@@ -1,173 +1,394 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>AI Teacher Platform</title>
-
-  <style>
-    body {
-      font-family: Arial;
-      max-width: 750px;
-      margin: auto;
-      padding: 20px;
-      background: #f5f5f5;
-    }
-
-    .box {
-      background: white;
-      padding: 15px;
-      margin-bottom: 10px;
-      border-radius: 8px;
-    }
-
-    #chat {
-      background: white;
-      border-radius: 8px;
-      height: 350px;
-      overflow-y: auto;
-      padding: 10px;
-      margin-bottom: 10px;
-    }
-
-    input, select, button {
-      padding: 10px;
-      width: 100%;
-      margin-top: 5px;
-      margin-bottom: 10px;
-    }
-
-    .user { color: blue; margin: 5px 0; }
-    .bot { color: green; margin: 5px 0; }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Synapse AI Tutor</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        .container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            padding: 40px;
+            max-width: 700px;
+            width: 100%;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+            font-size: 2.5rem;
+        }
+        h1 span {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        h2 {
+            color: #555;
+            margin: 20px 0 10px 0;
+            font-size: 1.2rem;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            font-weight: 600;
+            color: #555;
+            margin-bottom: 5px;
+        }
+        input, select, textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        button {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            margin-top: 10px;
+        }
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.4);
+        }
+        button:active {
+            transform: translateY(0);
+        }
+        button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+        .response-box {
+            margin-top: 20px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            border-left: 4px solid #667eea;
+            min-height: 80px;
+            white-space: pre-wrap;
+            font-size: 15px;
+            line-height: 1.6;
+        }
+        .response-box.error {
+            border-left-color: #dc3545;
+            background: #fff5f5;
+        }
+        .status-badge {
+            display: inline-block;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 600;
+            margin-top: 10px;
+        }
+        .status-trial {
+            background: #fff3cd;
+            color: #856404;
+        }
+        .status-active {
+            background: #d4edda;
+            color: #155724;
+        }
+        .status-expired {
+            background: #f8d7da;
+            color: #721c24;
+        }
+        .chat-area {
+            margin-top: 20px;
+        }
+        .chat-history {
+            max-height: 300px;
+            overflow-y: auto;
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 15px;
+        }
+        .message {
+            margin-bottom: 10px;
+            padding: 10px 15px;
+            border-radius: 10px;
+        }
+        .message.user {
+            background: #667eea;
+            color: white;
+            text-align: right;
+        }
+        .message.assistant {
+            background: #e9ecef;
+            color: #333;
+        }
+        .spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,.3);
+            border-radius: 50%;
+            border-top-color: #fff;
+            animation: spin 1s ease-in-out infinite;
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        .hidden {
+            display: none;
+        }
+        @media (max-width: 600px) {
+            .container { padding: 20px; }
+            h1 { font-size: 1.8rem; }
+        }
+    </style>
 </head>
-
 <body>
+    <div class="container">
+        <h1>🧠 <span>Synapse</span></h1>
+        <p style="text-align: center; color: #888; margin-bottom: 20px;">Your Strict AI Tutor</p>
 
-  <h2>📚 AI Teacher Platform</h2>
+        <!-- Profile Section -->
+        <div id="profileSection">
+            <h2>👤 Profile Setup</h2>
+            <div class="form-group">
+                <label>Your name</label>
+                <input type="text" id="name" placeholder="Enter your name" value="Student">
+            </div>
+            <div class="form-group">
+                <label>Select Country</label>
+                <select id="country">
+                    <option value="USA">USA</option>
+                    <option value="UK">UK</option>
+                    <option value="Canada">Canada</option>
+                    <option value="Australia">Australia</option>
+                    <option value="India">India</option>
+                    <option value="South Africa">South Africa</option>
+                    <option value="Nigeria">Nigeria</option>
+                    <option value="Other">Other</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label>Select Grade</label>
+                <select id="grade">
+                    <option value="6th">6th Grade</option>
+                    <option value="7th">7th Grade</option>
+                    <option value="8th">8th Grade</option>
+                    <option value="9th">9th Grade</option>
+                    <option value="10th">10th Grade</option>
+                    <option value="11th">11th Grade</option>
+                    <option value="12th">12th Grade</option>
+                    <option value="College">College</option>
+                </select>
+            </div>
+            <button id="saveProfileBtn" onclick="saveProfile()">💾 Save Profile</button>
+            <div id="profileStatus" class="response-box hidden"></div>
+        </div>
 
-  <!-- PROFILE -->
-  <div class="box">
-    <h3>👤 Profile Setup</h3>
+        <!-- Chat Section (hidden until profile is saved) -->
+        <div id="chatSection" class="hidden">
+            <hr style="margin: 20px 0;">
+            <h2>📚 Subject Selection</h2>
+            <div class="form-group">
+                <select id="subjectSelect" style="width: auto;">
+                    <option value="English">English</option>
+                    <option value="Math">Math</option>
+                    <option value="Science">Science</option>
+                    <option value="History">History</option>
+                    <option value="Geography">Geography</option>
+                    <option value="General">General</option>
+                </select>
+            </div>
 
-    <input id="name" placeholder="Your name" />
+            <div id="subscriptionStatus"></div>
 
-    <select id="country" onchange="updateSubjects()">
-      <option value="">Select Country</option>
-      <option value="South Africa">South Africa</option>
-      <option value="Other">Other</option>
-    </select>
+            <div class="chat-area">
+                <div class="chat-history" id="chatHistory">
+                    <div class="message assistant">👋 Welcome! Ask me anything and I'll guide you step by step.</div>
+                </div>
+                <div class="form-group" style="display: flex; gap: 10px;">
+                    <input type="text" id="messageInput" placeholder="Type your message..." style="flex: 1;" onkeypress="if(event.key==='Enter') sendMessage()">
+                    <button id="sendBtn" onclick="sendMessage()" style="width: auto; padding: 12px 30px;">Send</button>
+                </div>
+                <div id="statusMessage" style="color: #888; font-size: 14px; margin-top: 5px;"></div>
+            </div>
+        </div>
+    </div>
 
-    <select id="grade">
-      <option value="">Select Grade</option>
-      <option value="10">Grade 10</option>
-      <option value="11">Grade 11</option>
-      <option value="12">Grade 12</option>
-    </select>
+    <script>
+        // Generate a unique user ID
+        let userId = 'user_' + Date.now();
+        let isProfileSaved = false;
 
-    <button onclick="saveProfile()">Save Profile</button>
-  </div>
+        // ========== SAVE PROFILE ==========
+        async function saveProfile() {
+            const name = document.getElementById('name').value.trim();
+            const country = document.getElementById('country').value;
+            const grade = document.getElementById('grade').value;
 
-  <!-- SUBJECT -->
-  <div class="box">
-    <h3>📘 Subject Selection</h3>
+            if (!name) {
+                showStatus('Please enter your name.', 'error');
+                return;
+            }
 
-    <select id="subject">
-      <option value="English">English</option>
-      <option value="Mathematics">Mathematics</option>
-    </select>
-  </div>
+            const btn = document.getElementById('saveProfileBtn');
+            btn.disabled = true;
+            btn.innerHTML = '<span class="spinner"></span> Saving...';
 
-  <!-- CHAT -->
-  <div id="chat"></div>
+            try {
+                const response = await fetch('/save-profile', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ userId, name, country, grade })
+                });
 
-  <input id="input" placeholder="Ask your teacher..." />
-  <button onclick="send()">Send</button>
+                const data = await response.json();
 
-  <script>
-    let userId = localStorage.getItem("userId");
+                if (data.success) {
+                    isProfileSaved = true;
+                    showStatus('✅ Profile saved successfully!', 'success');
+                    document.getElementById('profileSection').style.display = 'none';
+                    document.getElementById('chatSection').classList.remove('hidden');
+                    checkSubscriptionStatus();
+                } else {
+                    showStatus('❌ Error: ' + (data.error || 'Unknown error'), 'error');
+                }
+            } catch (error) {
+                showStatus('❌ Server not reachable. Please try again.', 'error');
+                console.error('Save profile error:', error);
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = '💾 Save Profile';
+            }
+        }
 
-    if (!userId) {
-      userId = "user-" + Math.random().toString(36).substring(2, 10);
-      localStorage.setItem("userId", userId);
-    }
+        // ========== SEND MESSAGE ==========
+        async function sendMessage() {
+            if (!isProfileSaved) {
+                alert('Please save your profile first!');
+                return;
+            }
 
-    function updateSubjects() {
-      const country = document.getElementById("country").value;
-      const subject = document.getElementById("subject");
+            const input = document.getElementById('messageInput');
+            const message = input.value.trim();
+            if (!message) return;
 
-      subject.innerHTML = "";
+            const subject = document.getElementById('subjectSelect').value;
+            const fullMessage = `[${subject}] ${message}`;
 
-      if (country === "South Africa") {
-        subject.innerHTML += `
-          <option>Mathematics</option>
-          <option>English</option>
-          <option>Physical Sciences</option>
-          <option>Life Sciences</option>
-          <option>Accounting</option>
-          <option>Business Studies</option>
-        `;
-      } else {
-        subject.innerHTML += `
-          <option>English</option>
-          <option>Pure Mathematics</option>
-        `;
-      }
-    }
+            // Add user message to chat
+            addMessage('user', message);
+            input.value = '';
+            input.disabled = true;
 
-    async function saveProfile() {
-      const name = document.getElementById("name").value;
-      const country = document.getElementById("country").value;
-      const grade = document.getElementById("grade").value;
+            const sendBtn = document.getElementById('sendBtn');
+            sendBtn.disabled = true;
+            sendBtn.innerHTML = '<span class="spinner"></span>';
 
-      if (!name || !country) {
-        alert("Please fill in name and country");
-        return;
-      }
+            try {
+                const response = await fetch('/chat', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ userId, message: fullMessage })
+                });
 
-      await fetch("http://localhost:5000/save-profile", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          userId,
-          name,
-          country,
-          grade
-        })
-      });
+                const data = await response.json();
 
-      alert("Profile saved!");
-    }
+                if (data.reply) {
+                    addMessage('assistant', data.reply);
+                } else if (data.error) {
+                    addMessage('assistant', '❌ Error: ' + data.error);
+                } else {
+                    addMessage('assistant', '❌ No response from server.');
+                }
 
-    async function send() {
-      const input = document.getElementById("input");
-      const chat = document.getElementById("chat");
-      const subject = document.getElementById("subject").value;
+                // Check subscription status after each message
+                checkSubscriptionStatus();
 
-      const message = input.value.trim();
-      if (!message) return;
+            } catch (error) {
+                addMessage('assistant', '❌ Server not reachable. Please try again.');
+                console.error('Chat error:', error);
+            } finally {
+                input.disabled = false;
+                input.focus();
+                sendBtn.disabled = false;
+                sendBtn.innerHTML = 'Send';
+            }
+        }
 
-      chat.innerHTML += `<div class="user"><b>You:</b> [${subject}] ${message}</div>`;
-      input.value = "";
+        // ========== ADD MESSAGE ==========
+        function addMessage(role, content) {
+            const history = document.getElementById('chatHistory');
+            const div = document.createElement('div');
+            div.className = 'message ' + role;
+            // Convert newlines to <br> for display
+            div.innerHTML = content.replace(/\n/g, '<br>');
+            history.appendChild(div);
+            history.scrollTop = history.scrollHeight;
+        }
 
-      try {
-        const res = await fetch("http://localhost:5000/chat", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            message: `[Subject: ${subject}] ${message}`,
-            userId
-          })
-        });
+        // ========== CHECK SUBSCRIPTION STATUS ==========
+        async function checkSubscriptionStatus() {
+            try {
+                const response = await fetch('/subscription-status/' + userId);
+                const data = await response.json();
 
-        const data = await res.json();
+                const statusDiv = document.getElementById('subscriptionStatus');
+                if (data.status === 'trial') {
+                    statusDiv.innerHTML = `
+                        <span class="status-badge status-trial">📝 Trial • ${data.daysRemaining || 3} days remaining</span>
+                    `;
+                } else if (data.status === 'active') {
+                    statusDiv.innerHTML = `
+                        <span class="status-badge status-active">✅ Premium Active</span>
+                    `;
+                } else {
+                    statusDiv.innerHTML = `
+                        <span class="status-badge status-expired">⛔ ${data.status || 'Expired'}</span>
+                    `;
+                }
+            } catch (error) {
+                console.error('Status check error:', error);
+            }
+        }
 
-        chat.innerHTML += `<div class="bot"><b>Teacher:</b> ${data.reply}</div>`;
-      } catch (err) {
-        chat.innerHTML += `<div class="bot" style="color:red;">Server not reachable</div>`;
-      }
+        // ========== SHOW STATUS ==========
+        function showStatus(message, type) {
+            const statusDiv = document.getElementById('profileStatus');
+            statusDiv.className = 'response-box ' + (type || '');
+            statusDiv.textContent = message;
+            statusDiv.classList.remove('hidden');
+        }
 
-      chat.scrollTop = chat.scrollHeight;
-    }
-  </script>
-
+        // ========== INIT ==========
+        console.log('🧠 Synapse AI Tutor loaded');
+        console.log('📱 User ID:', userId);
+    </script>
 </body>
 </html>
