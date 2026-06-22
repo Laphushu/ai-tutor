@@ -9,6 +9,11 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
+// ================= ROOT ROUTE (Fixes "Cannot GET /") =================
+app.get('/', (req, res) => {
+  res.send('Synapse AI Tutor API is running! 🚀');
+});
+
 // ================= POSTGRES =================
 const db = new Pool({
   connectionString: process.env.DATABASE_URL,
