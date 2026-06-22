@@ -3,16 +3,12 @@ require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
 const OpenAI = require("openai");
-const sqlite3 = require("sqlite3").verbose();
+const { Pool } = require("pg");
 
-const app = express();
-
-app.use(cors());
-app.use(express.json());
-
-// ================= DATABASE =================
-const db = new sqlite3.Database("./school.db");
-
+const db = new Pool({
+  connectionString: process.env.DATABASE_URL,
+  ssl: { rejectUnauthorized: false }
+});
 db.serialize(() => {
   db.run(`
     CREATE TABLE IF NOT EXISTS users (
