@@ -9,7 +9,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// ================= ROOT ROUTE (Fixes "Cannot GET /") =================
+// ================= ROOT ROUTE =================
 app.get('/', (req, res) => {
   res.send('Synapse AI Tutor API is running! 🚀');
 });
@@ -20,8 +20,9 @@ const db = new Pool({
   ssl: { rejectUnauthorized: false }
 });
 
-// ================= INIT TABLES =================
+// ================= INIT TABLES (UPGRADED FOR STRIPE) =================
 async function initDB() {
+  // Users table
   await db.query(`
     CREATE TABLE IF NOT EXISTS users (
       userId TEXT PRIMARY KEY,
@@ -31,6 +32,7 @@ async function initDB() {
     )
   `);
 
+  // Messages table
   await db.query(`
     CREATE TABLE IF NOT EXISTS messages (
       id SERIAL PRIMARY KEY,
@@ -41,13 +43,19 @@ async function initDB() {
     )
   `);
 
+  // Subscriptions table - NOW WITH STRIPE SUPPORT!
   await db.query(`
     CREATE TABLE IF NOT EXISTS subscriptions (
       userId TEXT PRIMARY KEY,
       status TEXT DEFAULT 'trial',
-      startDate TIMESTAMP DEFAULT NOW()
+      startDate TIMESTAMP DEFAULT NOW(),
+      stripeCustomerId TEXT,
+      subscriptionEndDate TIMESTAMP,
+      planType TEXT DEFAULT 'free'
     )
   `);
+
+  console.log("✅ Database tables ready (Stripe supported)");
 }
 
 initDB();
@@ -121,15 +129,36 @@ app.post("/chat", async (req, res) => {
       return res.json({ reply: "Subscription error." });
     }
 
-    // trial check
+    // Trial check (3 days)
     const trialDays = 3;
     const start = new Date(sub.startdate || sub.startDate);
     const now = new Date();
     const diffDays = Math.floor((now - start) / (1000 * 60 * 60 * 24));
 
+    // Also check if subscription is active (paid) beyond trial
+    let isPaid = false;
+    if (sub.status === 'active' && sub.subscriptionenddate) {
+      const endDate = new Date(sub.subscriptionenddate);
+      if (now < endDate) {
+        isPaid = true;
+      } else {
+        // Subscription expired - update status
+        await db.query(
+          `UPDATE subscriptions SET status = 'expired' WHERE userId = $1`,
+          [userId]
+        );
+      }
+    }
+
     if (sub.status === "trial" && diffDays > trialDays) {
       return res.json({
-        reply: "Your 3-day free trial has ended. Please subscribe."
+        reply: "Your 3-day free trial has ended. Please subscribe to continue learning."
+      });
+    }
+
+    if (!isPaid && sub.status !== 'trial') {
+      return res.json({
+        reply: "Your subscription is inactive. Please subscribe to continue."
       });
     }
 
@@ -200,9 +229,45 @@ Country: ${user.country}
   }
 });
 
+// ================= CHECK SUBSCRIPTION STATUS =================
+app.get("/subscription-status/:userId", async (req, res) => {
+  try {
+    const { userId } = req.params;
+    const result = await db.query(
+      `SELECT status, startDate, subscriptionEndDate, planType FROM subscriptions WHERE userId = $1`,
+      [userId]
+    );
+
+    if (result.rows.length === 0) {
+      return res.json({ status: 'trial', daysRemaining: 3 });
+    }
+
+    const sub = result.rows[0];
+    const now = new Date();
+    const start = new Date(sub.startdate);
+    const diffDays = Math.floor((now - start) / (1000 * 60 * 60 * 24));
+    const daysRemaining = Math.max(0, 3 - diffDays);
+
+    let status = sub.status;
+    if (sub.status === 'trial' && diffDays > 3) {
+      status = 'expired';
+    }
+
+    res.json({
+      status: status,
+      daysRemaining: daysRemaining,
+      planType: sub.plantype || 'free',
+      subscriptionEndDate: sub.subscriptionenddate
+    });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 // ================= START =================
 const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, () => {
-  console.log("EduNova running on port " + PORT);
+  console.log("Synapse AI Tutor running on port " + PORT);
+  console.log("💳 Stripe-ready database tables active!");
 });
