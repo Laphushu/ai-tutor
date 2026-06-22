@@ -5,12 +5,19 @@ const cors = require("cors");
 const OpenAI = require("openai");
 const { Pool } = require("pg");
 
+const app = express();
+app.use(cors());
+app.use(express.json());
+
+// ================= POSTGRES =================
 const db = new Pool({
   connectionString: process.env.DATABASE_URL,
   ssl: { rejectUnauthorized: false }
 });
-db.serialize(() => {
-  db.run(`
+
+// ================= INIT TABLES =================
+async function initDB() {
+  await db.query(`
     CREATE TABLE IF NOT EXISTS users (
       userId TEXT PRIMARY KEY,
       name TEXT,
@@ -19,24 +26,26 @@ db.serialize(() => {
     )
   `);
 
-  db.run(`
+  await db.query(`
     CREATE TABLE IF NOT EXISTS messages (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      id SERIAL PRIMARY KEY,
       userId TEXT,
       role TEXT,
       content TEXT,
-      created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+      created_at TIMESTAMP DEFAULT NOW()
     )
   `);
 
-  db.run(`
+  await db.query(`
     CREATE TABLE IF NOT EXISTS subscriptions (
       userId TEXT PRIMARY KEY,
       status TEXT DEFAULT 'trial',
-      startDate DATETIME DEFAULT CURRENT_TIMESTAMP
+      startDate TIMESTAMP DEFAULT NOW()
     )
   `);
-});
+}
+
+initDB();
 
 // ================= AI =================
 const client = new OpenAI({
@@ -45,146 +54,150 @@ const client = new OpenAI({
 });
 
 // ================= HELPERS =================
-function ensureTrial(userId) {
-  db.run(
-    `INSERT OR IGNORE INTO subscriptions (userId, status)
-     VALUES (?, 'trial')`,
+async function ensureTrial(userId) {
+  await db.query(
+    `INSERT INTO subscriptions (userId, status)
+     VALUES ($1, 'trial')
+     ON CONFLICT (userId) DO NOTHING`,
     [userId]
   );
 }
 
 // ================= PROFILE =================
-app.post("/save-profile", (req, res) => {
+app.post("/save-profile", async (req, res) => {
   const { userId, name, country, grade } = req.body;
 
-  db.run(
-    `INSERT OR REPLACE INTO users (userId,name,country,grade)
-     VALUES (?,?,?,?)`,
-    [userId, name, country, grade],
-    (err) => {
-      if (err) return res.status(500).json({ error: err.message });
-      res.json({ success: true });
-    }
-  );
+  try {
+    await db.query(
+      `INSERT INTO users (userId,name,country,grade)
+       VALUES ($1,$2,$3,$4)
+       ON CONFLICT (userId) DO UPDATE SET
+       name=EXCLUDED.name,
+       country=EXCLUDED.country,
+       grade=EXCLUDED.grade`,
+      [userId, name, country, grade]
+    );
+
+    res.json({ success: true });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
 });
 
 // ================= CHAT =================
-app.post("/chat", (req, res) => {
+app.post("/chat", async (req, res) => {
   const { userId, message } = req.body;
 
   if (!userId || !message) {
     return res.status(400).json({ reply: "Missing userId or message" });
   }
 
-  ensureTrial(userId);
+  try {
+    await ensureTrial(userId);
 
-  db.get(`SELECT * FROM users WHERE userId = ?`, [userId], (err, user) => {
+    const userResult = await db.query(
+      `SELECT * FROM users WHERE userId=$1`,
+      [userId]
+    );
+
+    const user = userResult.rows[0];
     if (!user) {
       return res.json({ reply: "Please create your profile first." });
     }
 
-    db.get(
-      `SELECT * FROM subscriptions WHERE userId = ?`,
-      [userId],
-      (err, sub) => {
-        if (!sub) {
-          return res.json({ reply: "Subscription error." });
-        }
+    const subResult = await db.query(
+      `SELECT * FROM subscriptions WHERE userId=$1`,
+      [userId]
+    );
 
-        // ================= TRIAL CHECK =================
-        const trialDays = 3;
-        const start = new Date(sub.startDate);
-        const now = new Date();
-        const diffDays = Math.floor((now - start) / (1000 * 60 * 60 * 24));
+    const sub = subResult.rows[0];
 
-        if (sub.status === "trial" && diffDays > trialDays) {
-          return res.json({
-            reply: "Your 3-day free trial has ended. Please subscribe."
-          });
-        }
+    if (!sub) {
+      return res.json({ reply: "Subscription error." });
+    }
 
-        // ================= HISTORY =================
-        db.all(
-          `SELECT role, content FROM messages
-           WHERE userId = ?
-           ORDER BY id DESC
-           LIMIT 10`,
-          [userId],
-          async (err, rows) => {
+    // trial check
+    const trialDays = 3;
+    const start = new Date(sub.startdate || sub.startDate);
+    const now = new Date();
+    const diffDays = Math.floor((now - start) / (1000 * 60 * 60 * 24));
 
-            const history = [
-              {
-                role: "system",
-                content: `
+    if (sub.status === "trial" && diffDays > trialDays) {
+      return res.json({
+        reply: "Your 3-day free trial has ended. Please subscribe."
+      });
+    }
+
+    // get history
+    const messagesResult = await db.query(
+      `SELECT role, content FROM messages
+       WHERE userId=$1
+       ORDER BY id DESC
+       LIMIT 10`,
+      [userId]
+    );
+
+    const history = [
+      {
+        role: "system",
+        content: `
 You are STRICT AI TEACHER.
 
 RULES:
-- NEVER give full answers immediately
-- ONE step at a time only
-- ALWAYS ask a question after each step
-- NO long paragraphs
-- Keep answers short (max 2–4 lines)
-- Wait for student response before continuing
+- ONE step only
+- ALWAYS ask a question
+- NO full answers
+- SHORT replies
 
 FORMAT:
-
-📚 Topic:
-🎯 Goal:
-✏️ Step:
-🤔 Question:
-
-If student says "I don't know":
-give ONLY a hint, NOT the answer.
+📚 Topic
+🎯 Goal
+✏️ Step
+🤔 Question
 
 Student:
 Name: ${user.name}
 Grade: ${user.grade}
 Country: ${user.country}
-                `
-              }
-            ];
-
-            rows.reverse().forEach(r => {
-              history.push({ role: r.role, content: r.content });
-            });
-
-            history.push({ role: "user", content: message });
-
-            try {
-              const response = await client.chat.completions.create({
-                model: "deepseek-chat",
-                messages: history
-              });
-
-              const reply = response.choices[0].message.content;
-
-              db.run(
-                `INSERT INTO messages (userId, role, content)
-                 VALUES (?,?,?)`,
-                [userId, "user", message]
-              );
-
-              db.run(
-                `INSERT INTO messages (userId, role, content)
-                 VALUES (?,?,?)`,
-                [userId, "assistant", reply]
-              );
-
-              res.json({ reply });
-
-            } catch (error) {
-              res.status(500).json({
-                reply: "AI Error: " + error.message
-              });
-            }
-          }
-        );
+        `
       }
+    ];
+
+    messagesResult.rows.reverse().forEach(m => {
+      history.push({ role: m.role, content: m.content });
+    });
+
+    history.push({ role: "user", content: message });
+
+    const response = await client.chat.completions.create({
+      model: "deepseek-chat",
+      messages: history
+    });
+
+    const reply = response.choices[0].message.content;
+
+    await db.query(
+      `INSERT INTO messages (userId, role, content)
+       VALUES ($1,$2,$3)`,
+      [userId, "user", message]
     );
-  });
+
+    await db.query(
+      `INSERT INTO messages (userId, role, content)
+       VALUES ($1,$2,$3)`,
+      [userId, "assistant", reply]
+    );
+
+    res.json({ reply });
+
+  } catch (err) {
+    res.status(500).json({ reply: err.message });
+  }
 });
 
 // ================= START =================
-app.listen(5000, () => {
-  console.log("AI School Server running on http://localhost:5000");
+const PORT = process.env.PORT || 5000;
+
+app.listen(PORT, () => {
+  console.log("EduNova running on port " + PORT);
 });
