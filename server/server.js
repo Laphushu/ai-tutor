@@ -2,16 +2,25 @@ require("dotenv").config();
 
 const express = require("express");
 const cors = require("cors");
+const path = require("path");            // <-- NEW: for serving HTML files
 const OpenAI = require("openai");
 const { Pool } = require("pg");
 
 const app = express();
+
+// ================= MIDDLEWARE =================
 app.use(cors());
+
+// IMPORTANT: Serve static files from the 'client' folder FIRST
+app.use(express.static(path.join(__dirname, '../client')));
+
+// Then, handle JSON requests (after static)
 app.use(express.json());
 
 // ================= ROOT ROUTE =================
+// Now serves the actual index.html instead of a plain text message
 app.get('/', (req, res) => {
-  res.send('Synapse AI Tutor API is running! 🚀');
+  res.sendFile(path.join(__dirname, '../client/index.html'));
 });
 
 // ================= POSTGRES =================
@@ -276,4 +285,5 @@ const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log("Synapse AI Tutor running on port " + PORT);
   console.log("💳 Database auto-migration complete!");
+  console.log("🚀 Frontend available at /");
 });
