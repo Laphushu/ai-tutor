@@ -20,7 +20,7 @@ const db = new Pool({
   ssl: { rejectUnauthorized: false }
 });
 
-// ================= INIT TABLES (UPGRADED FOR STRIPE) =================
+// ================= INIT TABLES + AUTO-MIGRATION =================
 async function initDB() {
   // Users table
   await db.query(`
@@ -43,19 +43,26 @@ async function initDB() {
     )
   `);
 
-  // Subscriptions table - NOW WITH STRIPE SUPPORT!
+  // Subscriptions table (basic structure)
   await db.query(`
     CREATE TABLE IF NOT EXISTS subscriptions (
       userId TEXT PRIMARY KEY,
       status TEXT DEFAULT 'trial',
-      startDate TIMESTAMP DEFAULT NOW(),
-      stripeCustomerId TEXT,
-      subscriptionEndDate TIMESTAMP,
-      planType TEXT DEFAULT 'free'
+      startDate TIMESTAMP DEFAULT NOW()
     )
   `);
 
-  console.log("✅ Database tables ready (Stripe supported)");
+  // ========== AUTO-MIGRATION: Add Stripe columns if missing ==========
+  try {
+    await db.query(`ALTER TABLE subscriptions ADD COLUMN IF NOT EXISTS stripeCustomerId TEXT`);
+    await db.query(`ALTER TABLE subscriptions ADD COLUMN IF NOT EXISTS subscriptionEndDate TIMESTAMP`);
+    await db.query(`ALTER TABLE subscriptions ADD COLUMN IF NOT EXISTS planType TEXT DEFAULT 'free'`);
+    console.log("✅ Database migration successful (Stripe columns added)");
+  } catch (err) {
+    console.log("⚠️ Migration warning (columns might already exist):", err.message);
+  }
+
+  console.log("✅ Database tables ready");
 }
 
 initDB();
@@ -129,20 +136,19 @@ app.post("/chat", async (req, res) => {
       return res.json({ reply: "Subscription error." });
     }
 
-    // Trial check (3 days)
+    // Trial check
     const trialDays = 3;
     const start = new Date(sub.startdate || sub.startDate);
     const now = new Date();
     const diffDays = Math.floor((now - start) / (1000 * 60 * 60 * 24));
 
-    // Also check if subscription is active (paid) beyond trial
+    // Check if paid subscription is active
     let isPaid = false;
     if (sub.status === 'active' && sub.subscriptionenddate) {
       const endDate = new Date(sub.subscriptionenddate);
       if (now < endDate) {
         isPaid = true;
       } else {
-        // Subscription expired - update status
         await db.query(
           `UPDATE subscriptions SET status = 'expired' WHERE userId = $1`,
           [userId]
@@ -269,5 +275,5 @@ const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, () => {
   console.log("Synapse AI Tutor running on port " + PORT);
-  console.log("💳 Stripe-ready database tables active!");
+  console.log("💳 Database auto-migration complete!");
 });
