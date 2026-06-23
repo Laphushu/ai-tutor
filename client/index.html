@@ -647,7 +647,9 @@
         <!-- ===== STEP 1 — Role + DOB ===== -->
         <div class="step active" data-s="1">
             <h2>👋 Welcome to Synapse</h2>
-            <p class="desc">Sign up as a learner today! First, we need your date of birth to help us give you the best experience.</p>
+            <p class="desc">
+                Choose your role to get started. We’ll personalise your experience based on your age and learning goals.
+            </p>
 
             <div class="field">
                 <label>I am a...</label>
@@ -664,9 +666,9 @@
                 <div class="hint" id="roleHint">Please select a role</div>
             </div>
 
-            <div class="row">
-                <div class="field">
-                    <label>Month</label>
+            <div class="field">
+                <label>Date of Birth</label>
+                <div class="row">
                     <select id="dobMonth">
                         <option value="">Month</option>
                         <option value="January">January</option>
@@ -682,9 +684,6 @@
                         <option value="November">November</option>
                         <option value="December">December</option>
                     </select>
-                </div>
-                <div class="field">
-                    <label>Year</label>
                     <select id="dobYear">
                         <option value="">Year</option>
                         <option value="2024">2024</option>
@@ -744,19 +743,19 @@
                         <option value="1970">1970</option>
                     </select>
                 </div>
+                <div class="hint" id="dobHint">Please select both month and year</div>
             </div>
-            <div class="hint" id="dobHint">Please select both month and year</div>
 
             <button class="btn btn-primary" onclick="goStep(2)">Continue →</button>
         </div>
 
         <!-- ===== STEP 2 — Email + Password ===== -->
         <div class="step" data-s="2">
-            <h2>🔐 Create Your Account</h2>
+            <h2>🔐 Create your account</h2>
             <p class="desc">Enter your email and choose a password to get started.</p>
 
             <div class="field">
-                <label>Email Address</label>
+                <label>Email address</label>
                 <input type="email" id="emailInput" placeholder="you@example.com" autocomplete="email" />
                 <div class="hint" id="emailHint">Please enter a valid email</div>
             </div>
@@ -775,17 +774,17 @@
 
         <!-- ===== STEP 3 — First + Last Name ===== -->
         <div class="step" data-s="3">
-            <h2>📝 Tell Us About Yourself</h2>
-            <p class="desc">We need to know a bit more about you to finish setting up your profile.</p>
+            <h2>📝 Tell us about yourself</h2>
+            <p class="desc">We’d like to know your name to make your experience more personal.</p>
 
             <div class="row">
                 <div class="field">
-                    <label>First Name</label>
+                    <label>First name</label>
                     <input type="text" id="firstNameInput" placeholder="First name" />
                     <div class="hint" id="firstNameHint">Please enter your first name</div>
                 </div>
                 <div class="field">
-                    <label>Last Name</label>
+                    <label>Last name</label>
                     <input type="text" id="lastNameInput" placeholder="Last name" />
                     <div class="hint" id="lastNameHint">Please enter your last name</div>
                 </div>
@@ -793,7 +792,7 @@
 
             <div class="btn-group">
                 <button class="btn btn-secondary" onclick="goStep(2)">← Back</button>
-                <button class="btn btn-primary" onclick="finishSignup()">Complete Signup 🎉</button>
+                <button class="btn btn-primary" onclick="finishSignup()">Complete Signup</button>
             </div>
         </div>
 
@@ -806,10 +805,10 @@
             </div>
 
             <div class="summary" id="welcomeSummary">
-                <p><strong>👤 Name:</strong> <span id="wName">-</span></p>
-                <p><strong>📧 Email:</strong> <span id="wEmail">-</span></p>
-                <p><strong>🎯 Role:</strong> <span id="wRole">-</span></p>
-                <p><strong>🎂 DOB:</strong> <span id="wDob">-</span></p>
+                <p><strong>Name:</strong> <span id="wName">-</span></p>
+                <p><strong>Email:</strong> <span id="wEmail">-</span></p>
+                <p><strong>Role:</strong> <span id="wRole">-</span></p>
+                <p><strong>DOB:</strong> <span id="wDob">-</span></p>
             </div>
 
             <button class="btn btn-primary" onclick="enterApp()">Enter App →</button>
@@ -878,19 +877,14 @@
     //  STEP NAVIGATION
     // ================================================================
     function goStep(n) {
-        // Validate before moving forward
         if (n === 2 && !validateStep1()) return;
         if (n === 3 && !validateStep2()) return;
         if (n === 4 && !validateStep3()) return;
 
-        // Hide all
         document.querySelectorAll('.step').forEach(el => el.classList.remove('active'));
-
-        // Show target
         const target = document.querySelector(`.step[data-s="${n}"]`);
         if (target) target.classList.add('active');
 
-        // Update dots
         document.querySelectorAll('.dot').forEach((dot, i) => {
             const step = i + 1;
             dot.classList.remove('active', 'done');
@@ -913,8 +907,6 @@
 
     function validateStep1() {
         let ok = true;
-
-        // Role
         const sel = document.querySelector('.role-box.selected');
         if (!sel) {
             document.getElementById('roleHint').classList.add('show');
@@ -923,8 +915,6 @@
             document.getElementById('roleHint').classList.remove('show');
             S.role = sel.dataset.role;
         }
-
-        // DOB
         const m = document.getElementById('dobMonth').value;
         const y = document.getElementById('dobYear').value;
         if (!m || !y) {
@@ -935,7 +925,6 @@
             S.dobMonth = m;
             S.dobYear = y;
         }
-
         return ok;
     }
 
@@ -944,10 +933,8 @@
     // ================================================================
     function validateStep2() {
         let ok = true;
-
         const email = document.getElementById('emailInput').value.trim();
         const pass = document.getElementById('passwordInput').value;
-
         if (!email || !email.includes('@') || !email.includes('.')) {
             document.getElementById('emailHint').classList.add('show');
             ok = false;
@@ -955,7 +942,6 @@
             document.getElementById('emailHint').classList.remove('show');
             S.email = email;
         }
-
         if (pass.length < 6) {
             document.getElementById('passwordHint').classList.add('show');
             ok = false;
@@ -963,7 +949,6 @@
             document.getElementById('passwordHint').classList.remove('show');
             S.password = pass;
         }
-
         return ok;
     }
 
@@ -972,10 +957,8 @@
     // ================================================================
     function validateStep3() {
         let ok = true;
-
         const f = document.getElementById('firstNameInput').value.trim();
         const l = document.getElementById('lastNameInput').value.trim();
-
         if (!f) {
             document.getElementById('firstNameHint').classList.add('show');
             ok = false;
@@ -983,7 +966,6 @@
             document.getElementById('firstNameHint').classList.remove('show');
             S.firstName = f;
         }
-
         if (!l) {
             document.getElementById('lastNameHint').classList.add('show');
             ok = false;
@@ -991,7 +973,6 @@
             document.getElementById('lastNameHint').classList.remove('show');
             S.lastName = l;
         }
-
         return ok;
     }
 
@@ -1000,14 +981,11 @@
     // ================================================================
     function finishSignup() {
         if (!validateStep3()) return;
-
         S.userId = 'user_' + S.email.replace(/[^a-zA-Z0-9]/g, '_');
-
         document.getElementById('wName').textContent = `${S.firstName} ${S.lastName}`;
         document.getElementById('wEmail').textContent = S.email;
         document.getElementById('wRole').textContent = S.role.charAt(0).toUpperCase() + S.role.slice(1);
         document.getElementById('wDob').textContent = `${S.dobMonth} ${S.dobYear}`;
-
         goStep(4);
     }
 
@@ -1017,17 +995,15 @@
     function enterApp() {
         document.getElementById('signupFlow').style.display = 'none';
         document.getElementById('dashboard').classList.add('active');
-
         document.getElementById('dashName').textContent = `${S.firstName} ${S.lastName}`;
         document.getElementById('dashRole').textContent = S.role.charAt(0).toUpperCase() + S.role.slice(1);
-
         saveProfile();
         checkSubscription();
         document.getElementById('chatInput').focus();
     }
 
     // ================================================================
-    //  SAVE PROFILE TO BACKEND
+    //  SAVE PROFILE
     // ================================================================
     async function saveProfile() {
         try {
@@ -1041,7 +1017,7 @@
                     grade: S.role === 'teacher' ? 'Teacher' : 'Student'
                 })
             });
-        } catch (_) { /* ignore */ }
+        } catch (_) {}
     }
 
     // ================================================================
@@ -1058,15 +1034,12 @@
         const input = document.getElementById('chatInput');
         const msg = input.value.trim();
         if (!msg) return;
-
         addMessage('user', msg);
         input.value = '';
         input.disabled = true;
-
         const btn = document.getElementById('sendBtn');
         btn.disabled = true;
         btn.textContent = '⏳';
-
         try {
             const res = await fetch('/chat', {
                 method: 'POST',
@@ -1074,7 +1047,6 @@
                 body: JSON.stringify({ userId: S.userId, message: `[General] ${msg}` })
             });
             const data = await res.json();
-
             if (data.reply) {
                 addMessage('bot', data.reply);
             } else {
@@ -1098,7 +1070,6 @@
         div.innerHTML = text.replace(/\n/g, '<br>');
         box.appendChild(div);
         box.scrollTop = box.scrollHeight;
-
         if (role === 'bot' && document.getElementById('speakToggle').checked) {
             speak(text);
         }
@@ -1113,12 +1084,10 @@
     function toggleVoice() {
         const btn = document.getElementById('voiceBtn');
         const st = document.getElementById('voiceStatus');
-
         if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
             alert('Voice input requires Chrome, Edge, or Android browser.');
             return;
         }
-
         if (listening) {
             if (recognition) recognition.stop();
             listening = false;
@@ -1127,17 +1096,14 @@
             st.textContent = 'Ready';
             return;
         }
-
         const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
         recognition = new SR();
         recognition.lang = 'en-US';
         recognition.interimResults = false;
-
         listening = true;
         btn.classList.add('listening');
         btn.textContent = '⏹️';
         st.textContent = '🎤 Listening...';
-
         recognition.onresult = (e) => {
             const text = e.results[0][0].transcript;
             document.getElementById('chatInput').value = text;
@@ -1147,20 +1113,17 @@
             listening = false;
             setTimeout(sendChat, 300);
         };
-
         recognition.onerror = (e) => {
             st.textContent = '❌ ' + e.error;
             btn.classList.remove('listening');
             btn.textContent = '🎤';
             listening = false;
         };
-
         recognition.onend = () => {
             btn.classList.remove('listening');
             btn.textContent = '🎤';
             listening = false;
         };
-
         recognition.start();
     }
 
@@ -1169,27 +1132,17 @@
     // ================================================================
     function speak(text) {
         if (!('speechSynthesis' in window)) return;
-
-        let clean = text
-            .replace(/\*\*/g, '')
-            .replace(/#/g, '')
-            .replace(/📚|🎯|✏️|🤔/g, '')
-            .replace(/\n/g, '. ');
-
+        let clean = text.replace(/\*\*/g, '').replace(/#/g, '').replace(/📚|🎯|✏️|🤔/g, '').replace(/\n/g, '. ');
         if (clean.length > 350) clean = clean.substring(0, 350) + '...';
-
         window.speechSynthesis.cancel();
-
         const u = new SpeechSynthesisUtterance(clean);
         u.lang = 'en-US';
         u.rate = 0.85;
         u.pitch = 1.0;
         u.volume = 1;
-
         const voices = window.speechSynthesis.getVoices();
         const best = voices.find(v => v.lang.includes('en') && v.name.includes('Google'));
         if (best) u.voice = best;
-
         window.speechSynthesis.speak(u);
     }
 
@@ -1201,10 +1154,7 @@
             const res = await fetch('/subscription-status/' + S.userId);
             const data = await res.json();
             const badge = document.getElementById('dashBadge');
-            const subDiv = document.getElementById('dashSubscription');
-
-            let label = '';
-            let cls = '';
+            let label = '', cls = '';
             if (data.status === 'trial') {
                 cls = 'badge-trial';
                 label = `📝 Trial • ${data.daysRemaining || 3}d left`;
@@ -1216,22 +1166,18 @@
                 label = '⛔ ' + (data.status || 'Expired');
             }
             badge.innerHTML = `<span class="badge ${cls}">${label}</span>`;
-            subDiv.innerHTML = '';
-        } catch (_) { /* ignore */ }
+            document.getElementById('dashSubscription').innerHTML = '';
+        } catch (_) {}
     }
 
     // ================================================================
     //  INIT
     // ================================================================
     console.log('🧠 Synapse AI Tutor loaded');
-
-    // Preload voices
     if ('speechSynthesis' in window) {
         window.speechSynthesis.getVoices();
         window.speechSynthesis.onvoiceschanged = () => { window.speechSynthesis.getVoices(); };
     }
-
-    // Enter key in chat
     document.addEventListener('keydown', (e) => {
         if (e.key === 'Enter' && document.getElementById('dashboard').classList.contains('active')) {
             const input = document.getElementById('chatInput');
