@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Synapse AI Tutor</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Synapse — AI Tutor</title>
     <style>
+        /* ===== RESET & BASE ===== */
         * {
             margin: 0;
             padding: 0;
@@ -12,36 +13,38 @@
         }
 
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(145deg, #f6f9fc 0%, #e9f0f5 100%);
             min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
-            padding: 20px;
+            padding: 24px;
         }
 
-        .container {
-            background: white;
-            border-radius: 24px;
-            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.35);
-            padding: 48px;
+        /* ===== CARD ===== */
+        .card {
+            background: #ffffff;
+            border-radius: 32px;
+            box-shadow: 0 24px 80px rgba(0, 20, 40, 0.12), 0 8px 32px rgba(0, 0, 0, 0.04);
+            padding: 44px 40px 40px;
             max-width: 520px;
             width: 100%;
             position: relative;
-            overflow: hidden;
+            transition: all 0.2s;
         }
 
-        .container::before {
+        .card::before {
             content: '';
             position: absolute;
             top: 0;
             left: 0;
             right: 0;
             height: 4px;
-            background: linear-gradient(90deg, #667eea, #764ba2, #667eea);
+            border-radius: 32px 32px 0 0;
+            background: linear-gradient(90deg, #6366f1, #8b5cf6, #a855f7);
             background-size: 200% 100%;
-            animation: shimmer 3s infinite;
+            animation: shimmer 4s ease-in-out infinite;
         }
 
         @keyframes shimmer {
@@ -49,273 +52,307 @@
             100% { background-position: 200% 0; }
         }
 
-        .logo {
+        /* ===== LOGO ===== */
+        .brand {
             text-align: center;
-            margin-bottom: 8px;
+            margin-bottom: 28px;
         }
 
-        .logo h1 {
-            font-size: 2.8rem;
+        .brand h1 {
+            font-size: 2.6rem;
             font-weight: 800;
-            letter-spacing: -1px;
+            letter-spacing: -1.5px;
+            color: #0b1120;
         }
 
-        .logo h1 span {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        .brand h1 span {
+            background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
 
-        .logo .tagline {
-            color: #888;
+        .brand .sub {
             font-size: 0.95rem;
-            margin-top: -4px;
+            color: #6b7280;
+            margin-top: -2px;
+            letter-spacing: 0.2px;
         }
 
-        .step-indicator {
+        /* ===== STEP INDICATOR ===== */
+        .steps {
             display: flex;
             justify-content: center;
-            gap: 8px;
-            margin: 24px 0 28px 0;
+            gap: 10px;
+            margin: 20px 0 28px 0;
         }
 
-        .step-dot {
+        .steps .dot {
             width: 10px;
             height: 10px;
             border-radius: 50%;
-            background: #ddd;
-            transition: all 0.3s;
+            background: #d1d5db;
+            transition: all 0.35s ease;
         }
 
-        .step-dot.active {
-            background: #667eea;
+        .steps .dot.active {
+            background: #6366f1;
             transform: scale(1.3);
+            box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.2);
         }
 
-        .step-dot.done {
-            background: #28a745;
+        .steps .dot.done {
+            background: #22c55e;
         }
 
-        .form-step {
+        /* ===== STEPS ===== */
+        .step {
             display: none;
-            animation: fadeIn 0.4s ease;
+            animation: fadeUp 0.45s ease;
         }
 
-        .form-step.active {
+        .step.active {
             display: block;
         }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(12px); }
-            to { opacity: 1; transform: translateY(0); }
+        @keyframes fadeUp {
+            0% { opacity: 0; transform: translateY(16px); }
+            100% { opacity: 1; transform: translateY(0); }
         }
 
-        .form-step h2 {
+        .step h2 {
             font-size: 1.5rem;
-            color: #222;
-            margin-bottom: 6px;
+            font-weight: 700;
+            color: #0b1120;
+            margin-bottom: 4px;
         }
 
-        .form-step .description {
-            color: #777;
+        .step .desc {
             font-size: 0.95rem;
-            margin-bottom: 22px;
+            color: #6b7280;
+            margin-bottom: 24px;
             line-height: 1.5;
         }
 
-        .form-group {
+        /* ===== FORM ===== */
+        .field {
             margin-bottom: 18px;
         }
 
-        .form-group label {
+        .field label {
             display: block;
+            font-size: 0.85rem;
             font-weight: 600;
-            color: #444;
+            color: #1f2937;
             margin-bottom: 5px;
-            font-size: 0.9rem;
         }
 
-        .form-group input,
-        .form-group select {
+        .field input,
+        .field select {
             width: 100%;
             padding: 14px 16px;
-            border: 2px solid #e8e8e8;
-            border-radius: 12px;
-            font-size: 16px;
-            transition: border-color 0.3s, box-shadow 0.3s;
-            background: #fafafa;
+            font-size: 1rem;
+            border: 2px solid #e5e7eb;
+            border-radius: 14px;
+            background: #fafbfc;
+            transition: border-color 0.25s, box-shadow 0.25s, background 0.25s;
+            font-family: inherit;
+            color: #0b1120;
+            appearance: none;
+            -webkit-appearance: none;
         }
 
-        .form-group input:focus,
-        .form-group select:focus {
+        .field input:focus,
+        .field select:focus {
             outline: none;
-            border-color: #667eea;
-            box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.15);
-            background: white;
+            border-color: #6366f1;
+            box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.12);
+            background: #ffffff;
         }
 
-        .form-group input.error {
-            border-color: #dc3545;
-            box-shadow: 0 0 0 4px rgba(220, 53, 69, 0.12);
+        .field input.error,
+        .field select.error {
+            border-color: #ef4444;
+            box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.10);
         }
 
-        .form-group .error-text {
-            color: #dc3545;
+        .field .hint {
             font-size: 0.8rem;
+            color: #ef4444;
             margin-top: 4px;
             display: none;
         }
 
-        .form-group .error-text.show {
+        .field .hint.show {
             display: block;
         }
 
-        .form-row {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 14px;
-        }
-
-        .role-selector {
+        /* ===== ROLE SELECTOR ===== */
+        .role-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 12px;
         }
 
-        .role-option {
-            padding: 20px;
-            border: 2px solid #e8e8e8;
-            border-radius: 14px;
+        .role-box {
+            padding: 20px 16px;
+            border: 2px solid #e5e7eb;
+            border-radius: 16px;
             text-align: center;
             cursor: pointer;
-            transition: all 0.3s;
-            background: #fafafa;
+            transition: all 0.25s;
+            background: #fafbfc;
             user-select: none;
         }
 
-        .role-option:hover {
-            border-color: #667eea;
-            background: #f0f2ff;
+        .role-box:hover {
+            border-color: #a5b4fc;
+            background: #f8faff;
         }
 
-        .role-option.selected {
-            border-color: #667eea;
-            background: #f0f2ff;
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
+        .role-box.selected {
+            border-color: #6366f1;
+            background: #eef2ff;
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
         }
 
-        .role-option .icon {
+        .role-box .icon {
             font-size: 2.2rem;
             display: block;
-            margin-bottom: 6px;
+            margin-bottom: 4px;
         }
 
-        .role-option .label {
+        .role-box .label {
             font-weight: 600;
-            color: #333;
             font-size: 0.95rem;
+            color: #1f2937;
         }
 
+        /* ===== ROW ===== */
+        .row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+        }
+
+        /* ===== BUTTONS ===== */
         .btn {
             width: 100%;
-            padding: 16px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
+            padding: 15px;
             border: none;
-            border-radius: 12px;
-            font-size: 17px;
+            border-radius: 14px;
+            font-size: 1rem;
             font-weight: 700;
             cursor: pointer;
-            transition: transform 0.2s, box-shadow 0.2s;
-            margin-top: 8px;
+            transition: transform 0.15s, box-shadow 0.2s;
+            font-family: inherit;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
         }
 
-        .btn:hover {
+        .btn-primary {
+            background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+            color: #fff;
+            box-shadow: 0 4px 16px rgba(99, 102, 241, 0.3);
+        }
+
+        .btn-primary:hover {
             transform: translateY(-2px);
-            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+            box-shadow: 0 8px 28px rgba(99, 102, 241, 0.35);
         }
 
-        .btn:active {
+        .btn-primary:active {
             transform: translateY(0);
         }
 
-        .btn:disabled {
+        .btn-primary:disabled {
             opacity: 0.6;
             cursor: not-allowed;
             transform: none !important;
         }
 
         .btn-secondary {
-            background: #e8e8e8;
-            color: #444;
+            background: #f3f4f6;
+            color: #1f2937;
         }
 
         .btn-secondary:hover {
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            background: #e5e7eb;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 6px;
+        }
+
+        .btn-group .btn {
+            flex: 1;
         }
 
         .btn .spinner {
-            display: inline-block;
             width: 20px;
             height: 20px;
-            border: 3px solid rgba(255, 255, 255, 0.3);
-            border-radius: 50%;
+            border: 3px solid rgba(255, 255, 255, 0.25);
             border-top-color: #fff;
-            animation: spin 0.8s linear infinite;
-            vertical-align: middle;
+            border-radius: 50%;
+            animation: spin 0.7s linear infinite;
+            display: inline-block;
         }
 
         @keyframes spin {
             to { transform: rotate(360deg); }
         }
 
-        .welcome-message {
+        /* ===== WELCOME ===== */
+        .welcome {
             text-align: center;
-            padding: 20px 0 10px 0;
+            padding: 12px 0 4px;
         }
 
-        .welcome-message .big-icon {
+        .welcome .big {
             font-size: 4rem;
             display: block;
-            margin-bottom: 12px;
+            margin-bottom: 6px;
         }
 
-        .welcome-message h2 {
+        .welcome h2 {
             font-size: 2rem;
-            color: #222;
+            font-weight: 800;
+            color: #0b1120;
         }
 
-        .welcome-message h2 span {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        .welcome h2 span {
+            background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
 
-        .welcome-message .sub {
-            color: #777;
+        .welcome .sub {
+            color: #6b7280;
             font-size: 1rem;
-            margin-top: 4px;
         }
 
-        .welcome-details {
-            background: #f8f9fa;
-            border-radius: 14px;
+        .summary {
+            background: #f8fafc;
+            border-radius: 16px;
             padding: 18px 22px;
-            margin: 20px 0;
+            margin: 20px 0 24px;
             text-align: left;
         }
 
-        .welcome-details p {
-            margin: 6px 0;
+        .summary p {
+            margin: 4px 0;
             font-size: 0.95rem;
-            color: #444;
+            color: #374151;
         }
 
-        .welcome-details strong {
-            color: #222;
+        .summary strong {
+            color: #0b1120;
         }
 
-        /* Chat Dashboard (shown after signup) */
+        /* ===== DASHBOARD ===== */
         #dashboard {
             display: none;
         }
@@ -324,772 +361,887 @@
             display: block;
         }
 
-        .dashboard-header {
+        .dash-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 20px;
             padding-bottom: 16px;
-            border-bottom: 1px solid #eee;
+            border-bottom: 1px solid #e5e7eb;
+            margin-bottom: 18px;
+            flex-wrap: wrap;
+            gap: 10px;
         }
 
-        .dashboard-header .user-info {
+        .dash-user {
             font-size: 0.95rem;
-            color: #555;
+            color: #4b5563;
         }
 
-        .dashboard-header .user-info strong {
-            color: #222;
+        .dash-user strong {
+            color: #0b1120;
+        }
+
+        .dash-actions {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 14px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+
+        .badge-trial {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .badge-active {
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        .badge-expired {
+            background: #fee2e2;
+            color: #991b1b;
         }
 
         .logout-btn {
             background: none;
             border: none;
-            color: #999;
+            color: #9ca3af;
+            font-size: 0.85rem;
             cursor: pointer;
-            font-size: 0.9rem;
-            padding: 8px 16px;
+            padding: 6px 12px;
             border-radius: 8px;
             transition: background 0.2s, color 0.2s;
+            font-family: inherit;
         }
 
         .logout-btn:hover {
-            background: #f0f0f0;
-            color: #dc3545;
+            background: #f3f4f6;
+            color: #ef4444;
         }
 
-        /* Chat styles */
-        .chat-area {
-            margin-top: 16px;
-        }
-
-        .chat-history {
-            max-height: 320px;
-            overflow-y: auto;
-            background: #f8f9fa;
-            border-radius: 14px;
+        /* ===== CHAT ===== */
+        .chat-box {
+            background: #f8fafc;
+            border-radius: 16px;
             padding: 16px;
+            max-height: 280px;
+            overflow-y: auto;
             margin-bottom: 14px;
-            border: 1px solid #eee;
+            border: 1px solid #e5e7eb;
         }
 
-        .message {
-            margin-bottom: 10px;
-            padding: 12px 16px;
+        .chat-box .msg {
+            padding: 10px 14px;
             border-radius: 12px;
             max-width: 85%;
-            word-wrap: break-word;
+            margin-bottom: 8px;
             font-size: 0.95rem;
             line-height: 1.5;
+            word-wrap: break-word;
         }
 
-        .message.user {
-            background: #667eea;
-            color: white;
+        .chat-box .msg.user {
+            background: #6366f1;
+            color: #fff;
             margin-left: auto;
             text-align: right;
         }
 
-        .message.assistant {
-            background: #e9ecef;
-            color: #333;
+        .chat-box .msg.bot {
+            background: #e5e7eb;
+            color: #0b1120;
             margin-right: auto;
         }
 
-        .input-group {
+        .chat-input {
             display: flex;
             gap: 10px;
         }
 
-        .input-group input {
+        .chat-input input {
             flex: 1;
             padding: 14px 16px;
-            border: 2px solid #e8e8e8;
-            border-radius: 12px;
-            font-size: 15px;
-            transition: border-color 0.3s;
-            background: #fafafa;
+            border: 2px solid #e5e7eb;
+            border-radius: 14px;
+            font-size: 0.95rem;
+            background: #fafbfc;
+            transition: border-color 0.25s;
+            font-family: inherit;
         }
 
-        .input-group input:focus {
+        .chat-input input:focus {
             outline: none;
-            border-color: #667eea;
-            background: white;
+            border-color: #6366f1;
+            background: #fff;
         }
 
-        .input-group .btn-voice {
+        .chat-input .btn-voice {
             width: 52px;
             height: 52px;
             border-radius: 50%;
-            background: #28a745;
-            color: white;
+            background: #22c55e;
             border: none;
-            font-size: 22px;
+            color: #fff;
+            font-size: 1.4rem;
             cursor: pointer;
-            transition: all 0.3s;
+            transition: all 0.25s;
             flex-shrink: 0;
         }
 
-        .input-group .btn-voice:hover {
+        .chat-input .btn-voice:hover {
             transform: scale(1.05);
         }
 
-        .input-group .btn-voice.listening {
-            background: #dc3545;
+        .chat-input .btn-voice.listening {
+            background: #ef4444;
             animation: pulse 1.2s infinite;
         }
 
         @keyframes pulse {
-            0% { box-shadow: 0 0 0 0 rgba(220, 53, 69, 0.4); }
-            70% { box-shadow: 0 0 0 15px rgba(220, 53, 69, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(220, 53, 69, 0); }
+            0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.35); }
+            70% { box-shadow: 0 0 0 16px rgba(239, 68, 68, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
         }
 
-        .input-group .btn-send {
-            padding: 14px 24px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
+        .chat-input .btn-send {
+            padding: 0 24px;
+            background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+            color: #fff;
             border: none;
-            border-radius: 12px;
-            font-size: 16px;
-            font-weight: 600;
+            border-radius: 14px;
+            font-weight: 700;
             cursor: pointer;
-            transition: all 0.3s;
-            flex-shrink: 0;
+            transition: all 0.25s;
+            font-family: inherit;
+            font-size: 0.95rem;
         }
 
-        .input-group .btn-send:hover {
+        .chat-input .btn-send:hover {
             transform: scale(1.02);
         }
 
-        .input-group .btn-send:disabled {
+        .chat-input .btn-send:disabled {
             opacity: 0.6;
             cursor: not-allowed;
+            transform: none !important;
         }
 
-        .voice-toggle {
+        .chat-options {
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
             margin-top: 10px;
             font-size: 0.85rem;
-            color: #888;
+            color: #6b7280;
         }
 
-        .voice-toggle input[type="checkbox"] {
+        .chat-options input[type="checkbox"] {
             width: 18px;
             height: 18px;
-            accent-color: #667eea;
+            accent-color: #6366f1;
             cursor: pointer;
         }
 
-        .status-badge {
-            display: inline-block;
-            padding: 4px 14px;
-            border-radius: 20px;
-            font-size: 0.8rem;
-            font-weight: 600;
-            margin-top: 8px;
+        .chat-options label {
+            cursor: pointer;
         }
 
-        .status-trial { background: #fff3cd; color: #856404; }
-        .status-active { background: #d4edda; color: #155724; }
-        .status-expired { background: #f8d7da; color: #721c24; }
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 520px) {
+            .card {
+                padding: 28px 18px 24px;
+                border-radius: 24px;
+            }
 
-        .hidden {
-            display: none !important;
+            .brand h1 {
+                font-size: 2rem;
+            }
+
+            .role-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 10px;
+            }
+
+            .role-box {
+                padding: 14px 10px;
+            }
+
+            .role-box .icon {
+                font-size: 1.6rem;
+            }
+
+            .row {
+                grid-template-columns: 1fr;
+                gap: 0;
+            }
+
+            .btn-group {
+                flex-direction: column;
+            }
+
+            .welcome h2 {
+                font-size: 1.5rem;
+            }
+
+            .chat-input {
+                flex-wrap: wrap;
+            }
+
+            .chat-input .btn-send {
+                flex: 1;
+                padding: 14px;
+            }
+
+            .dash-header {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 8px;
+            }
+
+            .dash-actions {
+                justify-content: space-between;
+            }
         }
 
-        @media (max-width: 500px) {
-            .container { padding: 28px 20px; }
-            .form-row { grid-template-columns: 1fr; }
-            .role-selector { grid-template-columns: 1fr; }
-            .logo h1 { font-size: 2.2rem; }
-            .input-group { flex-wrap: wrap; }
-            .input-group .btn-send { flex: 1; }
-            .welcome-message h2 { font-size: 1.5rem; }
+        @media (max-width: 400px) {
+            .role-grid {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="container" id="app">
 
-        <!-- ========== SIGNUP FLOW ========== -->
-        <div id="signupFlow">
+<div class="card" id="app">
 
-            <div class="logo">
-                <h1>🧠 <span>Synapse</span></h1>
-                <p class="tagline">Your Strict AI Tutor</p>
-            </div>
+    <!-- ===== BRAND ===== -->
+    <div class="brand" id="brand">
+        <h1>🧠 <span>Synapse</span></h1>
+        <p class="sub">Your Strict AI Tutor</p>
+    </div>
 
-            <!-- Step Indicator -->
-            <div class="step-indicator" id="stepIndicator">
-                <span class="step-dot active" data-step="1"></span>
-                <span class="step-dot" data-step="2"></span>
-                <span class="step-dot" data-step="3"></span>
-                <span class="step-dot" data-step="4"></span>
-            </div>
+    <!-- ============================================================ -->
+    <!-- ===== SIGNUP FLOW ===== -->
+    <!-- ============================================================ -->
+    <div id="signupFlow">
 
-            <!-- STEP 1: Role + DOB -->
-            <div class="form-step active" data-step="1">
-                <h2>👋 Welcome to Synapse</h2>
-                <p class="description">Sign up as a learner today! First, we need your date of birth to help us give you the best experience.</p>
-
-                <div class="form-group">
-                    <label>I am a...</label>
-                    <div class="role-selector" id="roleSelector">
-                        <div class="role-option" data-role="learner" onclick="selectRole(this)">
-                            <span class="icon">📖</span>
-                            <span class="label">Learner</span>
-                        </div>
-                        <div class="role-option" data-role="teacher" onclick="selectRole(this)">
-                            <span class="icon">👨‍🏫</span>
-                            <span class="label">Teacher</span>
-                        </div>
-                    </div>
-                    <div class="error-text" id="roleError">Please select a role</div>
-                </div>
-
-                <div class="form-row">
-                    <div class="form-group">
-                        <label>Month</label>
-                        <select id="dobMonth">
-                            <option value="">Month</option>
-                            <option value="January">January</option>
-                            <option value="February">February</option>
-                            <option value="March">March</option>
-                            <option value="April">April</option>
-                            <option value="May">May</option>
-                            <option value="June">June</option>
-                            <option value="July">July</option>
-                            <option value="August">August</option>
-                            <option value="September">September</option>
-                            <option value="October">October</option>
-                            <option value="November">November</option>
-                            <option value="December">December</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label>Year</label>
-                        <select id="dobYear">
-                            <option value="">Year</option>
-                            <option value="2024">2024</option>
-                            <option value="2023">2023</option>
-                            <option value="2022">2022</option>
-                            <option value="2021">2021</option>
-                            <option value="2020">2020</option>
-                            <option value="2019">2019</option>
-                            <option value="2018">2018</option>
-                            <option value="2017">2017</option>
-                            <option value="2016">2016</option>
-                            <option value="2015">2015</option>
-                            <option value="2014">2014</option>
-                            <option value="2013">2013</option>
-                            <option value="2012">2012</option>
-                            <option value="2011">2011</option>
-                            <option value="2010">2010</option>
-                            <option value="2009">2009</option>
-                            <option value="2008">2008</option>
-                            <option value="2007">2007</option>
-                            <option value="2006">2006</option>
-                            <option value="2005">2005</option>
-                            <option value="2004">2004</option>
-                            <option value="2003">2003</option>
-                            <option value="2002">2002</option>
-                            <option value="2001">2001</option>
-                            <option value="2000">2000</option>
-                            <option value="1999">1999</option>
-                            <option value="1998">1998</option>
-                            <option value="1997">1997</option>
-                            <option value="1996">1996</option>
-                            <option value="1995">1995</option>
-                            <option value="1994">1994</option>
-                            <option value="1993">1993</option>
-                            <option value="1992">1992</option>
-                            <option value="1991">1991</option>
-                            <option value="1990">1990</option>
-                            <option value="1989">1989</option>
-                            <option value="1988">1988</option>
-                            <option value="1987">1987</option>
-                            <option value="1986">1986</option>
-                            <option value="1985">1985</option>
-                            <option value="1984">1984</option>
-                            <option value="1983">1983</option>
-                            <option value="1982">1982</option>
-                            <option value="1981">1981</option>
-                            <option value="1980">1980</option>
-                            <option value="1979">1979</option>
-                            <option value="1978">1978</option>
-                            <option value="1977">1977</option>
-                            <option value="1976">1976</option>
-                            <option value="1975">1975</option>
-                            <option value="1974">1974</option>
-                            <option value="1973">1973</option>
-                            <option value="1972">1972</option>
-                            <option value="1971">1971</option>
-                            <option value="1970">1970</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="error-text" id="dobError">Please select both month and year</div>
-
-                <button class="btn" onclick="goToStep(2)">Continue →</button>
-            </div>
-
-            <!-- STEP 2: Email + Password -->
-            <div class="form-step" data-step="2">
-                <h2>🔐 Create Your Account</h2>
-                <p class="description">Enter your email and choose a password to get started.</p>
-
-                <div class="form-group">
-                    <label>Email Address</label>
-                    <input type="email" id="emailInput" placeholder="you@example.com" autocomplete="email">
-                    <div class="error-text" id="emailError">Please enter a valid email</div>
-                </div>
-
-                <div class="form-group">
-                    <label>Password</label>
-                    <input type="password" id="passwordInput" placeholder="Create a password" autocomplete="new-password">
-                    <div class="error-text" id="passwordError">Password must be at least 6 characters</div>
-                </div>
-
-                <div style="display:flex;gap:10px;margin-top:4px;">
-                    <button class="btn btn-secondary" onclick="goToStep(1)">← Back</button>
-                    <button class="btn" onclick="goToStep(3)">Continue →</button>
-                </div>
-            </div>
-
-            <!-- STEP 3: First Name + Last Name -->
-            <div class="form-step" data-step="3">
-                <h2>📝 Tell Us About Yourself</h2>
-                <p class="description">We need to know a bit more about you to finish setting up your profile.</p>
-
-                <div class="form-row">
-                    <div class="form-group">
-                        <label>First Name</label>
-                        <input type="text" id="firstNameInput" placeholder="First name">
-                        <div class="error-text" id="firstNameError">Please enter your first name</div>
-                    </div>
-                    <div class="form-group">
-                        <label>Last Name</label>
-                        <input type="text" id="lastNameInput" placeholder="Last name">
-                        <div class="error-text" id="lastNameError">Please enter your last name</div>
-                    </div>
-                </div>
-
-                <div style="display:flex;gap:10px;margin-top:4px;">
-                    <button class="btn btn-secondary" onclick="goToStep(2)">← Back</button>
-                    <button class="btn" onclick="completeSignup()">Complete Signup 🎉</button>
-                </div>
-            </div>
-
-            <!-- STEP 4: Welcome! -->
-            <div class="form-step" data-step="4">
-                <div class="welcome-message">
-                    <span class="big-icon">🎉</span>
-                    <h2>Welcome to <span>Synapse</span>!</h2>
-                    <p class="sub">Your AI tutor is ready to guide you.</p>
-                </div>
-
-                <div class="welcome-details" id="welcomeDetails">
-                    <p><strong>👤 Name:</strong> <span id="welcomeName">-</span></p>
-                    <p><strong>📧 Email:</strong> <span id="welcomeEmail">-</span></p>
-                    <p><strong>🎯 Role:</strong> <span id="welcomeRole">-</span></p>
-                    <p><strong>🎂 DOB:</strong> <span id="welcomeDob">-</span></p>
-                </div>
-
-                <button class="btn" onclick="enterApp()">Enter App →</button>
-            </div>
-
+        <!-- Step Dots -->
+        <div class="steps" id="stepDots">
+            <span class="dot active" data-s="1"></span>
+            <span class="dot" data-s="2"></span>
+            <span class="dot" data-s="3"></span>
+            <span class="dot" data-s="4"></span>
         </div>
 
-        <!-- ========== DASHBOARD (After Signup) ========== -->
-        <div id="dashboard">
-            <div class="dashboard-header">
-                <div class="user-info">
-                    👋 <strong id="dashName">User</strong> · <span id="dashRole">Learner</span>
+        <!-- ===== STEP 1 — Role + DOB ===== -->
+        <div class="step active" data-s="1">
+            <h2>👋 Welcome to Synapse</h2>
+            <p class="desc">Sign up as a learner today! First, we need your date of birth to help us give you the best experience.</p>
+
+            <div class="field">
+                <label>I am a...</label>
+                <div class="role-grid" id="roleGrid">
+                    <div class="role-box" data-role="learner" onclick="pickRole(this)">
+                        <span class="icon">📖</span>
+                        <span class="label">Learner</span>
+                    </div>
+                    <div class="role-box" data-role="teacher" onclick="pickRole(this)">
+                        <span class="icon">👨‍🏫</span>
+                        <span class="label">Teacher</span>
+                    </div>
                 </div>
-                <div>
-                    <span id="dashBadge"></span>
-                    <button class="logout-btn" onclick="logout()">🚪 Logout</button>
+                <div class="hint" id="roleHint">Please select a role</div>
+            </div>
+
+            <div class="row">
+                <div class="field">
+                    <label>Month</label>
+                    <select id="dobMonth">
+                        <option value="">Month</option>
+                        <option value="January">January</option>
+                        <option value="February">February</option>
+                        <option value="March">March</option>
+                        <option value="April">April</option>
+                        <option value="May">May</option>
+                        <option value="June">June</option>
+                        <option value="July">July</option>
+                        <option value="August">August</option>
+                        <option value="September">September</option>
+                        <option value="October">October</option>
+                        <option value="November">November</option>
+                        <option value="December">December</option>
+                    </select>
+                </div>
+                <div class="field">
+                    <label>Year</label>
+                    <select id="dobYear">
+                        <option value="">Year</option>
+                        <option value="2024">2024</option>
+                        <option value="2023">2023</option>
+                        <option value="2022">2022</option>
+                        <option value="2021">2021</option>
+                        <option value="2020">2020</option>
+                        <option value="2019">2019</option>
+                        <option value="2018">2018</option>
+                        <option value="2017">2017</option>
+                        <option value="2016">2016</option>
+                        <option value="2015">2015</option>
+                        <option value="2014">2014</option>
+                        <option value="2013">2013</option>
+                        <option value="2012">2012</option>
+                        <option value="2011">2011</option>
+                        <option value="2010">2010</option>
+                        <option value="2009">2009</option>
+                        <option value="2008">2008</option>
+                        <option value="2007">2007</option>
+                        <option value="2006">2006</option>
+                        <option value="2005">2005</option>
+                        <option value="2004">2004</option>
+                        <option value="2003">2003</option>
+                        <option value="2002">2002</option>
+                        <option value="2001">2001</option>
+                        <option value="2000">2000</option>
+                        <option value="1999">1999</option>
+                        <option value="1998">1998</option>
+                        <option value="1997">1997</option>
+                        <option value="1996">1996</option>
+                        <option value="1995">1995</option>
+                        <option value="1994">1994</option>
+                        <option value="1993">1993</option>
+                        <option value="1992">1992</option>
+                        <option value="1991">1991</option>
+                        <option value="1990">1990</option>
+                        <option value="1989">1989</option>
+                        <option value="1988">1988</option>
+                        <option value="1987">1987</option>
+                        <option value="1986">1986</option>
+                        <option value="1985">1985</option>
+                        <option value="1984">1984</option>
+                        <option value="1983">1983</option>
+                        <option value="1982">1982</option>
+                        <option value="1981">1981</option>
+                        <option value="1980">1980</option>
+                        <option value="1979">1979</option>
+                        <option value="1978">1978</option>
+                        <option value="1977">1977</option>
+                        <option value="1976">1976</option>
+                        <option value="1975">1975</option>
+                        <option value="1974">1974</option>
+                        <option value="1973">1973</option>
+                        <option value="1972">1972</option>
+                        <option value="1971">1971</option>
+                        <option value="1970">1970</option>
+                    </select>
+                </div>
+            </div>
+            <div class="hint" id="dobHint">Please select both month and year</div>
+
+            <button class="btn btn-primary" onclick="goStep(2)">Continue →</button>
+        </div>
+
+        <!-- ===== STEP 2 — Email + Password ===== -->
+        <div class="step" data-s="2">
+            <h2>🔐 Create Your Account</h2>
+            <p class="desc">Enter your email and choose a password to get started.</p>
+
+            <div class="field">
+                <label>Email Address</label>
+                <input type="email" id="emailInput" placeholder="you@example.com" autocomplete="email" />
+                <div class="hint" id="emailHint">Please enter a valid email</div>
+            </div>
+
+            <div class="field">
+                <label>Password</label>
+                <input type="password" id="passwordInput" placeholder="Create a password" autocomplete="new-password" />
+                <div class="hint" id="passwordHint">Password must be at least 6 characters</div>
+            </div>
+
+            <div class="btn-group">
+                <button class="btn btn-secondary" onclick="goStep(1)">← Back</button>
+                <button class="btn btn-primary" onclick="goStep(3)">Continue →</button>
+            </div>
+        </div>
+
+        <!-- ===== STEP 3 — First + Last Name ===== -->
+        <div class="step" data-s="3">
+            <h2>📝 Tell Us About Yourself</h2>
+            <p class="desc">We need to know a bit more about you to finish setting up your profile.</p>
+
+            <div class="row">
+                <div class="field">
+                    <label>First Name</label>
+                    <input type="text" id="firstNameInput" placeholder="First name" />
+                    <div class="hint" id="firstNameHint">Please enter your first name</div>
+                </div>
+                <div class="field">
+                    <label>Last Name</label>
+                    <input type="text" id="lastNameInput" placeholder="Last name" />
+                    <div class="hint" id="lastNameHint">Please enter your last name</div>
                 </div>
             </div>
 
-            <div id="subscriptionStatus"></div>
-
-            <div class="chat-area">
-                <div class="chat-history" id="chatHistory">
-                    <div class="message assistant">👋 Welcome back! Ask me anything and I'll guide you step by step.</div>
-                </div>
-
-                <div class="input-group">
-                    <input type="text" id="messageInput" placeholder="Type your message or speak..." onkeypress="if(event.key==='Enter') sendMessage()">
-                    <button class="btn-voice" id="voiceBtn" onclick="toggleVoiceInput()" title="Speak">🎤</button>
-                    <button class="btn-send" id="sendBtn" onclick="sendMessage()">Send</button>
-                </div>
-
-                <div class="voice-toggle">
-                    <input type="checkbox" id="speakToggle" checked>
-                    <label for="speakToggle">🔊 AI reads responses aloud</label>
-                    <span style="margin-left:auto;font-size:0.8rem;color:#aaa;" id="voiceStatus">Ready</span>
-                </div>
-
-                <div id="statusMessage" style="color:#888;font-size:0.85rem;margin-top:8px;"></div>
+            <div class="btn-group">
+                <button class="btn btn-secondary" onclick="goStep(2)">← Back</button>
+                <button class="btn btn-primary" onclick="finishSignup()">Complete Signup 🎉</button>
             </div>
+        </div>
+
+        <!-- ===== STEP 4 — Welcome ===== -->
+        <div class="step" data-s="4">
+            <div class="welcome">
+                <span class="big">🎉</span>
+                <h2>Welcome to <span>Synapse</span>!</h2>
+                <p class="sub">Your AI tutor is ready to guide you.</p>
+            </div>
+
+            <div class="summary" id="welcomeSummary">
+                <p><strong>👤 Name:</strong> <span id="wName">-</span></p>
+                <p><strong>📧 Email:</strong> <span id="wEmail">-</span></p>
+                <p><strong>🎯 Role:</strong> <span id="wRole">-</span></p>
+                <p><strong>🎂 DOB:</strong> <span id="wDob">-</span></p>
+            </div>
+
+            <button class="btn btn-primary" onclick="enterApp()">Enter App →</button>
         </div>
 
     </div>
 
-    <script>
-        // ========== STATE ==========
-        let appState = {
-            role: '',
-            dobMonth: '',
-            dobYear: '',
-            email: '',
-            password: '',
-            firstName: '',
-            lastName: '',
-            userId: '',
-            isLoggedIn: false
-        };
+    <!-- ============================================================ -->
+    <!-- ===== DASHBOARD ===== -->
+    <!-- ============================================================ -->
+    <div id="dashboard">
 
-        // ========== STEP NAVIGATION ==========
-        function goToStep(step) {
-            // Validate current step before moving forward
-            if (step === 2 && !validateStep1()) return;
-            if (step === 3 && !validateStep2()) return;
+        <div class="dash-header">
+            <div class="dash-user">
+                👋 <strong id="dashName">User</strong> · <span id="dashRole">Learner</span>
+            </div>
+            <div class="dash-actions">
+                <span id="dashBadge"></span>
+                <button class="logout-btn" onclick="logout()">🚪 Logout</button>
+            </div>
+        </div>
 
-            // Hide all steps
-            document.querySelectorAll('.form-step').forEach(el => el.classList.remove('active'));
+        <div id="dashSubscription"></div>
 
-            // Show target step
-            const target = document.querySelector(`.form-step[data-step="${step}"]`);
-            if (target) target.classList.add('active');
+        <div class="chat-box" id="chatBox">
+            <div class="msg bot">👋 Welcome back! Ask me anything — I'll guide you step by step.</div>
+        </div>
 
-            // Update dots
-            document.querySelectorAll('.step-dot').forEach((dot, index) => {
-                dot.classList.remove('active', 'done');
-                if (index + 1 === step) dot.classList.add('active');
-                else if (index + 1 < step) dot.classList.add('done');
-            });
+        <div class="chat-input">
+            <input type="text" id="chatInput" placeholder="Type your message or speak..." onkeypress="if(event.key==='Enter') sendChat()" />
+            <button class="btn-voice" id="voiceBtn" onclick="toggleVoice()" title="Speak">🎤</button>
+            <button class="btn-send" id="sendBtn" onclick="sendChat()">Send</button>
+        </div>
 
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
+        <div class="chat-options">
+            <input type="checkbox" id="speakToggle" checked />
+            <label for="speakToggle">🔊 AI reads responses aloud</label>
+            <span style="margin-left:auto;font-size:0.8rem;color:#9ca3af;" id="voiceStatus">Ready</span>
+        </div>
 
-        // ========== STEP 1 VALIDATION ==========
-        function validateStep1() {
-            let valid = true;
+        <div id="chatStatus" style="font-size:0.8rem;color:#9ca3af;margin-top:8px;"></div>
+    </div>
 
-            // Role
-            const role = document.querySelector('.role-option.selected');
-            if (!role) {
-                document.getElementById('roleError').classList.add('show');
-                valid = false;
-            } else {
-                document.getElementById('roleError').classList.remove('show');
-                appState.role = role.dataset.role;
-            }
+</div>
 
-            // DOB
-            const month = document.getElementById('dobMonth').value;
-            const year = document.getElementById('dobYear').value;
-            if (!month || !year) {
-                document.getElementById('dobError').classList.add('show');
-                valid = false;
-            } else {
-                document.getElementById('dobError').classList.remove('show');
-                appState.dobMonth = month;
-                appState.dobYear = year;
-            }
+<!-- ============================================================ -->
+<!-- ===== JAVASCRIPT ===== -->
+<!-- ============================================================ -->
+<script>
+    // ================================================================
+    //  STATE
+    // ================================================================
+    const S = {
+        role: '',
+        dobMonth: '',
+        dobYear: '',
+        email: '',
+        password: '',
+        firstName: '',
+        lastName: '',
+        userId: '',
+        loggedIn: false
+    };
 
-            return valid;
-        }
+    // ================================================================
+    //  STEP NAVIGATION
+    // ================================================================
+    function goStep(n) {
+        // Validate before moving forward
+        if (n === 2 && !validateStep1()) return;
+        if (n === 3 && !validateStep2()) return;
+        if (n === 4 && !validateStep3()) return;
 
-        // ========== STEP 2 VALIDATION ==========
-        function validateStep2() {
-            let valid = true;
+        // Hide all
+        document.querySelectorAll('.step').forEach(el => el.classList.remove('active'));
 
-            const email = document.getElementById('emailInput').value.trim();
-            const password = document.getElementById('passwordInput').value;
+        // Show target
+        const target = document.querySelector(`.step[data-s="${n}"]`);
+        if (target) target.classList.add('active');
 
-            if (!email || !email.includes('@') || !email.includes('.')) {
-                document.getElementById('emailError').classList.add('show');
-                valid = false;
-            } else {
-                document.getElementById('emailError').classList.remove('show');
-                appState.email = email;
-            }
-
-            if (password.length < 6) {
-                document.getElementById('passwordError').classList.add('show');
-                valid = false;
-            } else {
-                document.getElementById('passwordError').classList.remove('show');
-                appState.password = password;
-            }
-
-            return valid;
-        }
-
-        // ========== ROLE SELECTION ==========
-        function selectRole(el) {
-            document.querySelectorAll('.role-option').forEach(opt => opt.classList.remove('selected'));
-            el.classList.add('selected');
-            document.getElementById('roleError').classList.remove('show');
-        }
-
-        // ========== COMPLETE SIGNUP ==========
-        function completeSignup() {
-            // Validate step 3
-            const firstName = document.getElementById('firstNameInput').value.trim();
-            const lastName = document.getElementById('lastNameInput').value.trim();
-
-            let valid = true;
-            if (!firstName) {
-                document.getElementById('firstNameError').classList.add('show');
-                valid = false;
-            } else {
-                document.getElementById('firstNameError').classList.remove('show');
-                appState.firstName = firstName;
-            }
-
-            if (!lastName) {
-                document.getElementById('lastNameError').classList.add('show');
-                valid = false;
-            } else {
-                document.getElementById('lastNameError').classList.remove('show');
-                appState.lastName = lastName;
-            }
-
-            if (!valid) return;
-
-            // Generate userId from email
-            appState.userId = 'user_' + appState.email.replace(/[^a-zA-Z0-9]/g, '_');
-
-            // Show welcome screen
-            document.getElementById('welcomeName').textContent = `${firstName} ${lastName}`;
-            document.getElementById('welcomeEmail').textContent = appState.email;
-            document.getElementById('welcomeRole').textContent = appState.role.charAt(0).toUpperCase() + appState.role.slice(1);
-            document.getElementById('welcomeDob').textContent = `${appState.dobMonth} ${appState.dobYear}`;
-
-            goToStep(4);
-        }
-
-        // ========== ENTER APP ==========
-        function enterApp() {
-            document.getElementById('signupFlow').style.display = 'none';
-            document.getElementById('dashboard').classList.add('active');
-
-            // Set user name in dashboard
-            document.getElementById('dashName').textContent = `${appState.firstName} ${appState.lastName}`;
-            document.getElementById('dashRole').textContent = appState.role.charAt(0).toUpperCase() + appState.role.slice(1);
-
-            // Save profile to backend
-            saveProfileToBackend();
-
-            // Check subscription
-            checkSubscriptionStatus();
-
-            // Focus input
-            document.getElementById('messageInput').focus();
-        }
-
-        // ========== SAVE PROFILE TO BACKEND ==========
-        async function saveProfileToBackend() {
-            try {
-                await fetch('/save-profile', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        userId: appState.userId,
-                        name: `${appState.firstName} ${appState.lastName}`,
-                        country: 'Not specified',
-                        grade: appState.role === 'teacher' ? 'Teacher' : 'Student'
-                    })
-                });
-            } catch (err) {
-                console.error('Profile save error:', err);
-            }
-        }
-
-        // ========== LOGOUT ==========
-        function logout() {
-            if (confirm('Are you sure you want to logout?')) {
-                location.reload();
-            }
-        }
-
-        // ========== SEND MESSAGE ==========
-        async function sendMessage() {
-            const input = document.getElementById('messageInput');
-            const message = input.value.trim();
-            if (!message) return;
-
-            addMessage('user', message);
-            input.value = '';
-            input.disabled = true;
-
-            const sendBtn = document.getElementById('sendBtn');
-            sendBtn.disabled = true;
-            sendBtn.textContent = '⏳';
-
-            try {
-                const response = await fetch('/chat', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ userId: appState.userId, message: `[General] ${message}` })
-                });
-                const data = await response.json();
-
-                if (data.reply) {
-                    addMessage('assistant', data.reply);
-                } else {
-                    addMessage('assistant', '❌ ' + (data.error || 'No response'));
-                }
-                checkSubscriptionStatus();
-            } catch (error) {
-                addMessage('assistant', '❌ Server not reachable. Please try again.');
-            } finally {
-                input.disabled = false;
-                input.focus();
-                sendBtn.disabled = false;
-                sendBtn.textContent = 'Send';
-            }
-        }
-
-        // ========== ADD MESSAGE ==========
-        function addMessage(role, content) {
-            const history = document.getElementById('chatHistory');
-            const div = document.createElement('div');
-            div.className = 'message ' + role;
-            div.innerHTML = content.replace(/\n/g, '<br>');
-            history.appendChild(div);
-            history.scrollTop = history.scrollHeight;
-
-            if (role === 'assistant' && document.getElementById('speakToggle').checked) {
-                speakText(content);
-            }
-        }
-
-        // ========== VOICE INPUT ==========
-        let recognition = null;
-        let isListening = false;
-
-        function toggleVoiceInput() {
-            const btn = document.getElementById('voiceBtn');
-            const status = document.getElementById('voiceStatus');
-
-            if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
-                alert('Voice input requires Chrome, Edge, or Android browser.');
-                return;
-            }
-
-            if (isListening) {
-                if (recognition) recognition.stop();
-                isListening = false;
-                btn.classList.remove('listening');
-                btn.textContent = '🎤';
-                status.textContent = 'Ready';
-                return;
-            }
-
-            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-            recognition = new SpeechRecognition();
-            recognition.lang = 'en-US';
-            recognition.interimResults = false;
-
-            isListening = true;
-            btn.classList.add('listening');
-            btn.textContent = '⏹️';
-            status.textContent = '🎤 Listening...';
-
-            recognition.onresult = (event) => {
-                const transcript = event.results[0][0].transcript;
-                document.getElementById('messageInput').value = transcript;
-                status.textContent = '✅ Heard: "' + transcript + '"';
-                btn.classList.remove('listening');
-                btn.textContent = '🎤';
-                isListening = false;
-                setTimeout(() => sendMessage(), 300);
-            };
-
-            recognition.onerror = (event) => {
-                status.textContent = '❌ Error: ' + event.error;
-                btn.classList.remove('listening');
-                btn.textContent = '🎤';
-                isListening = false;
-            };
-
-            recognition.onend = () => {
-                btn.classList.remove('listening');
-                btn.textContent = '🎤';
-                isListening = false;
-            };
-
-            recognition.start();
-        }
-
-        // ========== TEXT TO SPEECH ==========
-        function speakText(text) {
-            if (!('speechSynthesis' in window)) return;
-
-            let cleanText = text
-                .replace(/\*\*/g, '')
-                .replace(/#/g, '')
-                .replace(/📚|🎯|✏️|🤔/g, '')
-                .replace(/\n/g, '. ');
-
-            if (cleanText.length > 300) {
-                cleanText = cleanText.substring(0, 300) + '...';
-            }
-
-            window.speechSynthesis.cancel();
-            const utterance = new SpeechSynthesisUtterance(cleanText);
-            utterance.lang = 'en-US';
-            utterance.rate = 0.85;
-            utterance.pitch = 1.0;
-            utterance.volume = 1;
-
-            const voices = window.speechSynthesis.getVoices();
-            const preferred = voices.find(v => v.lang.includes('en') && v.name.includes('Google'));
-            if (preferred) utterance.voice = preferred;
-
-            window.speechSynthesis.speak(utterance);
-        }
-
-        // ========== SUBSCRIPTION STATUS ==========
-        async function checkSubscriptionStatus() {
-            try {
-                const response = await fetch('/subscription-status/' + appState.userId);
-                const data = await response.json();
-                const badge = document.getElementById('dashBadge');
-                if (data.status === 'trial') {
-                    badge.innerHTML = `<span class="status-badge status-trial">📝 Trial • ${data.daysRemaining || 3}d</span>`;
-                } else if (data.status === 'active') {
-                    badge.innerHTML = `<span class="status-badge status-active">✅ Premium</span>`;
-                } else {
-                    badge.innerHTML = `<span class="status-badge status-expired">⛔ Expired</span>`;
-                }
-            } catch (err) {
-                console.error('Status check error:', err);
-            }
-        }
-
-        // ========== KEYBOARD SHORTCUTS ==========
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Enter' && document.getElementById('dashboard').classList.contains('active')) {
-                const input = document.getElementById('messageInput');
-                if (document.activeElement === input) {
-                    e.preventDefault();
-                    sendMessage();
-                }
-            }
+        // Update dots
+        document.querySelectorAll('.dot').forEach((dot, i) => {
+            const step = i + 1;
+            dot.classList.remove('active', 'done');
+            if (step === n) dot.classList.add('active');
+            else if (step < n) dot.classList.add('done');
         });
 
-        // ========== INIT ==========
-        console.log('🧠 Synapse AI Tutor loaded');
-        console.log('📱 Ready for signup');
-    </script>
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // ================================================================
+    //  STEP 1 — ROLE + DOB
+    // ================================================================
+    function pickRole(el) {
+        document.querySelectorAll('.role-box').forEach(b => b.classList.remove('selected'));
+        el.classList.add('selected');
+        document.getElementById('roleHint').classList.remove('show');
+        S.role = el.dataset.role;
+    }
+
+    function validateStep1() {
+        let ok = true;
+
+        // Role
+        const sel = document.querySelector('.role-box.selected');
+        if (!sel) {
+            document.getElementById('roleHint').classList.add('show');
+            ok = false;
+        } else {
+            document.getElementById('roleHint').classList.remove('show');
+            S.role = sel.dataset.role;
+        }
+
+        // DOB
+        const m = document.getElementById('dobMonth').value;
+        const y = document.getElementById('dobYear').value;
+        if (!m || !y) {
+            document.getElementById('dobHint').classList.add('show');
+            ok = false;
+        } else {
+            document.getElementById('dobHint').classList.remove('show');
+            S.dobMonth = m;
+            S.dobYear = y;
+        }
+
+        return ok;
+    }
+
+    // ================================================================
+    //  STEP 2 — EMAIL + PASSWORD
+    // ================================================================
+    function validateStep2() {
+        let ok = true;
+
+        const email = document.getElementById('emailInput').value.trim();
+        const pass = document.getElementById('passwordInput').value;
+
+        if (!email || !email.includes('@') || !email.includes('.')) {
+            document.getElementById('emailHint').classList.add('show');
+            ok = false;
+        } else {
+            document.getElementById('emailHint').classList.remove('show');
+            S.email = email;
+        }
+
+        if (pass.length < 6) {
+            document.getElementById('passwordHint').classList.add('show');
+            ok = false;
+        } else {
+            document.getElementById('passwordHint').classList.remove('show');
+            S.password = pass;
+        }
+
+        return ok;
+    }
+
+    // ================================================================
+    //  STEP 3 — FIRST + LAST NAME
+    // ================================================================
+    function validateStep3() {
+        let ok = true;
+
+        const f = document.getElementById('firstNameInput').value.trim();
+        const l = document.getElementById('lastNameInput').value.trim();
+
+        if (!f) {
+            document.getElementById('firstNameHint').classList.add('show');
+            ok = false;
+        } else {
+            document.getElementById('firstNameHint').classList.remove('show');
+            S.firstName = f;
+        }
+
+        if (!l) {
+            document.getElementById('lastNameHint').classList.add('show');
+            ok = false;
+        } else {
+            document.getElementById('lastNameHint').classList.remove('show');
+            S.lastName = l;
+        }
+
+        return ok;
+    }
+
+    // ================================================================
+    //  FINISH SIGNUP → STEP 4
+    // ================================================================
+    function finishSignup() {
+        if (!validateStep3()) return;
+
+        S.userId = 'user_' + S.email.replace(/[^a-zA-Z0-9]/g, '_');
+
+        document.getElementById('wName').textContent = `${S.firstName} ${S.lastName}`;
+        document.getElementById('wEmail').textContent = S.email;
+        document.getElementById('wRole').textContent = S.role.charAt(0).toUpperCase() + S.role.slice(1);
+        document.getElementById('wDob').textContent = `${S.dobMonth} ${S.dobYear}`;
+
+        goStep(4);
+    }
+
+    // ================================================================
+    //  ENTER APP
+    // ================================================================
+    function enterApp() {
+        document.getElementById('signupFlow').style.display = 'none';
+        document.getElementById('dashboard').classList.add('active');
+
+        document.getElementById('dashName').textContent = `${S.firstName} ${S.lastName}`;
+        document.getElementById('dashRole').textContent = S.role.charAt(0).toUpperCase() + S.role.slice(1);
+
+        saveProfile();
+        checkSubscription();
+        document.getElementById('chatInput').focus();
+    }
+
+    // ================================================================
+    //  SAVE PROFILE TO BACKEND
+    // ================================================================
+    async function saveProfile() {
+        try {
+            await fetch('/save-profile', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    userId: S.userId,
+                    name: `${S.firstName} ${S.lastName}`,
+                    country: 'Not specified',
+                    grade: S.role === 'teacher' ? 'Teacher' : 'Student'
+                })
+            });
+        } catch (_) { /* ignore */ }
+    }
+
+    // ================================================================
+    //  LOGOUT
+    // ================================================================
+    function logout() {
+        if (confirm('Logout?')) location.reload();
+    }
+
+    // ================================================================
+    //  CHAT
+    // ================================================================
+    async function sendChat() {
+        const input = document.getElementById('chatInput');
+        const msg = input.value.trim();
+        if (!msg) return;
+
+        addMessage('user', msg);
+        input.value = '';
+        input.disabled = true;
+
+        const btn = document.getElementById('sendBtn');
+        btn.disabled = true;
+        btn.textContent = '⏳';
+
+        try {
+            const res = await fetch('/chat', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ userId: S.userId, message: `[General] ${msg}` })
+            });
+            const data = await res.json();
+
+            if (data.reply) {
+                addMessage('bot', data.reply);
+            } else {
+                addMessage('bot', '❌ ' + (data.error || 'No response'));
+            }
+            checkSubscription();
+        } catch (_) {
+            addMessage('bot', '❌ Server not reachable. Please try again.');
+        } finally {
+            input.disabled = false;
+            input.focus();
+            btn.disabled = false;
+            btn.textContent = 'Send';
+        }
+    }
+
+    function addMessage(role, text) {
+        const box = document.getElementById('chatBox');
+        const div = document.createElement('div');
+        div.className = 'msg ' + (role === 'user' ? 'user' : 'bot');
+        div.innerHTML = text.replace(/\n/g, '<br>');
+        box.appendChild(div);
+        box.scrollTop = box.scrollHeight;
+
+        if (role === 'bot' && document.getElementById('speakToggle').checked) {
+            speak(text);
+        }
+    }
+
+    // ================================================================
+    //  VOICE INPUT
+    // ================================================================
+    let recognition = null;
+    let listening = false;
+
+    function toggleVoice() {
+        const btn = document.getElementById('voiceBtn');
+        const st = document.getElementById('voiceStatus');
+
+        if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
+            alert('Voice input requires Chrome, Edge, or Android browser.');
+            return;
+        }
+
+        if (listening) {
+            if (recognition) recognition.stop();
+            listening = false;
+            btn.classList.remove('listening');
+            btn.textContent = '🎤';
+            st.textContent = 'Ready';
+            return;
+        }
+
+        const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+        recognition = new SR();
+        recognition.lang = 'en-US';
+        recognition.interimResults = false;
+
+        listening = true;
+        btn.classList.add('listening');
+        btn.textContent = '⏹️';
+        st.textContent = '🎤 Listening...';
+
+        recognition.onresult = (e) => {
+            const text = e.results[0][0].transcript;
+            document.getElementById('chatInput').value = text;
+            st.textContent = '✅ "' + text + '"';
+            btn.classList.remove('listening');
+            btn.textContent = '🎤';
+            listening = false;
+            setTimeout(sendChat, 300);
+        };
+
+        recognition.onerror = (e) => {
+            st.textContent = '❌ ' + e.error;
+            btn.classList.remove('listening');
+            btn.textContent = '🎤';
+            listening = false;
+        };
+
+        recognition.onend = () => {
+            btn.classList.remove('listening');
+            btn.textContent = '🎤';
+            listening = false;
+        };
+
+        recognition.start();
+    }
+
+    // ================================================================
+    //  TEXT TO SPEECH
+    // ================================================================
+    function speak(text) {
+        if (!('speechSynthesis' in window)) return;
+
+        let clean = text
+            .replace(/\*\*/g, '')
+            .replace(/#/g, '')
+            .replace(/📚|🎯|✏️|🤔/g, '')
+            .replace(/\n/g, '. ');
+
+        if (clean.length > 350) clean = clean.substring(0, 350) + '...';
+
+        window.speechSynthesis.cancel();
+
+        const u = new SpeechSynthesisUtterance(clean);
+        u.lang = 'en-US';
+        u.rate = 0.85;
+        u.pitch = 1.0;
+        u.volume = 1;
+
+        const voices = window.speechSynthesis.getVoices();
+        const best = voices.find(v => v.lang.includes('en') && v.name.includes('Google'));
+        if (best) u.voice = best;
+
+        window.speechSynthesis.speak(u);
+    }
+
+    // ================================================================
+    //  SUBSCRIPTION STATUS
+    // ================================================================
+    async function checkSubscription() {
+        try {
+            const res = await fetch('/subscription-status/' + S.userId);
+            const data = await res.json();
+            const badge = document.getElementById('dashBadge');
+            const subDiv = document.getElementById('dashSubscription');
+
+            let label = '';
+            let cls = '';
+            if (data.status === 'trial') {
+                cls = 'badge-trial';
+                label = `📝 Trial • ${data.daysRemaining || 3}d left`;
+            } else if (data.status === 'active') {
+                cls = 'badge-active';
+                label = '✅ Premium Active';
+            } else {
+                cls = 'badge-expired';
+                label = '⛔ ' + (data.status || 'Expired');
+            }
+            badge.innerHTML = `<span class="badge ${cls}">${label}</span>`;
+            subDiv.innerHTML = '';
+        } catch (_) { /* ignore */ }
+    }
+
+    // ================================================================
+    //  INIT
+    // ================================================================
+    console.log('🧠 Synapse AI Tutor loaded');
+
+    // Preload voices
+    if ('speechSynthesis' in window) {
+        window.speechSynthesis.getVoices();
+        window.speechSynthesis.onvoiceschanged = () => { window.speechSynthesis.getVoices(); };
+    }
+
+    // Enter key in chat
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter' && document.getElementById('dashboard').classList.contains('active')) {
+            const input = document.getElementById('chatInput');
+            if (document.activeElement === input) {
+                e.preventDefault();
+                sendChat();
+            }
+        }
+    });
+</script>
+
 </body>
 </html>
