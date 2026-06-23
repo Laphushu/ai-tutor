@@ -2,10 +2,14 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>Synapse — AI Tutor</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Synapse</title>
     <style>
-        * { margin:0; padding:0; box-sizing:border-box; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
         body {
             font-family: 'Segoe UI', system-ui, sans-serif;
             background: #f0f4f8;
@@ -20,42 +24,131 @@
             border-radius: 28px;
             padding: 40px 36px;
             max-width: 420px;
-            width:100%;
+            width: 100%;
             box-shadow: 0 24px 80px rgba(0,0,0,0.08);
         }
-        .logo { text-align:center; margin-bottom:24px; }
-        .logo h1 { font-size:2.2rem; font-weight:800; color:#0b1120; }
-        .logo h1 span { background:linear-gradient(135deg,#6366f1,#a855f7); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
-        .logo p { color:#6b7280; font-size:0.95rem; }
-        h2 { font-size:1.4rem; font-weight:700; color:#0b1120; margin-bottom:4px; }
-        .sub { color:#6b7280; font-size:0.95rem; margin-bottom:20px; }
-        .field { margin-bottom:16px; }
-        .field label { display:block; font-weight:600; font-size:0.85rem; color:#1f2937; margin-bottom:4px; }
-        .field input, .field select {
-            width:100%; padding:14px 16px; border:2px solid #e5e7eb; border-radius:12px;
-            font-size:1rem; background:#fff; font-family:inherit;
+        .logo {
+            text-align: center;
+            margin-bottom: 24px;
         }
-        .field input:focus, .field select:focus { outline:none; border-color:#6366f1; }
+        .logo h1 {
+            font-size: 2.2rem;
+            font-weight: 800;
+            color: #0b1120;
+        }
+        .logo h1 span {
+            background: linear-gradient(135deg, #6366f1, #a855f7);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .logo p {
+            color: #6b7280;
+            font-size: 0.95rem;
+        }
+        h2 {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #0b1120;
+            margin-bottom: 4px;
+        }
+        .sub {
+            color: #6b7280;
+            font-size: 0.95rem;
+            margin-bottom: 20px;
+        }
+        .field {
+            margin-bottom: 16px;
+        }
+        .field label {
+            display: block;
+            font-weight: 600;
+            font-size: 0.85rem;
+            color: #1f2937;
+            margin-bottom: 4px;
+        }
+        .field input,
+        .field select {
+            width: 100%;
+            padding: 14px 16px;
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            font-size: 1rem;
+            background: #fff;
+            font-family: inherit;
+        }
+        .field input:focus,
+        .field select:focus {
+            outline: none;
+            border-color: #6366f1;
+        }
         .btn {
-            width:100%; padding:15px; border:none; border-radius:12px; font-size:1rem;
-            font-weight:700; cursor:pointer; background:linear-gradient(135deg,#6366f1,#8b5cf6);
-            color:#fff; transition:transform 0.15s;
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            color: #fff;
+            transition: transform 0.15s;
         }
-        .btn:hover { transform:translateY(-2px); }
-        .btn:disabled { opacity:0.6; cursor:not-allowed; }
-        .auth-link { text-align:center; margin-top:16px; font-size:0.9rem; color:#6b7280; }
-        .auth-link a { color:#6366f1; text-decoration:none; font-weight:600; cursor:pointer; }
-        .auth-link a:hover { text-decoration:underline; }
-        .error { color:#ef4444; font-size:0.85rem; margin-top:4px; display:none; }
-        .error.show { display:block; }
-        .success { color:#22c55e; font-size:0.85rem; margin-top:4px; display:none; }
-        .success.show { display:block; }
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+        .auth-link {
+            text-align: center;
+            margin-top: 16px;
+            font-size: 0.9rem;
+            color: #6b7280;
+        }
+        .auth-link a {
+            color: #6366f1;
+            text-decoration: none;
+            font-weight: 600;
+            cursor: pointer;
+        }
+        .auth-link a:hover {
+            text-decoration: underline;
+        }
+        .error {
+            color: #ef4444;
+            font-size: 0.85rem;
+            margin-top: 4px;
+            display: none;
+        }
+        .error.show {
+            display: block;
+        }
+        .success {
+            color: #22c55e;
+            font-size: 0.85rem;
+            margin-top: 4px;
+            display: none;
+        }
+        .success.show {
+            display: block;
+        }
         .spinner {
-            display:inline-block; width:20px; height:20px; border:3px solid rgba(255,255,255,0.25);
-            border-top-color:#fff; border-radius:50%; animation:spin 0.7s linear infinite;
-            vertical-align:middle; margin-right:8px;
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,0.25);
+            border-top-color: #fff;
+            border-radius: 50%;
+            animation: spin 0.7s linear infinite;
+            vertical-align: middle;
+            margin-right: 8px;
         }
-        @keyframes spin { to { transform:rotate(360deg); } }
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
     </style>
 </head>
 <body>
@@ -209,12 +302,10 @@
                 }
 
                 if (data.success) {
-                    // Store user in localStorage
                     localStorage.setItem('synapse_user', JSON.stringify(data.user));
-                    // Redirect to the main app (we'll build it later)
                     showSuccess('loginSuccess', 'Login successful! Redirecting...');
                     setTimeout(() => {
-                        window.location.href = '/dashboard.html'; // we'll create later
+                        window.location.href = '/dashboard.html';
                     }, 1000);
                 }
             } catch (err) {
@@ -235,7 +326,6 @@
                 showError('signupError', 'Please fill all fields');
                 return;
             }
-
             if (password.length < 6) {
                 showError('signupError', 'Password must be at least 6 characters');
                 return;
@@ -273,11 +363,9 @@
             }
         }
 
-        // Check if user already logged in
+        // Check if already logged in
         const storedUser = localStorage.getItem('synapse_user');
         if (storedUser) {
-            // Redirect to dashboard (we'll create later)
-            // For now, just show a message
             document.querySelector('.card').innerHTML = `
                 <div style="text-align:center;padding:20px;">
                     <h2>Welcome back!</h2>

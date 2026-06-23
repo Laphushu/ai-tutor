@@ -24,38 +24,24 @@ const db = new Pool({
   ssl: { rejectUnauthorized: false }
 });
 
-// ================= INIT TABLES + MIGRATIONS =================
+// ================= INIT TABLES (COMPLETE) =================
 async function initDB() {
   try {
-    // 1. Create users table (if not exists)
+    // Users table with ALL columns
     await db.query(`
       CREATE TABLE IF NOT EXISTS users (
         userId TEXT PRIMARY KEY,
+        email TEXT UNIQUE,
+        password TEXT,
         name TEXT,
         country TEXT,
-        grade TEXT
+        grade TEXT,
+        role TEXT DEFAULT 'learner',
+        created_at TIMESTAMP DEFAULT NOW()
       )
     `);
 
-    // 2. Add new columns (idempotent)
-    await db.query(`ALTER TABLE users ADD COLUMN IF NOT EXISTS email TEXT`);
-    await db.query(`ALTER TABLE users ADD COLUMN IF NOT EXISTS password TEXT`);
-    await db.query(`ALTER TABLE users ADD COLUMN IF NOT EXISTS role TEXT DEFAULT 'learner'`);
-    await db.query(`ALTER TABLE users ADD COLUMN IF NOT EXISTS created_at TIMESTAMP DEFAULT NOW()`);
-    
-    // 3. Add unique constraint on email (if not exists)
-    await db.query(`
-      DO $$
-      BEGIN
-        IF NOT EXISTS (
-          SELECT 1 FROM pg_constraint WHERE conname = 'users_email_unique'
-        ) THEN
-          ALTER TABLE users ADD CONSTRAINT users_email_unique UNIQUE (email);
-        END IF;
-      END $$;
-    `);
-
-    // 4. Create messages table
+    // Messages table
     await db.query(`
       CREATE TABLE IF NOT EXISTS messages (
         id SERIAL PRIMARY KEY,
@@ -66,7 +52,7 @@ async function initDB() {
       )
     `);
 
-    // 5. Create subscriptions table
+    // Subscriptions table
     await db.query(`
       CREATE TABLE IF NOT EXISTS subscriptions (
         userId TEXT PRIMARY KEY,
@@ -75,14 +61,15 @@ async function initDB() {
       )
     `);
 
+    // Add Stripe columns if missing (safe)
     await db.query(`ALTER TABLE subscriptions ADD COLUMN IF NOT EXISTS stripeCustomerId TEXT`);
     await db.query(`ALTER TABLE subscriptions ADD COLUMN IF NOT EXISTS subscriptionEndDate TIMESTAMP`);
     await db.query(`ALTER TABLE subscriptions ADD COLUMN IF NOT EXISTS planType TEXT DEFAULT 'free'`);
 
-    console.log("✅ Database tables and migrations complete");
+    console.log("✅ Database ready with all columns");
   } catch (err) {
-    console.error("❌ Database init error:", err.message);
-    // Don't crash the app — log and continue
+    console.error("❌ DB init error:", err.message);
+    // Don't crash — the app will still try to work
   }
 }
 
@@ -113,36 +100,29 @@ app.post("/signup", async (req, res) => {
   const { email, password, name, country, role } = req.body;
 
   if (!email || !password || !name || !country) {
-    return res.status(400).json({ error: "All fields are required" });
+    return res.status(400).json({ error: "All fields required" });
   }
-
   if (password.length < 6) {
     return res.status(400).json({ error: "Password must be at least 6 characters" });
   }
 
   try {
-    // Check if user exists
     const existing = await db.query(`SELECT * FROM users WHERE email = $1`, [email]);
     if (existing.rows.length > 0) {
       return res.status(400).json({ error: "Email already registered" });
     }
 
-    // Generate userId
     const userId = 'user_' + email.replace(/[^a-zA-Z0-9]/g, '_');
-
-    // Insert user
     await db.query(
       `INSERT INTO users (userId, email, password, name, country, role)
        VALUES ($1, $2, $3, $4, $5, $6)`,
       [userId, email, password, name, country, role || 'learner']
     );
-
-    // Ensure trial subscription
     await ensureTrial(userId);
 
-    res.json({ 
-      success: true, 
-      user: { id: userId, email, name, country, role: role || 'learner' } 
+    res.json({
+      success: true,
+      user: { id: userId, email, name, country, role: role || 'learner' }
     });
   } catch (err) {
     console.error("Signup error:", err);
@@ -171,16 +151,16 @@ app.post("/login", async (req, res) => {
     const user = result.rows[0];
     await ensureTrial(user.userid);
 
-    res.json({ 
-      success: true, 
-      user: { 
-        id: user.userid, 
-        email: user.email, 
-        name: user.name, 
-        country: user.country, 
+    res.json({
+      success: true,
+      user: {
+        id: user.userid,
+        email: user.email,
+        name: user.name,
+        country: user.country,
         role: user.role,
         grade: user.grade
-      } 
+      }
     });
   } catch (err) {
     console.error("Login error:", err);
@@ -188,16 +168,14 @@ app.post("/login", async (req, res) => {
   }
 });
 
-// ================= PROFILE =================
+// ================= PROFILE UPDATE =================
 app.post("/save-profile", async (req, res) => {
   const { userId, name, country, grade } = req.body;
-
   try {
     await db.query(
       `UPDATE users SET name = $1, country = $2, grade = $3 WHERE userId = $4`,
       [name, country, grade, userId]
     );
-
     res.json({ success: true });
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -207,82 +185,58 @@ app.post("/save-profile", async (req, res) => {
 // ================= CHAT =================
 app.post("/chat", async (req, res) => {
   const { userId, message } = req.body;
-
   if (!userId || !message) {
     return res.status(400).json({ reply: "Missing userId or message" });
   }
 
   try {
     await ensureTrial(userId);
-
-    const userResult = await db.query(
-      `SELECT * FROM users WHERE userId = $1`,
-      [userId]
-    );
-
+    const userResult = await db.query(`SELECT * FROM users WHERE userId = $1`, [userId]);
     const user = userResult.rows[0];
     if (!user) {
       return res.json({ reply: "Please create your profile first." });
     }
 
-    const subResult = await db.query(
-      `SELECT * FROM subscriptions WHERE userId = $1`,
-      [userId]
-    );
-
+    const subResult = await db.query(`SELECT * FROM subscriptions WHERE userId = $1`, [userId]);
     const sub = subResult.rows[0];
     if (!sub) {
       return res.json({ reply: "Subscription error." });
     }
 
-    // Trial check
     const trialDays = 3;
     const start = new Date(sub.startdate || sub.startDate);
     const now = new Date();
     const diffDays = Math.floor((now - start) / (1000 * 60 * 60 * 24));
-
     if (sub.status === "trial" && diffDays > trialDays) {
-      return res.json({
-        reply: "Your 3-day free trial has ended. Please subscribe to continue learning."
-      });
+      return res.json({ reply: "Your 3-day free trial has ended. Please subscribe." });
     }
 
-    // Get chat history
     const messagesResult = await db.query(
-      `SELECT role, content FROM messages
-       WHERE userId = $1
-       ORDER BY id DESC
-       LIMIT 10`,
+      `SELECT role, content FROM messages WHERE userId = $1 ORDER BY id DESC LIMIT 10`,
       [userId]
     );
 
-    // Human-like teacher prompt
     const systemPrompt = `
 You are Professor Synapse, a warm and patient teacher.
 
-Your teaching style:
-1. Greet the student warmly and introduce the topic.
-2. Explain the concept clearly with simple language and real-life examples.
-3. Define new terms before using them.
-4. Show 2-3 worked examples step by step.
-5. Ask: "Do you understand so far? Would you like me to explain again?"
+Teaching style:
+1. Greet the student warmly.
+2. Explain concepts clearly with examples.
+3. Define new terms.
+4. Show 2-3 worked examples.
+5. Ask: "Do you understand? Shall I explain again?"
 6. Give one simple question to check understanding.
-7. Praise correct answers: "Great job!", "Well done!"
-8. If the student says "I don't know", explain again with different examples.
+7. Praise correct answers.
 
 Student: ${user.name}
 Grade: ${user.grade || 'Not set'}
 Country: ${user.country}`;
 
-    const history = [
-      { role: "system", content: systemPrompt }
-    ];
-
-    const reversedMessages = messagesResult.rows.reverse();
-    for (const m of reversedMessages) {
+    const history = [{ role: "system", content: systemPrompt }];
+    const reversed = messagesResult.rows.reverse();
+    for (const m of reversed) {
       history.push({ role: m.role, content: m.content });
     }
-
     history.push({ role: "user", content: message });
 
     const response = await client.chat.completions.create({
@@ -295,28 +249,22 @@ Country: ${user.country}`;
     const reply = response.choices[0].message.content;
 
     await db.query(
-      `INSERT INTO messages (userId, role, content)
-       VALUES ($1, $2, $3)`,
+      `INSERT INTO messages (userId, role, content) VALUES ($1, $2, $3)`,
       [userId, "user", message]
     );
-
     await db.query(
-      `INSERT INTO messages (userId, role, content)
-       VALUES ($1, $2, $3)`,
+      `INSERT INTO messages (userId, role, content) VALUES ($1, $2, $3)`,
       [userId, "assistant", reply]
     );
 
     res.json({ reply });
-
   } catch (err) {
     console.error("Chat error:", err);
-    res.status(500).json({ 
-      reply: "Sorry, something went wrong. Please try again." 
-    });
+    res.status(500).json({ reply: "Sorry, something went wrong." });
   }
 });
 
-// ================= CHECK SUBSCRIPTION STATUS =================
+// ================= SUBSCRIPTION STATUS =================
 app.get("/subscription-status/:userId", async (req, res) => {
   try {
     const { userId } = req.params;
@@ -324,27 +272,17 @@ app.get("/subscription-status/:userId", async (req, res) => {
       `SELECT status, startDate FROM subscriptions WHERE userId = $1`,
       [userId]
     );
-
     if (result.rows.length === 0) {
       return res.json({ status: 'trial', daysRemaining: 3 });
     }
-
     const sub = result.rows[0];
     const now = new Date();
     const start = new Date(sub.startdate);
     const diffDays = Math.floor((now - start) / (1000 * 60 * 60 * 24));
     const daysRemaining = Math.max(0, 3 - diffDays);
-
     let status = sub.status;
-    if (sub.status === 'trial' && diffDays > 3) {
-      status = 'expired';
-    }
-
-    res.json({
-      status: status,
-      daysRemaining: daysRemaining,
-      planType: 'free'
-    });
+    if (sub.status === 'trial' && diffDays > 3) status = 'expired';
+    res.json({ status, daysRemaining, planType: 'free' });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
@@ -352,8 +290,7 @@ app.get("/subscription-status/:userId", async (req, res) => {
 
 // ================= START =================
 const PORT = process.env.PORT || 5000;
-
 app.listen(PORT, () => {
   console.log("✅ Synapse AI Tutor running on port " + PORT);
-  console.log("🔐 Real authentication active");
+  console.log("🔐 Authentication ready");
 });
