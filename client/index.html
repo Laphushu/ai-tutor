@@ -3,169 +3,948 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Synapse</title>
+    <title>Synapse — AI Tutor</title>
     <style>
-        * { margin:0; padding:0; box-sizing:border-box; }
+        /* ===== RESET & BASE ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         body {
-            font-family: 'Segoe UI', system-ui, sans-serif;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
             background: #f0f4f8;
             min-height: 100vh;
+        }
+
+        /* ===== AUTH CARD ===== */
+        .auth-container {
             display: flex;
             justify-content: center;
             align-items: center;
+            min-height: 100vh;
             padding: 20px;
         }
-        .card {
+
+        .auth-card {
             background: white;
             border-radius: 28px;
             padding: 40px 36px;
             max-width: 420px;
             width: 100%;
-            box-shadow: 0 24px 80px rgba(0,0,0,0.08);
+            box-shadow: 0 24px 80px rgba(0, 0, 0, 0.08);
         }
-        .logo { text-align:center; margin-bottom:24px; }
-        .logo h1 { font-size:2.2rem; font-weight:800; color:#0b1120; }
-        .logo h1 span { background:linear-gradient(135deg,#6366f1,#a855f7); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
-        .logo p { color:#6b7280; font-size:0.95rem; }
-        h2 { font-size:1.4rem; font-weight:700; color:#0b1120; margin-bottom:4px; }
-        .sub { color:#6b7280; font-size:0.95rem; margin-bottom:20px; }
-        .field { margin-bottom:16px; }
-        .field label { display:block; font-weight:600; font-size:0.85rem; color:#1f2937; margin-bottom:4px; }
-        .field input, .field select {
-            width:100%; padding:14px 16px; border:2px solid #e5e7eb; border-radius:12px;
-            font-size:1rem; background:#fff; font-family:inherit;
+
+        .auth-card .logo {
+            text-align: center;
+            margin-bottom: 24px;
         }
-        .field input:focus, .field select:focus { outline:none; border-color:#6366f1; }
-        .btn {
-            width:100%; padding:15px; border:none; border-radius:12px; font-size:1rem;
-            font-weight:700; cursor:pointer; background:linear-gradient(135deg,#6366f1,#8b5cf6);
-            color:#fff; transition:transform 0.15s;
+
+        .auth-card .logo h1 {
+            font-size: 2.2rem;
+            font-weight: 800;
+            color: #0b1120;
         }
-        .btn:hover { transform:translateY(-2px); }
-        .btn:disabled { opacity:0.6; cursor:not-allowed; }
-        .auth-link { text-align:center; margin-top:16px; font-size:0.9rem; color:#6b7280; }
-        .auth-link a { color:#6366f1; text-decoration:none; font-weight:600; cursor:pointer; }
-        .auth-link a:hover { text-decoration:underline; }
-        .error { color:#ef4444; font-size:0.85rem; margin-top:4px; display:none; }
-        .error.show { display:block; }
-        .success { color:#22c55e; font-size:0.85rem; margin-top:4px; display:none; }
-        .success.show { display:block; }
+
+        .auth-card .logo h1 span {
+            background: linear-gradient(135deg, #6366f1, #a855f7);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .auth-card .logo p {
+            color: #6b7280;
+            font-size: 0.95rem;
+        }
+
+        .auth-card h2 {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #0b1120;
+            margin-bottom: 4px;
+        }
+
+        .auth-card .sub {
+            color: #6b7280;
+            font-size: 0.95rem;
+            margin-bottom: 20px;
+        }
+
+        .auth-card .field {
+            margin-bottom: 16px;
+        }
+
+        .auth-card .field label {
+            display: block;
+            font-weight: 600;
+            font-size: 0.85rem;
+            color: #1f2937;
+            margin-bottom: 4px;
+        }
+
+        .auth-card .field input,
+        .auth-card .field select {
+            width: 100%;
+            padding: 14px 16px;
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            font-size: 1rem;
+            background: #fff;
+            font-family: inherit;
+        }
+
+        .auth-card .field input:focus,
+        .auth-card .field select:focus {
+            outline: none;
+            border-color: #6366f1;
+        }
+
+        .auth-card .btn {
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            color: #fff;
+            transition: transform 0.15s;
+        }
+
+        .auth-card .btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .auth-card .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .auth-card .auth-link {
+            text-align: center;
+            margin-top: 16px;
+            font-size: 0.9rem;
+            color: #6b7280;
+        }
+
+        .auth-card .auth-link a {
+            color: #6366f1;
+            text-decoration: none;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .auth-card .auth-link a:hover {
+            text-decoration: underline;
+        }
+
+        .auth-card .error {
+            color: #ef4444;
+            font-size: 0.85rem;
+            margin-top: 4px;
+            display: none;
+        }
+
+        .auth-card .error.show {
+            display: block;
+        }
+
+        .auth-card .success {
+            color: #22c55e;
+            font-size: 0.85rem;
+            margin-top: 4px;
+            display: none;
+        }
+
+        .auth-card .success.show {
+            display: block;
+        }
+
         .spinner {
-            display:inline-block; width:20px; height:20px; border:3px solid rgba(255,255,255,0.25);
-            border-top-color:#fff; border-radius:50%; animation:spin 0.7s linear infinite;
-            vertical-align:middle; margin-right:8px;
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255, 255, 255, 0.25);
+            border-top-color: #fff;
+            border-radius: 50%;
+            animation: spin 0.7s linear infinite;
+            vertical-align: middle;
+            margin-right: 8px;
         }
-        @keyframes spin { to { transform:rotate(360deg); } }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* ============================================================ */
+        /* DASHBOARD STYLES */
+        /* ============================================================ */
+        .dashboard {
+            display: none;
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 24px 20px;
+        }
+
+        .dashboard.active {
+            display: block;
+        }
+
+        /* Top Nav */
+        .top-nav {
+            background: white;
+            padding: 16px 32px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 24px;
+            border-radius: 16px;
+        }
+
+        .top-nav .logo {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: #0b1120;
+            text-decoration: none;
+        }
+
+        .top-nav .logo span {
+            background: linear-gradient(135deg, #6366f1, #a855f7);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .top-nav .user-info {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        .top-nav .user-info .name {
+            font-weight: 600;
+            color: #0b1120;
+        }
+
+        .top-nav .user-info .role {
+            font-size: 0.8rem;
+            color: #6b7280;
+            background: #f3f4f6;
+            padding: 2px 12px;
+            border-radius: 12px;
+        }
+
+        .top-nav .user-info .grade-badge {
+            font-size: 0.8rem;
+            color: #6366f1;
+            background: #eef2ff;
+            padding: 2px 12px;
+            border-radius: 12px;
+            font-weight: 600;
+        }
+
+        .top-nav .user-info .logout-btn {
+            background: none;
+            border: none;
+            color: #9ca3af;
+            font-size: 0.85rem;
+            cursor: pointer;
+            padding: 6px 14px;
+            border-radius: 8px;
+            transition: all 0.2s;
+            font-family: inherit;
+        }
+
+        .top-nav .user-info .logout-btn:hover {
+            background: #f3f4f6;
+            color: #ef4444;
+        }
+
+        .sub-badge {
+            font-size: 0.7rem;
+            padding: 3px 12px;
+            border-radius: 12px;
+            font-weight: 600;
+        }
+
+        .sub-trial {
+            background: #fef3c7;
+            color: #92400e;
+        }
+        .sub-active {
+            background: #d1fae5;
+            color: #065f46;
+        }
+        .sub-expired {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        /* Pages */
+        .page-section {
+            display: none;
+            animation: fadeUp 0.4s ease;
+        }
+
+        .page-section.active {
+            display: block;
+        }
+
+        @keyframes fadeUp {
+            0% {
+                opacity: 0;
+                transform: translateY(12px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .page-header {
+            margin-bottom: 24px;
+        }
+
+        .page-header h2 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #0b1120;
+        }
+
+        .page-header p {
+            color: #6b7280;
+            font-size: 1rem;
+        }
+
+        /* Grade Grid */
+        .grade-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+            gap: 12px;
+            margin: 16px 0;
+        }
+
+        .grade-card {
+            padding: 20px 8px;
+            border: 2px solid #e5e7eb;
+            border-radius: 14px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.25s;
+            background: white;
+            font-weight: 600;
+            font-size: 1rem;
+            color: #0b1120;
+        }
+
+        .grade-card:hover {
+            border-color: #6366f1;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 24px rgba(99, 102, 241, 0.10);
+        }
+
+        .grade-card.selected {
+            border-color: #6366f1;
+            background: #eef2ff;
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
+        }
+
+        .btn-confirm {
+            padding: 14px 40px;
+            border: none;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            color: #fff;
+            transition: transform 0.15s;
+            font-family: inherit;
+            margin-top: 16px;
+            display: none;
+        }
+
+        .btn-confirm:hover {
+            transform: translateY(-2px);
+        }
+
+        /* Subject Grid */
+        .subject-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            gap: 16px;
+        }
+
+        .subject-card {
+            background: white;
+            border: 2px solid #e5e7eb;
+            border-radius: 16px;
+            padding: 28px 16px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.25s;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
+        }
+
+        .subject-card:hover {
+            border-color: #6366f1;
+            transform: translateY(-4px);
+            box-shadow: 0 12px 32px rgba(99, 102, 241, 0.12);
+        }
+
+        .subject-card .icon {
+            font-size: 2.8rem;
+            display: block;
+            margin-bottom: 6px;
+        }
+
+        .subject-card .name {
+            font-weight: 700;
+            font-size: 0.95rem;
+            color: #0b1120;
+        }
+
+        /* Classroom */
+        .classroom-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .classroom-header h2 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #0b1120;
+        }
+
+        .back-btn {
+            background: none;
+            border: 1px solid #e5e7eb;
+            padding: 10px 20px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: 600;
+            color: #4b5563;
+            transition: all 0.2s;
+            font-family: inherit;
+        }
+
+        .back-btn:hover {
+            background: #f3f4f6;
+        }
+
+        .topic-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+            gap: 16px;
+        }
+
+        .topic-card {
+            background: white;
+            border: 2px solid #e5e7eb;
+            border-radius: 14px;
+            padding: 20px 18px;
+            transition: all 0.25s;
+            cursor: pointer;
+        }
+
+        .topic-card:hover {
+            border-color: #6366f1;
+            box-shadow: 0 8px 24px rgba(99, 102, 241, 0.08);
+        }
+
+        .topic-card .title {
+            font-weight: 700;
+            font-size: 1rem;
+            color: #0b1120;
+        }
+
+        .topic-card .meta {
+            font-size: 0.8rem;
+            color: #6b7280;
+            margin-top: 4px;
+        }
+
+        .topic-card .resources {
+            margin-top: 10px;
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+
+        .topic-card .resources .tag {
+            background: #eef2ff;
+            color: #6366f1;
+            padding: 2px 12px;
+            border-radius: 12px;
+            font-size: 0.7rem;
+            font-weight: 600;
+        }
+
+        /* AI Tutor */
+        .tutor-container {
+            background: white;
+            border-radius: 20px;
+            padding: 28px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+        }
+
+        .tutor-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .tutor-header h3 {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #0b1120;
+        }
+
+        .tutor-header .context {
+            font-size: 0.9rem;
+            color: #6b7280;
+            background: #f3f4f6;
+            padding: 4px 16px;
+            border-radius: 20px;
+        }
+
+        .chat-box {
+            background: #f8fafc;
+            border-radius: 16px;
+            padding: 20px;
+            max-height: 400px;
+            overflow-y: auto;
+            border: 1px solid #e5e7eb;
+            margin-bottom: 16px;
+        }
+
+        .chat-box .msg {
+            padding: 12px 16px;
+            border-radius: 14px;
+            max-width: 85%;
+            margin-bottom: 10px;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            word-wrap: break-word;
+        }
+
+        .chat-box .msg.user {
+            background: #6366f1;
+            color: #fff;
+            margin-left: auto;
+            text-align: right;
+        }
+
+        .chat-box .msg.bot {
+            background: #e5e7eb;
+            color: #0b1120;
+            margin-right: auto;
+        }
+
+        .chat-input {
+            display: flex;
+            gap: 10px;
+        }
+
+        .chat-input input {
+            flex: 1;
+            padding: 14px 18px;
+            border: 2px solid #e5e7eb;
+            border-radius: 14px;
+            font-size: 0.95rem;
+            font-family: inherit;
+            transition: border-color 0.25s;
+        }
+
+        .chat-input input:focus {
+            outline: none;
+            border-color: #6366f1;
+        }
+
+        .chat-input .btn-send {
+            padding: 0 28px;
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            color: #fff;
+            border: none;
+            border-radius: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.25s;
+            font-family: inherit;
+        }
+
+        .chat-input .btn-send:hover {
+            transform: scale(1.02);
+        }
+
+        .chat-input .btn-send:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .chat-options {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin-top: 12px;
+            font-size: 0.85rem;
+            color: #6b7280;
+        }
+
+        .chat-options input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            accent-color: #6366f1;
+            cursor: pointer;
+        }
+
+        .chat-options label {
+            cursor: pointer;
+        }
+
+        .empty-state {
+            grid-column: 1/-1;
+            text-align: center;
+            padding: 40px;
+            color: #6b7280;
+        }
+
+        /* Responsive */
+        @media (max-width: 640px) {
+            .top-nav {
+                padding: 12px 16px;
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .top-nav .logo {
+                text-align: center;
+            }
+            .top-nav .user-info {
+                justify-content: center;
+            }
+            .subject-grid {
+                grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+            }
+            .grade-grid {
+                grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
+            }
+            .topic-grid {
+                grid-template-columns: 1fr;
+            }
+            .tutor-container {
+                padding: 16px;
+            }
+            .chat-input {
+                flex-wrap: wrap;
+            }
+            .chat-input .btn-send {
+                flex: 1;
+                padding: 14px;
+            }
+        }
     </style>
 </head>
 <body>
-    <div class="card" id="app">
-        <div class="logo">
-            <h1>🧠 <span>Synapse</span></h1>
-            <p>Your AI Tutor</p>
-        </div>
 
-        <!-- Login -->
-        <div id="loginPage">
-            <h2>Welcome back</h2>
-            <p class="sub">Log in to continue learning.</p>
-            <div class="field">
-                <label>Email</label>
-                <input type="email" id="loginEmail" placeholder="you@example.com" />
+    <!-- ============================================================ -->
+    <!-- AUTH CONTAINER (Login/Signup) -->
+    <!-- ============================================================ -->
+    <div class="auth-container" id="authContainer">
+        <div class="auth-card">
+            <div class="logo">
+                <h1>🧠 <span>Synapse</span></h1>
+                <p>Your AI Tutor</p>
             </div>
-            <div class="field">
-                <label>Password</label>
-                <input type="password" id="loginPassword" placeholder="Enter password" />
-            </div>
-            <div class="error" id="loginError"></div>
-            <div class="success" id="loginSuccess"></div>
-            <button class="btn" id="loginBtn" onclick="login()">Log In</button>
-            <div class="auth-link">
-                Don't have an account? <a onclick="showSignup()">Sign up</a>
-            </div>
-        </div>
 
-        <!-- Signup -->
-        <div id="signupPage" style="display:none;">
-            <h2>Create account</h2>
-            <p class="sub">Join Synapse and start learning.</p>
-            <div class="field">
-                <label>Full name</label>
-                <input type="text" id="signupName" placeholder="John Doe" />
+            <!-- Login -->
+            <div id="loginPage">
+                <h2>Welcome back</h2>
+                <p class="sub">Log in to continue learning.</p>
+                <div class="field">
+                    <label>Email</label>
+                    <input type="email" id="loginEmail" placeholder="you@example.com" />
+                </div>
+                <div class="field">
+                    <label>Password</label>
+                    <input type="password" id="loginPassword" placeholder="Enter password" />
+                </div>
+                <div class="error" id="loginError"></div>
+                <div class="success" id="loginSuccess"></div>
+                <button class="btn" id="loginBtn" onclick="login()">Log In</button>
+                <div class="auth-link">
+                    Don't have an account? <a onclick="showSignup()">Sign up</a>
+                </div>
             </div>
-            <div class="field">
-                <label>Email</label>
-                <input type="email" id="signupEmail" placeholder="you@example.com" />
-            </div>
-            <div class="field">
-                <label>Password</label>
-                <input type="password" id="signupPassword" placeholder="Min 6 characters" />
-            </div>
-            <div class="field">
-                <label>Country</label>
-                <select id="signupCountry">
-                    <option value="South Africa">South Africa</option>
-                    <option value="China">China</option>
-                    <option value="United Kingdom">United Kingdom</option>
-                    <option value="United States">United States</option>
-                    <option value="Australia">Australia</option>
-                    <option value="India">India</option>
-                    <option value="Nigeria">Nigeria</option>
-                    <option value="Kenya">Kenya</option>
-                    <option value="Egypt">Egypt</option>
-                    <option value="Germany">Germany</option>
-                    <option value="France">France</option>
-                    <option value="Japan">Japan</option>
-                    <option value="Brazil">Brazil</option>
-                    <option value="Canada">Canada</option>
-                    <option value="New Zealand">New Zealand</option>
-                </select>
-            </div>
-            <div class="field">
-                <label>Role</label>
-                <select id="signupRole">
-                    <option value="learner">Learner</option>
-                    <option value="teacher">Teacher</option>
-                </select>
-            </div>
-            <div class="error" id="signupError"></div>
-            <div class="success" id="signupSuccess"></div>
-            <button class="btn" id="signupBtn" onclick="signup()">Create Account</button>
-            <div class="auth-link">
-                Already have an account? <a onclick="showLogin()">Log in</a>
+
+            <!-- Signup -->
+            <div id="signupPage" style="display:none;">
+                <h2>Create account</h2>
+                <p class="sub">Join Synapse and start learning.</p>
+                <div class="field">
+                    <label>Full name</label>
+                    <input type="text" id="signupName" placeholder="John Doe" />
+                </div>
+                <div class="field">
+                    <label>Email</label>
+                    <input type="email" id="signupEmail" placeholder="you@example.com" />
+                </div>
+                <div class="field">
+                    <label>Password</label>
+                    <input type="password" id="signupPassword" placeholder="Min 6 characters" />
+                </div>
+                <div class="field">
+                    <label>Country</label>
+                    <select id="signupCountry">
+                        <option value="South Africa">South Africa</option>
+                        <option value="China">China</option>
+                        <option value="United Kingdom">United Kingdom</option>
+                        <option value="United States">United States</option>
+                        <option value="Australia">Australia</option>
+                        <option value="India">India</option>
+                        <option value="Nigeria">Nigeria</option>
+                        <option value="Kenya">Kenya</option>
+                        <option value="Egypt">Egypt</option>
+                        <option value="Germany">Germany</option>
+                        <option value="France">France</option>
+                        <option value="Japan">Japan</option>
+                        <option value="Brazil">Brazil</option>
+                        <option value="Canada">Canada</option>
+                        <option value="New Zealand">New Zealand</option>
+                    </select>
+                </div>
+                <div class="field">
+                    <label>Role</label>
+                    <select id="signupRole">
+                        <option value="learner">Learner</option>
+                        <option value="teacher">Teacher</option>
+                    </select>
+                </div>
+                <div class="error" id="signupError"></div>
+                <div class="success" id="signupSuccess"></div>
+                <button class="btn" id="signupBtn" onclick="signup()">Create Account</button>
+                <div class="auth-link">
+                    Already have an account? <a onclick="showLogin()">Log in</a>
+                </div>
             </div>
         </div>
     </div>
 
-    <script>
-        const API_BASE = window.location.origin;
+    <!-- ============================================================ -->
+    <!-- DASHBOARD (Hidden until logged in) -->
+    <!-- ============================================================ -->
+    <div class="dashboard" id="dashboard">
 
+        <!-- Top Navigation -->
+        <nav class="top-nav">
+            <a href="#" class="logo">🧠 <span>Synapse</span></a>
+            <div class="user-info">
+                <span class="name" id="userName">User</span>
+                <span class="role" id="userRole">Learner</span>
+                <span class="grade-badge" id="userGrade">Grade: Not set</span>
+                <span id="subscriptionBadge"></span>
+                <button class="logout-btn" onclick="logout()">Logout</button>
+            </div>
+        </nav>
+
+        <!-- ===== PAGE: GRADE SELECTION ===== -->
+        <div class="page-section active" id="page-grades">
+            <div class="page-header">
+                <h2>📚 Select Your Grade</h2>
+                <p>Choose your current grade to get personalized lessons.</p>
+            </div>
+            <div class="grade-grid" id="gradeGrid"></div>
+            <button class="btn-confirm" id="gradeConfirmBtn" onclick="confirmGrade()">Continue to Subjects →</button>
+        </div>
+
+        <!-- ===== PAGE: SUBJECTS ===== -->
+        <div class="page-section" id="page-subjects">
+            <div class="page-header">
+                <h2>📚 Your Subjects</h2>
+                <p id="subjectsSubtitle">Select a subject to start learning.</p>
+            </div>
+            <div class="subject-grid" id="subjectGrid"></div>
+        </div>
+
+        <!-- ===== PAGE: CLASSROOM ===== -->
+        <div class="page-section" id="page-classroom">
+            <div class="classroom-header">
+                <h2 id="classroomTitle">Subject</h2>
+                <button class="back-btn" onclick="showPage('subjects')">← Back to Subjects</button>
+            </div>
+            <div id="topicCount" style="font-size:0.9rem;color:#6b7280;margin-bottom:12px;"></div>
+            <div class="topic-grid" id="topicGrid"></div>
+        </div>
+
+        <!-- ===== PAGE: AI TUTOR ===== -->
+        <div class="page-section" id="page-tutor">
+            <div class="tutor-container">
+                <div class="tutor-header">
+                    <h3>💬 AI Tutor</h3>
+                    <span class="context" id="tutorContext">General</span>
+                </div>
+                <div class="chat-box" id="chatBox">
+                    <div class="msg bot">👋 Welcome! Ask me anything — I'll guide you step by step.</div>
+                </div>
+                <div class="chat-input">
+                    <input type="text" id="chatInput" placeholder="Type your message..." onkeypress="if(event.key==='Enter') sendChat()" />
+                    <button class="btn-send" id="sendBtn" onclick="sendChat()">Send</button>
+                </div>
+                <div class="chat-options">
+                    <input type="checkbox" id="speakToggle" />
+                    <label for="speakToggle">🔊 AI reads responses aloud</label>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- JAVASCRIPT -->
+    <!-- ============================================================ -->
+    <script>
+        // ================================================================
+        //  STATE
+        // ================================================================
+        let currentUser = null;
+        let currentSubject = '';
+        let selectedGrade = '';
+        let chatHistory = [];
+
+        // ================================================================
+        //  COUNTRY DATA
+        // ================================================================
+        const COUNTRY_DATA = {
+            'South Africa': {
+                grades: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'],
+                subjects: {
+                    'Mathematics': ['Number Operations', 'Patterns & Algebra', 'Fractions & Decimals', 'Geometry', 'Measurement', 'Data Handling', 'Algebra', 'Trigonometry', 'Calculus', 'Financial Maths'],
+                    'English': ['Reading Comprehension', 'Grammar', 'Creative Writing', 'Literature Analysis', 'Poetry', 'Vocabulary'],
+                    'Science': ['Life Processes', 'Energy & Change', 'Matter & Materials', 'Ecosystems', 'Physics', 'Chemistry', 'Biology'],
+                    'History': ['Ancient Civilizations', 'Colonialism in Africa', 'Apartheid', 'World Wars', 'Democracy', 'Cold War'],
+                    'Geography': ['Map Skills', 'Weather & Climate', 'South Africa\'s Provinces', 'Water Cycle', 'Economic Geography', 'Climate Change'],
+                    'Life Orientation': ['Self-Awareness', 'Healthy Living', 'Citizenship', 'Study Skills', 'Career Guidance'],
+                    'Accounting': ['Introduction', 'Double-Entry', 'Trial Balance', 'Financial Statements', 'VAT', 'Cost Accounting', 'Budgeting'],
+                    'Business Studies': ['Business Environments', 'Business Functions', 'Entrepreneurship', 'Marketing', 'Financial Management', 'Human Resources'],
+                    'Economics': ['Basic Concepts', 'Demand & Supply', 'Market Structures', 'Macroeconomics', 'South African Economy'],
+                    'Life Sciences': ['Cell Biology', 'Genetics', 'Evolution', 'Ecology', 'Human Body Systems'],
+                    'Physical Sciences': ['Mechanics', 'Waves & Sound', 'Electricity', 'Chemical Bonding', 'Thermodynamics'],
+                    'Technology': ['Design Process', 'Structures', 'Electrical Systems', 'Coding Basics', 'Digital Citizenship']
+                }
+            },
+            'United States': {
+                grades: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'],
+                subjects: {
+                    'English Language Arts': ['Reading', 'Writing', 'Literature', 'Grammar', 'Vocabulary'],
+                    'Mathematics': ['Arithmetic', 'Algebra', 'Geometry', 'Trigonometry', 'Calculus', 'Statistics'],
+                    'Science': ['Life Science', 'Physical Science', 'Earth Science', 'Biology', 'Chemistry', 'Physics'],
+                    'History': ['American History', 'World History', 'Government', 'Civics', 'Economics'],
+                    'Geography': ['Physical Geography', 'Human Geography', 'US Geography', 'World Geography']
+                }
+            },
+            'United Kingdom': {
+                grades: ['7', '8', '9', '10', '11', '12', '13'],
+                subjects: {
+                    'English': ['Reading', 'Writing', 'Shakespeare', 'Poetry', 'Modern Literature'],
+                    'Mathematics': ['Algebra', 'Geometry', 'Trigonometry', 'Calculus', 'Statistics'],
+                    'Science': ['Biology', 'Chemistry', 'Physics', 'Earth Science'],
+                    'History': ['Medieval History', 'Tudors', 'Victorian Era', 'World Wars'],
+                    'Geography': ['Physical Geography', 'Human Geography', 'UK Geography', 'Climate Change']
+                }
+            },
+            'China': {
+                grades: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'],
+                subjects: {
+                    '语文 (Chinese)': ['Reading', 'Writing', 'Classical Literature', 'Modern Literature', 'Poetry'],
+                    '数学 (Mathematics)': ['Arithmetic', 'Algebra', 'Geometry', 'Trigonometry', 'Calculus'],
+                    '英语 (English)': ['Reading', 'Grammar', 'Writing', 'Listening', 'Speaking'],
+                    '物理 (Physics)': ['Mechanics', 'Thermodynamics', 'Electricity', 'Waves', 'Optics'],
+                    '化学 (Chemistry)': ['Basic Concepts', 'Chemical Reactions', 'Organic Chemistry', 'Inorganic Chemistry'],
+                    '生物 (Biology)': ['Cell Biology', 'Genetics', 'Ecology', 'Evolution']
+                }
+            },
+            'Australia': {
+                grades: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'],
+                subjects: {
+                    'English': ['Reading', 'Writing', 'Literature', 'Grammar', 'Media Studies'],
+                    'Mathematics': ['Algebra', 'Geometry', 'Trigonometry', 'Calculus', 'Statistics'],
+                    'Science': ['Biology', 'Chemistry', 'Physics', 'Earth Science', 'Environmental Science'],
+                    'History': ['Australian History', 'World History', 'Civics', 'Ancient History'],
+                    'Geography': ['Physical Geography', 'Human Geography', 'Australian Geography']
+                }
+            },
+            'India': {
+                grades: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'],
+                subjects: {
+                    'English': ['Reading', 'Writing', 'Literature', 'Grammar', 'Communication'],
+                    'Hindi': ['Reading', 'Writing', 'Literature', 'Grammar'],
+                    'Mathematics': ['Algebra', 'Geometry', 'Trigonometry', 'Calculus', 'Statistics'],
+                    'Science': ['Physics', 'Chemistry', 'Biology', 'Environmental Science'],
+                    'Social Studies': ['History', 'Geography', 'Civics', 'Economics']
+                }
+            }
+        };
+
+        const DEFAULT_SUBJECTS = {
+            'Mathematics': ['Numbers', 'Algebra', 'Geometry', 'Data', 'Measurement'],
+            'English': ['Reading', 'Writing', 'Grammar', 'Literature'],
+            'Science': ['Life Science', 'Physical Science', 'Earth Science'],
+            'History': ['World History', 'Local History'],
+            'Geography': ['Physical Geography', 'Human Geography']
+        };
+
+        // ================================================================
+        //  AUTH FUNCTIONS
+        // ================================================================
         function showSignup() {
             document.getElementById('loginPage').style.display = 'none';
             document.getElementById('signupPage').style.display = 'block';
             clearErrors();
         }
+
         function showLogin() {
             document.getElementById('loginPage').style.display = 'block';
             document.getElementById('signupPage').style.display = 'none';
             clearErrors();
         }
+
         function clearErrors() {
-            document.querySelectorAll('.error, .success').forEach(el => {
+            document.querySelectorAll('.auth-card .error, .auth-card .success').forEach(el => {
                 el.classList.remove('show');
                 el.textContent = '';
             });
         }
+
         function showError(id, msg) {
             const el = document.getElementById(id);
             el.textContent = msg;
             el.classList.add('show');
         }
+
         function showSuccess(id, msg) {
             const el = document.getElementById(id);
             el.textContent = msg;
             el.classList.add('show');
         }
+
         function setButtonLoading(id, loading) {
             const btn = document.getElementById(id);
             if (loading) {
@@ -187,7 +966,7 @@
             clearErrors();
             setButtonLoading('loginBtn', true);
             try {
-                const res = await fetch(API_BASE + '/login', {
+                const res = await fetch('/login', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ email, password })
@@ -199,8 +978,12 @@
                 }
                 if (data.success) {
                     localStorage.setItem('synapse_user', JSON.stringify(data.user));
-                    showSuccess('loginSuccess', 'Login successful! Redirecting...');
-                    setTimeout(() => window.location.href = '/dashboard.html', 1000);
+                    showSuccess('loginSuccess', 'Login successful!');
+                    setTimeout(() => {
+                        document.getElementById('authContainer').style.display = 'none';
+                        document.getElementById('dashboard').classList.add('active');
+                        initDashboard(data.user);
+                    }, 500);
                 }
             } catch (err) {
                 showError('loginError', 'Server error. Please try again.');
@@ -226,7 +1009,7 @@
             clearErrors();
             setButtonLoading('signupBtn', true);
             try {
-                const res = await fetch(API_BASE + '/signup', {
+                const res = await fetch('/signup', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ email, password, name, country, role })
@@ -237,12 +1020,11 @@
                     return;
                 }
                 if (data.success) {
-                    showSuccess('signupSuccess', 'Account created! Redirecting to login...');
+                    showSuccess('signupSuccess', 'Account created! Please log in.');
                     setTimeout(() => {
                         showLogin();
                         document.getElementById('loginEmail').value = email;
-                        showSuccess('loginSuccess', 'Account created! Please log in.');
-                    }, 1500);
+                    }, 1000);
                 }
             } catch (err) {
                 showError('signupError', 'Server error. Please try again.');
@@ -251,11 +1033,265 @@
             }
         }
 
-        // Check if already logged in
-        const storedUser = localStorage.getItem('synapse_user');
-        if (storedUser) {
-            window.location.href = '/dashboard.html';
+        // ================================================================
+        //  DASHBOARD INIT
+        // ================================================================
+        function initDashboard(user) {
+            currentUser = user;
+            document.getElementById('userName').textContent = user.name || 'User';
+            document.getElementById('userRole').textContent = user.role || 'Learner';
+            document.getElementById('userGrade').textContent = user.grade ? 'Grade ' + user.grade : 'Grade: Not set';
+
+            checkSubscription();
+            if (user.grade) {
+                selectedGrade = user.grade;
+                showSubjects();
+            } else {
+                showGradeSelection();
+            }
         }
+
+        // ================================================================
+        //  DASHBOARD FUNCTIONS
+        // ================================================================
+        function showPage(page) {
+            document.querySelectorAll('.page-section').forEach(el => el.classList.remove('active'));
+            const target = document.getElementById('page-' + page);
+            if (target) target.classList.add('active');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function showGradeSelection() {
+            const country = currentUser.country || 'South Africa';
+            const data = COUNTRY_DATA[country];
+            const grades = data ? data.grades : ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'];
+
+            const grid = document.getElementById('gradeGrid');
+            grid.innerHTML = '';
+            grades.forEach(g => {
+                const div = document.createElement('div');
+                div.className = 'grade-card';
+                div.textContent = 'Grade ' + g;
+                div.dataset.grade = g;
+                div.onclick = function() {
+                    document.querySelectorAll('.grade-card').forEach(c => c.classList.remove('selected'));
+                    this.classList.add('selected');
+                    selectedGrade = this.dataset.grade;
+                    document.getElementById('gradeConfirmBtn').style.display = 'block';
+                };
+                grid.appendChild(div);
+            });
+            showPage('grades');
+        }
+
+        function confirmGrade() {
+            if (!selectedGrade) {
+                alert('Please select your grade.');
+                return;
+            }
+            fetch('/save-profile', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    userId: currentUser.id,
+                    name: currentUser.name,
+                    country: currentUser.country,
+                    grade: selectedGrade
+                })
+            });
+            currentUser.grade = selectedGrade;
+            localStorage.setItem('synapse_user', JSON.stringify(currentUser));
+            document.getElementById('userGrade').textContent = 'Grade ' + selectedGrade;
+            showSubjects();
+        }
+
+        function showSubjects() {
+            const country = currentUser.country || 'South Africa';
+            const data = COUNTRY_DATA[country];
+            const subjects = data ? data.subjects : DEFAULT_SUBJECTS;
+
+            document.getElementById('subjectsSubtitle').textContent =
+                'Grade ' + currentUser.grade + ' · ' + country + ' · Select a subject to start learning.';
+
+            const grid = document.getElementById('subjectGrid');
+            grid.innerHTML = '';
+            const icons = {
+                'Mathematics': '📐',
+                'Math': '📐',
+                'English': '📖',
+                'Science': '🔬',
+                'History': '🏛️',
+                'Geography': '🌍',
+                'Life Orientation': '🧘',
+                'Accounting': '💰',
+                'Business Studies': '📊',
+                'Economics': '📈',
+                'Life Sciences': '🧬',
+                'Physical Sciences': '⚛️',
+                'Technology': '💻',
+                'English Language Arts': '📖',
+                '语文 (Chinese)': '🀄',
+                '数学 (Mathematics)': '📐',
+                '英语 (English)': '📖',
+                '物理 (Physics)': '⚡',
+                '化学 (Chemistry)': '🧪',
+                '生物 (Biology)': '🧬',
+                'Hindi': '🇮🇳',
+                'Social Studies': '🏛️'
+            };
+            Object.keys(subjects).forEach(name => {
+                const div = document.createElement('div');
+                div.className = 'subject-card';
+                div.innerHTML = `<span class="icon">${icons[name] || '📚'}</span><span class="name">${name}</span>`;
+                div.onclick = () => openSubject(name);
+                grid.appendChild(div);
+            });
+            showPage('subjects');
+        }
+
+        function openSubject(subject) {
+            currentSubject = subject;
+            document.getElementById('classroomTitle').textContent = subject;
+            const country = currentUser.country || 'South Africa';
+            const data = COUNTRY_DATA[country];
+            const topics = data ? data.subjects[subject] : DEFAULT_SUBJECTS[subject] || [];
+
+            const grid = document.getElementById('topicGrid');
+            const countDiv = document.getElementById('topicCount');
+            countDiv.textContent = 'Showing ' + topics.length + ' topics';
+
+            if (topics.length === 0) {
+                grid.innerHTML = `<div class="empty-state">No topics available for this subject yet.</div>`;
+            } else {
+                grid.innerHTML = topics.map(t => `
+                    <div class="topic-card" onclick="openTutor('${subject}', '${t}')">
+                        <div class="title">${t}</div>
+                        <div class="meta">${subject}</div>
+                        <div class="resources"><span class="tag">Lesson</span><span class="tag">Quiz</span><span class="tag">Worksheet</span></div>
+                    </div>
+                `).join('');
+            }
+            showPage('classroom');
+        }
+
+        function openTutor(subject, topic) {
+            currentSubject = subject;
+            document.getElementById('tutorContext').textContent = subject + ' - ' + topic;
+            showPage('tutor');
+            const box = document.getElementById('chatBox');
+            box.innerHTML = `<div class="msg bot">👋 Welcome! Ask me anything — I'll guide you step by step.</div>`;
+            document.getElementById('chatInput').value = 'I\'m learning about "' + topic + '" in ' + subject + '. Can you teach me step by step?';
+            setTimeout(sendChat, 500);
+        }
+
+        // ================================================================
+        //  CHAT
+        // ================================================================
+        async function sendChat() {
+            const input = document.getElementById('chatInput');
+            const message = input.value.trim();
+            if (!message) return;
+            addMessage('user', message);
+            input.value = '';
+            input.disabled = true;
+            const btn = document.getElementById('sendBtn');
+            btn.disabled = true;
+            btn.innerHTML = '<span class="spinner"></span>';
+            try {
+                const context = document.getElementById('tutorContext').textContent;
+                const fullMsg = context + ': ' + message;
+                const res = await fetch('/chat', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ userId: currentUser.id, message: fullMsg })
+                });
+                const data = await res.json();
+                if (data.reply) addMessage('bot', data.reply);
+                else addMessage('bot', '❌ ' + (data.error || 'No response'));
+            } catch (err) {
+                addMessage('bot', '❌ Server error. Please try again.');
+            } finally {
+                input.disabled = false;
+                input.focus();
+                btn.disabled = false;
+                btn.innerHTML = 'Send';
+            }
+        }
+
+        function addMessage(role, text) {
+            const box = document.getElementById('chatBox');
+            const div = document.createElement('div');
+            div.className = 'msg ' + (role === 'user' ? 'user' : 'bot');
+            div.innerHTML = text.replace(/\n/g, '<br>');
+            box.appendChild(div);
+            box.scrollTop = box.scrollHeight;
+            if (role === 'bot' && document.getElementById('speakToggle').checked) {
+                speakText(text);
+            }
+        }
+
+        function speakText(text) {
+            if (!('speechSynthesis' in window)) return;
+            let clean = text.replace(/\*\*/g, '').replace(/#/g, '').replace(/[📚🎯✏️🤔💡]/g, '').replace(/\n/g, '. ');
+            if (clean.length > 300) clean = clean.substring(0, 300) + '...';
+            window.speechSynthesis.cancel();
+            const u = new SpeechSynthesisUtterance(clean);
+            u.lang = 'en-US';
+            u.rate = 0.85;
+            window.speechSynthesis.speak(u);
+        }
+
+        // ================================================================
+        //  SUBSCRIPTION
+        // ================================================================
+        async function checkSubscription() {
+            try {
+                const res = await fetch('/subscription-status/' + currentUser.id);
+                const data = await res.json();
+                const badge = document.getElementById('subscriptionBadge');
+                if (data.status === 'trial') {
+                    badge.innerHTML = `<span class="sub-badge sub-trial">Trial • ${data.daysRemaining}d left</span>`;
+                } else if (data.status === 'active') {
+                    badge.innerHTML = `<span class="sub-badge sub-active">Premium</span>`;
+                } else {
+                    badge.innerHTML = `<span class="sub-badge sub-expired">${data.status}</span>`;
+                }
+            } catch (err) { console.error('Subscription check error:', err); }
+        }
+
+        // ================================================================
+        //  LOGOUT
+        // ================================================================
+        function logout() {
+            if (confirm('Are you sure you want to logout?')) {
+                localStorage.removeItem('synapse_user');
+                document.getElementById('dashboard').classList.remove('active');
+                document.getElementById('authContainer').style.display = 'flex';
+                document.getElementById('loginPage').style.display = 'block';
+                document.getElementById('signupPage').style.display = 'none';
+                document.getElementById('loginEmail').value = '';
+                document.getElementById('loginPassword').value = '';
+                clearErrors();
+            }
+        }
+
+        // ================================================================
+        //  INIT
+        // ================================================================
+        document.addEventListener('DOMContentLoaded', function() {
+            const stored = localStorage.getItem('synapse_user');
+            if (stored) {
+                try {
+                    const user = JSON.parse(stored);
+                    document.getElementById('authContainer').style.display = 'none';
+                    document.getElementById('dashboard').classList.add('active');
+                    initDashboard(user);
+                } catch (e) {
+                    // invalid stored data, show login
+                }
+            }
+        });
     </script>
+
 </body>
 </html>
