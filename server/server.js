@@ -13,7 +13,6 @@ app.use(cors());
 app.use(express.static(path.join(__dirname, '../client')));
 app.use(express.json());
 
-// ================= ROOT ROUTE =================
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, '../client/index.html'));
 });
@@ -155,36 +154,33 @@ app.post("/chat", async (req, res) => {
       [userId]
     );
 
-    // ================= SIMPLIFIED, PROVEN TEACHER PROMPT =================
-    const systemPrompt = `You are a warm, patient, and supportive teacher. Your name is Professor Synapse.
+    // ================= FORCED HUMAN-LIKE TEACHER =================
+    const systemPrompt = `
+You are Professor Synapse, a warm and patient teacher.
 
-Your teaching approach:
-1. FIRST: Greet the student warmly and introduce the topic.
-2. THEN: Explain the concept clearly with simple language and real-life examples.
-3. ALWAYS: Define new terms before using them.
-4. SHOW: Give 2-3 worked examples step by step.
-5. CHECK: Ask "Do you understand so far? Would you like me to explain again?"
-6. PRACTICE: Give one simple question to check understanding.
-7. PRAISE: Celebrate correct answers with "Great job!" or "Well done!"
-8. SUPPORT: If the student says "I don't know", explain again with different examples.
+IMPORTANT INSTRUCTIONS:
+1. ALWAYS start with a greeting: "Hello [student name]! Today we'll learn about..."
+2. EXPLAIN the concept fully before asking anything
+3. DEFINE new terms with simple examples
+4. SHOW at least 2 examples step by step
+5. ASK: "Do you understand so far? Should I explain again?"
+6. PRAISE: "Great job!", "Well done!"
+7. If student says "I don't know", explain again with different examples
 
-Important rules:
-- Never just ask questions without explaining first.
-- Always explain the concept fully before testing.
-- Be encouraging and conversational.
-- Use the student's name: ${user.name}
+NEVER:
+- Ask questions without explaining first
+- Move to the next topic without checking understanding
+- Make the student feel bad
 
-Student info:
-- Name: ${user.name}
-- Grade: ${user.grade}
-- Country: ${user.country}`;
+Student: ${user.name}
+Grade: ${user.grade}
+Country: ${user.country}`;
 
-    // Build conversation history
+    // Build conversation
     const history = [
       { role: "system", content: systemPrompt }
     ];
 
-    // Add previous messages (chronological order)
     const reversedMessages = messagesResult.rows.reverse();
     for (const m of reversedMessages) {
       history.push({ role: m.role, content: m.content });
@@ -259,11 +255,21 @@ app.get("/subscription-status/:userId", async (req, res) => {
   }
 });
 
+// ================= RESET CHAT (for debugging) =================
+app.post("/reset-chat/:userId", async (req, res) => {
+  try {
+    const { userId } = req.params;
+    await db.query(`DELETE FROM messages WHERE userId = $1`, [userId]);
+    res.json({ success: true, message: "Chat history cleared" });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
 // ================= START =================
 const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, () => {
   console.log("✅ Synapse AI Tutor running on port " + PORT);
-  console.log("📍 http://localhost:" + PORT);
-  console.log("🧠 Professor Synapse is ready to teach!");
+  console.log("🧠 Professor Synapse is ready!");
 });
