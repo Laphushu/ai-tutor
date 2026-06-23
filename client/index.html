@@ -1123,7 +1123,7 @@
             }
         };
 
-        // Default fallback for unsupported countries
+        // Default fallback
         const DEFAULT_SUBJECTS = {
             'Mathematics': ['Algebra', 'Geometry', 'Trigonometry', 'Calculus', 'Statistics'],
             'English': ['Reading', 'Writing', 'Grammar', 'Literature'],
@@ -1285,7 +1285,6 @@
         function showGradeSelection() {
             const country = currentUser.country || 'South Africa';
             const data = COUNTRY_DATA[country];
-            // If country not found, use default grades 8-12
             const grades = (data && data.grades) ? data.grades : ['8', '9', '10', '11', '12'];
 
             const grid = document.getElementById('gradeGrid');
@@ -1458,14 +1457,12 @@
         function speakText(text) {
             if (!('speechSynthesis' in window)) return;
 
-            // Remove all markdown, dashes, slashes, asterisks, underscores, etc.
             let clean = text
-                .replace(/[\\*\/_\-~#`|]/g, ' ')      // replace symbols with space
-                .replace(/[📚🎯✏️🤔💡✅❌]/g, '')        // remove emojis
-                .replace(/\s+/g, ' ')                 // collapse multiple spaces
+                .replace(/[\\*\/_\-~#`|]/g, ' ')
+                .replace(/[📚🎯✏️🤔💡✅❌]/g, '')
+                .replace(/\s+/g, ' ')
                 .trim();
 
-            // Limit length for TTS
             if (clean.length > 300) {
                 clean = clean.substring(0, 300) + '...';
             }
@@ -1478,7 +1475,6 @@
             utterance.pitch = 1.0;
             utterance.volume = 1;
 
-            // Try to pick a natural voice
             const voices = window.speechSynthesis.getVoices();
             const preferred = voices.find(v => v.lang.includes('en') && (v.name.includes('Google') || v.name.includes('Natural')));
             if (preferred) utterance.voice = preferred;
@@ -1494,14 +1490,84 @@
                 const res = await fetch('/subscription-status/' + currentUser.id);
                 const data = await res.json();
                 const badge = document.getElementById('subscriptionBadge');
+                const subBtn = document.getElementById('subscribeBtn');
+
+                let statusText = '';
+                let statusClass = '';
+                let btnText = 'Subscribe';
+                let btnDisplay = 'inline-block';
+
                 if (data.status === 'trial') {
-                    badge.innerHTML = `<span class="sub-badge sub-trial">Trial • ${data.daysRemaining}d left</span>`;
+                    statusClass = 'sub-trial';
+                    statusText = `Trial • ${data.daysRemaining}d left`;
+                    btnText = 'Subscribe';
+                    btnDisplay = 'inline-block';
                 } else if (data.status === 'active') {
-                    badge.innerHTML = `<span class="sub-badge sub-active">Premium</span>`;
+                    statusClass = 'sub-active';
+                    statusText = 'Premium ✅';
+                    btnText = 'Renew';
+                    btnDisplay = 'none';
                 } else {
-                    badge.innerHTML = `<span class="sub-badge sub-expired">${data.status}</span>`;
+                    statusClass = 'sub-expired';
+                    statusText = 'Expired';
+                    btnText = 'Renew';
+                    btnDisplay = 'inline-block';
                 }
-            } catch (err) { console.error('Subscription check error:', err); }
+
+                badge.innerHTML = `
+                    <span class="sub-badge ${statusClass}">${statusText}</span>
+                    <button id="subscribeBtn" onclick="subscribe()" style="
+                        background: linear-gradient(135deg, #6366f1, #8b5cf6);
+                        color: white;
+                        border: none;
+                        padding: 6px 16px;
+                        border-radius: 20px;
+                        font-weight: 600;
+                        font-size: 0.8rem;
+                        cursor: pointer;
+                        font-family: inherit;
+                        display: ${btnDisplay};
+                    ">${btnText}</button>
+                `;
+            } catch (err) {
+                console.error('Subscription check error:', err);
+            }
+        }
+
+        // ================================================================
+        //  PAYMENT: SUBSCRIBE
+        // ================================================================
+        async function subscribe() {
+            if (!currentUser) {
+                alert('Please log in first.');
+                return;
+            }
+
+            try {
+                const response = await fetch('/create-payment', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        userId: currentUser.id,
+                        email: currentUser.email
+                    })
+                });
+
+                const data = await response.json();
+
+                if (data.authorization_url) {
+                    // Show price confirmation
+                    const price = data.price || (currentUser.country === 'South Africa' ? 'R49.99' : 'R149.99');
+                    if (confirm(`You are about to subscribe for ${price} per month. Continue?`)) {
+                        window.location.href = data.authorization_url;
+                    }
+                } else {
+                    alert('Error creating payment. Please try again.');
+                }
+            } catch (err) {
+                console.error('Payment error:', err);
+                alert('Payment service unavailable. Please try again later.');
+            }
         }
 
         // ================================================================

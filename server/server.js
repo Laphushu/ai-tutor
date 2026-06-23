@@ -5,6 +5,7 @@ const cors = require("cors");
 const path = require("path");
 const OpenAI = require("openai");
 const { Pool } = require("pg");
+const Paystack = require('paystack')(process.env.PAYSTACK_SECRET_KEY);
 
 const app = express();
 
@@ -24,21 +25,14 @@ const db = new Pool({
   ssl: { rejectUnauthorized: false }
 });
 
-// ================= INIT TABLES (SAFE & COMPLETE) =================
+// ================= INIT TABLES =================
 async function initDB() {
   try {
-    // 1. Drop existing tables (only if you want to reset – this ensures clean schema)
-    // Comment the next two lines if you want to keep old data
-    await db.query(`DROP TABLE IF EXISTS messages CASCADE`);
-    await db.query(`DROP TABLE IF EXISTS subscriptions CASCADE`);
-    await db.query(`DROP TABLE IF EXISTS users CASCADE`);
-
-    // 2. Create users table (all columns)
     await db.query(`
-      CREATE TABLE users (
+      CREATE TABLE IF NOT EXISTS users (
         userId TEXT PRIMARY KEY,
-        email TEXT UNIQUE NOT NULL,
-        password TEXT NOT NULL,
+        email TEXT UNIQUE,
+        password TEXT,
         name TEXT,
         country TEXT,
         grade TEXT,
@@ -47,21 +41,19 @@ async function initDB() {
       )
     `);
 
-    // 3. Create messages table
     await db.query(`
-      CREATE TABLE messages (
+      CREATE TABLE IF NOT EXISTS messages (
         id SERIAL PRIMARY KEY,
-        userId TEXT REFERENCES users(userId),
+        userId TEXT,
         role TEXT,
         content TEXT,
         created_at TIMESTAMP DEFAULT NOW()
       )
     `);
 
-    // 4. Create subscriptions table
     await db.query(`
-      CREATE TABLE subscriptions (
-        userId TEXT PRIMARY KEY REFERENCES users(userId),
+      CREATE TABLE IF NOT EXISTS subscriptions (
+        userId TEXT PRIMARY KEY,
         status TEXT DEFAULT 'trial',
         startDate TIMESTAMP DEFAULT NOW(),
         stripeCustomerId TEXT,
@@ -70,14 +62,12 @@ async function initDB() {
       )
     `);
 
-    console.log("✅ Database initialized with clean schema");
+    console.log("✅ Database ready with payment columns");
   } catch (err) {
     console.error("❌ DB init error:", err.message);
-    // App will still run, but some features may fail
   }
 }
 
-// Run init (but don't crash if it fails)
 initDB();
 
 // ================= AI =================
@@ -208,14 +198,33 @@ app.post("/chat", async (req, res) => {
       return res.json({ reply: "Subscription error." });
     }
 
+    // ===== SUBSCRIPTION CHECK =====
     const trialDays = 3;
     const start = new Date(sub.startdate || sub.startDate);
     const now = new Date();
     const diffDays = Math.floor((now - start) / (1000 * 60 * 60 * 24));
-    if (sub.status === "trial" && diffDays > trialDays) {
-      return res.json({ reply: "Your 3-day free trial has ended. Please subscribe." });
+
+    let isActive = false;
+    if (sub.status === 'active' && sub.subscriptionenddate) {
+      const endDate = new Date(sub.subscriptionenddate);
+      if (now < endDate) {
+        isActive = true;
+      }
     }
 
+    if (sub.status === 'trial' && diffDays > trialDays && !isActive) {
+      return res.json({
+        reply: "Your 3-day free trial has ended. Please subscribe to continue learning."
+      });
+    }
+
+    if (sub.status === 'expired') {
+      return res.json({
+        reply: "Your subscription has expired. Please renew to continue learning."
+      });
+    }
+
+    // Get chat history
     const messagesResult = await db.query(
       `SELECT role, content FROM messages WHERE userId = $1 ORDER BY id DESC LIMIT 10`,
       [userId]
@@ -274,59 +283,204 @@ app.get("/subscription-status/:userId", async (req, res) => {
   try {
     const { userId } = req.params;
     const result = await db.query(
-      `SELECT status, startDate FROM subscriptions WHERE userId = $1`,
+      `SELECT status, startDate, subscriptionEndDate, planType FROM subscriptions WHERE userId = $1`,
       [userId]
     );
+
     if (result.rows.length === 0) {
-      return res.json({ status: 'trial', daysRemaining: 3 });
+      return res.json({ status: 'trial', daysRemaining: 3, planType: 'free' });
     }
+
     const sub = result.rows[0];
     const now = new Date();
     const start = new Date(sub.startdate);
     const diffDays = Math.floor((now - start) / (1000 * 60 * 60 * 24));
     const daysRemaining = Math.max(0, 3 - diffDays);
+
     let status = sub.status;
-    if (sub.status === 'trial' && diffDays > 3) status = 'expired';
-    res.json({ status, daysRemaining, planType: 'free' });
+    let planType = sub.plantype || 'free';
+
+    if (sub.status === 'active' && sub.subscriptionenddate) {
+      const endDate = new Date(sub.subscriptionenddate);
+      if (now > endDate) {
+        status = 'expired';
+        await db.query(
+          `UPDATE subscriptions SET status = 'expired' WHERE userId = $1`,
+          [userId]
+        );
+      }
+    }
+
+    if (sub.status === 'trial' && diffDays > 3) {
+      status = 'expired';
+      await db.query(
+        `UPDATE subscriptions SET status = 'expired' WHERE userId = $1`,
+        [userId]
+      );
+    }
+
+    res.json({
+      status: status,
+      daysRemaining: daysRemaining,
+      planType: planType,
+      subscriptionEndDate: sub.subscriptionenddate
+    });
   } catch (err) {
+    console.error("Status check error:", err);
     res.status(500).json({ error: err.message });
   }
 });
 
-// ================= RESET DATABASE (emergency) =================
-app.post("/reset-db", async (req, res) => {
+// ================= PAYMENT: Create Transaction =================
+app.post("/create-payment", async (req, res) => {
+  const { userId, email } = req.body;
+
+  if (!userId || !email) {
+    return res.status(400).json({ error: "Missing userId or email" });
+  }
+
   try {
-    await initDB();
-    res.json({ success: true, message: "Database reset successfully" });
+    // Get user details (including country)
+    const userResult = await db.query(
+      `SELECT name, country FROM users WHERE userId = $1`,
+      [userId]
+    );
+    const user = userResult.rows[0];
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    // ===== COUNTRY-SPECIFIC PRICING =====
+    // South Africa: R49.99 | Other countries: R149.99
+    let amount = 14999; // Default: R149.99 (international)
+    let priceDisplay = 'R149.99';
+    
+    if (user.country === 'South Africa') {
+      amount = 4999; // R49.99 for South Africa
+      priceDisplay = 'R49.99';
+    }
+
+    // Initialize Paystack transaction
+    const response = await Paystack.transaction.initialize({
+      email: email,
+      amount: amount,
+      currency: 'ZAR',
+      metadata: { 
+        userId: userId,
+        country: user.country,
+        price: amount / 100
+      },
+      callback_url: `${process.env.PAYSTACK_CALLBACK_URL || 'https://synapses-uwh1.onrender.com'}/payment-callback`,
+    });
+
+    res.json({
+      success: true,
+      authorization_url: response.data.authorization_url,
+      reference: response.data.reference,
+      price: priceDisplay,
+      amount: amount / 100
+    });
+
   } catch (err) {
+    console.error("Payment error:", err);
     res.status(500).json({ error: err.message });
   }
 });
 
-// ================= DASHBOARD (placeholder) =================
-app.get("/dashboard.html", (req, res) => {
-  res.send(`
-    <!DOCTYPE html>
-    <html>
-    <head><title>Dashboard</title></head>
-    <body style="font-family:sans-serif;text-align:center;padding:40px;">
-      <h1>Welcome to Synapse!</h1>
-      <p>You are logged in.</p>
-      <p>Your AI tutor is ready.</p>
-      <button onclick="localStorage.removeItem('synapse_user');window.location.href='/';">Logout</button>
-      <script>
-        const user = JSON.parse(localStorage.getItem('synapse_user') || 'null');
-        if (!user) window.location.href = '/';
-        document.querySelector('p').textContent = 'Welcome, ' + user.name + '!';
-      </script>
-    </body>
-    </html>
-  `);
+// ================= PAYMENT: Callback =================
+app.get("/payment-callback", async (req, res) => {
+  const { reference } = req.query;
+  if (!reference) {
+    return res.status(400).send("Missing reference");
+  }
+
+  try {
+    const response = await Paystack.transaction.verify(reference);
+    if (response.data.status === 'success') {
+      const userId = response.data.metadata.userId;
+      await db.query(
+        `UPDATE subscriptions 
+         SET status = 'active', 
+             subscriptionEndDate = NOW() + INTERVAL '30 days',
+             planType = 'premium'
+         WHERE userId = $1`,
+        [userId]
+      );
+      res.send(`
+        <!DOCTYPE html>
+        <html>
+        <head><title>Payment Successful</title>
+        <style>
+          body { font-family: sans-serif; text-align: center; padding: 60px; background: #f0f4f8; }
+          .card { background: white; padding: 40px; border-radius: 20px; max-width: 500px; margin: 0 auto; }
+          h1 { color: #22c55e; }
+          .btn { display: inline-block; padding: 14px 30px; background: #6366f1; color: white; text-decoration: none; border-radius: 12px; margin-top: 20px; }
+        </style>
+        </head>
+        <body>
+          <div class="card">
+            <h1>✅ Payment Successful!</h1>
+            <p>Your subscription is now active. You have premium access for 30 days.</p>
+            <a href="/" class="btn">Go to Dashboard</a>
+          </div>
+          <script>setTimeout(() => { window.location.href = '/'; }, 5000);</script>
+        </body>
+        </html>
+      `);
+    } else {
+      res.send(`
+        <!DOCTYPE html>
+        <html>
+        <head><title>Payment Failed</title>
+        <style>
+          body { font-family: sans-serif; text-align: center; padding: 60px; background: #f0f4f8; }
+          .card { background: white; padding: 40px; border-radius: 20px; max-width: 500px; margin: 0 auto; }
+          h1 { color: #ef4444; }
+          .btn { display: inline-block; padding: 14px 30px; background: #6366f1; color: white; text-decoration: none; border-radius: 12px; margin-top: 20px; }
+        </style>
+        </head>
+        <body>
+          <div class="card">
+            <h1>❌ Payment Failed</h1>
+            <p>Please try again.</p>
+            <a href="/" class="btn">Try Again</a>
+          </div>
+        </body>
+        </html>
+      `);
+    }
+  } catch (err) {
+    console.error("Verification error:", err);
+    res.status(500).send("Verification failed");
+  }
+});
+
+// ================= PAYMENT: Webhook =================
+app.post("/paystack-webhook", express.json(), async (req, res) => {
+  const event = req.body;
+  if (event.event === 'charge.success') {
+    const data = event.data;
+    const userId = data.metadata.userId;
+    try {
+      await db.query(
+        `UPDATE subscriptions 
+         SET status = 'active', 
+             subscriptionEndDate = NOW() + INTERVAL '30 days',
+             planType = 'premium'
+         WHERE userId = $1`,
+        [userId]
+      );
+      console.log(`✅ Webhook: Subscription activated for ${userId}`);
+    } catch (err) {
+      console.error("Webhook error:", err);
+    }
+  }
+  res.sendStatus(200);
 });
 
 // ================= START =================
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log("✅ Synapse AI Tutor running on port " + PORT);
-  console.log("🔐 Authentication ready");
+  console.log("💰 Country-specific pricing: SA R49.99 | International R149.99");
 });
