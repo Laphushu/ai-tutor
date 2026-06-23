@@ -84,6 +84,7 @@
             display: flex;
             align-items: center;
             gap: 14px;
+            flex-wrap: wrap;
         }
 
         .top-nav .user-badge .name {
@@ -179,7 +180,8 @@
             margin-bottom: 4px;
         }
 
-        .auth-card .field input {
+        .auth-card .field input,
+        .auth-card .field select {
             width: 100%;
             padding: 14px 16px;
             border: 2px solid #e5e7eb;
@@ -187,9 +189,11 @@
             font-size: 1rem;
             transition: border-color 0.25s;
             font-family: inherit;
+            background: #ffffff;
         }
 
-        .auth-card .field input:focus {
+        .auth-card .field input:focus,
+        .auth-card .field select:focus {
             outline: none;
             border-color: #6366f1;
             box-shadow: 0 0 0 4px rgba(99,102,241,0.1);
@@ -259,6 +263,39 @@
 
         .auth-card .success.show { display: block; }
 
+        /* ===== GRADE SELECTION PAGE ===== */
+        .grade-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            gap: 14px;
+            margin: 20px 0;
+        }
+
+        .grade-card {
+            padding: 24px 12px;
+            border: 2px solid #e5e7eb;
+            border-radius: 16px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.25s;
+            background: #ffffff;
+            font-weight: 600;
+            font-size: 1.1rem;
+            color: #0b1120;
+        }
+
+        .grade-card:hover {
+            border-color: #6366f1;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 24px rgba(99,102,241,0.10);
+        }
+
+        .grade-card.selected {
+            border-color: #6366f1;
+            background: #eef2ff;
+            box-shadow: 0 0 0 3px rgba(99,102,241,0.15);
+        }
+
         /* ===== SUBJECTS PAGE ===== */
         .page-header {
             margin-bottom: 24px;
@@ -277,7 +314,7 @@
 
         .subject-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
             gap: 16px;
         }
 
@@ -298,16 +335,16 @@
             box-shadow: 0 12px 32px rgba(99,102,241,0.12);
         }
 
-        .subject-card .icon {
-            font-size: 2.8rem;
-            display: block;
-            margin-bottom: 8px;
-        }
-
         .subject-card .name {
             font-weight: 700;
-            font-size: 0.95rem;
+            font-size: 1rem;
             color: #0b1120;
+        }
+
+        .subject-card .code {
+            font-size: 0.75rem;
+            color: #6b7280;
+            margin-top: 4px;
         }
 
         /* ===== CLASSROOM PAGE ===== */
@@ -342,29 +379,9 @@
             background: #f3f4f6;
         }
 
-        .grade-filter {
-            margin-bottom: 20px;
-        }
-
-        .grade-filter select {
-            padding: 12px 20px;
-            border: 2px solid #e5e7eb;
-            border-radius: 12px;
-            font-size: 1rem;
-            font-family: inherit;
-            background: #ffffff;
-            min-width: 200px;
-            cursor: pointer;
-        }
-
-        .grade-filter select:focus {
-            outline: none;
-            border-color: #6366f1;
-        }
-
         .topic-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
             gap: 16px;
         }
 
@@ -578,6 +595,61 @@
             color: #9ca3af;
         }
 
+        /* ===== COUNTRY FLAG ===== */
+        .country-option {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 14px;
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.25s;
+            background: #ffffff;
+        }
+
+        .country-option:hover {
+            border-color: #6366f1;
+            background: #f8faff;
+        }
+
+        .country-option.selected {
+            border-color: #6366f1;
+            background: #eef2ff;
+            box-shadow: 0 0 0 3px rgba(99,102,241,0.10);
+        }
+
+        .country-option .flag {
+            font-size: 1.8rem;
+            line-height: 1;
+        }
+
+        .country-option .info {
+            flex: 1;
+        }
+
+        .country-option .info .name {
+            font-weight: 600;
+            color: #0b1120;
+        }
+
+        .country-option .info .curriculum {
+            font-size: 0.8rem;
+            color: #6b7280;
+        }
+
+        .country-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+
+        @media (max-width: 600px) {
+            .country-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
         /* ===== RESPONSIVE ===== */
         @media (max-width: 640px) {
             .top-nav {
@@ -607,7 +679,7 @@
             }
 
             .subject-grid {
-                grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+                grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
             }
 
             .topic-grid {
@@ -626,11 +698,9 @@
             .tutor-container {
                 padding: 16px;
             }
-        }
 
-        @media (max-width: 400px) {
-            .subject-grid {
-                grid-template-columns: 1fr 1fr;
+            .grade-grid {
+                grid-template-columns: repeat(auto-fill, minmax(70px, 1fr));
             }
         }
 
@@ -640,7 +710,6 @@
         .mt-20 { margin-top: 20px; }
         .mb-20 { margin-bottom: 20px; }
 
-        /* ===== SPINNER ===== */
         .spinner {
             display: inline-block;
             width: 20px;
@@ -655,6 +724,21 @@
         @keyframes spin {
             to { transform: rotate(360deg); }
         }
+
+        .flag-icon {
+            font-size: 2rem;
+            line-height: 1;
+        }
+
+        .selected-grade {
+            display: inline-block;
+            background: #eef2ff;
+            color: #6366f1;
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
     </style>
 </head>
 <body>
@@ -665,18 +749,19 @@
     <!-- TOP NAVIGATION -->
     <!-- ============================================================ -->
     <nav class="top-nav" id="topNav" style="display:none;">
-        <a href="#" class="logo">🧠 <span>Synapse</span></a>
+        <a href="#" class="logo">Synapse</a>
 
         <div class="nav-links">
-            <a class="active" data-page="subjects" onclick="showPage('subjects')">📚 Subjects</a>
-            <a data-page="tutor" onclick="showPage('tutor')">💬 AI Tutor</a>
+            <a class="active" data-page="subjects" onclick="showPage('subjects')">Subjects</a>
+            <a data-page="tutor" onclick="showPage('tutor')">AI Tutor</a>
         </div>
 
         <div class="user-badge">
             <span class="name" id="navName">User</span>
             <span class="role" id="navRole">Learner</span>
             <span id="navBadge"></span>
-            <button class="logout-link" onclick="logout()">🚪 Logout</button>
+            <span id="navGrade" style="font-size:0.8rem;color:#6b7280;"></span>
+            <button class="logout-link" onclick="logout()">Logout</button>
         </div>
     </nav>
 
@@ -686,8 +771,8 @@
     <div class="page active" id="page-login">
         <div class="auth-card">
             <div style="text-align:center;margin-bottom:20px;">
-                <h1 style="font-size:2.2rem;font-weight:800;">🧠 <span style="background:linear-gradient(135deg,#6366f1,#a855f7);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">Synapse</span></h1>
-                <p style="color:#6b7280;font-size:0.95rem;">Your Strict AI Tutor</p>
+                <h1 style="font-size:2.2rem;font-weight:800;color:#0b1120;">Synapse</h1>
+                <p style="color:#6b7280;font-size:0.95rem;">Your AI Tutor</p>
             </div>
 
             <h2>Welcome back</h2>
@@ -722,7 +807,7 @@
     <div class="page" id="page-signup">
         <div class="auth-card">
             <div style="text-align:center;margin-bottom:16px;">
-                <h1 style="font-size:2rem;font-weight:800;">🧠 <span style="background:linear-gradient(135deg,#6366f1,#a855f7);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">Synapse</span></h1>
+                <h1 style="font-size:2rem;font-weight:800;color:#0b1120;">Synapse</h1>
             </div>
 
             <h2>Create your account</h2>
@@ -744,40 +829,37 @@
             </div>
 
             <div class="field">
-                <label>Province</label>
-                <select id="signupProvince" style="width:100%;padding:14px 16px;border:2px solid #e5e7eb;border-radius:12px;font-size:1rem;font-family:inherit;background:#fff;">
-                    <option value="">Select your province</option>
-                    <option value="Eastern Cape">Eastern Cape</option>
-                    <option value="Free State">Free State</option>
-                    <option value="Gauteng">Gauteng</option>
-                    <option value="KwaZulu-Natal">KwaZulu-Natal</option>
-                    <option value="Limpopo">Limpopo</option>
-                    <option value="Mpumalanga">Mpumalanga</option>
-                    <option value="Northern Cape">Northern Cape</option>
-                    <option value="North West">North West</option>
-                    <option value="Western Cape">Western Cape</option>
-                </select>
-            </div>
-
-            <div class="field">
-                <label>Curriculum</label>
-                <select id="signupCurriculum" style="width:100%;padding:14px 16px;border:2px solid #e5e7eb;border-radius:12px;font-size:1rem;font-family:inherit;background:#fff;">
-                    <option value="CAPS">CAPS (National Curriculum)</option>
-                    <option value="IEB">IEB (Independent Examinations Board)</option>
-                    <option value="Cambridge">Cambridge International</option>
+                <label>Select your country</label>
+                <select id="signupCountry" style="width:100%;padding:14px 16px;border:2px solid #e5e7eb;border-radius:12px;font-size:1rem;font-family:inherit;background:#fff;">
+                    <option value="">Select your country</option>
+                    <option value="South Africa">South Africa</option>
+                    <option value="China">China</option>
+                    <option value="United Kingdom">United Kingdom</option>
+                    <option value="United States">United States</option>
+                    <option value="Australia">Australia</option>
+                    <option value="India">India</option>
+                    <option value="Nigeria">Nigeria</option>
+                    <option value="Kenya">Kenya</option>
+                    <option value="Egypt">Egypt</option>
+                    <option value="Germany">Germany</option>
+                    <option value="France">France</option>
+                    <option value="Japan">Japan</option>
+                    <option value="Brazil">Brazil</option>
+                    <option value="Canada">Canada</option>
+                    <option value="New Zealand">New Zealand</option>
                 </select>
             </div>
 
             <div class="field">
                 <label>Role</label>
                 <select id="signupRole" style="width:100%;padding:14px 16px;border:2px solid #e5e7eb;border-radius:12px;font-size:1rem;font-family:inherit;background:#fff;">
-                    <option value="learner">📖 Learner</option>
-                    <option value="teacher">👨‍🏫 Teacher</option>
+                    <option value="learner">Learner</option>
+                    <option value="teacher">Teacher</option>
                 </select>
             </div>
 
             <div class="error" id="signupError">Please fill in all fields</div>
-            <div class="success" id="signupSuccess">Account created! Please check your email to verify your account. <span style="display:block;margin-top:8px;font-size:0.9rem;">(Demo: You can now log in)</span></div>
+            <div class="success" id="signupSuccess">Account created! Please check your email to verify your account.</div>
 
             <button class="btn" onclick="signup()">Create Account</button>
 
@@ -792,7 +874,7 @@
     <!-- ============================================================ -->
     <div class="page" id="page-forgot">
         <div class="auth-card">
-            <h2>🔑 Forgot password?</h2>
+            <h2>Forgot password?</h2>
             <p class="sub">Enter your email and we'll send you a link to reset your password.</p>
 
             <div class="field">
@@ -801,7 +883,7 @@
             </div>
 
             <div class="error" id="forgotError">Please enter a valid email</div>
-            <div class="success" id="forgotSuccess">Password reset link sent! Check your email. <span style="display:block;margin-top:8px;font-size:0.9rem;">(Demo: Check your console for the reset link)</span></div>
+            <div class="success" id="forgotSuccess">Password reset link sent! Check your email.</div>
 
             <button class="btn" onclick="forgotPassword()">Send Reset Link</button>
 
@@ -812,92 +894,45 @@
     </div>
 
     <!-- ============================================================ -->
+    <!-- PAGE: GRADE SELECTION -->
+    <!-- ============================================================ -->
+    <div class="page" id="page-grades">
+        <div class="page-header">
+            <h2>Select Your Grade</h2>
+            <p>Choose your current grade level to get the right lessons for you.</p>
+            <p style="font-size:0.9rem;color:#6366f1;margin-top:4px;" id="gradeCountryInfo"></p>
+        </div>
+
+        <div class="grade-grid" id="gradeGrid">
+            <!-- Generated by JavaScript -->
+        </div>
+
+        <button class="btn" id="gradeConfirmBtn" style="max-width:300px;margin:20px auto 0;display:none;" onclick="confirmGrade()">
+            Continue to Subjects
+        </button>
+    </div>
+
+    <!-- ============================================================ -->
     <!-- PAGE: SUBJECTS -->
     <!-- ============================================================ -->
     <div class="page" id="page-subjects">
         <div class="page-header">
-            <h2>📚 Choose a Subject</h2>
-            <p>Select a subject to start learning. Your progress is saved automatically.</p>
+            <h2>Your Subjects</h2>
+            <p id="subjectsSubtitle">Select a subject to start learning.</p>
         </div>
 
         <div class="subject-grid" id="subjectGrid">
-            <div class="subject-card" onclick="openSubject('Mathematics')">
-                <span class="icon">📐</span>
-                <span class="name">Mathematics</span>
-            </div>
-            <div class="subject-card" onclick="openSubject('English')">
-                <span class="icon">📖</span>
-                <span class="name">English</span>
-            </div>
-            <div class="subject-card" onclick="openSubject('Science')">
-                <span class="icon">🔬</span>
-                <span class="name">Science</span>
-            </div>
-            <div class="subject-card" onclick="openSubject('History')">
-                <span class="icon">🏛️</span>
-                <span class="name">History</span>
-            </div>
-            <div class="subject-card" onclick="openSubject('Geography')">
-                <span class="icon">🌍</span>
-                <span class="name">Geography</span>
-            </div>
-            <div class="subject-card" onclick="openSubject('Life Orientation')">
-                <span class="icon">🧘</span>
-                <span class="name">Life Orientation</span>
-            </div>
-            <div class="subject-card" onclick="openSubject('Accounting')">
-                <span class="icon">💰</span>
-                <span class="name">Accounting</span>
-            </div>
-            <div class="subject-card" onclick="openSubject('Business Studies')">
-                <span class="icon">📊</span>
-                <span class="name">Business Studies</span>
-            </div>
-            <div class="subject-card" onclick="openSubject('Economics')">
-                <span class="icon">📈</span>
-                <span class="name">Economics</span>
-            </div>
-            <div class="subject-card" onclick="openSubject('Life Sciences')">
-                <span class="icon">🧬</span>
-                <span class="name">Life Sciences</span>
-            </div>
-            <div class="subject-card" onclick="openSubject('Physical Sciences')">
-                <span class="icon">⚛️</span>
-                <span class="name">Physical Sciences</span>
-            </div>
-            <div class="subject-card" onclick="openSubject('Technology')">
-                <span class="icon">💻</span>
-                <span class="name">Technology</span>
-            </div>
+            <!-- Generated by JavaScript -->
         </div>
     </div>
 
     <!-- ============================================================ -->
-    <!-- PAGE: CLASSROOM (Subjects > Topics) -->
+    <!-- PAGE: CLASSROOM -->
     <!-- ============================================================ -->
     <div class="page" id="page-classroom">
         <div class="classroom-header">
-            <h2 id="classroomTitle">📚 Subject</h2>
+            <h2 id="classroomTitle">Subject</h2>
             <button class="back-btn" onclick="showPage('subjects')">← Back to Subjects</button>
-        </div>
-
-        <div class="grade-filter">
-            <label style="font-weight:600;font-size:0.9rem;display:block;margin-bottom:4px;">Select your grade</label>
-            <select id="gradeFilter" onchange="filterTopics()">
-                <option value="">All Grades</option>
-                <option value="1">Grade 1</option>
-                <option value="2">Grade 2</option>
-                <option value="3">Grade 3</option>
-                <option value="4">Grade 4</option>
-                <option value="5">Grade 5</option>
-                <option value="6">Grade 6</option>
-                <option value="7">Grade 7</option>
-                <option value="8">Grade 8</option>
-                <option value="9">Grade 9</option>
-                <option value="10">Grade 10</option>
-                <option value="11">Grade 11</option>
-                <option value="12">Grade 12</option>
-            </select>
         </div>
 
         <div id="topicCount" style="font-size:0.9rem;color:#6b7280;margin-bottom:12px;"></div>
@@ -913,12 +948,12 @@
     <div class="page" id="page-tutor">
         <div class="tutor-container">
             <div class="tutor-header">
-                <h2>💬 AI Tutor</h2>
+                <h2>AI Tutor</h2>
                 <span class="context" id="tutorContext">General</span>
             </div>
 
             <div class="chat-box" id="chatBox">
-                <div class="msg bot">👋 Welcome! Ask me anything — I'll guide you step by step.</div>
+                <div class="msg bot">Welcome! Ask me anything — I'll guide you step by step.</div>
             </div>
 
             <div class="chat-input">
@@ -929,7 +964,7 @@
 
             <div class="chat-options">
                 <input type="checkbox" id="speakToggle" checked />
-                <label for="speakToggle">🔊 AI reads responses aloud</label>
+                <label for="speakToggle">AI reads responses aloud</label>
                 <span class="status" id="voiceStatus">Ready</span>
             </div>
         </div>
@@ -946,109 +981,100 @@
     // ================================================================
     let currentUser = null;
     let currentSubject = '';
-    let currentGrade = '';
+    let selectedGrade = '';
 
     // ================================================================
-    //  TOPICS DATA (South African CAPS-aligned)
+    //  COUNTRY-SPECIFIC DATA
     // ================================================================
-    const TOPICS = {
-        'Mathematics': [
-            { title: 'Number Operations', grade: '1-3', resources: ['Lesson', 'Worksheet', 'Quiz'] },
-            { title: 'Patterns & Algebra', grade: '4-6', resources: ['Lesson', 'Interactive', 'Quiz'] },
-            { title: 'Fractions & Decimals', grade: '4-7', resources: ['Lesson', 'Worksheet', 'Video'] },
-            { title: 'Geometry & Shapes', grade: '4-9', resources: ['Lesson', 'Quiz', 'Video'] },
-            { title: 'Measurement', grade: '4-9', resources: ['Lesson', 'Worksheet'] },
-            { title: 'Data Handling', grade: '4-9', resources: ['Lesson', 'Project', 'Quiz'] },
-            { title: 'Algebra', grade: '8-10', resources: ['Lesson', 'Worksheet', 'Quiz'] },
-            { title: 'Trigonometry', grade: '10-12', resources: ['Lesson', 'Video', 'Quiz'] },
-            { title: 'Calculus', grade: '12', resources: ['Lesson', 'Worksheet'] },
-            { title: 'Financial Maths', grade: '10-12', resources: ['Lesson', 'Case Study', 'Quiz'] }
-        ],
-        'English': [
-            { title: 'Reading Comprehension', grade: '1-12', resources: ['Lesson', 'Worksheet', 'Quiz'] },
-            { title: 'Grammar Basics', grade: '1-6', resources: ['Lesson', 'Quiz', 'Video'] },
-            { title: 'Creative Writing', grade: '4-9', resources: ['Lesson', 'Worksheet'] },
-            { title: 'Literature Analysis', grade: '8-12', resources: ['Lesson', 'Essay Guide', 'Quiz'] },
-            { title: 'Poetry', grade: '8-12', resources: ['Lesson', 'Video', 'Quiz'] },
-            { title: 'Vocabulary Building', grade: '1-12', resources: ['Lesson', 'Game', 'Quiz'] }
-        ],
-        'Science': [
-            { title: 'Life Processes', grade: '4-6', resources: ['Lesson', 'Worksheet', 'Quiz'] },
-            { title: 'Energy & Change', grade: '4-7', resources: ['Lesson', 'Experiment', 'Video'] },
-            { title: 'Matter & Materials', grade: '4-7', resources: ['Lesson', 'Worksheet', 'Quiz'] },
-            { title: 'Ecosystems', grade: '7-9', resources: ['Lesson', 'Project', 'Quiz'] },
-            { title: 'Physics (Motion)', grade: '10-12', resources: ['Lesson', 'Video', 'Quiz'] },
-            { title: 'Chemistry (Bonding)', grade: '10-12', resources: ['Lesson', 'Worksheet', 'Video'] },
-            { title: 'Biology (DNA)', grade: '10-12', resources: ['Lesson', 'Video', 'Quiz'] }
-        ],
-        'History': [
-            { title: 'Ancient Civilizations', grade: '4-6', resources: ['Lesson', 'Video', 'Quiz'] },
-            { title: 'Colonialism in Africa', grade: '7-9', resources: ['Lesson', 'Worksheet', 'Video'] },
-            { title: 'Apartheid in SA', grade: '9-12', resources: ['Lesson', 'Documentary', 'Quiz'] },
-            { title: 'World War I & II', grade: '10-12', resources: ['Lesson', 'Video', 'Quiz'] },
-            { title: 'Democracy in SA', grade: '10-12', resources: ['Lesson', 'Case Study'] },
-            { title: 'Cold War', grade: '11-12', resources: ['Lesson', 'Video', 'Quiz'] }
-        ],
-        'Geography': [
-            { title: 'Map Skills', grade: '4-6', resources: ['Lesson', 'Worksheet', 'Quiz'] },
-            { title: 'Weather & Climate', grade: '4-7', resources: ['Lesson', 'Video', 'Quiz'] },
-            { title: 'South Africa\'s Provinces', grade: '4-9', resources: ['Lesson', 'Quiz', 'Map Activity'] },
-            { title: 'Water Cycle', grade: '7-9', resources: ['Lesson', 'Experiment', 'Quiz'] },
-            { title: 'Economic Geography', grade: '10-12', resources: ['Lesson', 'Case Study'] },
-            { title: 'Climate Change', grade: '10-12', resources: ['Lesson', 'Video', 'Quiz'] }
-        ],
-        'Life Orientation': [
-            { title: 'Self-Awareness', grade: '4-6', resources: ['Lesson', 'Worksheet'] },
-            { title: 'Healthy Living', grade: '4-7', resources: ['Lesson', 'Quiz', 'Video'] },
-            { title: 'Citizenship', grade: '7-9', resources: ['Lesson', 'Project'] },
-            { title: 'Study Skills', grade: '8-12', resources: ['Lesson', 'Quiz'] },
-            { title: 'Career Guidance', grade: '10-12', resources: ['Lesson', 'Worksheet'] }
-        ],
-        'Accounting': [
-            { title: 'Introduction to Accounting', grade: '10-12', resources: ['Lesson', 'Worksheet'] },
-            { title: 'Double-Entry System', grade: '10-12', resources: ['Lesson', 'Quiz', 'Video'] },
-            { title: 'Trial Balance', grade: '10-12', resources: ['Lesson', 'Worksheet'] },
-            { title: 'Financial Statements', grade: '11-12', resources: ['Lesson', 'Case Study'] },
-            { title: 'VAT & Taxation', grade: '11-12', resources: ['Lesson', 'Quiz'] },
-            { title: 'Cost Accounting', grade: '12', resources: ['Lesson', 'Worksheet'] },
-            { title: 'Budgeting', grade: '12', resources: ['Lesson', 'Project'] }
-        ],
-        'Business Studies': [
-            { title: 'Business Environments', grade: '10-12', resources: ['Lesson', 'Quiz'] },
-            { title: 'Business Functions', grade: '10-12', resources: ['Lesson', 'Worksheet'] },
-            { title: 'Entrepreneurship', grade: '10-12', resources: ['Lesson', 'Case Study'] },
-            { title: 'Marketing', grade: '11-12', resources: ['Lesson', 'Video', 'Quiz'] },
-            { title: 'Financial Management', grade: '11-12', resources: ['Lesson', 'Worksheet'] },
-            { title: 'Human Resources', grade: '12', resources: ['Lesson', 'Quiz'] }
-        ],
-        'Economics': [
-            { title: 'Basic Economic Concepts', grade: '10-12', resources: ['Lesson', 'Quiz'] },
-            { title: 'Demand & Supply', grade: '10-12', resources: ['Lesson', 'Video', 'Quiz'] },
-            { title: 'Market Structures', grade: '11-12', resources: ['Lesson', 'Worksheet'] },
-            { title: 'Macroeconomics', grade: '11-12', resources: ['Lesson', 'Case Study'] },
-            { title: 'South African Economy', grade: '12', resources: ['Lesson', 'Quiz'] }
-        ],
-        'Life Sciences': [
-            { title: 'Cell Biology', grade: '10-12', resources: ['Lesson', 'Video', 'Quiz'] },
-            { title: 'Genetics', grade: '11-12', resources: ['Lesson', 'Worksheet', 'Video'] },
-            { title: 'Evolution', grade: '12', resources: ['Lesson', 'Quiz'] },
-            { title: 'Ecology', grade: '10-12', resources: ['Lesson', 'Project'] },
-            { title: 'Human Body Systems', grade: '10-12', resources: ['Lesson', 'Video', 'Quiz'] }
-        ],
-        'Physical Sciences': [
-            { title: 'Mechanics', grade: '10-12', resources: ['Lesson', 'Quiz', 'Video'] },
-            { title: 'Waves & Sound', grade: '10-12', resources: ['Lesson', 'Worksheet'] },
-            { title: 'Electricity & Magnetism', grade: '10-12', resources: ['Lesson', 'Video', 'Quiz'] },
-            { title: 'Chemical Bonding', grade: '10-12', resources: ['Lesson', 'Worksheet'] },
-            { title: 'Thermodynamics', grade: '11-12', resources: ['Lesson', 'Quiz'] }
-        ],
-        'Technology': [
-            { title: 'Design Process', grade: '4-9', resources: ['Lesson', 'Project'] },
-            { title: 'Structures', grade: '4-9', resources: ['Lesson', 'Worksheet'] },
-            { title: 'Electrical Systems', grade: '7-9', resources: ['Lesson', 'Quiz'] },
-            { title: 'Coding Basics', grade: '7-12', resources: ['Lesson', 'Video', 'Quiz'] },
-            { title: 'Digital Citizenship', grade: '7-12', resources: ['Lesson', 'Quiz'] }
-        ]
+    const COUNTRY_DATA = {
+        'South Africa': {
+            grades: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'],
+            subjects: {
+                'Mathematics': ['Number Operations', 'Patterns & Algebra', 'Fractions & Decimals', 'Geometry', 'Measurement', 'Data Handling', 'Algebra', 'Trigonometry', 'Calculus', 'Financial Maths'],
+                'English': ['Reading Comprehension', 'Grammar', 'Creative Writing', 'Literature Analysis', 'Poetry', 'Vocabulary'],
+                'Science': ['Life Processes', 'Energy & Change', 'Matter & Materials', 'Ecosystems', 'Physics', 'Chemistry', 'Biology'],
+                'History': ['Ancient Civilizations', 'Colonialism in Africa', 'Apartheid', 'World Wars', 'Democracy', 'Cold War'],
+                'Geography': ['Map Skills', 'Weather & Climate', 'South Africa\'s Provinces', 'Water Cycle', 'Economic Geography', 'Climate Change'],
+                'Life Orientation': ['Self-Awareness', 'Healthy Living', 'Citizenship', 'Study Skills', 'Career Guidance'],
+                'Accounting': ['Introduction', 'Double-Entry', 'Trial Balance', 'Financial Statements', 'VAT', 'Cost Accounting', 'Budgeting'],
+                'Business Studies': ['Business Environments', 'Business Functions', 'Entrepreneurship', 'Marketing', 'Financial Management', 'Human Resources'],
+                'Economics': ['Basic Concepts', 'Demand & Supply', 'Market Structures', 'Macroeconomics', 'South African Economy'],
+                'Life Sciences': ['Cell Biology', 'Genetics', 'Evolution', 'Ecology', 'Human Body Systems'],
+                'Physical Sciences': ['Mechanics', 'Waves & Sound', 'Electricity', 'Chemical Bonding', 'Thermodynamics'],
+                'Technology': ['Design Process', 'Structures', 'Electrical Systems', 'Coding Basics', 'Digital Citizenship']
+            }
+        },
+        'China': {
+            grades: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'],
+            subjects: {
+                '语文 (Chinese)': ['Reading', 'Writing', 'Classical Literature', 'Modern Literature', 'Poetry', 'Grammar'],
+                '数学 (Mathematics)': ['Arithmetic', 'Algebra', 'Geometry', 'Trigonometry', 'Calculus', 'Statistics'],
+                '英语 (English)': ['Reading', 'Grammar', 'Writing', 'Listening', 'Speaking', 'Vocabulary'],
+                '物理 (Physics)': ['Mechanics', 'Thermodynamics', 'Electricity', 'Waves', 'Optics', 'Modern Physics'],
+                '化学 (Chemistry)': ['Basic Concepts', 'Chemical Reactions', 'Organic Chemistry', 'Inorganic Chemistry', 'Biochemistry'],
+                '生物 (Biology)': ['Cell Biology', 'Genetics', 'Ecology', 'Evolution', 'Human Body'],
+                '历史 (History)': ['Ancient China', 'Imperial China', 'Modern China', 'World History', 'Cultural Revolution'],
+                '地理 (Geography)': ['Physical Geography', 'Human Geography', 'China\'s Geography', 'World Geography', 'Climate']
+            }
+        },
+        'United Kingdom': {
+            grades: ['7', '8', '9', '10', '11', '12', '13'],
+            subjects: {
+                'English': ['Reading', 'Writing', 'Shakespeare', 'Poetry', 'Modern Literature', 'Grammar'],
+                'Mathematics': ['Algebra', 'Geometry', 'Trigonometry', 'Calculus', 'Statistics', 'Mechanics'],
+                'Science': ['Biology', 'Chemistry', 'Physics', 'Earth Science', 'Astronomy'],
+                'History': ['Medieval History', 'Tudors', 'Victorian Era', 'World Wars', 'Modern History'],
+                'Geography': ['Physical Geography', 'Human Geography', 'UK Geography', 'Climate Change', 'Development'],
+                'French': ['Grammar', 'Vocabulary', 'Conversation', 'Reading', 'Writing'],
+                'Spanish': ['Grammar', 'Vocabulary', 'Conversation', 'Reading', 'Writing'],
+                'Art': ['Drawing', 'Painting', 'Sculpture', 'Art History', 'Digital Art'],
+                'Music': ['Theory', 'Composition', 'Instrument', 'Music History']
+            }
+        },
+        'United States': {
+            grades: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'],
+            subjects: {
+                'English Language Arts': ['Reading', 'Writing', 'Literature', 'Grammar', 'Vocabulary', 'Speech'],
+                'Mathematics': ['Arithmetic', 'Algebra', 'Geometry', 'Trigonometry', 'Calculus', 'Statistics'],
+                'Science': ['Life Science', 'Physical Science', 'Earth Science', 'Biology', 'Chemistry', 'Physics'],
+                'History': ['American History', 'World History', 'Government', 'Civics', 'Economics'],
+                'Geography': ['Physical Geography', 'Human Geography', 'US Geography', 'World Geography'],
+                'Foreign Language': ['Spanish', 'French', 'Mandarin', 'Latin'],
+                'Art': ['Visual Arts', 'Art History', 'Digital Art'],
+                'Music': ['Theory', 'Performance', 'Music History']
+            }
+        },
+        'Australia': {
+            grades: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'],
+            subjects: {
+                'English': ['Reading', 'Writing', 'Literature', 'Grammar', 'Media Studies'],
+                'Mathematics': ['Algebra', 'Geometry', 'Trigonometry', 'Calculus', 'Statistics'],
+                'Science': ['Biology', 'Chemistry', 'Physics', 'Earth Science', 'Environmental Science'],
+                'History': ['Australian History', 'World History', 'Civics', 'Ancient History'],
+                'Geography': ['Physical Geography', 'Human Geography', 'Australian Geography'],
+                'Health & PE': ['Health Education', 'Physical Education', 'Sports Science']
+            }
+        },
+        'India': {
+            grades: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'],
+            subjects: {
+                'English': ['Reading', 'Writing', 'Literature', 'Grammar', 'Communication'],
+                'Hindi': ['Reading', 'Writing', 'Literature', 'Grammar'],
+                'Mathematics': ['Algebra', 'Geometry', 'Trigonometry', 'Calculus', 'Statistics'],
+                'Science': ['Physics', 'Chemistry', 'Biology', 'Environmental Science'],
+                'Social Studies': ['History', 'Geography', 'Civics', 'Economics'],
+                'Sanskrit': ['Reading', 'Writing', 'Grammar', 'Literature']
+            }
+        }
+    };
+
+    // Default fallback
+    const DEFAULT_SUBJECTS = {
+        'Mathematics': ['Numbers', 'Algebra', 'Geometry', 'Data', 'Measurement'],
+        'English': ['Reading', 'Writing', 'Grammar', 'Literature'],
+        'Science': ['Life Science', 'Physical Science', 'Earth Science'],
+        'History': ['World History', 'Local History'],
+        'Geography': ['Physical Geography', 'Human Geography']
     };
 
     // ================================================================
@@ -1063,8 +1089,7 @@
     }
 
     function getCurrentUser() {
-        const data = JSON.parse(localStorage.getItem('synapse_session') || 'null');
-        return data;
+        return JSON.parse(localStorage.getItem('synapse_session') || 'null');
     }
 
     function setCurrentUser(user) {
@@ -1078,27 +1103,45 @@
     }
 
     // ================================================================
+    //  SYNC PROFILE WITH BACKEND
+    // ================================================================
+    async function syncProfileWithBackend(user) {
+        try {
+            const response = await fetch('/save-profile', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    userId: user.id,
+                    name: user.name,
+                    country: user.country || 'South Africa',
+                    grade: user.grade || 'Not specified'
+                })
+            });
+            const data = await response.json();
+            if (data.success) {
+                console.log('Profile synced with backend');
+            }
+        } catch (err) {
+            console.warn('Could not sync profile:', err);
+        }
+    }
+
+    // ================================================================
     //  PAGE NAVIGATION
     // ================================================================
     function showPage(page) {
-        // Hide all pages
         document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-
-        // Show target
         const target = document.getElementById('page-' + page);
         if (target) target.classList.add('active');
 
-        // Update nav links
         document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active'));
         document.querySelectorAll('.nav-links a[data-page="' + page + '"]').forEach(a => a.classList.add('active'));
 
-        // Show/hide top nav
         const isAuth = ['login', 'signup', 'forgot'].includes(page);
         document.getElementById('topNav').style.display = isAuth ? 'none' : 'flex';
 
-        // Update tutor context
         if (page === 'tutor') {
-            document.getElementById('tutorContext').textContent = currentSubject ? `🧠 ${currentSubject}` : 'General';
+            document.getElementById('tutorContext').textContent = currentSubject ? currentSubject : 'General';
         }
 
         window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -1129,6 +1172,7 @@
 
         error.classList.remove('show');
         setCurrentUser(user);
+        syncProfileWithBackend(user);
         loadDashboard();
     }
 
@@ -1139,14 +1183,13 @@
         const name = document.getElementById('signupName').value.trim();
         const email = document.getElementById('signupEmail').value.trim();
         const password = document.getElementById('signupPassword').value.trim();
-        const province = document.getElementById('signupProvince').value;
-        const curriculum = document.getElementById('signupCurriculum').value;
+        const country = document.getElementById('signupCountry').value;
         const role = document.getElementById('signupRole').value;
 
         const error = document.getElementById('signupError');
         const success = document.getElementById('signupSuccess');
 
-        if (!name || !email || !password || !province) {
+        if (!name || !email || !password || !country) {
             error.textContent = 'Please fill in all fields';
             error.classList.add('show');
             success.classList.remove('show');
@@ -1173,9 +1216,9 @@
             name,
             email,
             password,
-            province,
-            curriculum,
+            country,
             role,
+            grade: '',
             verified: false,
             createdAt: new Date().toISOString()
         };
@@ -1184,12 +1227,12 @@
         saveUsers(users);
 
         error.classList.remove('show');
-        success.textContent = '✅ Account created! Please check your email to verify your account. (Demo: You can now log in)';
+        success.textContent = 'Account created! Please check your email to verify your account.';
         success.classList.add('show');
 
-        // Auto-login after 2 seconds
-        setTimeout(() => {
+        setTimeout(async () => {
             setCurrentUser(newUser);
+            await syncProfileWithBackend(newUser);
             loadDashboard();
         }, 1500);
     }
@@ -1220,11 +1263,10 @@
         }
 
         error.classList.remove('show');
-        success.textContent = '📧 Password reset link sent to ' + email + ' (Demo: Check your console)';
+        success.textContent = 'Password reset link sent to ' + email;
         success.classList.add('show');
 
-        console.log('🔑 Password reset link for:', email);
-        console.log('👉 Reset token: ' + btoa(email + ':' + Date.now()));
+        console.log('Password reset link for:', email);
     }
 
     // ================================================================
@@ -1239,28 +1281,106 @@
 
         currentUser = user;
 
-        // Update nav
         document.getElementById('navName').textContent = user.name;
         document.getElementById('navRole').textContent = user.role.charAt(0).toUpperCase() + user.role.slice(1);
+        document.getElementById('navGrade').textContent = user.grade ? 'Grade ' + user.grade : '';
 
-        // Show badge
         const badge = document.getElementById('navBadge');
-        badge.innerHTML = `<span class="badge badge-trial">📝 Trial • 3d left</span>`;
+        badge.innerHTML = `<span class="badge badge-trial">Trial • 3d left</span>`;
 
-        // Show subjects page
-        showPage('subjects');
+        // If user hasn't selected grade, show grade selection
+        if (!user.grade) {
+            showGradeSelection();
+        } else {
+            showSubjects();
+        }
     }
 
     // ================================================================
-    //  LOGOUT
+    //  GRADE SELECTION
     // ================================================================
-    function logout() {
-        if (confirm('Are you sure you want to logout?')) {
-            clearSession();
-            showPage('login');
-            document.getElementById('loginEmail').value = '';
-            document.getElementById('loginPassword').value = '';
+    function showGradeSelection() {
+        const user = getCurrentUser();
+        if (!user) return;
+
+        const country = user.country || 'South Africa';
+        const data = COUNTRY_DATA[country];
+        const grades = data ? data.grades : ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'];
+
+        document.getElementById('gradeCountryInfo').textContent = 'Country: ' + country;
+        document.getElementById('gradeCountryInfo').style.color = '#6366f1';
+
+        const grid = document.getElementById('gradeGrid');
+        grid.innerHTML = '';
+
+        grades.forEach(g => {
+            const div = document.createElement('div');
+            div.className = 'grade-card';
+            div.textContent = 'Grade ' + g;
+            div.dataset.grade = g;
+            div.onclick = function() {
+                document.querySelectorAll('.grade-card').forEach(c => c.classList.remove('selected'));
+                this.classList.add('selected');
+                selectedGrade = this.dataset.grade;
+                document.getElementById('gradeConfirmBtn').style.display = 'block';
+            };
+            grid.appendChild(div);
+        });
+
+        showPage('grades');
+    }
+
+    function confirmGrade() {
+        if (!selectedGrade) {
+            alert('Please select your grade.');
+            return;
         }
+
+        const user = getCurrentUser();
+        if (user) {
+            user.grade = selectedGrade;
+            const users = getUsers();
+            const index = users.findIndex(u => u.id === user.id);
+            if (index !== -1) {
+                users[index].grade = selectedGrade;
+                saveUsers(users);
+            }
+            setCurrentUser(user);
+            syncProfileWithBackend(user);
+        }
+
+        document.getElementById('navGrade').textContent = 'Grade ' + selectedGrade;
+        showSubjects();
+    }
+
+    // ================================================================
+    //  SUBJECTS
+    // ================================================================
+    function showSubjects() {
+        const user = getCurrentUser();
+        if (!user) return;
+
+        const country = user.country || 'South Africa';
+        const data = COUNTRY_DATA[country];
+        const subjects = data ? data.subjects : DEFAULT_SUBJECTS;
+
+        document.getElementById('subjectsSubtitle').textContent =
+            'Grade ' + user.grade + ' · ' + country + ' · Select a subject to start learning.';
+
+        const grid = document.getElementById('subjectGrid');
+        grid.innerHTML = '';
+
+        Object.keys(subjects).forEach(name => {
+            const div = document.createElement('div');
+            div.className = 'subject-card';
+            div.innerHTML = `<div class="name">${name}</div>`;
+            div.onclick = function() {
+                openSubject(name);
+            };
+            grid.appendChild(div);
+        });
+
+        showPage('subjects');
     }
 
     // ================================================================
@@ -1268,51 +1388,34 @@
     // ================================================================
     function openSubject(subject) {
         currentSubject = subject;
-        document.getElementById('classroomTitle').textContent = `📚 ${subject}`;
-        document.getElementById('gradeFilter').value = '';
-        currentGrade = '';
-        renderTopics(subject, '');
-        showPage('classroom');
-    }
+        document.getElementById('classroomTitle').textContent = subject;
 
-    function renderTopics(subject, grade) {
+        const user = getCurrentUser();
+        const country = user ? user.country : 'South Africa';
+        const data = COUNTRY_DATA[country];
+        const topics = data ? data.subjects[subject] : DEFAULT_SUBJECTS[subject] || [];
+
         const grid = document.getElementById('topicGrid');
-        const topics = TOPICS[subject] || [];
         const countDiv = document.getElementById('topicCount');
 
-        let filtered = topics;
-        if (grade) {
-            const g = parseInt(grade);
-            filtered = topics.filter(t => {
-                const range = t.grade.split('-');
-                const from = parseInt(range[0]);
-                const to = parseInt(range[1] || range[0]);
-                return g >= from && g <= to;
-            });
-        }
+        countDiv.textContent = 'Showing ' + topics.length + ' topics';
 
-        countDiv.textContent = `Showing ${filtered.length} topics`;
-
-        if (filtered.length === 0) {
-            grid.innerHTML = `<div class="empty-state">No topics available for this grade yet.</div>`;
-            return;
-        }
-
-        grid.innerHTML = filtered.map(t => `
-            <div class="topic-card" onclick="openTutor('${subject}', '${t.title}')">
-                <div class="title">${t.title}</div>
-                <div class="meta">Grade ${t.grade}</div>
-                <div class="resources">
-                    ${t.resources.map(r => `<span class="tag">${r}</span>`).join('')}
+        if (topics.length === 0) {
+            grid.innerHTML = `<div class="empty-state">No topics available for this subject yet.</div>`;
+        } else {
+            grid.innerHTML = topics.map(t => `
+                <div class="topic-card" onclick="openTutor('${subject}', '${t}')">
+                    <div class="title">${t}</div>
+                    <div class="resources">
+                        <span class="tag">Lesson</span>
+                        <span class="tag">Quiz</span>
+                        <span class="tag">Worksheet</span>
+                    </div>
                 </div>
-            </div>
-        `).join('');
-    }
+            `).join('');
+        }
 
-    function filterTopics() {
-        const grade = document.getElementById('gradeFilter').value;
-        currentGrade = grade;
-        renderTopics(currentSubject, grade);
+        showPage('classroom');
     }
 
     // ================================================================
@@ -1320,12 +1423,11 @@
     // ================================================================
     function openTutor(subject, topic) {
         currentSubject = subject;
-        document.getElementById('tutorContext').textContent = `🧠 ${subject} - ${topic}`;
+        document.getElementById('tutorContext').textContent = subject + ' - ' + topic;
         showPage('tutor');
 
-        // Auto-send a message to start the lesson
         const input = document.getElementById('chatInput');
-        input.value = `I'm learning about "${topic}" in ${subject}. Can you teach me step by step?`;
+        input.value = 'I\'m learning about "' + topic + '" in ' + subject + '. Can you teach me step by step?';
         setTimeout(sendChat, 500);
     }
 
@@ -1347,7 +1449,7 @@
 
         try {
             const context = document.getElementById('tutorContext').textContent;
-            const fullMsg = `${context}: ${msg}`;
+            const fullMsg = context + ': ' + msg;
 
             const response = await fetch('/chat', {
                 method: 'POST',
@@ -1363,10 +1465,10 @@
             if (data.reply) {
                 addMessage('bot', data.reply);
             } else {
-                addMessage('bot', '❌ ' + (data.error || 'No response'));
+                addMessage('bot', data.error || 'No response from server.');
             }
         } catch (err) {
-            addMessage('bot', '❌ Server not reachable. Please try again.');
+            addMessage('bot', 'Server not reachable. Please try again.');
         } finally {
             input.disabled = false;
             input.focus();
@@ -1420,12 +1522,12 @@
         listening = true;
         btn.classList.add('listening');
         btn.textContent = '⏹️';
-        st.textContent = '🎤 Listening...';
+        st.textContent = 'Listening...';
 
         recognition.onresult = (e) => {
             const text = e.results[0][0].transcript;
             document.getElementById('chatInput').value = text;
-            st.textContent = '✅ "' + text + '"';
+            st.textContent = 'Heard: "' + text + '"';
             btn.classList.remove('listening');
             btn.textContent = '🎤';
             listening = false;
@@ -1433,7 +1535,7 @@
         };
 
         recognition.onerror = (e) => {
-            st.textContent = '❌ ' + e.error;
+            st.textContent = 'Error: ' + e.error;
             btn.classList.remove('listening');
             btn.textContent = '🎤';
             listening = false;
@@ -1457,7 +1559,7 @@
         let clean = text
             .replace(/\*\*/g, '')
             .replace(/#/g, '')
-            .replace(/📚|🎯|✏️|🤔/g, '')
+            .replace(/[📚🎯✏️🤔]/g, '')
             .replace(/\n/g, '. ');
 
         if (clean.length > 350) clean = clean.substring(0, 350) + '...';
@@ -1478,28 +1580,37 @@
     }
 
     // ================================================================
+    //  LOGOUT
+    // ================================================================
+    function logout() {
+        if (confirm('Are you sure you want to logout?')) {
+            clearSession();
+            showPage('login');
+            document.getElementById('loginEmail').value = '';
+            document.getElementById('loginPassword').value = '';
+        }
+    }
+
+    // ================================================================
     //  INIT
     // ================================================================
     function init() {
-        console.log('🧠 Synapse AI Tutor loaded');
-        console.log('📱 Build: Professional Platform v2.0');
+        console.log('Synapse AI Tutor loaded');
 
-        // Preload voices
         if ('speechSynthesis' in window) {
             window.speechSynthesis.getVoices();
             window.speechSynthesis.onvoiceschanged = () => { window.speechSynthesis.getVoices(); };
         }
 
-        // Check session
         const user = getCurrentUser();
         if (user) {
             currentUser = user;
+            syncProfileWithBackend(user);
             loadDashboard();
         } else {
             showPage('login');
         }
 
-        // Enter key in chat
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Enter' && document.getElementById('page-tutor').classList.contains('active')) {
                 const input = document.getElementById('chatInput');
@@ -1510,7 +1621,6 @@
             }
         });
 
-        // Enter key in login
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Enter' && document.getElementById('page-login').classList.contains('active')) {
                 login();
@@ -1518,7 +1628,6 @@
         });
     }
 
-    // Start the app
     init();
 </script>
 
