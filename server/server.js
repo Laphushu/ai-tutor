@@ -24,23 +24,38 @@ const db = new Pool({
   ssl: { rejectUnauthorized: false }
 });
 
-// ================= INIT TABLES =================
+// ================= INIT TABLES + MIGRATIONS =================
 async function initDB() {
   try {
-    // Users table with email and password
+    // 1. Create users table (if not exists)
     await db.query(`
       CREATE TABLE IF NOT EXISTS users (
         userId TEXT PRIMARY KEY,
-        email TEXT UNIQUE NOT NULL,
-        password TEXT NOT NULL,
         name TEXT,
         country TEXT,
-        grade TEXT,
-        role TEXT DEFAULT 'learner',
-        created_at TIMESTAMP DEFAULT NOW()
+        grade TEXT
       )
     `);
 
+    // 2. Add new columns (idempotent)
+    await db.query(`ALTER TABLE users ADD COLUMN IF NOT EXISTS email TEXT`);
+    await db.query(`ALTER TABLE users ADD COLUMN IF NOT EXISTS password TEXT`);
+    await db.query(`ALTER TABLE users ADD COLUMN IF NOT EXISTS role TEXT DEFAULT 'learner'`);
+    await db.query(`ALTER TABLE users ADD COLUMN IF NOT EXISTS created_at TIMESTAMP DEFAULT NOW()`);
+    
+    // 3. Add unique constraint on email (if not exists)
+    await db.query(`
+      DO $$
+      BEGIN
+        IF NOT EXISTS (
+          SELECT 1 FROM pg_constraint WHERE conname = 'users_email_unique'
+        ) THEN
+          ALTER TABLE users ADD CONSTRAINT users_email_unique UNIQUE (email);
+        END IF;
+      END $$;
+    `);
+
+    // 4. Create messages table
     await db.query(`
       CREATE TABLE IF NOT EXISTS messages (
         id SERIAL PRIMARY KEY,
@@ -51,6 +66,7 @@ async function initDB() {
       )
     `);
 
+    // 5. Create subscriptions table
     await db.query(`
       CREATE TABLE IF NOT EXISTS subscriptions (
         userId TEXT PRIMARY KEY,
@@ -59,14 +75,14 @@ async function initDB() {
       )
     `);
 
-    // Add Stripe columns if missing
     await db.query(`ALTER TABLE subscriptions ADD COLUMN IF NOT EXISTS stripeCustomerId TEXT`);
     await db.query(`ALTER TABLE subscriptions ADD COLUMN IF NOT EXISTS subscriptionEndDate TIMESTAMP`);
     await db.query(`ALTER TABLE subscriptions ADD COLUMN IF NOT EXISTS planType TEXT DEFAULT 'free'`);
 
-    console.log("✅ Database tables ready with real auth");
+    console.log("✅ Database tables and migrations complete");
   } catch (err) {
-    console.error("❌ Database error:", err.message);
+    console.error("❌ Database init error:", err.message);
+    // Don't crash the app — log and continue
   }
 }
 
@@ -111,7 +127,7 @@ app.post("/signup", async (req, res) => {
       return res.status(400).json({ error: "Email already registered" });
     }
 
-    // Generate userId from email
+    // Generate userId
     const userId = 'user_' + email.replace(/[^a-zA-Z0-9]/g, '_');
 
     // Insert user
@@ -172,7 +188,7 @@ app.post("/login", async (req, res) => {
   }
 });
 
-// ================= PROFILE (update grade, etc.) =================
+// ================= PROFILE =================
 app.post("/save-profile", async (req, res) => {
   const { userId, name, country, grade } = req.body;
 
