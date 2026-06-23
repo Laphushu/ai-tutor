@@ -14,24 +14,20 @@
 
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: linear-gradient(145deg, #f6f9fc 0%, #e9f0f5 100%);
+            background: #f0f4f8;
             min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 24px;
+            padding: 20px;
         }
 
         /* ===== CARD ===== */
         .card {
             background: #ffffff;
             border-radius: 32px;
-            box-shadow: 0 24px 80px rgba(0, 20, 40, 0.12), 0 8px 32px rgba(0, 0, 0, 0.04);
+            box-shadow: 0 24px 80px rgba(0, 20, 40, 0.10);
             padding: 44px 40px 40px;
-            max-width: 520px;
-            width: 100%;
+            max-width: 900px;
+            margin: 0 auto;
             position: relative;
-            transition: all 0.2s;
         }
 
         .card::before {
@@ -43,16 +39,9 @@
             height: 4px;
             border-radius: 32px 32px 0 0;
             background: linear-gradient(90deg, #6366f1, #8b5cf6, #a855f7);
-            background-size: 200% 100%;
-            animation: shimmer 4s ease-in-out infinite;
         }
 
-        @keyframes shimmer {
-            0% { background-position: -200% 0; }
-            100% { background-position: 200% 0; }
-        }
-
-        /* ===== LOGO ===== */
+        /* ===== BRAND ===== */
         .brand {
             text-align: center;
             margin-bottom: 28px;
@@ -75,7 +64,6 @@
             font-size: 0.95rem;
             color: #6b7280;
             margin-top: -2px;
-            letter-spacing: 0.2px;
         }
 
         /* ===== STEP INDICATOR ===== */
@@ -154,11 +142,9 @@
             border: 2px solid #e5e7eb;
             border-radius: 14px;
             background: #fafbfc;
-            transition: border-color 0.25s, box-shadow 0.25s, background 0.25s;
+            transition: border-color 0.25s, box-shadow 0.25s;
             font-family: inherit;
             color: #0b1120;
-            appearance: none;
-            -webkit-appearance: none;
         }
 
         .field input:focus,
@@ -167,12 +153,6 @@
             border-color: #6366f1;
             box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.12);
             background: #ffffff;
-        }
-
-        .field input.error,
-        .field select.error {
-            border-color: #ef4444;
-            box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.10);
         }
 
         .field .hint {
@@ -262,16 +242,6 @@
             box-shadow: 0 8px 28px rgba(99, 102, 241, 0.35);
         }
 
-        .btn-primary:active {
-            transform: translateY(0);
-        }
-
-        .btn-primary:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-            transform: none !important;
-        }
-
         .btn-secondary {
             background: #f3f4f6;
             color: #1f2937;
@@ -291,18 +261,10 @@
             flex: 1;
         }
 
-        .btn .spinner {
-            width: 20px;
-            height: 20px;
-            border: 3px solid rgba(255, 255, 255, 0.25);
-            border-top-color: #fff;
-            border-radius: 50%;
-            animation: spin 0.7s linear infinite;
-            display: inline-block;
-        }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
+        .btn-sm {
+            padding: 10px 18px;
+            font-size: 0.85rem;
+            width: auto;
         }
 
         /* ===== WELCOME ===== */
@@ -327,11 +289,6 @@
             background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-        }
-
-        .welcome .sub {
-            color: #6b7280;
-            font-size: 1rem;
         }
 
         .summary {
@@ -367,7 +324,7 @@
             align-items: center;
             padding-bottom: 16px;
             border-bottom: 1px solid #e5e7eb;
-            margin-bottom: 18px;
+            margin-bottom: 20px;
             flex-wrap: wrap;
             gap: 10px;
         }
@@ -398,20 +355,9 @@
             letter-spacing: 0.3px;
         }
 
-        .badge-trial {
-            background: #fef3c7;
-            color: #92400e;
-        }
-
-        .badge-active {
-            background: #d1fae5;
-            color: #065f46;
-        }
-
-        .badge-expired {
-            background: #fee2e2;
-            color: #991b1b;
-        }
+        .badge-trial { background: #fef3c7; color: #92400e; }
+        .badge-active { background: #d1fae5; color: #065f46; }
+        .badge-expired { background: #fee2e2; color: #991b1b; }
 
         .logout-btn {
             background: none;
@@ -430,7 +376,160 @@
             color: #ef4444;
         }
 
+        /* ===== SUBJECT GRID ===== */
+        .section-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #0b1120;
+            margin-bottom: 16px;
+        }
+
+        .section-title small {
+            font-size: 0.9rem;
+            font-weight: 400;
+            color: #6b7280;
+        }
+
+        .subject-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 14px;
+            margin-bottom: 24px;
+        }
+
+        .subject-card {
+            padding: 20px 14px;
+            border: 2px solid #e5e7eb;
+            border-radius: 16px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.25s;
+            background: #fafbfc;
+            user-select: none;
+        }
+
+        .subject-card:hover {
+            border-color: #6366f1;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(99, 102, 241, 0.12);
+        }
+
+        .subject-card.selected {
+            border-color: #6366f1;
+            background: #eef2ff;
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
+        }
+
+        .subject-card .icon {
+            font-size: 2rem;
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        .subject-card .label {
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: #1f2937;
+        }
+
+        /* ===== CLASSROOM ===== */
+        .classroom {
+            margin-top: 20px;
+            border-top: 2px solid #f0f4f8;
+            padding-top: 20px;
+            display: none;
+        }
+
+        .classroom.active {
+            display: block;
+        }
+
+        .classroom-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .classroom-header h3 {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #0b1120;
+        }
+
+        .classroom-header .back-btn {
+            background: none;
+            border: 1px solid #e5e7eb;
+            padding: 8px 16px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            color: #4b5563;
+            transition: all 0.2s;
+            font-family: inherit;
+        }
+
+        .classroom-header .back-btn:hover {
+            background: #f3f4f6;
+        }
+
+        .topic-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 14px;
+        }
+
+        .topic-card {
+            padding: 18px 16px;
+            border: 2px solid #e5e7eb;
+            border-radius: 14px;
+            background: #fafbfc;
+            transition: all 0.25s;
+            cursor: pointer;
+        }
+
+        .topic-card:hover {
+            border-color: #6366f1;
+            box-shadow: 0 4px 16px rgba(99, 102, 241, 0.08);
+        }
+
+        .topic-card .title {
+            font-weight: 600;
+            color: #0b1120;
+            font-size: 0.95rem;
+        }
+
+        .topic-card .meta {
+            font-size: 0.8rem;
+            color: #6b7280;
+            margin-top: 4px;
+        }
+
+        .topic-card .resources {
+            margin-top: 10px;
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+
+        .topic-card .resources .tag {
+            background: #eef2ff;
+            color: #6366f1;
+            padding: 2px 10px;
+            border-radius: 12px;
+            font-size: 0.7rem;
+            font-weight: 600;
+        }
+
         /* ===== CHAT ===== */
+        .chat-section {
+            margin-top: 20px;
+            border-top: 2px solid #f0f4f8;
+            padding-top: 20px;
+        }
+
         .chat-box {
             background: #f8fafc;
             border-radius: 16px;
@@ -558,67 +657,22 @@
         }
 
         /* ===== RESPONSIVE ===== */
-        @media (max-width: 520px) {
-            .card {
-                padding: 28px 18px 24px;
-                border-radius: 24px;
-            }
-
-            .brand h1 {
-                font-size: 2rem;
-            }
-
-            .role-grid {
-                grid-template-columns: 1fr 1fr;
-                gap: 10px;
-            }
-
-            .role-box {
-                padding: 14px 10px;
-            }
-
-            .role-box .icon {
-                font-size: 1.6rem;
-            }
-
-            .row {
-                grid-template-columns: 1fr;
-                gap: 0;
-            }
-
-            .btn-group {
-                flex-direction: column;
-            }
-
-            .welcome h2 {
-                font-size: 1.5rem;
-            }
-
-            .chat-input {
-                flex-wrap: wrap;
-            }
-
-            .chat-input .btn-send {
-                flex: 1;
-                padding: 14px;
-            }
-
-            .dash-header {
-                flex-direction: column;
-                align-items: stretch;
-                gap: 8px;
-            }
-
-            .dash-actions {
-                justify-content: space-between;
-            }
+        @media (max-width: 600px) {
+            .card { padding: 24px 18px; }
+            .brand h1 { font-size: 2rem; }
+            .role-grid { grid-template-columns: 1fr; }
+            .row { grid-template-columns: 1fr; gap: 0; }
+            .btn-group { flex-direction: column; }
+            .subject-grid { grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); }
+            .topic-grid { grid-template-columns: 1fr; }
+            .chat-input { flex-wrap: wrap; }
+            .chat-input .btn-send { flex: 1; padding: 14px; }
+            .dash-header { flex-direction: column; align-items: stretch; }
+            .dash-actions { justify-content: space-between; }
         }
 
-        @media (max-width: 400px) {
-            .role-grid {
-                grid-template-columns: 1fr;
-            }
-        }
+        /* ===== HIDDEN ===== */
+        .hidden { display: none !important; }
     </style>
 </head>
 <body>
@@ -626,7 +680,7 @@
 <div class="card" id="app">
 
     <!-- ===== BRAND ===== -->
-    <div class="brand" id="brand">
+    <div class="brand">
         <h1>🧠 <span>Synapse</span></h1>
         <p class="sub">Your Strict AI Tutor</p>
     </div>
@@ -636,7 +690,6 @@
     <!-- ============================================================ -->
     <div id="signupFlow">
 
-        <!-- Step Dots -->
         <div class="steps" id="stepDots">
             <span class="dot active" data-s="1"></span>
             <span class="dot" data-s="2"></span>
@@ -644,11 +697,11 @@
             <span class="dot" data-s="4"></span>
         </div>
 
-        <!-- ===== STEP 1 — Role + DOB ===== -->
+        <!-- STEP 1 — Role + DOB -->
         <div class="step active" data-s="1">
             <h2>👋 Welcome to Synapse</h2>
             <p class="desc">
-                Choose your role to get started. We’ll personalise your experience based on your age and learning goals.
+                Choose your role to get started. We'll personalise your experience based on your age and learning goals.
             </p>
 
             <div class="field">
@@ -749,8 +802,47 @@
             <button class="btn btn-primary" onclick="goStep(2)">Continue →</button>
         </div>
 
-        <!-- ===== STEP 2 — Email + Password ===== -->
+        <!-- STEP 2 — Province + Curriculum -->
         <div class="step" data-s="2">
+            <h2>📍 Where are you from?</h2>
+            <p class="desc">Select your province so we can align with your curriculum (CAPS, IEB, or Cambridge).</p>
+
+            <div class="field">
+                <label>Province</label>
+                <select id="provinceSelect">
+                    <option value="">Select your province</option>
+                    <option value="Eastern Cape">Eastern Cape</option>
+                    <option value="Free State">Free State</option>
+                    <option value="Gauteng">Gauteng</option>
+                    <option value="KwaZulu-Natal">KwaZulu-Natal</option>
+                    <option value="Limpopo">Limpopo</option>
+                    <option value="Mpumalanga">Mpumalanga</option>
+                    <option value="Northern Cape">Northern Cape</option>
+                    <option value="North West">North West</option>
+                    <option value="Western Cape">Western Cape</option>
+                </select>
+                <div class="hint" id="provinceHint">Please select your province</div>
+            </div>
+
+            <div class="field">
+                <label>Curriculum</label>
+                <select id="curriculumSelect">
+                    <option value="">Select your curriculum</option>
+                    <option value="CAPS">CAPS (National Curriculum)</option>
+                    <option value="IEB">IEB (Independent Examinations Board)</option>
+                    <option value="Cambridge">Cambridge International</option>
+                </select>
+                <div class="hint" id="curriculumHint">Please select your curriculum</div>
+            </div>
+
+            <div class="btn-group">
+                <button class="btn btn-secondary" onclick="goStep(1)">← Back</button>
+                <button class="btn btn-primary" onclick="goStep(3)">Continue →</button>
+            </div>
+        </div>
+
+        <!-- STEP 3 — Email + Password -->
+        <div class="step" data-s="3">
             <h2>🔐 Create your account</h2>
             <p class="desc">Enter your email and choose a password to get started.</p>
 
@@ -767,15 +859,15 @@
             </div>
 
             <div class="btn-group">
-                <button class="btn btn-secondary" onclick="goStep(1)">← Back</button>
-                <button class="btn btn-primary" onclick="goStep(3)">Continue →</button>
+                <button class="btn btn-secondary" onclick="goStep(2)">← Back</button>
+                <button class="btn btn-primary" onclick="goStep(4)">Continue →</button>
             </div>
         </div>
 
-        <!-- ===== STEP 3 — First + Last Name ===== -->
-        <div class="step" data-s="3">
+        <!-- STEP 4 — First + Last Name -->
+        <div class="step" data-s="4">
             <h2>📝 Tell us about yourself</h2>
-            <p class="desc">We’d like to know your name to make your experience more personal.</p>
+            <p class="desc">We'd like to know your name to make your experience more personal.</p>
 
             <div class="row">
                 <div class="field">
@@ -791,13 +883,13 @@
             </div>
 
             <div class="btn-group">
-                <button class="btn btn-secondary" onclick="goStep(2)">← Back</button>
+                <button class="btn btn-secondary" onclick="goStep(3)">← Back</button>
                 <button class="btn btn-primary" onclick="finishSignup()">Complete Signup</button>
             </div>
         </div>
 
-        <!-- ===== STEP 4 — Welcome ===== -->
-        <div class="step" data-s="4">
+        <!-- STEP 5 — Welcome -->
+        <div class="step" data-s="5">
             <div class="welcome">
                 <span class="big">🎉</span>
                 <h2>Welcome to <span>Synapse</span>!</h2>
@@ -808,10 +900,12 @@
                 <p><strong>Name:</strong> <span id="wName">-</span></p>
                 <p><strong>Email:</strong> <span id="wEmail">-</span></p>
                 <p><strong>Role:</strong> <span id="wRole">-</span></p>
+                <p><strong>Province:</strong> <span id="wProvince">-</span></p>
+                <p><strong>Curriculum:</strong> <span id="wCurriculum">-</span></p>
                 <p><strong>DOB:</strong> <span id="wDob">-</span></p>
             </div>
 
-            <button class="btn btn-primary" onclick="enterApp()">Enter App →</button>
+            <button class="btn btn-primary" onclick="enterApp()">Browse Synapse →</button>
         </div>
 
     </div>
@@ -824,6 +918,7 @@
         <div class="dash-header">
             <div class="dash-user">
                 👋 <strong id="dashName">User</strong> · <span id="dashRole">Learner</span>
+                <span style="font-size:0.8rem;color:#6b7280;display:block;">📍 <span id="dashProvince">-</span> · <span id="dashCurriculum">-</span></span>
             </div>
             <div class="dash-actions">
                 <span id="dashBadge"></span>
@@ -831,25 +926,98 @@
             </div>
         </div>
 
-        <div id="dashSubscription"></div>
+        <!-- ===== BROWSE SYNAPSE ===== -->
+        <div id="browseView">
+            <div class="section-title">
+                📚 Browse Synapse
+                <small>— Choose a subject to start learning</small>
+            </div>
 
-        <div class="chat-box" id="chatBox">
-            <div class="msg bot">👋 Welcome back! Ask me anything — I'll guide you step by step.</div>
+            <div class="subject-grid" id="subjectGrid">
+                <div class="subject-card" data-subject="Mathematics" onclick="selectSubject(this)">
+                    <span class="icon">📐</span>
+                    <span class="label">Mathematics</span>
+                </div>
+                <div class="subject-card" data-subject="English" onclick="selectSubject(this)">
+                    <span class="icon">📖</span>
+                    <span class="label">English</span>
+                </div>
+                <div class="subject-card" data-subject="Science" onclick="selectSubject(this)">
+                    <span class="icon">🔬</span>
+                    <span class="label">Science</span>
+                </div>
+                <div class="subject-card" data-subject="History" onclick="selectSubject(this)">
+                    <span class="icon">🏛️</span>
+                    <span class="label">History</span>
+                </div>
+                <div class="subject-card" data-subject="Geography" onclick="selectSubject(this)">
+                    <span class="icon">🌍</span>
+                    <span class="label">Geography</span>
+                </div>
+                <div class="subject-card" data-subject="Life Orientation" onclick="selectSubject(this)">
+                    <span class="icon">🧘</span>
+                    <span class="label">Life Orientation</span>
+                </div>
+            </div>
+
+            <!-- ===== CLASSROOM ===== -->
+            <div class="classroom" id="classroom">
+                <div class="classroom-header">
+                    <h3 id="classroomTitle">📚 Subject Name</h3>
+                    <button class="back-btn" onclick="closeClassroom()">← Back to Subjects</button>
+                </div>
+
+                <div class="field" style="margin-bottom:16px;">
+                    <label>Select your grade</label>
+                    <select id="gradeSelect" onchange="filterTopics()">
+                        <option value="">All Grades</option>
+                        <option value="1">Grade 1</option>
+                        <option value="2">Grade 2</option>
+                        <option value="3">Grade 3</option>
+                        <option value="4">Grade 4</option>
+                        <option value="5">Grade 5</option>
+                        <option value="6">Grade 6</option>
+                        <option value="7">Grade 7</option>
+                        <option value="8">Grade 8</option>
+                        <option value="9">Grade 9</option>
+                        <option value="10">Grade 10</option>
+                        <option value="11">Grade 11</option>
+                        <option value="12">Grade 12</option>
+                    </select>
+                </div>
+
+                <div id="topicCount" style="font-size:0.9rem;color:#6b7280;margin-bottom:12px;"></div>
+
+                <div class="topic-grid" id="topicGrid">
+                    <!-- Topics loaded dynamically -->
+                </div>
+            </div>
         </div>
 
-        <div class="chat-input">
-            <input type="text" id="chatInput" placeholder="Type your message or speak..." onkeypress="if(event.key==='Enter') sendChat()" />
-            <button class="btn-voice" id="voiceBtn" onclick="toggleVoice()" title="Speak">🎤</button>
-            <button class="btn-send" id="sendBtn" onclick="sendChat()">Send</button>
+        <!-- ===== CHAT SECTION ===== -->
+        <div class="chat-section" id="chatSection">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;flex-wrap:wrap;gap:6px;">
+                <span style="font-weight:600;font-size:1rem;">💬 AI Tutor Chat</span>
+                <span id="chatContext" style="font-size:0.85rem;color:#6b7280;">General</span>
+            </div>
+
+            <div class="chat-box" id="chatBox">
+                <div class="msg bot">👋 Welcome! Ask me anything — I'll guide you step by step.</div>
+            </div>
+
+            <div class="chat-input">
+                <input type="text" id="chatInput" placeholder="Type your message or speak..." onkeypress="if(event.key==='Enter') sendChat()" />
+                <button class="btn-voice" id="voiceBtn" onclick="toggleVoice()" title="Speak">🎤</button>
+                <button class="btn-send" id="sendBtn" onclick="sendChat()">Send</button>
+            </div>
+
+            <div class="chat-options">
+                <input type="checkbox" id="speakToggle" checked />
+                <label for="speakToggle">🔊 AI reads responses aloud</label>
+                <span style="margin-left:auto;font-size:0.8rem;color:#9ca3af;" id="voiceStatus">Ready</span>
+            </div>
         </div>
 
-        <div class="chat-options">
-            <input type="checkbox" id="speakToggle" checked />
-            <label for="speakToggle">🔊 AI reads responses aloud</label>
-            <span style="margin-left:auto;font-size:0.8rem;color:#9ca3af;" id="voiceStatus">Ready</span>
-        </div>
-
-        <div id="chatStatus" style="font-size:0.8rem;color:#9ca3af;margin-top:8px;"></div>
     </div>
 
 </div>
@@ -865,12 +1033,74 @@
         role: '',
         dobMonth: '',
         dobYear: '',
+        province: '',
+        curriculum: '',
         email: '',
         password: '',
         firstName: '',
         lastName: '',
         userId: '',
-        loggedIn: false
+        loggedIn: false,
+        currentSubject: '',
+        currentGrade: ''
+    };
+
+    // ================================================================
+    //  TOPICS DATA (South African CAPS-aligned)
+    // ================================================================
+    const TOPICS = {
+        'Mathematics': [
+            { title: 'Number Operations', grade: '1-3', resources: ['Lesson', 'Worksheet', 'Quiz'] },
+            { title: 'Patterns & Algebra', grade: '4-6', resources: ['Lesson', 'Interactive', 'Quiz'] },
+            { title: 'Fractions & Decimals', grade: '4-7', resources: ['Lesson', 'Worksheet', 'Video'] },
+            { title: 'Geometry & Shapes', grade: '4-9', resources: ['Lesson', 'Quiz', 'Video'] },
+            { title: 'Measurement', grade: '4-9', resources: ['Lesson', 'Worksheet'] },
+            { title: 'Data Handling', grade: '4-9', resources: ['Lesson', 'Project', 'Quiz'] },
+            { title: 'Algebra', grade: '8-10', resources: ['Lesson', 'Worksheet', 'Quiz'] },
+            { title: 'Trigonometry', grade: '10-12', resources: ['Lesson', 'Video', 'Quiz'] },
+            { title: 'Calculus', grade: '12', resources: ['Lesson', 'Worksheet'] },
+            { title: 'Financial Maths', grade: '10-12', resources: ['Lesson', 'Case Study', 'Quiz'] }
+        ],
+        'English': [
+            { title: 'Reading Comprehension', grade: '1-12', resources: ['Lesson', 'Worksheet', 'Quiz'] },
+            { title: 'Grammar Basics', grade: '1-6', resources: ['Lesson', 'Quiz', 'Video'] },
+            { title: 'Creative Writing', grade: '4-9', resources: ['Lesson', 'Worksheet'] },
+            { title: 'Literature Analysis', grade: '8-12', resources: ['Lesson', 'Essay Guide', 'Quiz'] },
+            { title: 'Poetry', grade: '8-12', resources: ['Lesson', 'Video', 'Quiz'] },
+            { title: 'Vocabulary Building', grade: '1-12', resources: ['Lesson', 'Game', 'Quiz'] }
+        ],
+        'Science': [
+            { title: 'Life Processes', grade: '4-6', resources: ['Lesson', 'Worksheet', 'Quiz'] },
+            { title: 'Energy & Change', grade: '4-7', resources: ['Lesson', 'Experiment', 'Video'] },
+            { title: 'Matter & Materials', grade: '4-7', resources: ['Lesson', 'Worksheet', 'Quiz'] },
+            { title: 'Ecosystems', grade: '7-9', resources: ['Lesson', 'Project', 'Quiz'] },
+            { title: 'Physics (Motion)', grade: '10-12', resources: ['Lesson', 'Video', 'Quiz'] },
+            { title: 'Chemistry (Bonding)', grade: '10-12', resources: ['Lesson', 'Worksheet', 'Video'] },
+            { title: 'Biology (DNA)', grade: '10-12', resources: ['Lesson', 'Video', 'Quiz'] }
+        ],
+        'History': [
+            { title: 'Ancient Civilizations', grade: '4-6', resources: ['Lesson', 'Video', 'Quiz'] },
+            { title: 'Colonialism in Africa', grade: '7-9', resources: ['Lesson', 'Worksheet', 'Video'] },
+            { title: 'Apartheid in SA', grade: '9-12', resources: ['Lesson', 'Documentary', 'Quiz'] },
+            { title: 'World War I & II', grade: '10-12', resources: ['Lesson', 'Video', 'Quiz'] },
+            { title: 'Democracy in SA', grade: '10-12', resources: ['Lesson', 'Case Study'] },
+            { title: 'Cold War', grade: '11-12', resources: ['Lesson', 'Video', 'Quiz'] }
+        ],
+        'Geography': [
+            { title: 'Map Skills', grade: '4-6', resources: ['Lesson', 'Worksheet', 'Quiz'] },
+            { title: 'Weather & Climate', grade: '4-7', resources: ['Lesson', 'Video', 'Quiz'] },
+            { title: 'South Africa\'s Provinces', grade: '4-9', resources: ['Lesson', 'Quiz', 'Map Activity'] },
+            { title: 'Water Cycle', grade: '7-9', resources: ['Lesson', 'Experiment', 'Quiz'] },
+            { title: 'Economic Geography', grade: '10-12', resources: ['Lesson', 'Case Study'] },
+            { title: 'Climate Change', grade: '10-12', resources: ['Lesson', 'Video', 'Quiz'] }
+        ],
+        'Life Orientation': [
+            { title: 'Self-Awareness', grade: '4-6', resources: ['Lesson', 'Worksheet'] },
+            { title: 'Healthy Living', grade: '4-7', resources: ['Lesson', 'Quiz', 'Video'] },
+            { title: 'Citizenship', grade: '7-9', resources: ['Lesson', 'Project'] },
+            { title: 'Study Skills', grade: '8-12', resources: ['Lesson', 'Quiz'] },
+            { title: 'Career Guidance', grade: '10-12', resources: ['Lesson', 'Worksheet'] }
+        ]
     };
 
     // ================================================================
@@ -880,6 +1110,7 @@
         if (n === 2 && !validateStep1()) return;
         if (n === 3 && !validateStep2()) return;
         if (n === 4 && !validateStep3()) return;
+        if (n === 5 && !validateStep4()) return;
 
         document.querySelectorAll('.step').forEach(el => el.classList.remove('active'));
         const target = document.querySelector(`.step[data-s="${n}"]`);
@@ -929,9 +1160,33 @@
     }
 
     // ================================================================
-    //  STEP 2 — EMAIL + PASSWORD
+    //  STEP 2 — PROVINCE + CURRICULUM
     // ================================================================
     function validateStep2() {
+        let ok = true;
+        const p = document.getElementById('provinceSelect').value;
+        const c = document.getElementById('curriculumSelect').value;
+        if (!p) {
+            document.getElementById('provinceHint').classList.add('show');
+            ok = false;
+        } else {
+            document.getElementById('provinceHint').classList.remove('show');
+            S.province = p;
+        }
+        if (!c) {
+            document.getElementById('curriculumHint').classList.add('show');
+            ok = false;
+        } else {
+            document.getElementById('curriculumHint').classList.remove('show');
+            S.curriculum = c;
+        }
+        return ok;
+    }
+
+    // ================================================================
+    //  STEP 3 — EMAIL + PASSWORD
+    // ================================================================
+    function validateStep3() {
         let ok = true;
         const email = document.getElementById('emailInput').value.trim();
         const pass = document.getElementById('passwordInput').value;
@@ -953,9 +1208,9 @@
     }
 
     // ================================================================
-    //  STEP 3 — FIRST + LAST NAME
+    //  STEP 4 — FIRST + LAST NAME
     // ================================================================
-    function validateStep3() {
+    function validateStep4() {
         let ok = true;
         const f = document.getElementById('firstNameInput').value.trim();
         const l = document.getElementById('lastNameInput').value.trim();
@@ -977,16 +1232,18 @@
     }
 
     // ================================================================
-    //  FINISH SIGNUP → STEP 4
+    //  FINISH SIGNUP
     // ================================================================
     function finishSignup() {
-        if (!validateStep3()) return;
+        if (!validateStep4()) return;
         S.userId = 'user_' + S.email.replace(/[^a-zA-Z0-9]/g, '_');
         document.getElementById('wName').textContent = `${S.firstName} ${S.lastName}`;
         document.getElementById('wEmail').textContent = S.email;
         document.getElementById('wRole').textContent = S.role.charAt(0).toUpperCase() + S.role.slice(1);
+        document.getElementById('wProvince').textContent = S.province;
+        document.getElementById('wCurriculum').textContent = S.curriculum;
         document.getElementById('wDob').textContent = `${S.dobMonth} ${S.dobYear}`;
-        goStep(4);
+        goStep(5);
     }
 
     // ================================================================
@@ -997,6 +1254,8 @@
         document.getElementById('dashboard').classList.add('active');
         document.getElementById('dashName').textContent = `${S.firstName} ${S.lastName}`;
         document.getElementById('dashRole').textContent = S.role.charAt(0).toUpperCase() + S.role.slice(1);
+        document.getElementById('dashProvince').textContent = S.province;
+        document.getElementById('dashCurriculum').textContent = S.curriculum;
         saveProfile();
         checkSubscription();
         document.getElementById('chatInput').focus();
@@ -1013,7 +1272,7 @@
                 body: JSON.stringify({
                     userId: S.userId,
                     name: `${S.firstName} ${S.lastName}`,
-                    country: 'Not specified',
+                    country: S.province,
                     grade: S.role === 'teacher' ? 'Teacher' : 'Student'
                 })
             });
@@ -1025,6 +1284,78 @@
     // ================================================================
     function logout() {
         if (confirm('Logout?')) location.reload();
+    }
+
+    // ================================================================
+    //  SUBJECT SELECTION
+    // ================================================================
+    function selectSubject(el) {
+        document.querySelectorAll('.subject-card').forEach(c => c.classList.remove('selected'));
+        el.classList.add('selected');
+        S.currentSubject = el.dataset.subject;
+        openClassroom(S.currentSubject);
+    }
+
+    function openClassroom(subject) {
+        document.getElementById('classroom').classList.add('active');
+        document.getElementById('classroomTitle').textContent = `📚 ${subject}`;
+        document.getElementById('chatContext').textContent = `🧠 ${subject} Tutor`;
+        document.getElementById('gradeSelect').value = '';
+        S.currentGrade = '';
+        renderTopics(subject, '');
+    }
+
+    function closeClassroom() {
+        document.getElementById('classroom').classList.remove('active');
+        document.querySelectorAll('.subject-card').forEach(c => c.classList.remove('selected'));
+        document.getElementById('chatContext').textContent = 'General';
+    }
+
+    function renderTopics(subject, grade) {
+        const grid = document.getElementById('topicGrid');
+        const topics = TOPICS[subject] || [];
+        const countDiv = document.getElementById('topicCount');
+
+        let filtered = topics;
+        if (grade) {
+            filtered = topics.filter(t => {
+                const range = t.grade.split('-');
+                const g = parseInt(grade);
+                const from = parseInt(range[0]);
+                const to = parseInt(range[1] || range[0]);
+                return g >= from && g <= to;
+            });
+        }
+
+        countDiv.textContent = `Showing ${filtered.length} topics`;
+
+        if (filtered.length === 0) {
+            grid.innerHTML = `<p style="color:#6b7280;grid-column:1/-1;text-align:center;padding:20px;">No topics available for this grade yet.</p>`;
+            return;
+        }
+
+        grid.innerHTML = filtered.map(t => `
+            <div class="topic-card" onclick="startTopic('${subject}', '${t.title}')">
+                <div class="title">${t.title}</div>
+                <div class="meta">Grade ${t.grade}</div>
+                <div class="resources">
+                    ${t.resources.map(r => `<span class="tag">${r}</span>`).join('')}
+                </div>
+            </div>
+        `).join('');
+    }
+
+    function filterTopics() {
+        const grade = document.getElementById('gradeSelect').value;
+        S.currentGrade = grade;
+        renderTopics(S.currentSubject, grade);
+    }
+
+    function startTopic(subject, topic) {
+        // Set chat context and send a message to the AI
+        document.getElementById('chatContext').textContent = `🧠 ${subject} - ${topic}`;
+        document.getElementById('chatInput').value = `I'm learning about ${topic} in ${subject}. Can you teach me step by step?`;
+        setTimeout(sendChat, 300);
     }
 
     // ================================================================
@@ -1041,10 +1372,12 @@
         btn.disabled = true;
         btn.textContent = '⏳';
         try {
+            const context = document.getElementById('chatContext').textContent;
+            const fullMsg = `${context}: ${msg}`;
             const res = await fetch('/chat', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ userId: S.userId, message: `[General] ${msg}` })
+                body: JSON.stringify({ userId: S.userId, message: fullMsg })
             });
             const data = await res.json();
             if (data.reply) {
@@ -1166,7 +1499,6 @@
                 label = '⛔ ' + (data.status || 'Expired');
             }
             badge.innerHTML = `<span class="badge ${cls}">${label}</span>`;
-            document.getElementById('dashSubscription').innerHTML = '';
         } catch (_) {}
     }
 
