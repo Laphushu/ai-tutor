@@ -5,11 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Synapse</title>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        * { margin:0; padding:0; box-sizing:border-box; }
         body {
             font-family: 'Segoe UI', system-ui, sans-serif;
             background: #f0f4f8;
@@ -27,128 +23,39 @@
             width: 100%;
             box-shadow: 0 24px 80px rgba(0,0,0,0.08);
         }
-        .logo {
-            text-align: center;
-            margin-bottom: 24px;
+        .logo { text-align:center; margin-bottom:24px; }
+        .logo h1 { font-size:2.2rem; font-weight:800; color:#0b1120; }
+        .logo h1 span { background:linear-gradient(135deg,#6366f1,#a855f7); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
+        .logo p { color:#6b7280; font-size:0.95rem; }
+        h2 { font-size:1.4rem; font-weight:700; color:#0b1120; margin-bottom:4px; }
+        .sub { color:#6b7280; font-size:0.95rem; margin-bottom:20px; }
+        .field { margin-bottom:16px; }
+        .field label { display:block; font-weight:600; font-size:0.85rem; color:#1f2937; margin-bottom:4px; }
+        .field input, .field select {
+            width:100%; padding:14px 16px; border:2px solid #e5e7eb; border-radius:12px;
+            font-size:1rem; background:#fff; font-family:inherit;
         }
-        .logo h1 {
-            font-size: 2.2rem;
-            font-weight: 800;
-            color: #0b1120;
-        }
-        .logo h1 span {
-            background: linear-gradient(135deg, #6366f1, #a855f7);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-        .logo p {
-            color: #6b7280;
-            font-size: 0.95rem;
-        }
-        h2 {
-            font-size: 1.4rem;
-            font-weight: 700;
-            color: #0b1120;
-            margin-bottom: 4px;
-        }
-        .sub {
-            color: #6b7280;
-            font-size: 0.95rem;
-            margin-bottom: 20px;
-        }
-        .field {
-            margin-bottom: 16px;
-        }
-        .field label {
-            display: block;
-            font-weight: 600;
-            font-size: 0.85rem;
-            color: #1f2937;
-            margin-bottom: 4px;
-        }
-        .field input,
-        .field select {
-            width: 100%;
-            padding: 14px 16px;
-            border: 2px solid #e5e7eb;
-            border-radius: 12px;
-            font-size: 1rem;
-            background: #fff;
-            font-family: inherit;
-        }
-        .field input:focus,
-        .field select:focus {
-            outline: none;
-            border-color: #6366f1;
-        }
+        .field input:focus, .field select:focus { outline:none; border-color:#6366f1; }
         .btn {
-            width: 100%;
-            padding: 15px;
-            border: none;
-            border-radius: 12px;
-            font-size: 1rem;
-            font-weight: 700;
-            cursor: pointer;
-            background: linear-gradient(135deg, #6366f1, #8b5cf6);
-            color: #fff;
-            transition: transform 0.15s;
+            width:100%; padding:15px; border:none; border-radius:12px; font-size:1rem;
+            font-weight:700; cursor:pointer; background:linear-gradient(135deg,#6366f1,#8b5cf6);
+            color:#fff; transition:transform 0.15s;
         }
-        .btn:hover {
-            transform: translateY(-2px);
-        }
-        .btn:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-        }
-        .auth-link {
-            text-align: center;
-            margin-top: 16px;
-            font-size: 0.9rem;
-            color: #6b7280;
-        }
-        .auth-link a {
-            color: #6366f1;
-            text-decoration: none;
-            font-weight: 600;
-            cursor: pointer;
-        }
-        .auth-link a:hover {
-            text-decoration: underline;
-        }
-        .error {
-            color: #ef4444;
-            font-size: 0.85rem;
-            margin-top: 4px;
-            display: none;
-        }
-        .error.show {
-            display: block;
-        }
-        .success {
-            color: #22c55e;
-            font-size: 0.85rem;
-            margin-top: 4px;
-            display: none;
-        }
-        .success.show {
-            display: block;
-        }
+        .btn:hover { transform:translateY(-2px); }
+        .btn:disabled { opacity:0.6; cursor:not-allowed; }
+        .auth-link { text-align:center; margin-top:16px; font-size:0.9rem; color:#6b7280; }
+        .auth-link a { color:#6366f1; text-decoration:none; font-weight:600; cursor:pointer; }
+        .auth-link a:hover { text-decoration:underline; }
+        .error { color:#ef4444; font-size:0.85rem; margin-top:4px; display:none; }
+        .error.show { display:block; }
+        .success { color:#22c55e; font-size:0.85rem; margin-top:4px; display:none; }
+        .success.show { display:block; }
         .spinner {
-            display: inline-block;
-            width: 20px;
-            height: 20px;
-            border: 3px solid rgba(255,255,255,0.25);
-            border-top-color: #fff;
-            border-radius: 50%;
-            animation: spin 0.7s linear infinite;
-            vertical-align: middle;
-            margin-right: 8px;
+            display:inline-block; width:20px; height:20px; border:3px solid rgba(255,255,255,0.25);
+            border-top-color:#fff; border-radius:50%; animation:spin 0.7s linear infinite;
+            vertical-align:middle; margin-right:8px;
         }
-        @keyframes spin {
-            to {
-                transform: rotate(360deg);
-            }
-        }
+        @keyframes spin { to { transform:rotate(360deg); } }
     </style>
 </head>
 <body>
@@ -238,34 +145,29 @@
             document.getElementById('signupPage').style.display = 'block';
             clearErrors();
         }
-
         function showLogin() {
             document.getElementById('loginPage').style.display = 'block';
             document.getElementById('signupPage').style.display = 'none';
             clearErrors();
         }
-
         function clearErrors() {
             document.querySelectorAll('.error, .success').forEach(el => {
                 el.classList.remove('show');
                 el.textContent = '';
             });
         }
-
-        function showError(elementId, message) {
-            const el = document.getElementById(elementId);
-            el.textContent = message;
+        function showError(id, msg) {
+            const el = document.getElementById(id);
+            el.textContent = msg;
             el.classList.add('show');
         }
-
-        function showSuccess(elementId, message) {
-            const el = document.getElementById(elementId);
-            el.textContent = message;
+        function showSuccess(id, msg) {
+            const el = document.getElementById(id);
+            el.textContent = msg;
             el.classList.add('show');
         }
-
-        function setButtonLoading(buttonId, loading) {
-            const btn = document.getElementById(buttonId);
+        function setButtonLoading(id, loading) {
+            const btn = document.getElementById(id);
             if (loading) {
                 btn.disabled = true;
                 btn.innerHTML = '<span class="spinner"></span> Loading...';
@@ -278,35 +180,27 @@
         async function login() {
             const email = document.getElementById('loginEmail').value.trim();
             const password = document.getElementById('loginPassword').value.trim();
-
             if (!email || !password) {
                 showError('loginError', 'Please enter email and password');
                 return;
             }
-
             clearErrors();
             setButtonLoading('loginBtn', true);
-
             try {
-                const response = await fetch(API_BASE + '/login', {
+                const res = await fetch(API_BASE + '/login', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ email, password })
                 });
-
-                const data = await response.json();
-
-                if (!response.ok) {
+                const data = await res.json();
+                if (!res.ok) {
                     showError('loginError', data.error || 'Login failed');
                     return;
                 }
-
                 if (data.success) {
                     localStorage.setItem('synapse_user', JSON.stringify(data.user));
                     showSuccess('loginSuccess', 'Login successful! Redirecting...');
-                    setTimeout(() => {
-                        window.location.href = '/dashboard.html';
-                    }, 1000);
+                    setTimeout(() => window.location.href = '/dashboard.html', 1000);
                 }
             } catch (err) {
                 showError('loginError', 'Server error. Please try again.');
@@ -321,7 +215,6 @@
             const password = document.getElementById('signupPassword').value.trim();
             const country = document.getElementById('signupCountry').value;
             const role = document.getElementById('signupRole').value;
-
             if (!name || !email || !password || !country) {
                 showError('signupError', 'Please fill all fields');
                 return;
@@ -330,24 +223,19 @@
                 showError('signupError', 'Password must be at least 6 characters');
                 return;
             }
-
             clearErrors();
             setButtonLoading('signupBtn', true);
-
             try {
-                const response = await fetch(API_BASE + '/signup', {
+                const res = await fetch(API_BASE + '/signup', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ email, password, name, country, role })
                 });
-
-                const data = await response.json();
-
-                if (!response.ok) {
+                const data = await res.json();
+                if (!res.ok) {
                     showError('signupError', data.error || 'Signup failed');
                     return;
                 }
-
                 if (data.success) {
                     showSuccess('signupSuccess', 'Account created! Redirecting to login...');
                     setTimeout(() => {
@@ -366,13 +254,7 @@
         // Check if already logged in
         const storedUser = localStorage.getItem('synapse_user');
         if (storedUser) {
-            document.querySelector('.card').innerHTML = `
-                <div style="text-align:center;padding:20px;">
-                    <h2>Welcome back!</h2>
-                    <p style="color:#6b7280;">You are already logged in.</p>
-                    <button onclick="localStorage.removeItem('synapse_user');location.reload();" style="margin-top:16px;padding:10px 20px;border:none;border-radius:8px;background:#ef4444;color:#fff;cursor:pointer;">Logout</button>
-                </div>
-            `;
+            window.location.href = '/dashboard.html';
         }
     </script>
 </body>

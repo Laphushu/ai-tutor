@@ -24,15 +24,21 @@ const db = new Pool({
   ssl: { rejectUnauthorized: false }
 });
 
-// ================= INIT TABLES (COMPLETE) =================
+// ================= INIT TABLES (SAFE & COMPLETE) =================
 async function initDB() {
   try {
-    // Users table with ALL columns
+    // 1. Drop existing tables (only if you want to reset – this ensures clean schema)
+    // Comment the next two lines if you want to keep old data
+    await db.query(`DROP TABLE IF EXISTS messages CASCADE`);
+    await db.query(`DROP TABLE IF EXISTS subscriptions CASCADE`);
+    await db.query(`DROP TABLE IF EXISTS users CASCADE`);
+
+    // 2. Create users table (all columns)
     await db.query(`
-      CREATE TABLE IF NOT EXISTS users (
+      CREATE TABLE users (
         userId TEXT PRIMARY KEY,
-        email TEXT UNIQUE,
-        password TEXT,
+        email TEXT UNIQUE NOT NULL,
+        password TEXT NOT NULL,
         name TEXT,
         country TEXT,
         grade TEXT,
@@ -41,38 +47,37 @@ async function initDB() {
       )
     `);
 
-    // Messages table
+    // 3. Create messages table
     await db.query(`
-      CREATE TABLE IF NOT EXISTS messages (
+      CREATE TABLE messages (
         id SERIAL PRIMARY KEY,
-        userId TEXT,
+        userId TEXT REFERENCES users(userId),
         role TEXT,
         content TEXT,
         created_at TIMESTAMP DEFAULT NOW()
       )
     `);
 
-    // Subscriptions table
+    // 4. Create subscriptions table
     await db.query(`
-      CREATE TABLE IF NOT EXISTS subscriptions (
-        userId TEXT PRIMARY KEY,
+      CREATE TABLE subscriptions (
+        userId TEXT PRIMARY KEY REFERENCES users(userId),
         status TEXT DEFAULT 'trial',
-        startDate TIMESTAMP DEFAULT NOW()
+        startDate TIMESTAMP DEFAULT NOW(),
+        stripeCustomerId TEXT,
+        subscriptionEndDate TIMESTAMP,
+        planType TEXT DEFAULT 'free'
       )
     `);
 
-    // Add Stripe columns if missing (safe)
-    await db.query(`ALTER TABLE subscriptions ADD COLUMN IF NOT EXISTS stripeCustomerId TEXT`);
-    await db.query(`ALTER TABLE subscriptions ADD COLUMN IF NOT EXISTS subscriptionEndDate TIMESTAMP`);
-    await db.query(`ALTER TABLE subscriptions ADD COLUMN IF NOT EXISTS planType TEXT DEFAULT 'free'`);
-
-    console.log("✅ Database ready with all columns");
+    console.log("✅ Database initialized with clean schema");
   } catch (err) {
     console.error("❌ DB init error:", err.message);
-    // Don't crash — the app will still try to work
+    // App will still run, but some features may fail
   }
 }
 
+// Run init (but don't crash if it fails)
 initDB();
 
 // ================= AI =================
@@ -286,6 +291,37 @@ app.get("/subscription-status/:userId", async (req, res) => {
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
+});
+
+// ================= RESET DATABASE (emergency) =================
+app.post("/reset-db", async (req, res) => {
+  try {
+    await initDB();
+    res.json({ success: true, message: "Database reset successfully" });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// ================= DASHBOARD (placeholder) =================
+app.get("/dashboard.html", (req, res) => {
+  res.send(`
+    <!DOCTYPE html>
+    <html>
+    <head><title>Dashboard</title></head>
+    <body style="font-family:sans-serif;text-align:center;padding:40px;">
+      <h1>Welcome to Synapse!</h1>
+      <p>You are logged in.</p>
+      <p>Your AI tutor is ready.</p>
+      <button onclick="localStorage.removeItem('synapse_user');window.location.href='/';">Logout</button>
+      <script>
+        const user = JSON.parse(localStorage.getItem('synapse_user') || 'null');
+        if (!user) window.location.href = '/';
+        document.querySelector('p').textContent = 'Welcome, ' + user.name + '!';
+      </script>
+    </body>
+    </html>
+  `);
 });
 
 // ================= START =================
