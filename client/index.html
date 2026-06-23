@@ -1,1635 +1,298 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>Synapse — AI Tutor</title>
-    <style>
-        /* ===== RESET & BASE ===== */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: #f0f4f8;
-            min-height: 100vh;
-        }
-
-        /* ===== APP CONTAINER ===== */
-        #app {
-            max-width: 1100px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-
-        /* ===== TOP NAV ===== */
-        .top-nav {
-            background: #ffffff;
-            border-radius: 20px;
-            padding: 16px 28px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.06);
-            margin-bottom: 24px;
-            flex-wrap: wrap;
-            gap: 12px;
-        }
-
-        .top-nav .logo {
-            font-size: 1.6rem;
-            font-weight: 800;
-            color: #0b1120;
-            text-decoration: none;
-        }
-
-        .top-nav .logo span {
-            background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .top-nav .nav-links {
-            display: flex;
-            align-items: center;
-            gap: 20px;
-            flex-wrap: wrap;
-        }
-
-        .top-nav .nav-links a {
-            text-decoration: none;
-            color: #4b5563;
-            font-weight: 500;
-            font-size: 0.95rem;
-            padding: 8px 12px;
-            border-radius: 10px;
-            transition: all 0.2s;
-            cursor: pointer;
-        }
-
-        .top-nav .nav-links a:hover {
-            background: #f3f4f6;
-            color: #0b1120;
-        }
-
-        .top-nav .nav-links a.active {
-            background: #eef2ff;
-            color: #6366f1;
-        }
-
-        .top-nav .user-badge {
-            display: flex;
-            align-items: center;
-            gap: 14px;
-            flex-wrap: wrap;
-        }
-
-        .top-nav .user-badge .name {
-            font-weight: 600;
-            color: #0b1120;
-            font-size: 0.95rem;
-        }
-
-        .top-nav .user-badge .role {
-            font-size: 0.8rem;
-            color: #6b7280;
-            background: #f3f4f6;
-            padding: 2px 12px;
-            border-radius: 12px;
-        }
-
-        .top-nav .user-badge .badge {
-            padding: 4px 12px;
-            border-radius: 16px;
-            font-size: 0.7rem;
-            font-weight: 700;
-            text-transform: uppercase;
-        }
-
-        .badge-trial { background: #fef3c7; color: #92400e; }
-        .badge-active { background: #d1fae5; color: #065f46; }
-        .badge-expired { background: #fee2e2; color: #991b1b; }
-
-        .logout-link {
-            background: none;
-            border: none;
-            color: #9ca3af;
-            font-size: 0.85rem;
-            cursor: pointer;
-            padding: 6px 12px;
-            border-radius: 8px;
-            transition: all 0.2s;
-            font-family: inherit;
-        }
-
-        .logout-link:hover {
-            background: #f3f4f6;
-            color: #ef4444;
-        }
-
-        /* ===== PAGE CONTAINERS ===== */
-        .page {
-            display: none;
-            animation: fadeUp 0.4s ease;
-        }
-
-        .page.active {
-            display: block;
-        }
-
-        @keyframes fadeUp {
-            0% { opacity: 0; transform: translateY(12px); }
-            100% { opacity: 1; transform: translateY(0); }
-        }
-
-        /* ===== AUTH PAGES ===== */
-        .auth-card {
-            max-width: 480px;
-            margin: 40px auto;
-            background: #ffffff;
-            border-radius: 28px;
-            padding: 40px 36px;
-            box-shadow: 0 24px 80px rgba(0,0,0,0.08);
-        }
-
-        .auth-card h2 {
-            font-size: 1.6rem;
-            font-weight: 700;
-            color: #0b1120;
-            margin-bottom: 4px;
-        }
-
-        .auth-card .sub {
-            color: #6b7280;
-            font-size: 0.95rem;
-            margin-bottom: 24px;
-        }
-
-        .auth-card .field {
-            margin-bottom: 16px;
-        }
-
-        .auth-card .field label {
-            display: block;
-            font-weight: 600;
-            font-size: 0.85rem;
-            color: #1f2937;
-            margin-bottom: 4px;
-        }
-
-        .auth-card .field input,
-        .auth-card .field select {
-            width: 100%;
-            padding: 14px 16px;
-            border: 2px solid #e5e7eb;
-            border-radius: 12px;
-            font-size: 1rem;
-            transition: border-color 0.25s;
-            font-family: inherit;
-            background: #ffffff;
-        }
-
-        .auth-card .field input:focus,
-        .auth-card .field select:focus {
-            outline: none;
-            border-color: #6366f1;
-            box-shadow: 0 0 0 4px rgba(99,102,241,0.1);
-        }
-
-        .auth-card .btn {
-            width: 100%;
-            padding: 15px;
-            border: none;
-            border-radius: 12px;
-            font-size: 1rem;
-            font-weight: 700;
-            cursor: pointer;
-            background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
-            color: #fff;
-            transition: transform 0.15s, box-shadow 0.2s;
-            font-family: inherit;
-            margin-top: 8px;
-        }
-
-        .auth-card .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 28px rgba(99,102,241,0.3);
-        }
-
-        .auth-card .btn-secondary {
-            background: #f3f4f6;
-            color: #1f2937;
-        }
-
-        .auth-card .auth-link {
-            text-align: center;
-            margin-top: 16px;
-            font-size: 0.9rem;
-            color: #6b7280;
-        }
-
-        .auth-card .auth-link a {
-            color: #6366f1;
-            text-decoration: none;
-            font-weight: 600;
-            cursor: pointer;
-        }
-
-        .auth-card .auth-link a:hover {
-            text-decoration: underline;
-        }
-
-        .auth-card .error {
-            color: #ef4444;
-            font-size: 0.85rem;
-            margin-top: 4px;
-            display: none;
-        }
-
-        .auth-card .error.show { display: block; }
-
-        .auth-card .success {
-            color: #22c55e;
-            font-size: 0.95rem;
-            margin-top: 12px;
-            padding: 12px 16px;
-            background: #f0fdf4;
-            border-radius: 10px;
-            display: none;
-        }
-
-        .auth-card .success.show { display: block; }
-
-        /* ===== GRADE SELECTION PAGE ===== */
-        .grade-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
-            gap: 14px;
-            margin: 20px 0;
-        }
-
-        .grade-card {
-            padding: 24px 12px;
-            border: 2px solid #e5e7eb;
-            border-radius: 16px;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.25s;
-            background: #ffffff;
-            font-weight: 600;
-            font-size: 1.1rem;
-            color: #0b1120;
-        }
-
-        .grade-card:hover {
-            border-color: #6366f1;
-            transform: translateY(-3px);
-            box-shadow: 0 8px 24px rgba(99,102,241,0.10);
-        }
-
-        .grade-card.selected {
-            border-color: #6366f1;
-            background: #eef2ff;
-            box-shadow: 0 0 0 3px rgba(99,102,241,0.15);
-        }
-
-        /* ===== SUBJECTS PAGE ===== */
-        .page-header {
-            margin-bottom: 24px;
-        }
-
-        .page-header h2 {
-            font-size: 1.8rem;
-            font-weight: 700;
-            color: #0b1120;
-        }
-
-        .page-header p {
-            color: #6b7280;
-            font-size: 1rem;
-        }
-
-        .subject-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-            gap: 16px;
-        }
-
-        .subject-card {
-            background: #ffffff;
-            border: 2px solid #e5e7eb;
-            border-radius: 18px;
-            padding: 28px 16px 22px;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.25s;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.02);
-        }
-
-        .subject-card:hover {
-            border-color: #6366f1;
-            transform: translateY(-4px);
-            box-shadow: 0 12px 32px rgba(99,102,241,0.12);
-        }
-
-        .subject-card .name {
-            font-weight: 700;
-            font-size: 1rem;
-            color: #0b1120;
-        }
-
-        .subject-card .code {
-            font-size: 0.75rem;
-            color: #6b7280;
-            margin-top: 4px;
-        }
-
-        /* ===== CLASSROOM PAGE ===== */
-        .classroom-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 12px;
-            margin-bottom: 20px;
-        }
-
-        .classroom-header h2 {
-            font-size: 1.6rem;
-            font-weight: 700;
-            color: #0b1120;
-        }
-
-        .classroom-header .back-btn {
-            background: none;
-            border: 1px solid #e5e7eb;
-            padding: 10px 20px;
-            border-radius: 12px;
-            cursor: pointer;
-            font-weight: 600;
-            color: #4b5563;
-            transition: all 0.2s;
-            font-family: inherit;
-        }
-
-        .classroom-header .back-btn:hover {
-            background: #f3f4f6;
-        }
-
-        .topic-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-            gap: 16px;
-        }
-
-        .topic-card {
-            background: #ffffff;
-            border: 2px solid #e5e7eb;
-            border-radius: 16px;
-            padding: 20px 18px;
-            transition: all 0.25s;
-            cursor: pointer;
-        }
-
-        .topic-card:hover {
-            border-color: #6366f1;
-            box-shadow: 0 8px 24px rgba(99,102,241,0.08);
-        }
-
-        .topic-card .title {
-            font-weight: 700;
-            font-size: 1rem;
-            color: #0b1120;
-        }
-
-        .topic-card .meta {
-            font-size: 0.8rem;
-            color: #6b7280;
-            margin-top: 4px;
-        }
-
-        .topic-card .resources {
-            margin-top: 12px;
-            display: flex;
-            gap: 6px;
-            flex-wrap: wrap;
-        }
-
-        .topic-card .resources .tag {
-            background: #eef2ff;
-            color: #6366f1;
-            padding: 2px 12px;
-            border-radius: 12px;
-            font-size: 0.7rem;
-            font-weight: 600;
-        }
-
-        .empty-state {
-            grid-column: 1/-1;
-            text-align: center;
-            padding: 40px;
-            color: #6b7280;
-        }
-
-        /* ===== AI TUTOR PAGE ===== */
-        .tutor-container {
-            background: #ffffff;
-            border-radius: 24px;
-            padding: 28px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.04);
-        }
-
-        .tutor-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-            flex-wrap: wrap;
-            gap: 10px;
-        }
-
-        .tutor-header h2 {
-            font-size: 1.4rem;
-            font-weight: 700;
-            color: #0b1120;
-        }
-
-        .tutor-header .context {
-            font-size: 0.9rem;
-            color: #6b7280;
-            background: #f3f4f6;
-            padding: 6px 16px;
-            border-radius: 20px;
-        }
-
-        .chat-box {
-            background: #f8fafc;
-            border-radius: 16px;
-            padding: 20px;
-            max-height: 380px;
-            overflow-y: auto;
-            border: 1px solid #e5e7eb;
-            margin-bottom: 16px;
-        }
-
-        .chat-box .msg {
-            padding: 12px 16px;
-            border-radius: 14px;
-            max-width: 85%;
-            margin-bottom: 10px;
-            font-size: 0.95rem;
-            line-height: 1.6;
-            word-wrap: break-word;
-        }
-
-        .chat-box .msg.user {
-            background: #6366f1;
-            color: #fff;
-            margin-left: auto;
-            text-align: right;
-        }
-
-        .chat-box .msg.bot {
-            background: #e5e7eb;
-            color: #0b1120;
-            margin-right: auto;
-        }
-
-        .chat-input {
-            display: flex;
-            gap: 10px;
-        }
-
-        .chat-input input {
-            flex: 1;
-            padding: 14px 18px;
-            border: 2px solid #e5e7eb;
-            border-radius: 14px;
-            font-size: 0.95rem;
-            font-family: inherit;
-            transition: border-color 0.25s;
-        }
-
-        .chat-input input:focus {
-            outline: none;
-            border-color: #6366f1;
-        }
-
-        .chat-input .btn-voice {
-            width: 52px;
-            height: 52px;
-            border-radius: 50%;
-            background: #22c55e;
-            border: none;
-            color: #fff;
-            font-size: 1.4rem;
-            cursor: pointer;
-            transition: all 0.25s;
-            flex-shrink: 0;
-        }
-
-        .chat-input .btn-voice:hover {
-            transform: scale(1.05);
-        }
-
-        .chat-input .btn-voice.listening {
-            background: #ef4444;
-            animation: pulse 1.2s infinite;
-        }
-
-        @keyframes pulse {
-            0% { box-shadow: 0 0 0 0 rgba(239,68,68,0.35); }
-            70% { box-shadow: 0 0 0 16px rgba(239,68,68,0); }
-            100% { box-shadow: 0 0 0 0 rgba(239,68,68,0); }
-        }
-
-        .chat-input .btn-send {
-            padding: 0 28px;
-            background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
-            color: #fff;
-            border: none;
-            border-radius: 14px;
-            font-weight: 700;
-            cursor: pointer;
-            transition: all 0.25s;
-            font-family: inherit;
-            font-size: 0.95rem;
-        }
-
-        .chat-input .btn-send:hover {
-            transform: scale(1.02);
-        }
-
-        .chat-input .btn-send:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-            transform: none !important;
-        }
-
-        .chat-options {
-            display: flex;
-            align-items: center;
-            gap: 14px;
-            margin-top: 12px;
-            font-size: 0.85rem;
-            color: #6b7280;
-        }
-
-        .chat-options input[type="checkbox"] {
-            width: 18px;
-            height: 18px;
-            accent-color: #6366f1;
-            cursor: pointer;
-        }
-
-        .chat-options label {
-            cursor: pointer;
-        }
-
-        .chat-options .status {
-            margin-left: auto;
-            font-size: 0.8rem;
-            color: #9ca3af;
-        }
-
-        /* ===== COUNTRY FLAG ===== */
-        .country-option {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 10px 14px;
-            border: 2px solid #e5e7eb;
-            border-radius: 12px;
-            cursor: pointer;
-            transition: all 0.25s;
-            background: #ffffff;
-        }
-
-        .country-option:hover {
-            border-color: #6366f1;
-            background: #f8faff;
-        }
-
-        .country-option.selected {
-            border-color: #6366f1;
-            background: #eef2ff;
-            box-shadow: 0 0 0 3px rgba(99,102,241,0.10);
-        }
-
-        .country-option .flag {
-            font-size: 1.8rem;
-            line-height: 1;
-        }
-
-        .country-option .info {
-            flex: 1;
-        }
-
-        .country-option .info .name {
-            font-weight: 600;
-            color: #0b1120;
-        }
-
-        .country-option .info .curriculum {
-            font-size: 0.8rem;
-            color: #6b7280;
-        }
-
-        .country-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-        }
-
-        @media (max-width: 600px) {
-            .country-grid {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        /* ===== RESPONSIVE ===== */
-        @media (max-width: 640px) {
-            .top-nav {
-                flex-direction: column;
-                align-items: stretch;
-                padding: 14px 18px;
-            }
-
-            .top-nav .nav-links {
-                justify-content: center;
-                gap: 8px;
-            }
-
-            .top-nav .nav-links a {
-                font-size: 0.85rem;
-                padding: 6px 10px;
-            }
-
-            .top-nav .user-badge {
-                justify-content: center;
-                flex-wrap: wrap;
-            }
-
-            .auth-card {
-                padding: 28px 20px;
-                margin: 20px 12px;
-            }
-
-            .subject-grid {
-                grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-            }
-
-            .topic-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .chat-input {
-                flex-wrap: wrap;
-            }
-
-            .chat-input .btn-send {
-                flex: 1;
-                padding: 14px;
-            }
-
-            .tutor-container {
-                padding: 16px;
-            }
-
-            .grade-grid {
-                grid-template-columns: repeat(auto-fill, minmax(70px, 1fr));
-            }
-        }
-
-        /* ===== UTILITY ===== */
-        .hidden { display: none !important; }
-        .text-center { text-align: center; }
-        .mt-20 { margin-top: 20px; }
-        .mb-20 { margin-bottom: 20px; }
-
-        .spinner {
-            display: inline-block;
-            width: 20px;
-            height: 20px;
-            border: 3px solid rgba(255,255,255,0.25);
-            border-top-color: #fff;
-            border-radius: 50%;
-            animation: spin 0.7s linear infinite;
-            vertical-align: middle;
-        }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-
-        .flag-icon {
-            font-size: 2rem;
-            line-height: 1;
-        }
-
-        .selected-grade {
-            display: inline-block;
-            background: #eef2ff;
-            color: #6366f1;
-            padding: 6px 16px;
-            border-radius: 20px;
-            font-weight: 600;
-            font-size: 0.9rem;
-        }
-    </style>
-</head>
-<body>
-
-<div id="app">
-
-    <!-- ============================================================ -->
-    <!-- TOP NAVIGATION -->
-    <!-- ============================================================ -->
-    <nav class="top-nav" id="topNav" style="display:none;">
-        <a href="#" class="logo">Synapse</a>
-
-        <div class="nav-links">
-            <a class="active" data-page="subjects" onclick="showPage('subjects')">Subjects</a>
-            <a data-page="tutor" onclick="showPage('tutor')">AI Tutor</a>
-        </div>
-
-        <div class="user-badge">
-            <span class="name" id="navName">User</span>
-            <span class="role" id="navRole">Learner</span>
-            <span id="navBadge"></span>
-            <span id="navGrade" style="font-size:0.8rem;color:#6b7280;"></span>
-            <button class="logout-link" onclick="logout()">Logout</button>
-        </div>
-    </nav>
-
-    <!-- ============================================================ -->
-    <!-- AUTH: LOGIN -->
-    <!-- ============================================================ -->
-    <div class="page active" id="page-login">
-        <div class="auth-card">
-            <div style="text-align:center;margin-bottom:20px;">
-                <h1 style="font-size:2.2rem;font-weight:800;color:#0b1120;">Synapse</h1>
-                <p style="color:#6b7280;font-size:0.95rem;">Your AI Tutor</p>
-            </div>
-
-            <h2>Welcome back</h2>
-            <p class="sub">Log in to continue learning with your AI tutor.</p>
-
-            <div class="field">
-                <label>Email address</label>
-                <input type="email" id="loginEmail" placeholder="you@example.com" />
-            </div>
-
-            <div class="field">
-                <label>Password</label>
-                <input type="password" id="loginPassword" placeholder="Enter your password" onkeypress="if(event.key==='Enter') login()" />
-            </div>
-
-            <div class="error" id="loginError">Invalid email or password</div>
-
-            <button class="btn" onclick="login()">Log In</button>
-
-            <div class="auth-link">
-                Don't have an account? <a onclick="showPage('signup')">Sign up</a>
-            </div>
-            <div class="auth-link">
-                <a onclick="showPage('forgot')">Forgot password?</a>
-            </div>
-        </div>
-    </div>
-
-    <!-- ============================================================ -->
-    <!-- AUTH: SIGNUP -->
-    <!-- ============================================================ -->
-    <div class="page" id="page-signup">
-        <div class="auth-card">
-            <div style="text-align:center;margin-bottom:16px;">
-                <h1 style="font-size:2rem;font-weight:800;color:#0b1120;">Synapse</h1>
-            </div>
-
-            <h2>Create your account</h2>
-            <p class="sub">Join Synapse and start learning with AI.</p>
-
-            <div class="field">
-                <label>Full name</label>
-                <input type="text" id="signupName" placeholder="John Doe" />
-            </div>
-
-            <div class="field">
-                <label>Email address</label>
-                <input type="email" id="signupEmail" placeholder="you@example.com" />
-            </div>
-
-            <div class="field">
-                <label>Password</label>
-                <input type="password" id="signupPassword" placeholder="Create a password (min 6 characters)" />
-            </div>
-
-            <div class="field">
-                <label>Select your country</label>
-                <select id="signupCountry" style="width:100%;padding:14px 16px;border:2px solid #e5e7eb;border-radius:12px;font-size:1rem;font-family:inherit;background:#fff;">
-                    <option value="">Select your country</option>
-                    <option value="South Africa">South Africa</option>
-                    <option value="China">China</option>
-                    <option value="United Kingdom">United Kingdom</option>
-                    <option value="United States">United States</option>
-                    <option value="Australia">Australia</option>
-                    <option value="India">India</option>
-                    <option value="Nigeria">Nigeria</option>
-                    <option value="Kenya">Kenya</option>
-                    <option value="Egypt">Egypt</option>
-                    <option value="Germany">Germany</option>
-                    <option value="France">France</option>
-                    <option value="Japan">Japan</option>
-                    <option value="Brazil">Brazil</option>
-                    <option value="Canada">Canada</option>
-                    <option value="New Zealand">New Zealand</option>
-                </select>
-            </div>
-
-            <div class="field">
-                <label>Role</label>
-                <select id="signupRole" style="width:100%;padding:14px 16px;border:2px solid #e5e7eb;border-radius:12px;font-size:1rem;font-family:inherit;background:#fff;">
-                    <option value="learner">Learner</option>
-                    <option value="teacher">Teacher</option>
-                </select>
-            </div>
-
-            <div class="error" id="signupError">Please fill in all fields</div>
-            <div class="success" id="signupSuccess">Account created! Please check your email to verify your account.</div>
-
-            <button class="btn" onclick="signup()">Create Account</button>
-
-            <div class="auth-link">
-                Already have an account? <a onclick="showPage('login')">Log in</a>
-            </div>
-        </div>
-    </div>
-
-    <!-- ============================================================ -->
-    <!-- AUTH: FORGOT PASSWORD -->
-    <!-- ============================================================ -->
-    <div class="page" id="page-forgot">
-        <div class="auth-card">
-            <h2>Forgot password?</h2>
-            <p class="sub">Enter your email and we'll send you a link to reset your password.</p>
-
-            <div class="field">
-                <label>Email address</label>
-                <input type="email" id="forgotEmail" placeholder="you@example.com" />
-            </div>
-
-            <div class="error" id="forgotError">Please enter a valid email</div>
-            <div class="success" id="forgotSuccess">Password reset link sent! Check your email.</div>
-
-            <button class="btn" onclick="forgotPassword()">Send Reset Link</button>
-
-            <div class="auth-link">
-                Remember your password? <a onclick="showPage('login')">Log in</a>
-            </div>
-        </div>
-    </div>
-
-    <!-- ============================================================ -->
-    <!-- PAGE: GRADE SELECTION -->
-    <!-- ============================================================ -->
-    <div class="page" id="page-grades">
-        <div class="page-header">
-            <h2>Select Your Grade</h2>
-            <p>Choose your current grade level to get the right lessons for you.</p>
-            <p style="font-size:0.9rem;color:#6366f1;margin-top:4px;" id="gradeCountryInfo"></p>
-        </div>
-
-        <div class="grade-grid" id="gradeGrid">
-            <!-- Generated by JavaScript -->
-        </div>
-
-        <button class="btn" id="gradeConfirmBtn" style="max-width:300px;margin:20px auto 0;display:none;" onclick="confirmGrade()">
-            Continue to Subjects
-        </button>
-    </div>
-
-    <!-- ============================================================ -->
-    <!-- PAGE: SUBJECTS -->
-    <!-- ============================================================ -->
-    <div class="page" id="page-subjects">
-        <div class="page-header">
-            <h2>Your Subjects</h2>
-            <p id="subjectsSubtitle">Select a subject to start learning.</p>
-        </div>
-
-        <div class="subject-grid" id="subjectGrid">
-            <!-- Generated by JavaScript -->
-        </div>
-    </div>
-
-    <!-- ============================================================ -->
-    <!-- PAGE: CLASSROOM -->
-    <!-- ============================================================ -->
-    <div class="page" id="page-classroom">
-        <div class="classroom-header">
-            <h2 id="classroomTitle">Subject</h2>
-            <button class="back-btn" onclick="showPage('subjects')">← Back to Subjects</button>
-        </div>
-
-        <div id="topicCount" style="font-size:0.9rem;color:#6b7280;margin-bottom:12px;"></div>
-
-        <div class="topic-grid" id="topicGrid">
-            <!-- Loaded dynamically -->
-        </div>
-    </div>
-
-    <!-- ============================================================ -->
-    <!-- PAGE: AI TUTOR -->
-    <!-- ============================================================ -->
-    <div class="page" id="page-tutor">
-        <div class="tutor-container">
-            <div class="tutor-header">
-                <h2>AI Tutor</h2>
-                <span class="context" id="tutorContext">General</span>
-            </div>
-
-            <div class="chat-box" id="chatBox">
-                <div class="msg bot">Welcome! Ask me anything — I'll guide you step by step.</div>
-            </div>
-
-            <div class="chat-input">
-                <input type="text" id="chatInput" placeholder="Type your message or speak..." onkeypress="if(event.key==='Enter') sendChat()" />
-                <button class="btn-voice" id="voiceBtn" onclick="toggleVoice()" title="Speak">🎤</button>
-                <button class="btn-send" id="sendBtn" onclick="sendChat()">Send</button>
-            </div>
-
-            <div class="chat-options">
-                <input type="checkbox" id="speakToggle" checked />
-                <label for="speakToggle">AI reads responses aloud</label>
-                <span class="status" id="voiceStatus">Ready</span>
-            </div>
-        </div>
-    </div>
-
-</div>
-
-<!-- ============================================================ -->
-<!-- JAVASCRIPT -->
-<!-- ============================================================ -->
-<script>
-    // ================================================================
-    //  STATE
-    // ================================================================
-    let currentUser = null;
-    let currentSubject = '';
-    let selectedGrade = '';
-
-    // ================================================================
-    //  COUNTRY-SPECIFIC DATA
-    // ================================================================
-    const COUNTRY_DATA = {
-        'South Africa': {
-            grades: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'],
-            subjects: {
-                'Mathematics': ['Number Operations', 'Patterns & Algebra', 'Fractions & Decimals', 'Geometry', 'Measurement', 'Data Handling', 'Algebra', 'Trigonometry', 'Calculus', 'Financial Maths'],
-                'English': ['Reading Comprehension', 'Grammar', 'Creative Writing', 'Literature Analysis', 'Poetry', 'Vocabulary'],
-                'Science': ['Life Processes', 'Energy & Change', 'Matter & Materials', 'Ecosystems', 'Physics', 'Chemistry', 'Biology'],
-                'History': ['Ancient Civilizations', 'Colonialism in Africa', 'Apartheid', 'World Wars', 'Democracy', 'Cold War'],
-                'Geography': ['Map Skills', 'Weather & Climate', 'South Africa\'s Provinces', 'Water Cycle', 'Economic Geography', 'Climate Change'],
-                'Life Orientation': ['Self-Awareness', 'Healthy Living', 'Citizenship', 'Study Skills', 'Career Guidance'],
-                'Accounting': ['Introduction', 'Double-Entry', 'Trial Balance', 'Financial Statements', 'VAT', 'Cost Accounting', 'Budgeting'],
-                'Business Studies': ['Business Environments', 'Business Functions', 'Entrepreneurship', 'Marketing', 'Financial Management', 'Human Resources'],
-                'Economics': ['Basic Concepts', 'Demand & Supply', 'Market Structures', 'Macroeconomics', 'South African Economy'],
-                'Life Sciences': ['Cell Biology', 'Genetics', 'Evolution', 'Ecology', 'Human Body Systems'],
-                'Physical Sciences': ['Mechanics', 'Waves & Sound', 'Electricity', 'Chemical Bonding', 'Thermodynamics'],
-                'Technology': ['Design Process', 'Structures', 'Electrical Systems', 'Coding Basics', 'Digital Citizenship']
-            }
-        },
-        'China': {
-            grades: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'],
-            subjects: {
-                '语文 (Chinese)': ['Reading', 'Writing', 'Classical Literature', 'Modern Literature', 'Poetry', 'Grammar'],
-                '数学 (Mathematics)': ['Arithmetic', 'Algebra', 'Geometry', 'Trigonometry', 'Calculus', 'Statistics'],
-                '英语 (English)': ['Reading', 'Grammar', 'Writing', 'Listening', 'Speaking', 'Vocabulary'],
-                '物理 (Physics)': ['Mechanics', 'Thermodynamics', 'Electricity', 'Waves', 'Optics', 'Modern Physics'],
-                '化学 (Chemistry)': ['Basic Concepts', 'Chemical Reactions', 'Organic Chemistry', 'Inorganic Chemistry', 'Biochemistry'],
-                '生物 (Biology)': ['Cell Biology', 'Genetics', 'Ecology', 'Evolution', 'Human Body'],
-                '历史 (History)': ['Ancient China', 'Imperial China', 'Modern China', 'World History', 'Cultural Revolution'],
-                '地理 (Geography)': ['Physical Geography', 'Human Geography', 'China\'s Geography', 'World Geography', 'Climate']
-            }
-        },
-        'United Kingdom': {
-            grades: ['7', '8', '9', '10', '11', '12', '13'],
-            subjects: {
-                'English': ['Reading', 'Writing', 'Shakespeare', 'Poetry', 'Modern Literature', 'Grammar'],
-                'Mathematics': ['Algebra', 'Geometry', 'Trigonometry', 'Calculus', 'Statistics', 'Mechanics'],
-                'Science': ['Biology', 'Chemistry', 'Physics', 'Earth Science', 'Astronomy'],
-                'History': ['Medieval History', 'Tudors', 'Victorian Era', 'World Wars', 'Modern History'],
-                'Geography': ['Physical Geography', 'Human Geography', 'UK Geography', 'Climate Change', 'Development'],
-                'French': ['Grammar', 'Vocabulary', 'Conversation', 'Reading', 'Writing'],
-                'Spanish': ['Grammar', 'Vocabulary', 'Conversation', 'Reading', 'Writing'],
-                'Art': ['Drawing', 'Painting', 'Sculpture', 'Art History', 'Digital Art'],
-                'Music': ['Theory', 'Composition', 'Instrument', 'Music History']
-            }
-        },
-        'United States': {
-            grades: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'],
-            subjects: {
-                'English Language Arts': ['Reading', 'Writing', 'Literature', 'Grammar', 'Vocabulary', 'Speech'],
-                'Mathematics': ['Arithmetic', 'Algebra', 'Geometry', 'Trigonometry', 'Calculus', 'Statistics'],
-                'Science': ['Life Science', 'Physical Science', 'Earth Science', 'Biology', 'Chemistry', 'Physics'],
-                'History': ['American History', 'World History', 'Government', 'Civics', 'Economics'],
-                'Geography': ['Physical Geography', 'Human Geography', 'US Geography', 'World Geography'],
-                'Foreign Language': ['Spanish', 'French', 'Mandarin', 'Latin'],
-                'Art': ['Visual Arts', 'Art History', 'Digital Art'],
-                'Music': ['Theory', 'Performance', 'Music History']
-            }
-        },
-        'Australia': {
-            grades: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'],
-            subjects: {
-                'English': ['Reading', 'Writing', 'Literature', 'Grammar', 'Media Studies'],
-                'Mathematics': ['Algebra', 'Geometry', 'Trigonometry', 'Calculus', 'Statistics'],
-                'Science': ['Biology', 'Chemistry', 'Physics', 'Earth Science', 'Environmental Science'],
-                'History': ['Australian History', 'World History', 'Civics', 'Ancient History'],
-                'Geography': ['Physical Geography', 'Human Geography', 'Australian Geography'],
-                'Health & PE': ['Health Education', 'Physical Education', 'Sports Science']
-            }
-        },
-        'India': {
-            grades: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'],
-            subjects: {
-                'English': ['Reading', 'Writing', 'Literature', 'Grammar', 'Communication'],
-                'Hindi': ['Reading', 'Writing', 'Literature', 'Grammar'],
-                'Mathematics': ['Algebra', 'Geometry', 'Trigonometry', 'Calculus', 'Statistics'],
-                'Science': ['Physics', 'Chemistry', 'Biology', 'Environmental Science'],
-                'Social Studies': ['History', 'Geography', 'Civics', 'Economics'],
-                'Sanskrit': ['Reading', 'Writing', 'Grammar', 'Literature']
-            }
-        }
-    };
-
-    // Default fallback
-    const DEFAULT_SUBJECTS = {
-        'Mathematics': ['Numbers', 'Algebra', 'Geometry', 'Data', 'Measurement'],
-        'English': ['Reading', 'Writing', 'Grammar', 'Literature'],
-        'Science': ['Life Science', 'Physical Science', 'Earth Science'],
-        'History': ['World History', 'Local History'],
-        'Geography': ['Physical Geography', 'Human Geography']
-    };
-
-    // ================================================================
-    //  USERS DATABASE (LocalStorage)
-    // ================================================================
-    function getUsers() {
-        return JSON.parse(localStorage.getItem('synapse_users') || '[]');
+require("dotenv").config();
+
+const express = require("express");
+const cors = require("cors");
+const path = require("path");
+const OpenAI = require("openai");
+const { Pool } = require("pg");
+
+const app = express();
+
+// ================= MIDDLEWARE =================
+app.use(cors());
+app.use(express.static(path.join(__dirname, '../client')));
+app.use(express.json());
+
+// ================= ROOT ROUTE =================
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, '../client/index.html'));
+});
+
+// ================= POSTGRES =================
+const db = new Pool({
+  connectionString: process.env.DATABASE_URL,
+  ssl: { rejectUnauthorized: false }
+});
+
+// ================= INIT TABLES + AUTO-MIGRATION =================
+async function initDB() {
+  await db.query(`
+    CREATE TABLE IF NOT EXISTS users (
+      userId TEXT PRIMARY KEY,
+      name TEXT,
+      country TEXT,
+      grade TEXT
+    )
+  `);
+
+  await db.query(`
+    CREATE TABLE IF NOT EXISTS messages (
+      id SERIAL PRIMARY KEY,
+      userId TEXT,
+      role TEXT,
+      content TEXT,
+      created_at TIMESTAMP DEFAULT NOW()
+    )
+  `);
+
+  await db.query(`
+    CREATE TABLE IF NOT EXISTS subscriptions (
+      userId TEXT PRIMARY KEY,
+      status TEXT DEFAULT 'trial',
+      startDate TIMESTAMP DEFAULT NOW()
+    )
+  `);
+
+  try {
+    await db.query(`ALTER TABLE subscriptions ADD COLUMN IF NOT EXISTS stripeCustomerId TEXT`);
+    await db.query(`ALTER TABLE subscriptions ADD COLUMN IF NOT EXISTS subscriptionEndDate TIMESTAMP`);
+    await db.query(`ALTER TABLE subscriptions ADD COLUMN IF NOT EXISTS planType TEXT DEFAULT 'free'`);
+    console.log("✅ Database migration successful");
+  } catch (err) {
+    console.log("⚠️ Migration warning:", err.message);
+  }
+
+  console.log("✅ Database tables ready");
+}
+
+initDB();
+
+// ================= AI =================
+const client = new OpenAI({
+  apiKey: process.env.DEEPSEEK_API_KEY,
+  baseURL: "https://api.deepseek.com"
+});
+
+// ================= HELPERS =================
+async function ensureTrial(userId) {
+  await db.query(
+    `INSERT INTO subscriptions (userId, status)
+     VALUES ($1, 'trial')
+     ON CONFLICT (userId) DO NOTHING`,
+    [userId]
+  );
+}
+
+// ================= PROFILE =================
+app.post("/save-profile", async (req, res) => {
+  const { userId, name, country, grade } = req.body;
+
+  try {
+    await db.query(
+      `INSERT INTO users (userId,name,country,grade)
+       VALUES ($1,$2,$3,$4)
+       ON CONFLICT (userId) DO UPDATE SET
+       name=EXCLUDED.name,
+       country=EXCLUDED.country,
+       grade=EXCLUDED.grade`,
+      [userId, name, country, grade]
+    );
+
+    res.json({ success: true });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// ================= CHAT =================
+app.post("/chat", async (req, res) => {
+  const { userId, message } = req.body;
+
+  if (!userId || !message) {
+    return res.status(400).json({ reply: "Missing userId or message" });
+  }
+
+  try {
+    await ensureTrial(userId);
+
+    const userResult = await db.query(
+      `SELECT * FROM users WHERE userId=$1`,
+      [userId]
+    );
+
+    const user = userResult.rows[0];
+    if (!user) {
+      return res.json({ reply: "Please create your profile first." });
     }
 
-    function saveUsers(users) {
-        localStorage.setItem('synapse_users', JSON.stringify(users));
+    const subResult = await db.query(
+      `SELECT * FROM subscriptions WHERE userId=$1`,
+      [userId]
+    );
+
+    const sub = subResult.rows[0];
+
+    if (!sub) {
+      return res.json({ reply: "Subscription error." });
     }
 
-    function getCurrentUser() {
-        return JSON.parse(localStorage.getItem('synapse_session') || 'null');
+    // trial check
+    const trialDays = 3;
+    const start = new Date(sub.startdate || sub.startDate);
+    const now = new Date();
+    const diffDays = Math.floor((now - start) / (1000 * 60 * 60 * 24));
+
+    let isPaid = false;
+    if (sub.status === 'active' && sub.subscriptionenddate) {
+      const endDate = new Date(sub.subscriptionenddate);
+      if (now < endDate) {
+        isPaid = true;
+      } else {
+        await db.query(
+          `UPDATE subscriptions SET status = 'expired' WHERE userId = $1`,
+          [userId]
+        );
+      }
     }
 
-    function setCurrentUser(user) {
-        localStorage.setItem('synapse_session', JSON.stringify(user));
-        currentUser = user;
+    if (sub.status === "trial" && diffDays > trialDays) {
+      return res.json({
+        reply: "Your 3-day free trial has ended. Please subscribe to continue learning."
+      });
     }
 
-    function clearSession() {
-        localStorage.removeItem('synapse_session');
-        currentUser = null;
+    if (!isPaid && sub.status !== 'trial') {
+      return res.json({
+        reply: "Your subscription is inactive. Please subscribe to continue."
+      });
     }
 
-    // ================================================================
-    //  SYNC PROFILE WITH BACKEND
-    // ================================================================
-    async function syncProfileWithBackend(user) {
-        try {
-            const response = await fetch('/save-profile', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    userId: user.id,
-                    name: user.name,
-                    country: user.country || 'South Africa',
-                    grade: user.grade || 'Not specified'
-                })
-            });
-            const data = await response.json();
-            if (data.success) {
-                console.log('Profile synced with backend');
-            }
-        } catch (err) {
-            console.warn('Could not sync profile:', err);
-        }
+    // get history
+    const messagesResult = await db.query(
+      `SELECT role, content FROM messages
+       WHERE userId=$1
+       ORDER BY id DESC
+       LIMIT 10`,
+      [userId]
+    );
+
+    // ================= NEW HUMAN-LIKE TEACHER PROMPT =================
+    const history = [
+      {
+        role: "system",
+        content: `
+You are a PROFESSIONAL, PATIENT, and SUPPORTIVE AI TEACHER.
+
+YOUR TEACHING STYLE:
+- Explain concepts clearly and thoroughly
+- Define all new terms with simple examples
+- Give real-life examples students can relate to
+- Check understanding with gentle questions
+- NEVER make students feel stupid
+- Encourage and praise effort
+- Break complex topics into small, digestible steps
+
+LESSON STRUCTURE:
+1. INTRODUCTION: "Today we're going to learn about [topic]."
+2. EXPLANATION: Clearly define the concept with examples.
+3. EXAMPLES: Show 2-3 worked examples step by step.
+4. CHECK: "Do you understand so far? Would you like me to explain again?"
+5. PRACTICE: Give a simple problem to solve.
+6. FEEDBACK: Praise correct answers, gently correct mistakes.
+7. REPEAT: Continue with the next concept.
+
+GUIDING PRINCIPLES:
+- If a student says "I don't know" or "help me" → explain again with different examples
+- If a student gets it wrong → say "That's a good try! Let me explain it another way..."
+- Use encouraging language: "Great job!", "Well done!", "You're doing well!"
+- Be conversational and warm, not robotic
+- Ask "Do you understand?" often
+- Never move to the next topic until the student says they understand
+- Always define new terms before using them
+
+FORMAT:
+📚 Topic: [topic name]
+🎯 Goal: [what we'll learn]
+✏️ Explanation: [clear definition with examples]
+💡 Example: [worked example]
+🤔 Check: "Do you understand this? Can you try this problem?"
+
+Student: ${user.name} (Grade: ${user.grade}, Country: ${user.country})
+        `
+      }
+    ];
+
+    messagesResult.rows.reverse().forEach(m => {
+      history.push({ role: m.role, content: m.content });
+    });
+
+    history.push({ role: "user", content: message });
+
+    const response = await client.chat.completions.create({
+      model: "deepseek-chat",
+      messages: history
+    });
+
+    const reply = response.choices[0].message.content;
+
+    await db.query(
+      `INSERT INTO messages (userId, role, content)
+       VALUES ($1,$2,$3)`,
+      [userId, "user", message]
+    );
+
+    await db.query(
+      `INSERT INTO messages (userId, role, content)
+       VALUES ($1,$2,$3)`,
+      [userId, "assistant", reply]
+    );
+
+    res.json({ reply });
+
+  } catch (err) {
+    res.status(500).json({ reply: err.message });
+  }
+});
+
+// ================= CHECK SUBSCRIPTION STATUS =================
+app.get("/subscription-status/:userId", async (req, res) => {
+  try {
+    const { userId } = req.params;
+    const result = await db.query(
+      `SELECT status, startDate, subscriptionEndDate, planType FROM subscriptions WHERE userId = $1`,
+      [userId]
+    );
+
+    if (result.rows.length === 0) {
+      return res.json({ status: 'trial', daysRemaining: 3 });
     }
 
-    // ================================================================
-    //  PAGE NAVIGATION
-    // ================================================================
-    function showPage(page) {
-        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-        const target = document.getElementById('page-' + page);
-        if (target) target.classList.add('active');
+    const sub = result.rows[0];
+    const now = new Date();
+    const start = new Date(sub.startdate);
+    const diffDays = Math.floor((now - start) / (1000 * 60 * 60 * 24));
+    const daysRemaining = Math.max(0, 3 - diffDays);
 
-        document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active'));
-        document.querySelectorAll('.nav-links a[data-page="' + page + '"]').forEach(a => a.classList.add('active'));
-
-        const isAuth = ['login', 'signup', 'forgot'].includes(page);
-        document.getElementById('topNav').style.display = isAuth ? 'none' : 'flex';
-
-        if (page === 'tutor') {
-            document.getElementById('tutorContext').textContent = currentSubject ? currentSubject : 'General';
-        }
-
-        window.scrollTo({ top: 0, behavior: 'smooth' });
+    let status = sub.status;
+    if (sub.status === 'trial' && diffDays > 3) {
+      status = 'expired';
     }
 
-    // ================================================================
-    //  AUTH: LOGIN
-    // ================================================================
-    function login() {
-        const email = document.getElementById('loginEmail').value.trim();
-        const password = document.getElementById('loginPassword').value.trim();
-        const error = document.getElementById('loginError');
-
-        if (!email || !password) {
-            error.textContent = 'Please enter your email and password';
-            error.classList.add('show');
-            return;
-        }
-
-        const users = getUsers();
-        const user = users.find(u => u.email === email && u.password === password);
-
-        if (!user) {
-            error.textContent = 'Invalid email or password';
-            error.classList.add('show');
-            return;
-        }
-
-        error.classList.remove('show');
-        setCurrentUser(user);
-        syncProfileWithBackend(user);
-        loadDashboard();
-    }
-
-    // ================================================================
-    //  AUTH: SIGNUP
-    // ================================================================
-    function signup() {
-        const name = document.getElementById('signupName').value.trim();
-        const email = document.getElementById('signupEmail').value.trim();
-        const password = document.getElementById('signupPassword').value.trim();
-        const country = document.getElementById('signupCountry').value;
-        const role = document.getElementById('signupRole').value;
-
-        const error = document.getElementById('signupError');
-        const success = document.getElementById('signupSuccess');
-
-        if (!name || !email || !password || !country) {
-            error.textContent = 'Please fill in all fields';
-            error.classList.add('show');
-            success.classList.remove('show');
-            return;
-        }
-
-        if (password.length < 6) {
-            error.textContent = 'Password must be at least 6 characters';
-            error.classList.add('show');
-            success.classList.remove('show');
-            return;
-        }
-
-        const users = getUsers();
-        if (users.find(u => u.email === email)) {
-            error.textContent = 'An account with this email already exists';
-            error.classList.add('show');
-            success.classList.remove('show');
-            return;
-        }
-
-        const newUser = {
-            id: Date.now().toString(),
-            name,
-            email,
-            password,
-            country,
-            role,
-            grade: '',
-            verified: false,
-            createdAt: new Date().toISOString()
-        };
-
-        users.push(newUser);
-        saveUsers(users);
-
-        error.classList.remove('show');
-        success.textContent = 'Account created! Please check your email to verify your account.';
-        success.classList.add('show');
-
-        setTimeout(async () => {
-            setCurrentUser(newUser);
-            await syncProfileWithBackend(newUser);
-            loadDashboard();
-        }, 1500);
-    }
-
-    // ================================================================
-    //  AUTH: FORGOT PASSWORD
-    // ================================================================
-    function forgotPassword() {
-        const email = document.getElementById('forgotEmail').value.trim();
-        const error = document.getElementById('forgotError');
-        const success = document.getElementById('forgotSuccess');
-
-        if (!email) {
-            error.textContent = 'Please enter your email';
-            error.classList.add('show');
-            success.classList.remove('show');
-            return;
-        }
-
-        const users = getUsers();
-        const user = users.find(u => u.email === email);
-
-        if (!user) {
-            error.textContent = 'No account found with this email';
-            error.classList.add('show');
-            success.classList.remove('show');
-            return;
-        }
-
-        error.classList.remove('show');
-        success.textContent = 'Password reset link sent to ' + email;
-        success.classList.add('show');
-
-        console.log('Password reset link for:', email);
-    }
-
-    // ================================================================
-    //  DASHBOARD
-    // ================================================================
-    function loadDashboard() {
-        const user = getCurrentUser();
-        if (!user) {
-            showPage('login');
-            return;
-        }
-
-        currentUser = user;
-
-        document.getElementById('navName').textContent = user.name;
-        document.getElementById('navRole').textContent = user.role.charAt(0).toUpperCase() + user.role.slice(1);
-        document.getElementById('navGrade').textContent = user.grade ? 'Grade ' + user.grade : '';
-
-        const badge = document.getElementById('navBadge');
-        badge.innerHTML = `<span class="badge badge-trial">Trial • 3d left</span>`;
-
-        // If user hasn't selected grade, show grade selection
-        if (!user.grade) {
-            showGradeSelection();
-        } else {
-            showSubjects();
-        }
-    }
-
-    // ================================================================
-    //  GRADE SELECTION
-    // ================================================================
-    function showGradeSelection() {
-        const user = getCurrentUser();
-        if (!user) return;
-
-        const country = user.country || 'South Africa';
-        const data = COUNTRY_DATA[country];
-        const grades = data ? data.grades : ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'];
-
-        document.getElementById('gradeCountryInfo').textContent = 'Country: ' + country;
-        document.getElementById('gradeCountryInfo').style.color = '#6366f1';
-
-        const grid = document.getElementById('gradeGrid');
-        grid.innerHTML = '';
-
-        grades.forEach(g => {
-            const div = document.createElement('div');
-            div.className = 'grade-card';
-            div.textContent = 'Grade ' + g;
-            div.dataset.grade = g;
-            div.onclick = function() {
-                document.querySelectorAll('.grade-card').forEach(c => c.classList.remove('selected'));
-                this.classList.add('selected');
-                selectedGrade = this.dataset.grade;
-                document.getElementById('gradeConfirmBtn').style.display = 'block';
-            };
-            grid.appendChild(div);
-        });
-
-        showPage('grades');
-    }
-
-    function confirmGrade() {
-        if (!selectedGrade) {
-            alert('Please select your grade.');
-            return;
-        }
-
-        const user = getCurrentUser();
-        if (user) {
-            user.grade = selectedGrade;
-            const users = getUsers();
-            const index = users.findIndex(u => u.id === user.id);
-            if (index !== -1) {
-                users[index].grade = selectedGrade;
-                saveUsers(users);
-            }
-            setCurrentUser(user);
-            syncProfileWithBackend(user);
-        }
-
-        document.getElementById('navGrade').textContent = 'Grade ' + selectedGrade;
-        showSubjects();
-    }
-
-    // ================================================================
-    //  SUBJECTS
-    // ================================================================
-    function showSubjects() {
-        const user = getCurrentUser();
-        if (!user) return;
-
-        const country = user.country || 'South Africa';
-        const data = COUNTRY_DATA[country];
-        const subjects = data ? data.subjects : DEFAULT_SUBJECTS;
-
-        document.getElementById('subjectsSubtitle').textContent =
-            'Grade ' + user.grade + ' · ' + country + ' · Select a subject to start learning.';
-
-        const grid = document.getElementById('subjectGrid');
-        grid.innerHTML = '';
-
-        Object.keys(subjects).forEach(name => {
-            const div = document.createElement('div');
-            div.className = 'subject-card';
-            div.innerHTML = `<div class="name">${name}</div>`;
-            div.onclick = function() {
-                openSubject(name);
-            };
-            grid.appendChild(div);
-        });
-
-        showPage('subjects');
-    }
-
-    // ================================================================
-    //  SUBJECTS → CLASSROOM
-    // ================================================================
-    function openSubject(subject) {
-        currentSubject = subject;
-        document.getElementById('classroomTitle').textContent = subject;
-
-        const user = getCurrentUser();
-        const country = user ? user.country : 'South Africa';
-        const data = COUNTRY_DATA[country];
-        const topics = data ? data.subjects[subject] : DEFAULT_SUBJECTS[subject] || [];
-
-        const grid = document.getElementById('topicGrid');
-        const countDiv = document.getElementById('topicCount');
-
-        countDiv.textContent = 'Showing ' + topics.length + ' topics';
-
-        if (topics.length === 0) {
-            grid.innerHTML = `<div class="empty-state">No topics available for this subject yet.</div>`;
-        } else {
-            grid.innerHTML = topics.map(t => `
-                <div class="topic-card" onclick="openTutor('${subject}', '${t}')">
-                    <div class="title">${t}</div>
-                    <div class="resources">
-                        <span class="tag">Lesson</span>
-                        <span class="tag">Quiz</span>
-                        <span class="tag">Worksheet</span>
-                    </div>
-                </div>
-            `).join('');
-        }
-
-        showPage('classroom');
-    }
-
-    // ================================================================
-    //  OPEN AI TUTOR
-    // ================================================================
-    function openTutor(subject, topic) {
-        currentSubject = subject;
-        document.getElementById('tutorContext').textContent = subject + ' - ' + topic;
-        showPage('tutor');
-
-        const input = document.getElementById('chatInput');
-        input.value = 'I\'m learning about "' + topic + '" in ' + subject + '. Can you teach me step by step?';
-        setTimeout(sendChat, 500);
-    }
-
-    // ================================================================
-    //  CHAT
-    // ================================================================
-    async function sendChat() {
-        const input = document.getElementById('chatInput');
-        const msg = input.value.trim();
-        if (!msg) return;
-
-        addMessage('user', msg);
-        input.value = '';
-        input.disabled = true;
-
-        const btn = document.getElementById('sendBtn');
-        btn.disabled = true;
-        btn.innerHTML = '<span class="spinner"></span>';
-
-        try {
-            const context = document.getElementById('tutorContext').textContent;
-            const fullMsg = context + ': ' + msg;
-
-            const response = await fetch('/chat', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    userId: currentUser ? currentUser.id : 'guest_' + Date.now(),
-                    message: fullMsg
-                })
-            });
-
-            const data = await response.json();
-
-            if (data.reply) {
-                addMessage('bot', data.reply);
-            } else {
-                addMessage('bot', data.error || 'No response from server.');
-            }
-        } catch (err) {
-            addMessage('bot', 'Server not reachable. Please try again.');
-        } finally {
-            input.disabled = false;
-            input.focus();
-            btn.disabled = false;
-            btn.textContent = 'Send';
-        }
-    }
-
-    function addMessage(role, text) {
-        const box = document.getElementById('chatBox');
-        const div = document.createElement('div');
-        div.className = 'msg ' + (role === 'user' ? 'user' : 'bot');
-        div.innerHTML = text.replace(/\n/g, '<br>');
-        box.appendChild(div);
-        box.scrollTop = box.scrollHeight;
-
-        if (role === 'bot' && document.getElementById('speakToggle').checked) {
-            speak(text);
-        }
-    }
-
-    // ================================================================
-    //  VOICE INPUT
-    // ================================================================
-    let recognition = null;
-    let listening = false;
-
-    function toggleVoice() {
-        const btn = document.getElementById('voiceBtn');
-        const st = document.getElementById('voiceStatus');
-
-        if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
-            alert('Voice input requires Chrome, Edge, or Android browser.');
-            return;
-        }
-
-        if (listening) {
-            if (recognition) recognition.stop();
-            listening = false;
-            btn.classList.remove('listening');
-            btn.textContent = '🎤';
-            st.textContent = 'Ready';
-            return;
-        }
-
-        const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
-        recognition = new SR();
-        recognition.lang = 'en-US';
-        recognition.interimResults = false;
-
-        listening = true;
-        btn.classList.add('listening');
-        btn.textContent = '⏹️';
-        st.textContent = 'Listening...';
-
-        recognition.onresult = (e) => {
-            const text = e.results[0][0].transcript;
-            document.getElementById('chatInput').value = text;
-            st.textContent = 'Heard: "' + text + '"';
-            btn.classList.remove('listening');
-            btn.textContent = '🎤';
-            listening = false;
-            setTimeout(sendChat, 300);
-        };
-
-        recognition.onerror = (e) => {
-            st.textContent = 'Error: ' + e.error;
-            btn.classList.remove('listening');
-            btn.textContent = '🎤';
-            listening = false;
-        };
-
-        recognition.onend = () => {
-            btn.classList.remove('listening');
-            btn.textContent = '🎤';
-            listening = false;
-        };
-
-        recognition.start();
-    }
-
-    // ================================================================
-    //  TEXT TO SPEECH
-    // ================================================================
-    function speak(text) {
-        if (!('speechSynthesis' in window)) return;
-
-        let clean = text
-            .replace(/\*\*/g, '')
-            .replace(/#/g, '')
-            .replace(/[📚🎯✏️🤔]/g, '')
-            .replace(/\n/g, '. ');
-
-        if (clean.length > 350) clean = clean.substring(0, 350) + '...';
-
-        window.speechSynthesis.cancel();
-
-        const u = new SpeechSynthesisUtterance(clean);
-        u.lang = 'en-US';
-        u.rate = 0.85;
-        u.pitch = 1.0;
-        u.volume = 1;
-
-        const voices = window.speechSynthesis.getVoices();
-        const best = voices.find(v => v.lang.includes('en') && v.name.includes('Google'));
-        if (best) u.voice = best;
-
-        window.speechSynthesis.speak(u);
-    }
-
-    // ================================================================
-    //  LOGOUT
-    // ================================================================
-    function logout() {
-        if (confirm('Are you sure you want to logout?')) {
-            clearSession();
-            showPage('login');
-            document.getElementById('loginEmail').value = '';
-            document.getElementById('loginPassword').value = '';
-        }
-    }
-
-    // ================================================================
-    //  INIT
-    // ================================================================
-    function init() {
-        console.log('Synapse AI Tutor loaded');
-
-        if ('speechSynthesis' in window) {
-            window.speechSynthesis.getVoices();
-            window.speechSynthesis.onvoiceschanged = () => { window.speechSynthesis.getVoices(); };
-        }
-
-        const user = getCurrentUser();
-        if (user) {
-            currentUser = user;
-            syncProfileWithBackend(user);
-            loadDashboard();
-        } else {
-            showPage('login');
-        }
-
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Enter' && document.getElementById('page-tutor').classList.contains('active')) {
-                const input = document.getElementById('chatInput');
-                if (document.activeElement === input) {
-                    e.preventDefault();
-                    sendChat();
-                }
-            }
-        });
-
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Enter' && document.getElementById('page-login').classList.contains('active')) {
-                login();
-            }
-        });
-    }
-
-    init();
-</script>
-
-</body>
-</html>
+    res.json({
+      status: status,
+      daysRemaining: daysRemaining,
+      planType: sub.plantype || 'free',
+      subscriptionEndDate: sub.subscriptionenddate
+    });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// ================= START =================
+const PORT = process.env.PORT || 5000;
+
+app.listen(PORT, () => {
+  console.log("Synapse AI Tutor running on port " + PORT);
+  console.log("💳 Database auto-migration complete!");
+});
