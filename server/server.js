@@ -2,7 +2,7 @@ require("dotenv").config();
 
 const express = require("express");
 const cors = require("cors");
-const path = require("path");            // <-- NEW: for serving HTML files
+const path = require("path");
 const OpenAI = require("openai");
 const { Pool } = require("pg");
 
@@ -10,15 +10,10 @@ const app = express();
 
 // ================= MIDDLEWARE =================
 app.use(cors());
-
-// IMPORTANT: Serve static files from the 'client' folder FIRST
 app.use(express.static(path.join(__dirname, '../client')));
-
-// Then, handle JSON requests (after static)
 app.use(express.json());
 
 // ================= ROOT ROUTE =================
-// Now serves the actual index.html instead of a plain text message
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, '../client/index.html'));
 });
@@ -29,49 +24,40 @@ const db = new Pool({
   ssl: { rejectUnauthorized: false }
 });
 
-// ================= INIT TABLES + AUTO-MIGRATION =================
+// ================= INIT TABLES =================
 async function initDB() {
-  // Users table
-  await db.query(`
-    CREATE TABLE IF NOT EXISTS users (
-      userId TEXT PRIMARY KEY,
-      name TEXT,
-      country TEXT,
-      grade TEXT
-    )
-  `);
-
-  // Messages table
-  await db.query(`
-    CREATE TABLE IF NOT EXISTS messages (
-      id SERIAL PRIMARY KEY,
-      userId TEXT,
-      role TEXT,
-      content TEXT,
-      created_at TIMESTAMP DEFAULT NOW()
-    )
-  `);
-
-  // Subscriptions table (basic structure)
-  await db.query(`
-    CREATE TABLE IF NOT EXISTS subscriptions (
-      userId TEXT PRIMARY KEY,
-      status TEXT DEFAULT 'trial',
-      startDate TIMESTAMP DEFAULT NOW()
-    )
-  `);
-
-  // ========== AUTO-MIGRATION: Add Stripe columns if missing ==========
   try {
-    await db.query(`ALTER TABLE subscriptions ADD COLUMN IF NOT EXISTS stripeCustomerId TEXT`);
-    await db.query(`ALTER TABLE subscriptions ADD COLUMN IF NOT EXISTS subscriptionEndDate TIMESTAMP`);
-    await db.query(`ALTER TABLE subscriptions ADD COLUMN IF NOT EXISTS planType TEXT DEFAULT 'free'`);
-    console.log("✅ Database migration successful (Stripe columns added)");
-  } catch (err) {
-    console.log("⚠️ Migration warning (columns might already exist):", err.message);
-  }
+    await db.query(`
+      CREATE TABLE IF NOT EXISTS users (
+        userId TEXT PRIMARY KEY,
+        name TEXT,
+        country TEXT,
+        grade TEXT
+      )
+    `);
 
-  console.log("✅ Database tables ready");
+    await db.query(`
+      CREATE TABLE IF NOT EXISTS messages (
+        id SERIAL PRIMARY KEY,
+        userId TEXT,
+        role TEXT,
+        content TEXT,
+        created_at TIMESTAMP DEFAULT NOW()
+      )
+    `);
+
+    await db.query(`
+      CREATE TABLE IF NOT EXISTS subscriptions (
+        userId TEXT PRIMARY KEY,
+        status TEXT DEFAULT 'trial',
+        startDate TIMESTAMP DEFAULT NOW()
+      )
+    `);
+
+    console.log("✅ Database tables ready");
+  } catch (err) {
+    console.error("❌ Database error:", err.message);
+  }
 }
 
 initDB();
@@ -84,12 +70,16 @@ const client = new OpenAI({
 
 // ================= HELPERS =================
 async function ensureTrial(userId) {
-  await db.query(
-    `INSERT INTO subscriptions (userId, status)
-     VALUES ($1, 'trial')
-     ON CONFLICT (userId) DO NOTHING`,
-    [userId]
-  );
+  try {
+    await db.query(
+      `INSERT INTO subscriptions (userId, status)
+       VALUES ($1, 'trial')
+       ON CONFLICT (userId) DO NOTHING`,
+      [userId]
+    );
+  } catch (err) {
+    console.error("Trial error:", err.message);
+  }
 }
 
 // ================= PROFILE =================
@@ -98,12 +88,12 @@ app.post("/save-profile", async (req, res) => {
 
   try {
     await db.query(
-      `INSERT INTO users (userId,name,country,grade)
-       VALUES ($1,$2,$3,$4)
+      `INSERT INTO users (userId, name, country, grade)
+       VALUES ($1, $2, $3, $4)
        ON CONFLICT (userId) DO UPDATE SET
-       name=EXCLUDED.name,
-       country=EXCLUDED.country,
-       grade=EXCLUDED.grade`,
+       name = EXCLUDED.name,
+       country = EXCLUDED.country,
+       grade = EXCLUDED.grade`,
       [userId, name, country, grade]
     );
 
@@ -124,8 +114,9 @@ app.post("/chat", async (req, res) => {
   try {
     await ensureTrial(userId);
 
+    // Get user
     const userResult = await db.query(
-      `SELECT * FROM users WHERE userId=$1`,
+      `SELECT * FROM users WHERE userId = $1`,
       [userId]
     );
 
@@ -134,13 +125,13 @@ app.post("/chat", async (req, res) => {
       return res.json({ reply: "Please create your profile first." });
     }
 
+    // Get subscription
     const subResult = await db.query(
-      `SELECT * FROM subscriptions WHERE userId=$1`,
+      `SELECT * FROM subscriptions WHERE userId = $1`,
       [userId]
     );
 
     const sub = subResult.rows[0];
-
     if (!sub) {
       return res.json({ reply: "Subscription error." });
     }
@@ -151,96 +142,106 @@ app.post("/chat", async (req, res) => {
     const now = new Date();
     const diffDays = Math.floor((now - start) / (1000 * 60 * 60 * 24));
 
-    // Check if paid subscription is active
-    let isPaid = false;
-    if (sub.status === 'active' && sub.subscriptionenddate) {
-      const endDate = new Date(sub.subscriptionenddate);
-      if (now < endDate) {
-        isPaid = true;
-      } else {
-        await db.query(
-          `UPDATE subscriptions SET status = 'expired' WHERE userId = $1`,
-          [userId]
-        );
-      }
-    }
-
     if (sub.status === "trial" && diffDays > trialDays) {
       return res.json({
         reply: "Your 3-day free trial has ended. Please subscribe to continue learning."
       });
     }
 
-    if (!isPaid && sub.status !== 'trial') {
-      return res.json({
-        reply: "Your subscription is inactive. Please subscribe to continue."
-      });
+    if (sub.status === "trial" && diffDays <= trialDays) {
+      // Still on trial - allow access
     }
 
-    // get history
+    // Get chat history
     const messagesResult = await db.query(
       `SELECT role, content FROM messages
-       WHERE userId=$1
+       WHERE userId = $1
        ORDER BY id DESC
        LIMIT 10`,
       [userId]
     );
 
+    // ================= HUMAN-LIKE TEACHER PROMPT =================
     const history = [
       {
         role: "system",
         content: `
-You are STRICT AI TEACHER.
+You are a PROFESSIONAL, PATIENT, and SUPPORTIVE AI TEACHER.
 
-RULES:
-- ONE step only
-- ALWAYS ask a question
-- NO full answers
-- SHORT replies
+YOUR TEACHING STYLE:
+- Explain concepts clearly and thoroughly
+- Define all new terms with simple examples
+- Give real-life examples students can relate to
+- Check understanding with gentle questions
+- NEVER make students feel stupid
+- Encourage and praise effort
+- Break complex topics into small, digestible steps
+
+LESSON STRUCTURE:
+1. INTRODUCTION: "Today we're going to learn about [topic]."
+2. EXPLANATION: Clearly define the concept with examples.
+3. EXAMPLES: Show 2-3 worked examples step by step.
+4. CHECK: "Do you understand so far? Would you like me to explain again?"
+5. PRACTICE: Give a simple problem to solve.
+6. FEEDBACK: Praise correct answers, gently correct mistakes.
+7. REPEAT: Continue with the next concept.
+
+GUIDING PRINCIPLES:
+- If a student says "I don't know" or "help me" → explain again with different examples
+- If a student gets it wrong → say "That's a good try! Let me explain it another way..."
+- Use encouraging language: "Great job!", "Well done!", "You're doing well!"
+- Be conversational and warm, not robotic
+- Ask "Do you understand?" often
+- Never move to the next topic until the student says they understand
+- Always define new terms before using them
 
 FORMAT:
-📚 Topic
-🎯 Goal
-✏️ Step
-🤔 Question
+📚 Topic: [topic name]
+🎯 Goal: [what we'll learn]
+✏️ Explanation: [clear definition with examples]
+💡 Example: [worked example]
+🤔 Check: "Do you understand this? Can you try this problem?"
 
-Student:
-Name: ${user.name}
-Grade: ${user.grade}
-Country: ${user.country}
+Student: ${user.name} (Grade: ${user.grade}, Country: ${user.country})
         `
       }
     ];
 
+    // Add recent history (reverse to get chronological order)
     messagesResult.rows.reverse().forEach(m => {
       history.push({ role: m.role, content: m.content });
     });
 
     history.push({ role: "user", content: message });
 
+    // Call AI
     const response = await client.chat.completions.create({
       model: "deepseek-chat",
-      messages: history
+      messages: history,
+      temperature: 0.7,
+      max_tokens: 800
     });
 
     const reply = response.choices[0].message.content;
 
+    // Save messages
     await db.query(
       `INSERT INTO messages (userId, role, content)
-       VALUES ($1,$2,$3)`,
+       VALUES ($1, $2, $3)`,
       [userId, "user", message]
     );
 
     await db.query(
       `INSERT INTO messages (userId, role, content)
-       VALUES ($1,$2,$3)`,
+       VALUES ($1, $2, $3)`,
       [userId, "assistant", reply]
     );
 
     res.json({ reply });
 
   } catch (err) {
-    res.status(500).json({ reply: err.message });
+    console.error("Chat error:", err);
+    res.status(500).json({ reply: "Sorry, something went wrong. Please try again." });
   }
 });
 
@@ -249,7 +250,7 @@ app.get("/subscription-status/:userId", async (req, res) => {
   try {
     const { userId } = req.params;
     const result = await db.query(
-      `SELECT status, startDate, subscriptionEndDate, planType FROM subscriptions WHERE userId = $1`,
+      `SELECT status, startDate FROM subscriptions WHERE userId = $1`,
       [userId]
     );
 
@@ -271,8 +272,7 @@ app.get("/subscription-status/:userId", async (req, res) => {
     res.json({
       status: status,
       daysRemaining: daysRemaining,
-      planType: sub.plantype || 'free',
-      subscriptionEndDate: sub.subscriptionenddate
+      planType: 'free'
     });
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -283,7 +283,6 @@ app.get("/subscription-status/:userId", async (req, res) => {
 const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, () => {
-  console.log("Synapse AI Tutor running on port " + PORT);
-  console.log("💳 Database auto-migration complete!");
-  console.log("🚀 Frontend available at /");
+  console.log("✅ Synapse AI Tutor running on port " + PORT);
+  console.log("📍 http://localhost:" + PORT);
 });
