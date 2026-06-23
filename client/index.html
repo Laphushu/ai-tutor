@@ -16,350 +16,103 @@
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             background: #f0f4f8;
             min-height: 100vh;
+        }
+
+        /* ===== APP CONTAINER ===== */
+        #app {
+            max-width: 1100px;
+            margin: 0 auto;
             padding: 20px;
         }
 
-        /* ===== CARD ===== */
-        .card {
+        /* ===== TOP NAV ===== */
+        .top-nav {
             background: #ffffff;
-            border-radius: 32px;
-            box-shadow: 0 24px 80px rgba(0, 20, 40, 0.10);
-            padding: 44px 40px 40px;
-            max-width: 900px;
-            margin: 0 auto;
-            position: relative;
-        }
-
-        .card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 4px;
-            border-radius: 32px 32px 0 0;
-            background: linear-gradient(90deg, #6366f1, #8b5cf6, #a855f7);
-        }
-
-        /* ===== BRAND ===== */
-        .brand {
-            text-align: center;
-            margin-bottom: 28px;
-        }
-
-        .brand h1 {
-            font-size: 2.6rem;
-            font-weight: 800;
-            letter-spacing: -1.5px;
-            color: #0b1120;
-        }
-
-        .brand h1 span {
-            background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .brand .sub {
-            font-size: 0.95rem;
-            color: #6b7280;
-            margin-top: -2px;
-        }
-
-        /* ===== STEP INDICATOR ===== */
-        .steps {
-            display: flex;
-            justify-content: center;
-            gap: 10px;
-            margin: 20px 0 28px 0;
-        }
-
-        .steps .dot {
-            width: 10px;
-            height: 10px;
-            border-radius: 50%;
-            background: #d1d5db;
-            transition: all 0.35s ease;
-        }
-
-        .steps .dot.active {
-            background: #6366f1;
-            transform: scale(1.3);
-            box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.2);
-        }
-
-        .steps .dot.done {
-            background: #22c55e;
-        }
-
-        /* ===== STEPS ===== */
-        .step {
-            display: none;
-            animation: fadeUp 0.45s ease;
-        }
-
-        .step.active {
-            display: block;
-        }
-
-        @keyframes fadeUp {
-            0% { opacity: 0; transform: translateY(16px); }
-            100% { opacity: 1; transform: translateY(0); }
-        }
-
-        .step h2 {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: #0b1120;
-            margin-bottom: 4px;
-        }
-
-        .step .desc {
-            font-size: 0.95rem;
-            color: #6b7280;
-            margin-bottom: 24px;
-            line-height: 1.5;
-        }
-
-        /* ===== FORM ===== */
-        .field {
-            margin-bottom: 18px;
-        }
-
-        .field label {
-            display: block;
-            font-size: 0.85rem;
-            font-weight: 600;
-            color: #1f2937;
-            margin-bottom: 5px;
-        }
-
-        .field input,
-        .field select {
-            width: 100%;
-            padding: 14px 16px;
-            font-size: 1rem;
-            border: 2px solid #e5e7eb;
-            border-radius: 14px;
-            background: #fafbfc;
-            transition: border-color 0.25s, box-shadow 0.25s;
-            font-family: inherit;
-            color: #0b1120;
-        }
-
-        .field input:focus,
-        .field select:focus {
-            outline: none;
-            border-color: #6366f1;
-            box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.12);
-            background: #ffffff;
-        }
-
-        .field .hint {
-            font-size: 0.8rem;
-            color: #ef4444;
-            margin-top: 4px;
-            display: none;
-        }
-
-        .field .hint.show {
-            display: block;
-        }
-
-        /* ===== ROLE SELECTOR ===== */
-        .role-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 12px;
-        }
-
-        .role-box {
-            padding: 20px 16px;
-            border: 2px solid #e5e7eb;
-            border-radius: 16px;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.25s;
-            background: #fafbfc;
-            user-select: none;
-        }
-
-        .role-box:hover {
-            border-color: #a5b4fc;
-            background: #f8faff;
-        }
-
-        .role-box.selected {
-            border-color: #6366f1;
-            background: #eef2ff;
-            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
-        }
-
-        .role-box .icon {
-            font-size: 2.2rem;
-            display: block;
-            margin-bottom: 4px;
-        }
-
-        .role-box .label {
-            font-weight: 600;
-            font-size: 0.95rem;
-            color: #1f2937;
-        }
-
-        /* ===== ROW ===== */
-        .row {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 14px;
-        }
-
-        /* ===== BUTTONS ===== */
-        .btn {
-            width: 100%;
-            padding: 15px;
-            border: none;
-            border-radius: 14px;
-            font-size: 1rem;
-            font-weight: 700;
-            cursor: pointer;
-            transition: transform 0.15s, box-shadow 0.2s;
-            font-family: inherit;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-        }
-
-        .btn-primary {
-            background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
-            color: #fff;
-            box-shadow: 0 4px 16px rgba(99, 102, 241, 0.3);
-        }
-
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 28px rgba(99, 102, 241, 0.35);
-        }
-
-        .btn-secondary {
-            background: #f3f4f6;
-            color: #1f2937;
-        }
-
-        .btn-secondary:hover {
-            background: #e5e7eb;
-        }
-
-        .btn-group {
-            display: flex;
-            gap: 10px;
-            margin-top: 6px;
-        }
-
-        .btn-group .btn {
-            flex: 1;
-        }
-
-        .btn-sm {
-            padding: 10px 18px;
-            font-size: 0.85rem;
-            width: auto;
-        }
-
-        /* ===== WELCOME ===== */
-        .welcome {
-            text-align: center;
-            padding: 12px 0 4px;
-        }
-
-        .welcome .big {
-            font-size: 4rem;
-            display: block;
-            margin-bottom: 6px;
-        }
-
-        .welcome h2 {
-            font-size: 2rem;
-            font-weight: 800;
-            color: #0b1120;
-        }
-
-        .welcome h2 span {
-            background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .summary {
-            background: #f8fafc;
-            border-radius: 16px;
-            padding: 18px 22px;
-            margin: 20px 0 24px;
-            text-align: left;
-        }
-
-        .summary p {
-            margin: 4px 0;
-            font-size: 0.95rem;
-            color: #374151;
-        }
-
-        .summary strong {
-            color: #0b1120;
-        }
-
-        /* ===== DASHBOARD ===== */
-        #dashboard {
-            display: none;
-        }
-
-        #dashboard.active {
-            display: block;
-        }
-
-        .dash-header {
+            border-radius: 20px;
+            padding: 16px 28px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding-bottom: 16px;
-            border-bottom: 1px solid #e5e7eb;
-            margin-bottom: 20px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+            margin-bottom: 24px;
             flex-wrap: wrap;
-            gap: 10px;
+            gap: 12px;
         }
 
-        .dash-user {
-            font-size: 0.95rem;
+        .top-nav .logo {
+            font-size: 1.6rem;
+            font-weight: 800;
+            color: #0b1120;
+            text-decoration: none;
+        }
+
+        .top-nav .logo span {
+            background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .top-nav .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .top-nav .nav-links a {
+            text-decoration: none;
             color: #4b5563;
+            font-weight: 500;
+            font-size: 0.95rem;
+            padding: 8px 12px;
+            border-radius: 10px;
+            transition: all 0.2s;
+            cursor: pointer;
         }
 
-        .dash-user strong {
+        .top-nav .nav-links a:hover {
+            background: #f3f4f6;
             color: #0b1120;
         }
 
-        .dash-actions {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            flex-wrap: wrap;
+        .top-nav .nav-links a.active {
+            background: #eef2ff;
+            color: #6366f1;
         }
 
-        .badge {
-            display: inline-block;
-            padding: 4px 14px;
-            border-radius: 20px;
-            font-size: 0.75rem;
+        .top-nav .user-badge {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .top-nav .user-badge .name {
+            font-weight: 600;
+            color: #0b1120;
+            font-size: 0.95rem;
+        }
+
+        .top-nav .user-badge .role {
+            font-size: 0.8rem;
+            color: #6b7280;
+            background: #f3f4f6;
+            padding: 2px 12px;
+            border-radius: 12px;
+        }
+
+        .top-nav .user-badge .badge {
+            padding: 4px 12px;
+            border-radius: 16px;
+            font-size: 0.7rem;
             font-weight: 700;
             text-transform: uppercase;
-            letter-spacing: 0.3px;
         }
 
         .badge-trial { background: #fef3c7; color: #92400e; }
         .badge-active { background: #d1fae5; color: #065f46; }
         .badge-expired { background: #fee2e2; color: #991b1b; }
 
-        .logout-btn {
+        .logout-link {
             background: none;
             border: none;
             color: #9ca3af;
@@ -367,94 +120,208 @@
             cursor: pointer;
             padding: 6px 12px;
             border-radius: 8px;
-            transition: background 0.2s, color 0.2s;
+            transition: all 0.2s;
             font-family: inherit;
         }
 
-        .logout-btn:hover {
+        .logout-link:hover {
             background: #f3f4f6;
             color: #ef4444;
         }
 
-        /* ===== SUBJECT GRID ===== */
-        .section-title {
-            font-size: 1.4rem;
+        /* ===== PAGE CONTAINERS ===== */
+        .page {
+            display: none;
+            animation: fadeUp 0.4s ease;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        @keyframes fadeUp {
+            0% { opacity: 0; transform: translateY(12px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ===== AUTH PAGES ===== */
+        .auth-card {
+            max-width: 480px;
+            margin: 40px auto;
+            background: #ffffff;
+            border-radius: 28px;
+            padding: 40px 36px;
+            box-shadow: 0 24px 80px rgba(0,0,0,0.08);
+        }
+
+        .auth-card h2 {
+            font-size: 1.6rem;
             font-weight: 700;
             color: #0b1120;
+            margin-bottom: 4px;
+        }
+
+        .auth-card .sub {
+            color: #6b7280;
+            font-size: 0.95rem;
+            margin-bottom: 24px;
+        }
+
+        .auth-card .field {
             margin-bottom: 16px;
         }
 
-        .section-title small {
+        .auth-card .field label {
+            display: block;
+            font-weight: 600;
+            font-size: 0.85rem;
+            color: #1f2937;
+            margin-bottom: 4px;
+        }
+
+        .auth-card .field input {
+            width: 100%;
+            padding: 14px 16px;
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            font-size: 1rem;
+            transition: border-color 0.25s;
+            font-family: inherit;
+        }
+
+        .auth-card .field input:focus {
+            outline: none;
+            border-color: #6366f1;
+            box-shadow: 0 0 0 4px rgba(99,102,241,0.1);
+        }
+
+        .auth-card .btn {
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+            color: #fff;
+            transition: transform 0.15s, box-shadow 0.2s;
+            font-family: inherit;
+            margin-top: 8px;
+        }
+
+        .auth-card .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 28px rgba(99,102,241,0.3);
+        }
+
+        .auth-card .btn-secondary {
+            background: #f3f4f6;
+            color: #1f2937;
+        }
+
+        .auth-card .auth-link {
+            text-align: center;
+            margin-top: 16px;
             font-size: 0.9rem;
-            font-weight: 400;
             color: #6b7280;
+        }
+
+        .auth-card .auth-link a {
+            color: #6366f1;
+            text-decoration: none;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .auth-card .auth-link a:hover {
+            text-decoration: underline;
+        }
+
+        .auth-card .error {
+            color: #ef4444;
+            font-size: 0.85rem;
+            margin-top: 4px;
+            display: none;
+        }
+
+        .auth-card .error.show { display: block; }
+
+        .auth-card .success {
+            color: #22c55e;
+            font-size: 0.95rem;
+            margin-top: 12px;
+            padding: 12px 16px;
+            background: #f0fdf4;
+            border-radius: 10px;
+            display: none;
+        }
+
+        .auth-card .success.show { display: block; }
+
+        /* ===== SUBJECTS PAGE ===== */
+        .page-header {
+            margin-bottom: 24px;
+        }
+
+        .page-header h2 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #0b1120;
+        }
+
+        .page-header p {
+            color: #6b7280;
+            font-size: 1rem;
         }
 
         .subject-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-            gap: 14px;
-            margin-bottom: 24px;
+            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            gap: 16px;
         }
 
         .subject-card {
-            padding: 20px 14px;
+            background: #ffffff;
             border: 2px solid #e5e7eb;
-            border-radius: 16px;
+            border-radius: 18px;
+            padding: 28px 16px 22px;
             text-align: center;
             cursor: pointer;
             transition: all 0.25s;
-            background: #fafbfc;
-            user-select: none;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.02);
         }
 
         .subject-card:hover {
             border-color: #6366f1;
-            transform: translateY(-2px);
-            box-shadow: 0 8px 24px rgba(99, 102, 241, 0.12);
-        }
-
-        .subject-card.selected {
-            border-color: #6366f1;
-            background: #eef2ff;
-            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
+            transform: translateY(-4px);
+            box-shadow: 0 12px 32px rgba(99,102,241,0.12);
         }
 
         .subject-card .icon {
-            font-size: 2rem;
+            font-size: 2.8rem;
             display: block;
-            margin-bottom: 4px;
+            margin-bottom: 8px;
         }
 
-        .subject-card .label {
-            font-weight: 600;
-            font-size: 0.9rem;
-            color: #1f2937;
+        .subject-card .name {
+            font-weight: 700;
+            font-size: 0.95rem;
+            color: #0b1120;
         }
 
-        /* ===== CLASSROOM ===== */
-        .classroom {
-            margin-top: 20px;
-            border-top: 2px solid #f0f4f8;
-            padding-top: 20px;
-            display: none;
-        }
-
-        .classroom.active {
-            display: block;
-        }
-
+        /* ===== CLASSROOM PAGE ===== */
         .classroom-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 16px;
             flex-wrap: wrap;
-            gap: 10px;
+            gap: 12px;
+            margin-bottom: 20px;
         }
 
-        .classroom-header h3 {
-            font-size: 1.2rem;
+        .classroom-header h2 {
+            font-size: 1.6rem;
             font-weight: 700;
             color: #0b1120;
         }
@@ -462,8 +329,8 @@
         .classroom-header .back-btn {
             background: none;
             border: 1px solid #e5e7eb;
-            padding: 8px 16px;
-            border-radius: 10px;
+            padding: 10px 20px;
+            border-radius: 12px;
             cursor: pointer;
             font-weight: 600;
             color: #4b5563;
@@ -475,30 +342,50 @@
             background: #f3f4f6;
         }
 
+        .grade-filter {
+            margin-bottom: 20px;
+        }
+
+        .grade-filter select {
+            padding: 12px 20px;
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-family: inherit;
+            background: #ffffff;
+            min-width: 200px;
+            cursor: pointer;
+        }
+
+        .grade-filter select:focus {
+            outline: none;
+            border-color: #6366f1;
+        }
+
         .topic-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-            gap: 14px;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 16px;
         }
 
         .topic-card {
-            padding: 18px 16px;
+            background: #ffffff;
             border: 2px solid #e5e7eb;
-            border-radius: 14px;
-            background: #fafbfc;
+            border-radius: 16px;
+            padding: 20px 18px;
             transition: all 0.25s;
             cursor: pointer;
         }
 
         .topic-card:hover {
             border-color: #6366f1;
-            box-shadow: 0 4px 16px rgba(99, 102, 241, 0.08);
+            box-shadow: 0 8px 24px rgba(99,102,241,0.08);
         }
 
         .topic-card .title {
-            font-weight: 600;
+            font-weight: 700;
+            font-size: 1rem;
             color: #0b1120;
-            font-size: 0.95rem;
         }
 
         .topic-card .meta {
@@ -508,7 +395,7 @@
         }
 
         .topic-card .resources {
-            margin-top: 10px;
+            margin-top: 12px;
             display: flex;
             gap: 6px;
             flex-wrap: wrap;
@@ -517,36 +404,67 @@
         .topic-card .resources .tag {
             background: #eef2ff;
             color: #6366f1;
-            padding: 2px 10px;
+            padding: 2px 12px;
             border-radius: 12px;
             font-size: 0.7rem;
             font-weight: 600;
         }
 
-        /* ===== CHAT ===== */
-        .chat-section {
-            margin-top: 20px;
-            border-top: 2px solid #f0f4f8;
-            padding-top: 20px;
+        .empty-state {
+            grid-column: 1/-1;
+            text-align: center;
+            padding: 40px;
+            color: #6b7280;
+        }
+
+        /* ===== AI TUTOR PAGE ===== */
+        .tutor-container {
+            background: #ffffff;
+            border-radius: 24px;
+            padding: 28px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.04);
+        }
+
+        .tutor-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .tutor-header h2 {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #0b1120;
+        }
+
+        .tutor-header .context {
+            font-size: 0.9rem;
+            color: #6b7280;
+            background: #f3f4f6;
+            padding: 6px 16px;
+            border-radius: 20px;
         }
 
         .chat-box {
             background: #f8fafc;
             border-radius: 16px;
-            padding: 16px;
-            max-height: 280px;
+            padding: 20px;
+            max-height: 380px;
             overflow-y: auto;
-            margin-bottom: 14px;
             border: 1px solid #e5e7eb;
+            margin-bottom: 16px;
         }
 
         .chat-box .msg {
-            padding: 10px 14px;
-            border-radius: 12px;
+            padding: 12px 16px;
+            border-radius: 14px;
             max-width: 85%;
-            margin-bottom: 8px;
+            margin-bottom: 10px;
             font-size: 0.95rem;
-            line-height: 1.5;
+            line-height: 1.6;
             word-wrap: break-word;
         }
 
@@ -570,19 +488,17 @@
 
         .chat-input input {
             flex: 1;
-            padding: 14px 16px;
+            padding: 14px 18px;
             border: 2px solid #e5e7eb;
             border-radius: 14px;
             font-size: 0.95rem;
-            background: #fafbfc;
-            transition: border-color 0.25s;
             font-family: inherit;
+            transition: border-color 0.25s;
         }
 
         .chat-input input:focus {
             outline: none;
             border-color: #6366f1;
-            background: #fff;
         }
 
         .chat-input .btn-voice {
@@ -608,13 +524,13 @@
         }
 
         @keyframes pulse {
-            0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.35); }
-            70% { box-shadow: 0 0 0 16px rgba(239, 68, 68, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+            0% { box-shadow: 0 0 0 0 rgba(239,68,68,0.35); }
+            70% { box-shadow: 0 0 0 16px rgba(239,68,68,0); }
+            100% { box-shadow: 0 0 0 0 rgba(239,68,68,0); }
         }
 
         .chat-input .btn-send {
-            padding: 0 24px;
+            padding: 0 28px;
             background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
             color: #fff;
             border: none;
@@ -639,8 +555,8 @@
         .chat-options {
             display: flex;
             align-items: center;
-            gap: 10px;
-            margin-top: 10px;
+            gap: 14px;
+            margin-top: 12px;
             font-size: 0.85rem;
             color: #6b7280;
         }
@@ -656,160 +572,180 @@
             cursor: pointer;
         }
 
-        /* ===== RESPONSIVE ===== */
-        @media (max-width: 600px) {
-            .card { padding: 24px 18px; }
-            .brand h1 { font-size: 2rem; }
-            .role-grid { grid-template-columns: 1fr; }
-            .row { grid-template-columns: 1fr; gap: 0; }
-            .btn-group { flex-direction: column; }
-            .subject-grid { grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); }
-            .topic-grid { grid-template-columns: 1fr; }
-            .chat-input { flex-wrap: wrap; }
-            .chat-input .btn-send { flex: 1; padding: 14px; }
-            .dash-header { flex-direction: column; align-items: stretch; }
-            .dash-actions { justify-content: space-between; }
+        .chat-options .status {
+            margin-left: auto;
+            font-size: 0.8rem;
+            color: #9ca3af;
         }
 
-        /* ===== HIDDEN ===== */
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 640px) {
+            .top-nav {
+                flex-direction: column;
+                align-items: stretch;
+                padding: 14px 18px;
+            }
+
+            .top-nav .nav-links {
+                justify-content: center;
+                gap: 8px;
+            }
+
+            .top-nav .nav-links a {
+                font-size: 0.85rem;
+                padding: 6px 10px;
+            }
+
+            .top-nav .user-badge {
+                justify-content: center;
+                flex-wrap: wrap;
+            }
+
+            .auth-card {
+                padding: 28px 20px;
+                margin: 20px 12px;
+            }
+
+            .subject-grid {
+                grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+            }
+
+            .topic-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .chat-input {
+                flex-wrap: wrap;
+            }
+
+            .chat-input .btn-send {
+                flex: 1;
+                padding: 14px;
+            }
+
+            .tutor-container {
+                padding: 16px;
+            }
+        }
+
+        @media (max-width: 400px) {
+            .subject-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        /* ===== UTILITY ===== */
         .hidden { display: none !important; }
+        .text-center { text-align: center; }
+        .mt-20 { margin-top: 20px; }
+        .mb-20 { margin-bottom: 20px; }
+
+        /* ===== SPINNER ===== */
+        .spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,0.25);
+            border-top-color: #fff;
+            border-radius: 50%;
+            animation: spin 0.7s linear infinite;
+            vertical-align: middle;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
     </style>
 </head>
 <body>
 
-<div class="card" id="app">
+<div id="app">
 
-    <!-- ===== BRAND ===== -->
-    <div class="brand">
-        <h1>🧠 <span>Synapse</span></h1>
-        <p class="sub">Your Strict AI Tutor</p>
+    <!-- ============================================================ -->
+    <!-- TOP NAVIGATION -->
+    <!-- ============================================================ -->
+    <nav class="top-nav" id="topNav" style="display:none;">
+        <a href="#" class="logo">🧠 <span>Synapse</span></a>
+
+        <div class="nav-links">
+            <a class="active" data-page="subjects" onclick="showPage('subjects')">📚 Subjects</a>
+            <a data-page="tutor" onclick="showPage('tutor')">💬 AI Tutor</a>
+        </div>
+
+        <div class="user-badge">
+            <span class="name" id="navName">User</span>
+            <span class="role" id="navRole">Learner</span>
+            <span id="navBadge"></span>
+            <button class="logout-link" onclick="logout()">🚪 Logout</button>
+        </div>
+    </nav>
+
+    <!-- ============================================================ -->
+    <!-- AUTH: LOGIN -->
+    <!-- ============================================================ -->
+    <div class="page active" id="page-login">
+        <div class="auth-card">
+            <div style="text-align:center;margin-bottom:20px;">
+                <h1 style="font-size:2.2rem;font-weight:800;">🧠 <span style="background:linear-gradient(135deg,#6366f1,#a855f7);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">Synapse</span></h1>
+                <p style="color:#6b7280;font-size:0.95rem;">Your Strict AI Tutor</p>
+            </div>
+
+            <h2>Welcome back</h2>
+            <p class="sub">Log in to continue learning with your AI tutor.</p>
+
+            <div class="field">
+                <label>Email address</label>
+                <input type="email" id="loginEmail" placeholder="you@example.com" />
+            </div>
+
+            <div class="field">
+                <label>Password</label>
+                <input type="password" id="loginPassword" placeholder="Enter your password" onkeypress="if(event.key==='Enter') login()" />
+            </div>
+
+            <div class="error" id="loginError">Invalid email or password</div>
+
+            <button class="btn" onclick="login()">Log In</button>
+
+            <div class="auth-link">
+                Don't have an account? <a onclick="showPage('signup')">Sign up</a>
+            </div>
+            <div class="auth-link">
+                <a onclick="showPage('forgot')">Forgot password?</a>
+            </div>
+        </div>
     </div>
 
     <!-- ============================================================ -->
-    <!-- ===== SIGNUP FLOW ===== -->
+    <!-- AUTH: SIGNUP -->
     <!-- ============================================================ -->
-    <div id="signupFlow">
+    <div class="page" id="page-signup">
+        <div class="auth-card">
+            <div style="text-align:center;margin-bottom:16px;">
+                <h1 style="font-size:2rem;font-weight:800;">🧠 <span style="background:linear-gradient(135deg,#6366f1,#a855f7);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">Synapse</span></h1>
+            </div>
 
-        <div class="steps" id="stepDots">
-            <span class="dot active" data-s="1"></span>
-            <span class="dot" data-s="2"></span>
-            <span class="dot" data-s="3"></span>
-            <span class="dot" data-s="4"></span>
-        </div>
-
-        <!-- STEP 1 — Role + DOB -->
-        <div class="step active" data-s="1">
-            <h2>👋 Welcome to Synapse</h2>
-            <p class="desc">
-                Choose your role to get started. We'll personalise your experience based on your age and learning goals.
-            </p>
+            <h2>Create your account</h2>
+            <p class="sub">Join Synapse and start learning with AI.</p>
 
             <div class="field">
-                <label>I am a...</label>
-                <div class="role-grid" id="roleGrid">
-                    <div class="role-box" data-role="learner" onclick="pickRole(this)">
-                        <span class="icon">📖</span>
-                        <span class="label">Learner</span>
-                    </div>
-                    <div class="role-box" data-role="teacher" onclick="pickRole(this)">
-                        <span class="icon">👨‍🏫</span>
-                        <span class="label">Teacher</span>
-                    </div>
-                </div>
-                <div class="hint" id="roleHint">Please select a role</div>
+                <label>Full name</label>
+                <input type="text" id="signupName" placeholder="John Doe" />
             </div>
 
             <div class="field">
-                <label>Date of Birth</label>
-                <div class="row">
-                    <select id="dobMonth">
-                        <option value="">Month</option>
-                        <option value="January">January</option>
-                        <option value="February">February</option>
-                        <option value="March">March</option>
-                        <option value="April">April</option>
-                        <option value="May">May</option>
-                        <option value="June">June</option>
-                        <option value="July">July</option>
-                        <option value="August">August</option>
-                        <option value="September">September</option>
-                        <option value="October">October</option>
-                        <option value="November">November</option>
-                        <option value="December">December</option>
-                    </select>
-                    <select id="dobYear">
-                        <option value="">Year</option>
-                        <option value="2024">2024</option>
-                        <option value="2023">2023</option>
-                        <option value="2022">2022</option>
-                        <option value="2021">2021</option>
-                        <option value="2020">2020</option>
-                        <option value="2019">2019</option>
-                        <option value="2018">2018</option>
-                        <option value="2017">2017</option>
-                        <option value="2016">2016</option>
-                        <option value="2015">2015</option>
-                        <option value="2014">2014</option>
-                        <option value="2013">2013</option>
-                        <option value="2012">2012</option>
-                        <option value="2011">2011</option>
-                        <option value="2010">2010</option>
-                        <option value="2009">2009</option>
-                        <option value="2008">2008</option>
-                        <option value="2007">2007</option>
-                        <option value="2006">2006</option>
-                        <option value="2005">2005</option>
-                        <option value="2004">2004</option>
-                        <option value="2003">2003</option>
-                        <option value="2002">2002</option>
-                        <option value="2001">2001</option>
-                        <option value="2000">2000</option>
-                        <option value="1999">1999</option>
-                        <option value="1998">1998</option>
-                        <option value="1997">1997</option>
-                        <option value="1996">1996</option>
-                        <option value="1995">1995</option>
-                        <option value="1994">1994</option>
-                        <option value="1993">1993</option>
-                        <option value="1992">1992</option>
-                        <option value="1991">1991</option>
-                        <option value="1990">1990</option>
-                        <option value="1989">1989</option>
-                        <option value="1988">1988</option>
-                        <option value="1987">1987</option>
-                        <option value="1986">1986</option>
-                        <option value="1985">1985</option>
-                        <option value="1984">1984</option>
-                        <option value="1983">1983</option>
-                        <option value="1982">1982</option>
-                        <option value="1981">1981</option>
-                        <option value="1980">1980</option>
-                        <option value="1979">1979</option>
-                        <option value="1978">1978</option>
-                        <option value="1977">1977</option>
-                        <option value="1976">1976</option>
-                        <option value="1975">1975</option>
-                        <option value="1974">1974</option>
-                        <option value="1973">1973</option>
-                        <option value="1972">1972</option>
-                        <option value="1971">1971</option>
-                        <option value="1970">1970</option>
-                    </select>
-                </div>
-                <div class="hint" id="dobHint">Please select both month and year</div>
+                <label>Email address</label>
+                <input type="email" id="signupEmail" placeholder="you@example.com" />
             </div>
 
-            <button class="btn btn-primary" onclick="goStep(2)">Continue →</button>
-        </div>
-
-        <!-- STEP 2 — Province + Curriculum -->
-        <div class="step" data-s="2">
-            <h2>📍 Where are you from?</h2>
-            <p class="desc">Select your province so we can align with your curriculum (CAPS, IEB, or Cambridge).</p>
+            <div class="field">
+                <label>Password</label>
+                <input type="password" id="signupPassword" placeholder="Create a password (min 6 characters)" />
+            </div>
 
             <div class="field">
                 <label>Province</label>
-                <select id="provinceSelect">
+                <select id="signupProvince" style="width:100%;padding:14px 16px;border:2px solid #e5e7eb;border-radius:12px;font-size:1rem;font-family:inherit;background:#fff;">
                     <option value="">Select your province</option>
                     <option value="Eastern Cape">Eastern Cape</option>
                     <option value="Free State">Free State</option>
@@ -821,184 +757,164 @@
                     <option value="North West">North West</option>
                     <option value="Western Cape">Western Cape</option>
                 </select>
-                <div class="hint" id="provinceHint">Please select your province</div>
             </div>
 
             <div class="field">
                 <label>Curriculum</label>
-                <select id="curriculumSelect">
-                    <option value="">Select your curriculum</option>
+                <select id="signupCurriculum" style="width:100%;padding:14px 16px;border:2px solid #e5e7eb;border-radius:12px;font-size:1rem;font-family:inherit;background:#fff;">
                     <option value="CAPS">CAPS (National Curriculum)</option>
                     <option value="IEB">IEB (Independent Examinations Board)</option>
                     <option value="Cambridge">Cambridge International</option>
                 </select>
-                <div class="hint" id="curriculumHint">Please select your curriculum</div>
-            </div>
-
-            <div class="btn-group">
-                <button class="btn btn-secondary" onclick="goStep(1)">← Back</button>
-                <button class="btn btn-primary" onclick="goStep(3)">Continue →</button>
-            </div>
-        </div>
-
-        <!-- STEP 3 — Email + Password -->
-        <div class="step" data-s="3">
-            <h2>🔐 Create your account</h2>
-            <p class="desc">Enter your email and choose a password to get started.</p>
-
-            <div class="field">
-                <label>Email address</label>
-                <input type="email" id="emailInput" placeholder="you@example.com" autocomplete="email" />
-                <div class="hint" id="emailHint">Please enter a valid email</div>
             </div>
 
             <div class="field">
-                <label>Password</label>
-                <input type="password" id="passwordInput" placeholder="Create a password" autocomplete="new-password" />
-                <div class="hint" id="passwordHint">Password must be at least 6 characters</div>
+                <label>Role</label>
+                <select id="signupRole" style="width:100%;padding:14px 16px;border:2px solid #e5e7eb;border-radius:12px;font-size:1rem;font-family:inherit;background:#fff;">
+                    <option value="learner">📖 Learner</option>
+                    <option value="teacher">👨‍🏫 Teacher</option>
+                </select>
             </div>
 
-            <div class="btn-group">
-                <button class="btn btn-secondary" onclick="goStep(2)">← Back</button>
-                <button class="btn btn-primary" onclick="goStep(4)">Continue →</button>
-            </div>
-        </div>
+            <div class="error" id="signupError">Please fill in all fields</div>
+            <div class="success" id="signupSuccess">Account created! Please check your email to verify your account. <span style="display:block;margin-top:8px;font-size:0.9rem;">(Demo: You can now log in)</span></div>
 
-        <!-- STEP 4 — First + Last Name -->
-        <div class="step" data-s="4">
-            <h2>📝 Tell us about yourself</h2>
-            <p class="desc">We'd like to know your name to make your experience more personal.</p>
+            <button class="btn" onclick="signup()">Create Account</button>
 
-            <div class="row">
-                <div class="field">
-                    <label>First name</label>
-                    <input type="text" id="firstNameInput" placeholder="First name" />
-                    <div class="hint" id="firstNameHint">Please enter your first name</div>
-                </div>
-                <div class="field">
-                    <label>Last name</label>
-                    <input type="text" id="lastNameInput" placeholder="Last name" />
-                    <div class="hint" id="lastNameHint">Please enter your last name</div>
-                </div>
-            </div>
-
-            <div class="btn-group">
-                <button class="btn btn-secondary" onclick="goStep(3)">← Back</button>
-                <button class="btn btn-primary" onclick="finishSignup()">Complete Signup</button>
+            <div class="auth-link">
+                Already have an account? <a onclick="showPage('login')">Log in</a>
             </div>
         </div>
-
-        <!-- STEP 5 — Welcome -->
-        <div class="step" data-s="5">
-            <div class="welcome">
-                <span class="big">🎉</span>
-                <h2>Welcome to <span>Synapse</span>!</h2>
-                <p class="sub">Your AI tutor is ready to guide you.</p>
-            </div>
-
-            <div class="summary" id="welcomeSummary">
-                <p><strong>Name:</strong> <span id="wName">-</span></p>
-                <p><strong>Email:</strong> <span id="wEmail">-</span></p>
-                <p><strong>Role:</strong> <span id="wRole">-</span></p>
-                <p><strong>Province:</strong> <span id="wProvince">-</span></p>
-                <p><strong>Curriculum:</strong> <span id="wCurriculum">-</span></p>
-                <p><strong>DOB:</strong> <span id="wDob">-</span></p>
-            </div>
-
-            <button class="btn btn-primary" onclick="enterApp()">Browse Synapse →</button>
-        </div>
-
     </div>
 
     <!-- ============================================================ -->
-    <!-- ===== DASHBOARD ===== -->
+    <!-- AUTH: FORGOT PASSWORD -->
     <!-- ============================================================ -->
-    <div id="dashboard">
+    <div class="page" id="page-forgot">
+        <div class="auth-card">
+            <h2>🔑 Forgot password?</h2>
+            <p class="sub">Enter your email and we'll send you a link to reset your password.</p>
 
-        <div class="dash-header">
-            <div class="dash-user">
-                👋 <strong id="dashName">User</strong> · <span id="dashRole">Learner</span>
-                <span style="font-size:0.8rem;color:#6b7280;display:block;">📍 <span id="dashProvince">-</span> · <span id="dashCurriculum">-</span></span>
-            </div>
-            <div class="dash-actions">
-                <span id="dashBadge"></span>
-                <button class="logout-btn" onclick="logout()">🚪 Logout</button>
-            </div>
-        </div>
-
-        <!-- ===== BROWSE SYNAPSE ===== -->
-        <div id="browseView">
-            <div class="section-title">
-                📚 Browse Synapse
-                <small>— Choose a subject to start learning</small>
+            <div class="field">
+                <label>Email address</label>
+                <input type="email" id="forgotEmail" placeholder="you@example.com" />
             </div>
 
-            <div class="subject-grid" id="subjectGrid">
-                <div class="subject-card" data-subject="Mathematics" onclick="selectSubject(this)">
-                    <span class="icon">📐</span>
-                    <span class="label">Mathematics</span>
-                </div>
-                <div class="subject-card" data-subject="English" onclick="selectSubject(this)">
-                    <span class="icon">📖</span>
-                    <span class="label">English</span>
-                </div>
-                <div class="subject-card" data-subject="Science" onclick="selectSubject(this)">
-                    <span class="icon">🔬</span>
-                    <span class="label">Science</span>
-                </div>
-                <div class="subject-card" data-subject="History" onclick="selectSubject(this)">
-                    <span class="icon">🏛️</span>
-                    <span class="label">History</span>
-                </div>
-                <div class="subject-card" data-subject="Geography" onclick="selectSubject(this)">
-                    <span class="icon">🌍</span>
-                    <span class="label">Geography</span>
-                </div>
-                <div class="subject-card" data-subject="Life Orientation" onclick="selectSubject(this)">
-                    <span class="icon">🧘</span>
-                    <span class="label">Life Orientation</span>
-                </div>
-            </div>
+            <div class="error" id="forgotError">Please enter a valid email</div>
+            <div class="success" id="forgotSuccess">Password reset link sent! Check your email. <span style="display:block;margin-top:8px;font-size:0.9rem;">(Demo: Check your console for the reset link)</span></div>
 
-            <!-- ===== CLASSROOM ===== -->
-            <div class="classroom" id="classroom">
-                <div class="classroom-header">
-                    <h3 id="classroomTitle">📚 Subject Name</h3>
-                    <button class="back-btn" onclick="closeClassroom()">← Back to Subjects</button>
-                </div>
+            <button class="btn" onclick="forgotPassword()">Send Reset Link</button>
 
-                <div class="field" style="margin-bottom:16px;">
-                    <label>Select your grade</label>
-                    <select id="gradeSelect" onchange="filterTopics()">
-                        <option value="">All Grades</option>
-                        <option value="1">Grade 1</option>
-                        <option value="2">Grade 2</option>
-                        <option value="3">Grade 3</option>
-                        <option value="4">Grade 4</option>
-                        <option value="5">Grade 5</option>
-                        <option value="6">Grade 6</option>
-                        <option value="7">Grade 7</option>
-                        <option value="8">Grade 8</option>
-                        <option value="9">Grade 9</option>
-                        <option value="10">Grade 10</option>
-                        <option value="11">Grade 11</option>
-                        <option value="12">Grade 12</option>
-                    </select>
-                </div>
-
-                <div id="topicCount" style="font-size:0.9rem;color:#6b7280;margin-bottom:12px;"></div>
-
-                <div class="topic-grid" id="topicGrid">
-                    <!-- Topics loaded dynamically -->
-                </div>
+            <div class="auth-link">
+                Remember your password? <a onclick="showPage('login')">Log in</a>
             </div>
         </div>
+    </div>
 
-        <!-- ===== CHAT SECTION ===== -->
-        <div class="chat-section" id="chatSection">
-            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;flex-wrap:wrap;gap:6px;">
-                <span style="font-weight:600;font-size:1rem;">💬 AI Tutor Chat</span>
-                <span id="chatContext" style="font-size:0.85rem;color:#6b7280;">General</span>
+    <!-- ============================================================ -->
+    <!-- PAGE: SUBJECTS -->
+    <!-- ============================================================ -->
+    <div class="page" id="page-subjects">
+        <div class="page-header">
+            <h2>📚 Choose a Subject</h2>
+            <p>Select a subject to start learning. Your progress is saved automatically.</p>
+        </div>
+
+        <div class="subject-grid" id="subjectGrid">
+            <div class="subject-card" onclick="openSubject('Mathematics')">
+                <span class="icon">📐</span>
+                <span class="name">Mathematics</span>
+            </div>
+            <div class="subject-card" onclick="openSubject('English')">
+                <span class="icon">📖</span>
+                <span class="name">English</span>
+            </div>
+            <div class="subject-card" onclick="openSubject('Science')">
+                <span class="icon">🔬</span>
+                <span class="name">Science</span>
+            </div>
+            <div class="subject-card" onclick="openSubject('History')">
+                <span class="icon">🏛️</span>
+                <span class="name">History</span>
+            </div>
+            <div class="subject-card" onclick="openSubject('Geography')">
+                <span class="icon">🌍</span>
+                <span class="name">Geography</span>
+            </div>
+            <div class="subject-card" onclick="openSubject('Life Orientation')">
+                <span class="icon">🧘</span>
+                <span class="name">Life Orientation</span>
+            </div>
+            <div class="subject-card" onclick="openSubject('Accounting')">
+                <span class="icon">💰</span>
+                <span class="name">Accounting</span>
+            </div>
+            <div class="subject-card" onclick="openSubject('Business Studies')">
+                <span class="icon">📊</span>
+                <span class="name">Business Studies</span>
+            </div>
+            <div class="subject-card" onclick="openSubject('Economics')">
+                <span class="icon">📈</span>
+                <span class="name">Economics</span>
+            </div>
+            <div class="subject-card" onclick="openSubject('Life Sciences')">
+                <span class="icon">🧬</span>
+                <span class="name">Life Sciences</span>
+            </div>
+            <div class="subject-card" onclick="openSubject('Physical Sciences')">
+                <span class="icon">⚛️</span>
+                <span class="name">Physical Sciences</span>
+            </div>
+            <div class="subject-card" onclick="openSubject('Technology')">
+                <span class="icon">💻</span>
+                <span class="name">Technology</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- PAGE: CLASSROOM (Subjects > Topics) -->
+    <!-- ============================================================ -->
+    <div class="page" id="page-classroom">
+        <div class="classroom-header">
+            <h2 id="classroomTitle">📚 Subject</h2>
+            <button class="back-btn" onclick="showPage('subjects')">← Back to Subjects</button>
+        </div>
+
+        <div class="grade-filter">
+            <label style="font-weight:600;font-size:0.9rem;display:block;margin-bottom:4px;">Select your grade</label>
+            <select id="gradeFilter" onchange="filterTopics()">
+                <option value="">All Grades</option>
+                <option value="1">Grade 1</option>
+                <option value="2">Grade 2</option>
+                <option value="3">Grade 3</option>
+                <option value="4">Grade 4</option>
+                <option value="5">Grade 5</option>
+                <option value="6">Grade 6</option>
+                <option value="7">Grade 7</option>
+                <option value="8">Grade 8</option>
+                <option value="9">Grade 9</option>
+                <option value="10">Grade 10</option>
+                <option value="11">Grade 11</option>
+                <option value="12">Grade 12</option>
+            </select>
+        </div>
+
+        <div id="topicCount" style="font-size:0.9rem;color:#6b7280;margin-bottom:12px;"></div>
+
+        <div class="topic-grid" id="topicGrid">
+            <!-- Loaded dynamically -->
+        </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- PAGE: AI TUTOR -->
+    <!-- ============================================================ -->
+    <div class="page" id="page-tutor">
+        <div class="tutor-container">
+            <div class="tutor-header">
+                <h2>💬 AI Tutor</h2>
+                <span class="context" id="tutorContext">General</span>
             </div>
 
             <div class="chat-box" id="chatBox">
@@ -1014,36 +930,23 @@
             <div class="chat-options">
                 <input type="checkbox" id="speakToggle" checked />
                 <label for="speakToggle">🔊 AI reads responses aloud</label>
-                <span style="margin-left:auto;font-size:0.8rem;color:#9ca3af;" id="voiceStatus">Ready</span>
+                <span class="status" id="voiceStatus">Ready</span>
             </div>
         </div>
-
     </div>
 
 </div>
 
 <!-- ============================================================ -->
-<!-- ===== JAVASCRIPT ===== -->
+<!-- JAVASCRIPT -->
 <!-- ============================================================ -->
 <script>
     // ================================================================
     //  STATE
     // ================================================================
-    const S = {
-        role: '',
-        dobMonth: '',
-        dobYear: '',
-        province: '',
-        curriculum: '',
-        email: '',
-        password: '',
-        firstName: '',
-        lastName: '',
-        userId: '',
-        loggedIn: false,
-        currentSubject: '',
-        currentGrade: ''
-    };
+    let currentUser = null;
+    let currentSubject = '';
+    let currentGrade = '';
 
     // ================================================================
     //  TOPICS DATA (South African CAPS-aligned)
@@ -1100,215 +1003,276 @@
             { title: 'Citizenship', grade: '7-9', resources: ['Lesson', 'Project'] },
             { title: 'Study Skills', grade: '8-12', resources: ['Lesson', 'Quiz'] },
             { title: 'Career Guidance', grade: '10-12', resources: ['Lesson', 'Worksheet'] }
+        ],
+        'Accounting': [
+            { title: 'Introduction to Accounting', grade: '10-12', resources: ['Lesson', 'Worksheet'] },
+            { title: 'Double-Entry System', grade: '10-12', resources: ['Lesson', 'Quiz', 'Video'] },
+            { title: 'Trial Balance', grade: '10-12', resources: ['Lesson', 'Worksheet'] },
+            { title: 'Financial Statements', grade: '11-12', resources: ['Lesson', 'Case Study'] },
+            { title: 'VAT & Taxation', grade: '11-12', resources: ['Lesson', 'Quiz'] },
+            { title: 'Cost Accounting', grade: '12', resources: ['Lesson', 'Worksheet'] },
+            { title: 'Budgeting', grade: '12', resources: ['Lesson', 'Project'] }
+        ],
+        'Business Studies': [
+            { title: 'Business Environments', grade: '10-12', resources: ['Lesson', 'Quiz'] },
+            { title: 'Business Functions', grade: '10-12', resources: ['Lesson', 'Worksheet'] },
+            { title: 'Entrepreneurship', grade: '10-12', resources: ['Lesson', 'Case Study'] },
+            { title: 'Marketing', grade: '11-12', resources: ['Lesson', 'Video', 'Quiz'] },
+            { title: 'Financial Management', grade: '11-12', resources: ['Lesson', 'Worksheet'] },
+            { title: 'Human Resources', grade: '12', resources: ['Lesson', 'Quiz'] }
+        ],
+        'Economics': [
+            { title: 'Basic Economic Concepts', grade: '10-12', resources: ['Lesson', 'Quiz'] },
+            { title: 'Demand & Supply', grade: '10-12', resources: ['Lesson', 'Video', 'Quiz'] },
+            { title: 'Market Structures', grade: '11-12', resources: ['Lesson', 'Worksheet'] },
+            { title: 'Macroeconomics', grade: '11-12', resources: ['Lesson', 'Case Study'] },
+            { title: 'South African Economy', grade: '12', resources: ['Lesson', 'Quiz'] }
+        ],
+        'Life Sciences': [
+            { title: 'Cell Biology', grade: '10-12', resources: ['Lesson', 'Video', 'Quiz'] },
+            { title: 'Genetics', grade: '11-12', resources: ['Lesson', 'Worksheet', 'Video'] },
+            { title: 'Evolution', grade: '12', resources: ['Lesson', 'Quiz'] },
+            { title: 'Ecology', grade: '10-12', resources: ['Lesson', 'Project'] },
+            { title: 'Human Body Systems', grade: '10-12', resources: ['Lesson', 'Video', 'Quiz'] }
+        ],
+        'Physical Sciences': [
+            { title: 'Mechanics', grade: '10-12', resources: ['Lesson', 'Quiz', 'Video'] },
+            { title: 'Waves & Sound', grade: '10-12', resources: ['Lesson', 'Worksheet'] },
+            { title: 'Electricity & Magnetism', grade: '10-12', resources: ['Lesson', 'Video', 'Quiz'] },
+            { title: 'Chemical Bonding', grade: '10-12', resources: ['Lesson', 'Worksheet'] },
+            { title: 'Thermodynamics', grade: '11-12', resources: ['Lesson', 'Quiz'] }
+        ],
+        'Technology': [
+            { title: 'Design Process', grade: '4-9', resources: ['Lesson', 'Project'] },
+            { title: 'Structures', grade: '4-9', resources: ['Lesson', 'Worksheet'] },
+            { title: 'Electrical Systems', grade: '7-9', resources: ['Lesson', 'Quiz'] },
+            { title: 'Coding Basics', grade: '7-12', resources: ['Lesson', 'Video', 'Quiz'] },
+            { title: 'Digital Citizenship', grade: '7-12', resources: ['Lesson', 'Quiz'] }
         ]
     };
 
     // ================================================================
-    //  STEP NAVIGATION
+    //  USERS DATABASE (LocalStorage)
     // ================================================================
-    function goStep(n) {
-        if (n === 2 && !validateStep1()) return;
-        if (n === 3 && !validateStep2()) return;
-        if (n === 4 && !validateStep3()) return;
-        if (n === 5 && !validateStep4()) return;
+    function getUsers() {
+        return JSON.parse(localStorage.getItem('synapse_users') || '[]');
+    }
 
-        document.querySelectorAll('.step').forEach(el => el.classList.remove('active'));
-        const target = document.querySelector(`.step[data-s="${n}"]`);
+    function saveUsers(users) {
+        localStorage.setItem('synapse_users', JSON.stringify(users));
+    }
+
+    function getCurrentUser() {
+        const data = JSON.parse(localStorage.getItem('synapse_session') || 'null');
+        return data;
+    }
+
+    function setCurrentUser(user) {
+        localStorage.setItem('synapse_session', JSON.stringify(user));
+        currentUser = user;
+    }
+
+    function clearSession() {
+        localStorage.removeItem('synapse_session');
+        currentUser = null;
+    }
+
+    // ================================================================
+    //  PAGE NAVIGATION
+    // ================================================================
+    function showPage(page) {
+        // Hide all pages
+        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+
+        // Show target
+        const target = document.getElementById('page-' + page);
         if (target) target.classList.add('active');
 
-        document.querySelectorAll('.dot').forEach((dot, i) => {
-            const step = i + 1;
-            dot.classList.remove('active', 'done');
-            if (step === n) dot.classList.add('active');
-            else if (step < n) dot.classList.add('done');
-        });
+        // Update nav links
+        document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active'));
+        document.querySelectorAll('.nav-links a[data-page="' + page + '"]').forEach(a => a.classList.add('active'));
+
+        // Show/hide top nav
+        const isAuth = ['login', 'signup', 'forgot'].includes(page);
+        document.getElementById('topNav').style.display = isAuth ? 'none' : 'flex';
+
+        // Update tutor context
+        if (page === 'tutor') {
+            document.getElementById('tutorContext').textContent = currentSubject ? `🧠 ${currentSubject}` : 'General';
+        }
 
         window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
     // ================================================================
-    //  STEP 1 — ROLE + DOB
+    //  AUTH: LOGIN
     // ================================================================
-    function pickRole(el) {
-        document.querySelectorAll('.role-box').forEach(b => b.classList.remove('selected'));
-        el.classList.add('selected');
-        document.getElementById('roleHint').classList.remove('show');
-        S.role = el.dataset.role;
-    }
+    function login() {
+        const email = document.getElementById('loginEmail').value.trim();
+        const password = document.getElementById('loginPassword').value.trim();
+        const error = document.getElementById('loginError');
 
-    function validateStep1() {
-        let ok = true;
-        const sel = document.querySelector('.role-box.selected');
-        if (!sel) {
-            document.getElementById('roleHint').classList.add('show');
-            ok = false;
-        } else {
-            document.getElementById('roleHint').classList.remove('show');
-            S.role = sel.dataset.role;
+        if (!email || !password) {
+            error.textContent = 'Please enter your email and password';
+            error.classList.add('show');
+            return;
         }
-        const m = document.getElementById('dobMonth').value;
-        const y = document.getElementById('dobYear').value;
-        if (!m || !y) {
-            document.getElementById('dobHint').classList.add('show');
-            ok = false;
-        } else {
-            document.getElementById('dobHint').classList.remove('show');
-            S.dobMonth = m;
-            S.dobYear = y;
+
+        const users = getUsers();
+        const user = users.find(u => u.email === email && u.password === password);
+
+        if (!user) {
+            error.textContent = 'Invalid email or password';
+            error.classList.add('show');
+            return;
         }
-        return ok;
+
+        error.classList.remove('show');
+        setCurrentUser(user);
+        loadDashboard();
     }
 
     // ================================================================
-    //  STEP 2 — PROVINCE + CURRICULUM
+    //  AUTH: SIGNUP
     // ================================================================
-    function validateStep2() {
-        let ok = true;
-        const p = document.getElementById('provinceSelect').value;
-        const c = document.getElementById('curriculumSelect').value;
-        if (!p) {
-            document.getElementById('provinceHint').classList.add('show');
-            ok = false;
-        } else {
-            document.getElementById('provinceHint').classList.remove('show');
-            S.province = p;
+    function signup() {
+        const name = document.getElementById('signupName').value.trim();
+        const email = document.getElementById('signupEmail').value.trim();
+        const password = document.getElementById('signupPassword').value.trim();
+        const province = document.getElementById('signupProvince').value;
+        const curriculum = document.getElementById('signupCurriculum').value;
+        const role = document.getElementById('signupRole').value;
+
+        const error = document.getElementById('signupError');
+        const success = document.getElementById('signupSuccess');
+
+        if (!name || !email || !password || !province) {
+            error.textContent = 'Please fill in all fields';
+            error.classList.add('show');
+            success.classList.remove('show');
+            return;
         }
-        if (!c) {
-            document.getElementById('curriculumHint').classList.add('show');
-            ok = false;
-        } else {
-            document.getElementById('curriculumHint').classList.remove('show');
-            S.curriculum = c;
+
+        if (password.length < 6) {
+            error.textContent = 'Password must be at least 6 characters';
+            error.classList.add('show');
+            success.classList.remove('show');
+            return;
         }
-        return ok;
+
+        const users = getUsers();
+        if (users.find(u => u.email === email)) {
+            error.textContent = 'An account with this email already exists';
+            error.classList.add('show');
+            success.classList.remove('show');
+            return;
+        }
+
+        const newUser = {
+            id: Date.now().toString(),
+            name,
+            email,
+            password,
+            province,
+            curriculum,
+            role,
+            verified: false,
+            createdAt: new Date().toISOString()
+        };
+
+        users.push(newUser);
+        saveUsers(users);
+
+        error.classList.remove('show');
+        success.textContent = '✅ Account created! Please check your email to verify your account. (Demo: You can now log in)';
+        success.classList.add('show');
+
+        // Auto-login after 2 seconds
+        setTimeout(() => {
+            setCurrentUser(newUser);
+            loadDashboard();
+        }, 1500);
     }
 
     // ================================================================
-    //  STEP 3 — EMAIL + PASSWORD
+    //  AUTH: FORGOT PASSWORD
     // ================================================================
-    function validateStep3() {
-        let ok = true;
-        const email = document.getElementById('emailInput').value.trim();
-        const pass = document.getElementById('passwordInput').value;
-        if (!email || !email.includes('@') || !email.includes('.')) {
-            document.getElementById('emailHint').classList.add('show');
-            ok = false;
-        } else {
-            document.getElementById('emailHint').classList.remove('show');
-            S.email = email;
+    function forgotPassword() {
+        const email = document.getElementById('forgotEmail').value.trim();
+        const error = document.getElementById('forgotError');
+        const success = document.getElementById('forgotSuccess');
+
+        if (!email) {
+            error.textContent = 'Please enter your email';
+            error.classList.add('show');
+            success.classList.remove('show');
+            return;
         }
-        if (pass.length < 6) {
-            document.getElementById('passwordHint').classList.add('show');
-            ok = false;
-        } else {
-            document.getElementById('passwordHint').classList.remove('show');
-            S.password = pass;
+
+        const users = getUsers();
+        const user = users.find(u => u.email === email);
+
+        if (!user) {
+            error.textContent = 'No account found with this email';
+            error.classList.add('show');
+            success.classList.remove('show');
+            return;
         }
-        return ok;
+
+        error.classList.remove('show');
+        success.textContent = '📧 Password reset link sent to ' + email + ' (Demo: Check your console)';
+        success.classList.add('show');
+
+        console.log('🔑 Password reset link for:', email);
+        console.log('👉 Reset token: ' + btoa(email + ':' + Date.now()));
     }
 
     // ================================================================
-    //  STEP 4 — FIRST + LAST NAME
+    //  DASHBOARD
     // ================================================================
-    function validateStep4() {
-        let ok = true;
-        const f = document.getElementById('firstNameInput').value.trim();
-        const l = document.getElementById('lastNameInput').value.trim();
-        if (!f) {
-            document.getElementById('firstNameHint').classList.add('show');
-            ok = false;
-        } else {
-            document.getElementById('firstNameHint').classList.remove('show');
-            S.firstName = f;
+    function loadDashboard() {
+        const user = getCurrentUser();
+        if (!user) {
+            showPage('login');
+            return;
         }
-        if (!l) {
-            document.getElementById('lastNameHint').classList.add('show');
-            ok = false;
-        } else {
-            document.getElementById('lastNameHint').classList.remove('show');
-            S.lastName = l;
-        }
-        return ok;
-    }
 
-    // ================================================================
-    //  FINISH SIGNUP
-    // ================================================================
-    function finishSignup() {
-        if (!validateStep4()) return;
-        S.userId = 'user_' + S.email.replace(/[^a-zA-Z0-9]/g, '_');
-        document.getElementById('wName').textContent = `${S.firstName} ${S.lastName}`;
-        document.getElementById('wEmail').textContent = S.email;
-        document.getElementById('wRole').textContent = S.role.charAt(0).toUpperCase() + S.role.slice(1);
-        document.getElementById('wProvince').textContent = S.province;
-        document.getElementById('wCurriculum').textContent = S.curriculum;
-        document.getElementById('wDob').textContent = `${S.dobMonth} ${S.dobYear}`;
-        goStep(5);
-    }
+        currentUser = user;
 
-    // ================================================================
-    //  ENTER APP
-    // ================================================================
-    function enterApp() {
-        document.getElementById('signupFlow').style.display = 'none';
-        document.getElementById('dashboard').classList.add('active');
-        document.getElementById('dashName').textContent = `${S.firstName} ${S.lastName}`;
-        document.getElementById('dashRole').textContent = S.role.charAt(0).toUpperCase() + S.role.slice(1);
-        document.getElementById('dashProvince').textContent = S.province;
-        document.getElementById('dashCurriculum').textContent = S.curriculum;
-        saveProfile();
-        checkSubscription();
-        document.getElementById('chatInput').focus();
-    }
+        // Update nav
+        document.getElementById('navName').textContent = user.name;
+        document.getElementById('navRole').textContent = user.role.charAt(0).toUpperCase() + user.role.slice(1);
 
-    // ================================================================
-    //  SAVE PROFILE
-    // ================================================================
-    async function saveProfile() {
-        try {
-            await fetch('/save-profile', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    userId: S.userId,
-                    name: `${S.firstName} ${S.lastName}`,
-                    country: S.province,
-                    grade: S.role === 'teacher' ? 'Teacher' : 'Student'
-                })
-            });
-        } catch (_) {}
+        // Show badge
+        const badge = document.getElementById('navBadge');
+        badge.innerHTML = `<span class="badge badge-trial">📝 Trial • 3d left</span>`;
+
+        // Show subjects page
+        showPage('subjects');
     }
 
     // ================================================================
     //  LOGOUT
     // ================================================================
     function logout() {
-        if (confirm('Logout?')) location.reload();
+        if (confirm('Are you sure you want to logout?')) {
+            clearSession();
+            showPage('login');
+            document.getElementById('loginEmail').value = '';
+            document.getElementById('loginPassword').value = '';
+        }
     }
 
     // ================================================================
-    //  SUBJECT SELECTION
+    //  SUBJECTS → CLASSROOM
     // ================================================================
-    function selectSubject(el) {
-        document.querySelectorAll('.subject-card').forEach(c => c.classList.remove('selected'));
-        el.classList.add('selected');
-        S.currentSubject = el.dataset.subject;
-        openClassroom(S.currentSubject);
-    }
-
-    function openClassroom(subject) {
-        document.getElementById('classroom').classList.add('active');
+    function openSubject(subject) {
+        currentSubject = subject;
         document.getElementById('classroomTitle').textContent = `📚 ${subject}`;
-        document.getElementById('chatContext').textContent = `🧠 ${subject} Tutor`;
-        document.getElementById('gradeSelect').value = '';
-        S.currentGrade = '';
+        document.getElementById('gradeFilter').value = '';
+        currentGrade = '';
         renderTopics(subject, '');
-    }
-
-    function closeClassroom() {
-        document.getElementById('classroom').classList.remove('active');
-        document.querySelectorAll('.subject-card').forEach(c => c.classList.remove('selected'));
-        document.getElementById('chatContext').textContent = 'General';
+        showPage('classroom');
     }
 
     function renderTopics(subject, grade) {
@@ -1318,9 +1282,9 @@
 
         let filtered = topics;
         if (grade) {
+            const g = parseInt(grade);
             filtered = topics.filter(t => {
                 const range = t.grade.split('-');
-                const g = parseInt(grade);
                 const from = parseInt(range[0]);
                 const to = parseInt(range[1] || range[0]);
                 return g >= from && g <= to;
@@ -1330,12 +1294,12 @@
         countDiv.textContent = `Showing ${filtered.length} topics`;
 
         if (filtered.length === 0) {
-            grid.innerHTML = `<p style="color:#6b7280;grid-column:1/-1;text-align:center;padding:20px;">No topics available for this grade yet.</p>`;
+            grid.innerHTML = `<div class="empty-state">No topics available for this grade yet.</div>`;
             return;
         }
 
         grid.innerHTML = filtered.map(t => `
-            <div class="topic-card" onclick="startTopic('${subject}', '${t.title}')">
+            <div class="topic-card" onclick="openTutor('${subject}', '${t.title}')">
                 <div class="title">${t.title}</div>
                 <div class="meta">Grade ${t.grade}</div>
                 <div class="resources">
@@ -1346,16 +1310,23 @@
     }
 
     function filterTopics() {
-        const grade = document.getElementById('gradeSelect').value;
-        S.currentGrade = grade;
-        renderTopics(S.currentSubject, grade);
+        const grade = document.getElementById('gradeFilter').value;
+        currentGrade = grade;
+        renderTopics(currentSubject, grade);
     }
 
-    function startTopic(subject, topic) {
-        // Set chat context and send a message to the AI
-        document.getElementById('chatContext').textContent = `🧠 ${subject} - ${topic}`;
-        document.getElementById('chatInput').value = `I'm learning about ${topic} in ${subject}. Can you teach me step by step?`;
-        setTimeout(sendChat, 300);
+    // ================================================================
+    //  OPEN AI TUTOR
+    // ================================================================
+    function openTutor(subject, topic) {
+        currentSubject = subject;
+        document.getElementById('tutorContext').textContent = `🧠 ${subject} - ${topic}`;
+        showPage('tutor');
+
+        // Auto-send a message to start the lesson
+        const input = document.getElementById('chatInput');
+        input.value = `I'm learning about "${topic}" in ${subject}. Can you teach me step by step?`;
+        setTimeout(sendChat, 500);
     }
 
     // ================================================================
@@ -1365,28 +1336,36 @@
         const input = document.getElementById('chatInput');
         const msg = input.value.trim();
         if (!msg) return;
+
         addMessage('user', msg);
         input.value = '';
         input.disabled = true;
+
         const btn = document.getElementById('sendBtn');
         btn.disabled = true;
-        btn.textContent = '⏳';
+        btn.innerHTML = '<span class="spinner"></span>';
+
         try {
-            const context = document.getElementById('chatContext').textContent;
+            const context = document.getElementById('tutorContext').textContent;
             const fullMsg = `${context}: ${msg}`;
-            const res = await fetch('/chat', {
+
+            const response = await fetch('/chat', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ userId: S.userId, message: fullMsg })
+                body: JSON.stringify({
+                    userId: currentUser ? currentUser.id : 'guest_' + Date.now(),
+                    message: fullMsg
+                })
             });
-            const data = await res.json();
+
+            const data = await response.json();
+
             if (data.reply) {
                 addMessage('bot', data.reply);
             } else {
                 addMessage('bot', '❌ ' + (data.error || 'No response'));
             }
-            checkSubscription();
-        } catch (_) {
+        } catch (err) {
             addMessage('bot', '❌ Server not reachable. Please try again.');
         } finally {
             input.disabled = false;
@@ -1403,6 +1382,7 @@
         div.innerHTML = text.replace(/\n/g, '<br>');
         box.appendChild(div);
         box.scrollTop = box.scrollHeight;
+
         if (role === 'bot' && document.getElementById('speakToggle').checked) {
             speak(text);
         }
@@ -1417,10 +1397,12 @@
     function toggleVoice() {
         const btn = document.getElementById('voiceBtn');
         const st = document.getElementById('voiceStatus');
+
         if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
             alert('Voice input requires Chrome, Edge, or Android browser.');
             return;
         }
+
         if (listening) {
             if (recognition) recognition.stop();
             listening = false;
@@ -1429,14 +1411,17 @@
             st.textContent = 'Ready';
             return;
         }
+
         const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
         recognition = new SR();
         recognition.lang = 'en-US';
         recognition.interimResults = false;
+
         listening = true;
         btn.classList.add('listening');
         btn.textContent = '⏹️';
         st.textContent = '🎤 Listening...';
+
         recognition.onresult = (e) => {
             const text = e.results[0][0].transcript;
             document.getElementById('chatInput').value = text;
@@ -1446,17 +1431,20 @@
             listening = false;
             setTimeout(sendChat, 300);
         };
+
         recognition.onerror = (e) => {
             st.textContent = '❌ ' + e.error;
             btn.classList.remove('listening');
             btn.textContent = '🎤';
             listening = false;
         };
+
         recognition.onend = () => {
             btn.classList.remove('listening');
             btn.textContent = '🎤';
             listening = false;
         };
+
         recognition.start();
     }
 
@@ -1465,60 +1453,73 @@
     // ================================================================
     function speak(text) {
         if (!('speechSynthesis' in window)) return;
-        let clean = text.replace(/\*\*/g, '').replace(/#/g, '').replace(/📚|🎯|✏️|🤔/g, '').replace(/\n/g, '. ');
+
+        let clean = text
+            .replace(/\*\*/g, '')
+            .replace(/#/g, '')
+            .replace(/📚|🎯|✏️|🤔/g, '')
+            .replace(/\n/g, '. ');
+
         if (clean.length > 350) clean = clean.substring(0, 350) + '...';
+
         window.speechSynthesis.cancel();
+
         const u = new SpeechSynthesisUtterance(clean);
         u.lang = 'en-US';
         u.rate = 0.85;
         u.pitch = 1.0;
         u.volume = 1;
+
         const voices = window.speechSynthesis.getVoices();
         const best = voices.find(v => v.lang.includes('en') && v.name.includes('Google'));
         if (best) u.voice = best;
-        window.speechSynthesis.speak(u);
-    }
 
-    // ================================================================
-    //  SUBSCRIPTION STATUS
-    // ================================================================
-    async function checkSubscription() {
-        try {
-            const res = await fetch('/subscription-status/' + S.userId);
-            const data = await res.json();
-            const badge = document.getElementById('dashBadge');
-            let label = '', cls = '';
-            if (data.status === 'trial') {
-                cls = 'badge-trial';
-                label = `📝 Trial • ${data.daysRemaining || 3}d left`;
-            } else if (data.status === 'active') {
-                cls = 'badge-active';
-                label = '✅ Premium Active';
-            } else {
-                cls = 'badge-expired';
-                label = '⛔ ' + (data.status || 'Expired');
-            }
-            badge.innerHTML = `<span class="badge ${cls}">${label}</span>`;
-        } catch (_) {}
+        window.speechSynthesis.speak(u);
     }
 
     // ================================================================
     //  INIT
     // ================================================================
-    console.log('🧠 Synapse AI Tutor loaded');
-    if ('speechSynthesis' in window) {
-        window.speechSynthesis.getVoices();
-        window.speechSynthesis.onvoiceschanged = () => { window.speechSynthesis.getVoices(); };
-    }
-    document.addEventListener('keydown', (e) => {
-        if (e.key === 'Enter' && document.getElementById('dashboard').classList.contains('active')) {
-            const input = document.getElementById('chatInput');
-            if (document.activeElement === input) {
-                e.preventDefault();
-                sendChat();
-            }
+    function init() {
+        console.log('🧠 Synapse AI Tutor loaded');
+        console.log('📱 Build: Professional Platform v2.0');
+
+        // Preload voices
+        if ('speechSynthesis' in window) {
+            window.speechSynthesis.getVoices();
+            window.speechSynthesis.onvoiceschanged = () => { window.speechSynthesis.getVoices(); };
         }
-    });
+
+        // Check session
+        const user = getCurrentUser();
+        if (user) {
+            currentUser = user;
+            loadDashboard();
+        } else {
+            showPage('login');
+        }
+
+        // Enter key in chat
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' && document.getElementById('page-tutor').classList.contains('active')) {
+                const input = document.getElementById('chatInput');
+                if (document.activeElement === input) {
+                    e.preventDefault();
+                    sendChat();
+                }
+            }
+        });
+
+        // Enter key in login
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' && document.getElementById('page-login').classList.contains('active')) {
+                login();
+            }
+        });
+    }
+
+    // Start the app
+    init();
 </script>
 
 </body>
