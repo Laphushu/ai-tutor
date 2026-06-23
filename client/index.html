@@ -3,17 +3,17 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>Synapse</title>
+    <title>Synapse — AI Tutor</title>
     <style>
         * { margin:0; padding:0; box-sizing:border-box; }
         body {
-            font-family: 'Segoe UI', sans-serif;
+            font-family: 'Segoe UI', system-ui, sans-serif;
             background: #f0f4f8;
             min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
-            padding:20px;
+            padding: 20px;
         }
         .card {
             background: white;
@@ -31,15 +31,31 @@
         .sub { color:#6b7280; font-size:0.95rem; margin-bottom:20px; }
         .field { margin-bottom:16px; }
         .field label { display:block; font-weight:600; font-size:0.85rem; color:#1f2937; margin-bottom:4px; }
-        .field input { width:100%; padding:14px 16px; border:2px solid #e5e7eb; border-radius:12px; font-size:1rem; }
-        .field input:focus { outline:none; border-color:#6366f1; }
-        .btn { width:100%; padding:15px; border:none; border-radius:12px; font-size:1rem; font-weight:700; cursor:pointer; background:linear-gradient(135deg,#6366f1,#8b5cf6); color:#fff; transition:transform 0.15s; }
+        .field input, .field select {
+            width:100%; padding:14px 16px; border:2px solid #e5e7eb; border-radius:12px;
+            font-size:1rem; background:#fff; font-family:inherit;
+        }
+        .field input:focus, .field select:focus { outline:none; border-color:#6366f1; }
+        .btn {
+            width:100%; padding:15px; border:none; border-radius:12px; font-size:1rem;
+            font-weight:700; cursor:pointer; background:linear-gradient(135deg,#6366f1,#8b5cf6);
+            color:#fff; transition:transform 0.15s;
+        }
         .btn:hover { transform:translateY(-2px); }
+        .btn:disabled { opacity:0.6; cursor:not-allowed; }
         .auth-link { text-align:center; margin-top:16px; font-size:0.9rem; color:#6b7280; }
         .auth-link a { color:#6366f1; text-decoration:none; font-weight:600; cursor:pointer; }
         .auth-link a:hover { text-decoration:underline; }
         .error { color:#ef4444; font-size:0.85rem; margin-top:4px; display:none; }
         .error.show { display:block; }
+        .success { color:#22c55e; font-size:0.85rem; margin-top:4px; display:none; }
+        .success.show { display:block; }
+        .spinner {
+            display:inline-block; width:20px; height:20px; border:3px solid rgba(255,255,255,0.25);
+            border-top-color:#fff; border-radius:50%; animation:spin 0.7s linear infinite;
+            vertical-align:middle; margin-right:8px;
+        }
+        @keyframes spin { to { transform:rotate(360deg); } }
     </style>
 </head>
 <body>
@@ -49,7 +65,7 @@
             <p>Your AI Tutor</p>
         </div>
 
-        <!-- Login Page -->
+        <!-- Login -->
         <div id="loginPage">
             <h2>Welcome back</h2>
             <p class="sub">Log in to continue learning.</p>
@@ -61,14 +77,15 @@
                 <label>Password</label>
                 <input type="password" id="loginPassword" placeholder="Enter password" />
             </div>
-            <div class="error" id="loginError">Invalid email or password</div>
-            <button class="btn" onclick="login()">Log In</button>
+            <div class="error" id="loginError"></div>
+            <div class="success" id="loginSuccess"></div>
+            <button class="btn" id="loginBtn" onclick="login()">Log In</button>
             <div class="auth-link">
                 Don't have an account? <a onclick="showSignup()">Sign up</a>
             </div>
         </div>
 
-        <!-- Signup Page -->
+        <!-- Signup -->
         <div id="signupPage" style="display:none;">
             <h2>Create account</h2>
             <p class="sub">Join Synapse and start learning.</p>
@@ -86,24 +103,34 @@
             </div>
             <div class="field">
                 <label>Country</label>
-                <select id="signupCountry" style="width:100%;padding:14px 16px;border:2px solid #e5e7eb;border-radius:12px;font-size:1rem;">
+                <select id="signupCountry">
                     <option value="South Africa">South Africa</option>
                     <option value="China">China</option>
                     <option value="United Kingdom">United Kingdom</option>
                     <option value="United States">United States</option>
                     <option value="Australia">Australia</option>
                     <option value="India">India</option>
+                    <option value="Nigeria">Nigeria</option>
+                    <option value="Kenya">Kenya</option>
+                    <option value="Egypt">Egypt</option>
+                    <option value="Germany">Germany</option>
+                    <option value="France">France</option>
+                    <option value="Japan">Japan</option>
+                    <option value="Brazil">Brazil</option>
+                    <option value="Canada">Canada</option>
+                    <option value="New Zealand">New Zealand</option>
                 </select>
             </div>
             <div class="field">
                 <label>Role</label>
-                <select id="signupRole" style="width:100%;padding:14px 16px;border:2px solid #e5e7eb;border-radius:12px;font-size:1rem;">
+                <select id="signupRole">
                     <option value="learner">Learner</option>
                     <option value="teacher">Teacher</option>
                 </select>
             </div>
-            <div class="error" id="signupError">Please fill all fields</div>
-            <button class="btn" onclick="signup()">Create Account</button>
+            <div class="error" id="signupError"></div>
+            <div class="success" id="signupSuccess"></div>
+            <button class="btn" id="signupBtn" onclick="signup()">Create Account</button>
             <div class="auth-link">
                 Already have an account? <a onclick="showLogin()">Log in</a>
             </div>
@@ -111,30 +138,90 @@
     </div>
 
     <script>
-        // Simple frontend for testing
+        const API_BASE = window.location.origin;
+
         function showSignup() {
             document.getElementById('loginPage').style.display = 'none';
             document.getElementById('signupPage').style.display = 'block';
+            clearErrors();
         }
+
         function showLogin() {
             document.getElementById('loginPage').style.display = 'block';
             document.getElementById('signupPage').style.display = 'none';
+            clearErrors();
+        }
+
+        function clearErrors() {
+            document.querySelectorAll('.error, .success').forEach(el => {
+                el.classList.remove('show');
+                el.textContent = '';
+            });
+        }
+
+        function showError(elementId, message) {
+            const el = document.getElementById(elementId);
+            el.textContent = message;
+            el.classList.add('show');
+        }
+
+        function showSuccess(elementId, message) {
+            const el = document.getElementById(elementId);
+            el.textContent = message;
+            el.classList.add('show');
+        }
+
+        function setButtonLoading(buttonId, loading) {
+            const btn = document.getElementById(buttonId);
+            if (loading) {
+                btn.disabled = true;
+                btn.innerHTML = '<span class="spinner"></span> Loading...';
+            } else {
+                btn.disabled = false;
+                btn.innerHTML = btn.id === 'loginBtn' ? 'Log In' : 'Create Account';
+            }
         }
 
         async function login() {
             const email = document.getElementById('loginEmail').value.trim();
             const password = document.getElementById('loginPassword').value.trim();
-            const error = document.getElementById('loginError');
+
             if (!email || !password) {
-                error.textContent = 'Please enter email and password';
-                error.classList.add('show');
+                showError('loginError', 'Please enter email and password');
                 return;
             }
-            // Just a demo — redirect to main app if successful
-            // In production, this would call the backend
-            alert('Login successful! (Demo)');
-            // For now, redirect to the full app (if you have one)
-            // window.location.href = '/subjects';
+
+            clearErrors();
+            setButtonLoading('loginBtn', true);
+
+            try {
+                const response = await fetch(API_BASE + '/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, password })
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    showError('loginError', data.error || 'Login failed');
+                    return;
+                }
+
+                if (data.success) {
+                    // Store user in localStorage
+                    localStorage.setItem('synapse_user', JSON.stringify(data.user));
+                    // Redirect to the main app (we'll build it later)
+                    showSuccess('loginSuccess', 'Login successful! Redirecting...');
+                    setTimeout(() => {
+                        window.location.href = '/dashboard.html'; // we'll create later
+                    }, 1000);
+                }
+            } catch (err) {
+                showError('loginError', 'Server error. Please try again.');
+            } finally {
+                setButtonLoading('loginBtn', false);
+            }
         }
 
         async function signup() {
@@ -143,24 +230,62 @@
             const password = document.getElementById('signupPassword').value.trim();
             const country = document.getElementById('signupCountry').value;
             const role = document.getElementById('signupRole').value;
-            const error = document.getElementById('signupError');
+
             if (!name || !email || !password || !country) {
-                error.textContent = 'Please fill all fields';
-                error.classList.add('show');
+                showError('signupError', 'Please fill all fields');
                 return;
             }
+
             if (password.length < 6) {
-                error.textContent = 'Password must be at least 6 characters';
-                error.classList.add('show');
+                showError('signupError', 'Password must be at least 6 characters');
                 return;
             }
-            alert('Account created! (Demo)');
-            // Redirect to login or main app
+
+            clearErrors();
+            setButtonLoading('signupBtn', true);
+
+            try {
+                const response = await fetch(API_BASE + '/signup', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, password, name, country, role })
+                });
+
+                const data = await response.json();
+
+                if (!response.ok) {
+                    showError('signupError', data.error || 'Signup failed');
+                    return;
+                }
+
+                if (data.success) {
+                    showSuccess('signupSuccess', 'Account created! Redirecting to login...');
+                    setTimeout(() => {
+                        showLogin();
+                        document.getElementById('loginEmail').value = email;
+                        showSuccess('loginSuccess', 'Account created! Please log in.');
+                    }, 1500);
+                }
+            } catch (err) {
+                showError('signupError', 'Server error. Please try again.');
+            } finally {
+                setButtonLoading('signupBtn', false);
+            }
         }
 
-        // Prefill for testing
-        document.getElementById('loginEmail').value = 'test@example.com';
-        document.getElementById('loginPassword').value = 'password123';
+        // Check if user already logged in
+        const storedUser = localStorage.getItem('synapse_user');
+        if (storedUser) {
+            // Redirect to dashboard (we'll create later)
+            // For now, just show a message
+            document.querySelector('.card').innerHTML = `
+                <div style="text-align:center;padding:20px;">
+                    <h2>Welcome back!</h2>
+                    <p style="color:#6b7280;">You are already logged in.</p>
+                    <button onclick="localStorage.removeItem('synapse_user');location.reload();" style="margin-top:16px;padding:10px 20px;border:none;border-radius:8px;background:#ef4444;color:#fff;cursor:pointer;">Logout</button>
+                </div>
+            `;
+        }
     </script>
 </body>
 </html>

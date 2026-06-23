@@ -13,6 +13,7 @@ app.use(cors());
 app.use(express.static(path.join(__dirname, '../client')));
 app.use(express.json());
 
+// ================= ROOT ROUTE =================
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, '../client/index.html'));
 });
@@ -26,12 +27,17 @@ const db = new Pool({
 // ================= INIT TABLES =================
 async function initDB() {
   try {
+    // Users table with email and password
     await db.query(`
       CREATE TABLE IF NOT EXISTS users (
         userId TEXT PRIMARY KEY,
+        email TEXT UNIQUE NOT NULL,
+        password TEXT NOT NULL,
         name TEXT,
         country TEXT,
-        grade TEXT
+        grade TEXT,
+        role TEXT DEFAULT 'learner',
+        created_at TIMESTAMP DEFAULT NOW()
       )
     `);
 
@@ -53,7 +59,12 @@ async function initDB() {
       )
     `);
 
-    console.log("✅ Database tables ready");
+    // Add Stripe columns if missing
+    await db.query(`ALTER TABLE subscriptions ADD COLUMN IF NOT EXISTS stripeCustomerId TEXT`);
+    await db.query(`ALTER TABLE subscriptions ADD COLUMN IF NOT EXISTS subscriptionEndDate TIMESTAMP`);
+    await db.query(`ALTER TABLE subscriptions ADD COLUMN IF NOT EXISTS planType TEXT DEFAULT 'free'`);
+
+    console.log("✅ Database tables ready with real auth");
   } catch (err) {
     console.error("❌ Database error:", err.message);
   }
@@ -81,19 +92,94 @@ async function ensureTrial(userId) {
   }
 }
 
-// ================= PROFILE =================
+// ================= AUTH: SIGNUP =================
+app.post("/signup", async (req, res) => {
+  const { email, password, name, country, role } = req.body;
+
+  if (!email || !password || !name || !country) {
+    return res.status(400).json({ error: "All fields are required" });
+  }
+
+  if (password.length < 6) {
+    return res.status(400).json({ error: "Password must be at least 6 characters" });
+  }
+
+  try {
+    // Check if user exists
+    const existing = await db.query(`SELECT * FROM users WHERE email = $1`, [email]);
+    if (existing.rows.length > 0) {
+      return res.status(400).json({ error: "Email already registered" });
+    }
+
+    // Generate userId from email
+    const userId = 'user_' + email.replace(/[^a-zA-Z0-9]/g, '_');
+
+    // Insert user
+    await db.query(
+      `INSERT INTO users (userId, email, password, name, country, role)
+       VALUES ($1, $2, $3, $4, $5, $6)`,
+      [userId, email, password, name, country, role || 'learner']
+    );
+
+    // Ensure trial subscription
+    await ensureTrial(userId);
+
+    res.json({ 
+      success: true, 
+      user: { id: userId, email, name, country, role: role || 'learner' } 
+    });
+  } catch (err) {
+    console.error("Signup error:", err);
+    res.status(500).json({ error: "Server error. Please try again." });
+  }
+});
+
+// ================= AUTH: LOGIN =================
+app.post("/login", async (req, res) => {
+  const { email, password } = req.body;
+
+  if (!email || !password) {
+    return res.status(400).json({ error: "Email and password required" });
+  }
+
+  try {
+    const result = await db.query(
+      `SELECT * FROM users WHERE email = $1 AND password = $2`,
+      [email, password]
+    );
+
+    if (result.rows.length === 0) {
+      return res.status(401).json({ error: "Invalid email or password" });
+    }
+
+    const user = result.rows[0];
+    await ensureTrial(user.userid);
+
+    res.json({ 
+      success: true, 
+      user: { 
+        id: user.userid, 
+        email: user.email, 
+        name: user.name, 
+        country: user.country, 
+        role: user.role,
+        grade: user.grade
+      } 
+    });
+  } catch (err) {
+    console.error("Login error:", err);
+    res.status(500).json({ error: "Server error. Please try again." });
+  }
+});
+
+// ================= PROFILE (update grade, etc.) =================
 app.post("/save-profile", async (req, res) => {
   const { userId, name, country, grade } = req.body;
 
   try {
     await db.query(
-      `INSERT INTO users (userId, name, country, grade)
-       VALUES ($1, $2, $3, $4)
-       ON CONFLICT (userId) DO UPDATE SET
-       name = EXCLUDED.name,
-       country = EXCLUDED.country,
-       grade = EXCLUDED.grade`,
-      [userId, name, country, grade]
+      `UPDATE users SET name = $1, country = $2, grade = $3 WHERE userId = $4`,
+      [name, country, grade, userId]
     );
 
     res.json({ success: true });
@@ -154,29 +240,24 @@ app.post("/chat", async (req, res) => {
       [userId]
     );
 
-    // ================= FORCED HUMAN-LIKE TEACHER =================
+    // Human-like teacher prompt
     const systemPrompt = `
 You are Professor Synapse, a warm and patient teacher.
 
-IMPORTANT INSTRUCTIONS:
-1. ALWAYS start with a greeting: "Hello [student name]! Today we'll learn about..."
-2. EXPLAIN the concept fully before asking anything
-3. DEFINE new terms with simple examples
-4. SHOW at least 2 examples step by step
-5. ASK: "Do you understand so far? Should I explain again?"
-6. PRAISE: "Great job!", "Well done!"
-7. If student says "I don't know", explain again with different examples
-
-NEVER:
-- Ask questions without explaining first
-- Move to the next topic without checking understanding
-- Make the student feel bad
+Your teaching style:
+1. Greet the student warmly and introduce the topic.
+2. Explain the concept clearly with simple language and real-life examples.
+3. Define new terms before using them.
+4. Show 2-3 worked examples step by step.
+5. Ask: "Do you understand so far? Would you like me to explain again?"
+6. Give one simple question to check understanding.
+7. Praise correct answers: "Great job!", "Well done!"
+8. If the student says "I don't know", explain again with different examples.
 
 Student: ${user.name}
-Grade: ${user.grade}
+Grade: ${user.grade || 'Not set'}
 Country: ${user.country}`;
 
-    // Build conversation
     const history = [
       { role: "system", content: systemPrompt }
     ];
@@ -188,7 +269,6 @@ Country: ${user.country}`;
 
     history.push({ role: "user", content: message });
 
-    // Call AI
     const response = await client.chat.completions.create({
       model: "deepseek-chat",
       messages: history,
@@ -198,7 +278,6 @@ Country: ${user.country}`;
 
     const reply = response.choices[0].message.content;
 
-    // Save messages
     await db.query(
       `INSERT INTO messages (userId, role, content)
        VALUES ($1, $2, $3)`,
@@ -255,21 +334,10 @@ app.get("/subscription-status/:userId", async (req, res) => {
   }
 });
 
-// ================= RESET CHAT (for debugging) =================
-app.post("/reset-chat/:userId", async (req, res) => {
-  try {
-    const { userId } = req.params;
-    await db.query(`DELETE FROM messages WHERE userId = $1`, [userId]);
-    res.json({ success: true, message: "Chat history cleared" });
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
-});
-
 // ================= START =================
 const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, () => {
   console.log("✅ Synapse AI Tutor running on port " + PORT);
-  console.log("🧠 Professor Synapse is ready!");
+  console.log("🔐 Real authentication active");
 });
