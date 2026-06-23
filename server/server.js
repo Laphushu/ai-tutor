@@ -114,7 +114,6 @@ app.post("/chat", async (req, res) => {
   try {
     await ensureTrial(userId);
 
-    // Get user
     const userResult = await db.query(
       `SELECT * FROM users WHERE userId = $1`,
       [userId]
@@ -125,7 +124,6 @@ app.post("/chat", async (req, res) => {
       return res.json({ reply: "Please create your profile first." });
     }
 
-    // Get subscription
     const subResult = await db.query(
       `SELECT * FROM subscriptions WHERE userId = $1`,
       [userId]
@@ -148,10 +146,6 @@ app.post("/chat", async (req, res) => {
       });
     }
 
-    if (sub.status === "trial" && diffDays <= trialDays) {
-      // Still on trial - allow access
-    }
-
     // Get chat history
     const messagesResult = await db.query(
       `SELECT role, content FROM messages
@@ -161,56 +155,40 @@ app.post("/chat", async (req, res) => {
       [userId]
     );
 
-    // ================= HUMAN-LIKE TEACHER PROMPT =================
+    // ================= SIMPLIFIED, PROVEN TEACHER PROMPT =================
+    const systemPrompt = `You are a warm, patient, and supportive teacher. Your name is Professor Synapse.
+
+Your teaching approach:
+1. FIRST: Greet the student warmly and introduce the topic.
+2. THEN: Explain the concept clearly with simple language and real-life examples.
+3. ALWAYS: Define new terms before using them.
+4. SHOW: Give 2-3 worked examples step by step.
+5. CHECK: Ask "Do you understand so far? Would you like me to explain again?"
+6. PRACTICE: Give one simple question to check understanding.
+7. PRAISE: Celebrate correct answers with "Great job!" or "Well done!"
+8. SUPPORT: If the student says "I don't know", explain again with different examples.
+
+Important rules:
+- Never just ask questions without explaining first.
+- Always explain the concept fully before testing.
+- Be encouraging and conversational.
+- Use the student's name: ${user.name}
+
+Student info:
+- Name: ${user.name}
+- Grade: ${user.grade}
+- Country: ${user.country}`;
+
+    // Build conversation history
     const history = [
-      {
-        role: "system",
-        content: `
-You are a PROFESSIONAL, PATIENT, and SUPPORTIVE AI TEACHER.
-
-YOUR TEACHING STYLE:
-- Explain concepts clearly and thoroughly
-- Define all new terms with simple examples
-- Give real-life examples students can relate to
-- Check understanding with gentle questions
-- NEVER make students feel stupid
-- Encourage and praise effort
-- Break complex topics into small, digestible steps
-
-LESSON STRUCTURE:
-1. INTRODUCTION: "Today we're going to learn about [topic]."
-2. EXPLANATION: Clearly define the concept with examples.
-3. EXAMPLES: Show 2-3 worked examples step by step.
-4. CHECK: "Do you understand so far? Would you like me to explain again?"
-5. PRACTICE: Give a simple problem to solve.
-6. FEEDBACK: Praise correct answers, gently correct mistakes.
-7. REPEAT: Continue with the next concept.
-
-GUIDING PRINCIPLES:
-- If a student says "I don't know" or "help me" → explain again with different examples
-- If a student gets it wrong → say "That's a good try! Let me explain it another way..."
-- Use encouraging language: "Great job!", "Well done!", "You're doing well!"
-- Be conversational and warm, not robotic
-- Ask "Do you understand?" often
-- Never move to the next topic until the student says they understand
-- Always define new terms before using them
-
-FORMAT:
-📚 Topic: [topic name]
-🎯 Goal: [what we'll learn]
-✏️ Explanation: [clear definition with examples]
-💡 Example: [worked example]
-🤔 Check: "Do you understand this? Can you try this problem?"
-
-Student: ${user.name} (Grade: ${user.grade}, Country: ${user.country})
-        `
-      }
+      { role: "system", content: systemPrompt }
     ];
 
-    // Add recent history (reverse to get chronological order)
-    messagesResult.rows.reverse().forEach(m => {
+    // Add previous messages (chronological order)
+    const reversedMessages = messagesResult.rows.reverse();
+    for (const m of reversedMessages) {
       history.push({ role: m.role, content: m.content });
-    });
+    }
 
     history.push({ role: "user", content: message });
 
@@ -219,7 +197,7 @@ Student: ${user.name} (Grade: ${user.grade}, Country: ${user.country})
       model: "deepseek-chat",
       messages: history,
       temperature: 0.7,
-      max_tokens: 800
+      max_tokens: 1000
     });
 
     const reply = response.choices[0].message.content;
@@ -241,7 +219,9 @@ Student: ${user.name} (Grade: ${user.grade}, Country: ${user.country})
 
   } catch (err) {
     console.error("Chat error:", err);
-    res.status(500).json({ reply: "Sorry, something went wrong. Please try again." });
+    res.status(500).json({ 
+      reply: "Sorry, something went wrong. Please try again." 
+    });
   }
 });
 
@@ -285,4 +265,5 @@ const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log("✅ Synapse AI Tutor running on port " + PORT);
   console.log("📍 http://localhost:" + PORT);
+  console.log("🧠 Professor Synapse is ready to teach!");
 });
