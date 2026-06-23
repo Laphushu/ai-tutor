@@ -195,7 +195,6 @@
             display: block;
         }
 
-        /* Top Nav */
         .top-nav {
             background: white;
             padding: 16px 32px;
@@ -292,7 +291,6 @@
             color: #991b1b;
         }
 
-        /* Pages */
         .page-section {
             display: none;
             animation: fadeUp 0.4s ease;
@@ -328,7 +326,6 @@
             font-size: 1rem;
         }
 
-        /* Grade Grid */
         .grade-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
@@ -380,7 +377,6 @@
             transform: translateY(-2px);
         }
 
-        /* Subject Grid */
         .subject-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
@@ -416,7 +412,6 @@
             color: #0b1120;
         }
 
-        /* Classroom */
         .classroom-header {
             display: flex;
             justify-content: space-between;
@@ -496,7 +491,6 @@
             font-weight: 600;
         }
 
-        /* AI Tutor */
         .tutor-container {
             background: white;
             border-radius: 20px;
@@ -628,7 +622,6 @@
             color: #6b7280;
         }
 
-        /* Responsive */
         @media (max-width: 640px) {
             .top-nav {
                 padding: 12px 16px;
@@ -765,11 +758,11 @@
             </div>
         </nav>
 
-        <!-- ===== PAGE: GRADE SELECTION ===== -->
+        <!-- ===== PAGE: GRADE SELECTION (ONLY 8–12) ===== -->
         <div class="page-section active" id="page-grades">
             <div class="page-header">
                 <h2>📚 Select Your Grade</h2>
-                <p>Choose your current grade to get personalized lessons.</p>
+                <p>Choose your grade (8–12) to get personalised lessons.</p>
             </div>
             <div class="grade-grid" id="gradeGrid"></div>
             <button class="btn-confirm" id="gradeConfirmBtn" onclick="confirmGrade()">Continue to Subjects →</button>
@@ -827,86 +820,314 @@
         let currentUser = null;
         let currentSubject = '';
         let selectedGrade = '';
-        let chatHistory = [];
 
         // ================================================================
-        //  COUNTRY DATA
+        //  COUNTRY DATA (GRADES 8–12 ONLY & FULL TOPICS)
         // ================================================================
         const COUNTRY_DATA = {
             'South Africa': {
-                grades: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'],
+                grades: ['8', '9', '10', '11', '12'],
                 subjects: {
-                    'Mathematics': ['Number Operations', 'Patterns & Algebra', 'Fractions & Decimals', 'Geometry', 'Measurement', 'Data Handling', 'Algebra', 'Trigonometry', 'Calculus', 'Financial Maths'],
-                    'English': ['Reading Comprehension', 'Grammar', 'Creative Writing', 'Literature Analysis', 'Poetry', 'Vocabulary'],
-                    'Science': ['Life Processes', 'Energy & Change', 'Matter & Materials', 'Ecosystems', 'Physics', 'Chemistry', 'Biology'],
-                    'History': ['Ancient Civilizations', 'Colonialism in Africa', 'Apartheid', 'World Wars', 'Democracy', 'Cold War'],
-                    'Geography': ['Map Skills', 'Weather & Climate', 'South Africa\'s Provinces', 'Water Cycle', 'Economic Geography', 'Climate Change'],
-                    'Life Orientation': ['Self-Awareness', 'Healthy Living', 'Citizenship', 'Study Skills', 'Career Guidance'],
-                    'Accounting': ['Introduction', 'Double-Entry', 'Trial Balance', 'Financial Statements', 'VAT', 'Cost Accounting', 'Budgeting'],
-                    'Business Studies': ['Business Environments', 'Business Functions', 'Entrepreneurship', 'Marketing', 'Financial Management', 'Human Resources'],
-                    'Economics': ['Basic Concepts', 'Demand & Supply', 'Market Structures', 'Macroeconomics', 'South African Economy'],
-                    'Life Sciences': ['Cell Biology', 'Genetics', 'Evolution', 'Ecology', 'Human Body Systems'],
-                    'Physical Sciences': ['Mechanics', 'Waves & Sound', 'Electricity', 'Chemical Bonding', 'Thermodynamics'],
-                    'Technology': ['Design Process', 'Structures', 'Electrical Systems', 'Coding Basics', 'Digital Citizenship']
+                    'Mathematics': [
+                        'Algebra – Linear Equations',
+                        'Algebra – Quadratic Equations',
+                        'Algebra – Exponents & Surds',
+                        'Geometry – Euclidean Geometry',
+                        'Geometry – Trigonometry',
+                        'Geometry – Mensuration',
+                        'Functions & Graphs',
+                        'Statistics – Data Handling',
+                        'Probability – Basics',
+                        'Calculus – Differentiation (Gr 12)',
+                        'Calculus – Integration (Gr 12)',
+                        'Financial Maths – Compound Interest'
+                    ],
+                    'English': [
+                        'Reading Comprehension – Analytical Skills',
+                        'Creative Writing – Essays & Short Stories',
+                        'Literature – Poetry Analysis',
+                        'Literature – Novel Study',
+                        'Grammar – Tense & Agreement',
+                        'Vocabulary Building – Context Clues',
+                        'Speech – Persuasive Techniques',
+                        'Visual Literacy – Advertisements',
+                        'Summary Writing',
+                        'Critical Thinking – Debates'
+                    ],
+                    'Life Sciences': [
+                        'Cell Biology – Structure & Function',
+                        'Cell Division – Mitosis & Meiosis',
+                        'Genetics – Mendelian Laws',
+                        'Evolution – Natural Selection',
+                        'Human Body – Digestive System',
+                        'Human Body – Respiratory System',
+                        'Human Body – Circulatory System',
+                        'Ecology – Food Chains & Webs',
+                        'Biodiversity – Classification',
+                        'Biotechnology – Applications'
+                    ],
+                    'Physical Sciences': [
+                        'Mechanics – Kinematics',
+                        'Mechanics – Newton\'s Laws',
+                        'Mechanics – Work, Energy & Power',
+                        'Waves – Sound & Light',
+                        'Electricity – Circuits',
+                        'Magnetism – Electromagnetism',
+                        'Chemical Bonding – Ionic & Covalent',
+                        'Stoichiometry – Mole Concept',
+                        'Acids & Bases – Reactions',
+                        'Thermodynamics – Heat & Temperature',
+                        'Nuclear Physics – Radioactivity'
+                    ],
+                    'History': [
+                        'The French Revolution – Causes & Effects',
+                        'Industrial Revolution – Impact on Society',
+                        'World War I – Causes & Outcomes',
+                        'World War II – Rise of Dictators',
+                        'The Holocaust – Remembering',
+                        'Apartheid in South Africa – Origins',
+                        'Anti-Apartheid Movement',
+                        'Democracy in South Africa 1994',
+                        'Cold War – Causes & Consequences',
+                        'Globalisation – Economic & Cultural'
+                    ],
+                    'Geography': [
+                        'Map Skills – Topographic Maps',
+                        'Atmosphere – Weather & Climate',
+                        'Plate Tectonics – Earth\'s Structure',
+                        'Rivers – Drainage Systems',
+                        'Oceans – Currents & Tides',
+                        'Population – Distribution & Density',
+                        'Urbanisation – Challenges',
+                        'South Africa\'s Provinces – Physical Features',
+                        'Natural Resources – Management',
+                        'Climate Change – Causes & Solutions'
+                    ]
                 }
             },
             'United States': {
-                grades: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'],
+                grades: ['8', '9', '10', '11', '12'],
                 subjects: {
-                    'English Language Arts': ['Reading', 'Writing', 'Literature', 'Grammar', 'Vocabulary'],
-                    'Mathematics': ['Arithmetic', 'Algebra', 'Geometry', 'Trigonometry', 'Calculus', 'Statistics'],
-                    'Science': ['Life Science', 'Physical Science', 'Earth Science', 'Biology', 'Chemistry', 'Physics'],
-                    'History': ['American History', 'World History', 'Government', 'Civics', 'Economics'],
-                    'Geography': ['Physical Geography', 'Human Geography', 'US Geography', 'World Geography']
+                    'English Language Arts': [
+                        'Reading Literature – Fiction Analysis',
+                        'Informational Text – Close Reading',
+                        'Writing – Expository Essays',
+                        'Writing – Persuasive Essays',
+                        'Grammar – Sentence Structure',
+                        'Vocabulary – Academic Words',
+                        'Speaking & Listening – Discussions',
+                        'Media Literacy – Evaluating Sources'
+                    ],
+                    'Mathematics': [
+                        'Algebra I – Linear Functions',
+                        'Algebra II – Quadratics & Polynomials',
+                        'Geometry – Proofs & Constructions',
+                        'Trigonometry – Ratios & Identities',
+                        'Pre-calculus – Functions & Graphs',
+                        'Calculus – Limits & Derivatives',
+                        'Statistics – Probability & Data',
+                        'Financial Algebra – Interest & Loans'
+                    ],
+                    'Science': [
+                        'Biology – Cell Structures',
+                        'Biology – Genetics & Evolution',
+                        'Chemistry – Atomic Structure',
+                        'Chemistry – Chemical Reactions',
+                        'Physics – Motion & Forces',
+                        'Physics – Energy & Waves',
+                        'Earth Science – Weather & Oceans',
+                        'Astronomy – Solar System & Beyond'
+                    ],
+                    'History': [
+                        'American Revolution – Causes & Impact',
+                        'Civil War – Slavery & Emancipation',
+                        'World War I – US Involvement',
+                        'Great Depression – New Deal',
+                        'World War II – Homefront',
+                        'Cold War – Space Race',
+                        'Civil Rights Movement',
+                        'Modern America – 21st Century'
+                    ],
+                    'Geography': [
+                        'Physical Geography – Landforms',
+                        'Human Geography – Culture & Migration',
+                        'US Geography – Regions & Capitals',
+                        'World Geography – Continents & Countries',
+                        'Climate – Climate Zones & Change',
+                        'Cartography – Map Reading'
+                    ]
                 }
             },
             'United Kingdom': {
-                grades: ['7', '8', '9', '10', '11', '12', '13'],
+                grades: ['8', '9', '10', '11', '12', '13'],
                 subjects: {
-                    'English': ['Reading', 'Writing', 'Shakespeare', 'Poetry', 'Modern Literature'],
-                    'Mathematics': ['Algebra', 'Geometry', 'Trigonometry', 'Calculus', 'Statistics'],
-                    'Science': ['Biology', 'Chemistry', 'Physics', 'Earth Science'],
-                    'History': ['Medieval History', 'Tudors', 'Victorian Era', 'World Wars'],
-                    'Geography': ['Physical Geography', 'Human Geography', 'UK Geography', 'Climate Change']
+                    'English': [
+                        'Shakespeare – Macbeth',
+                        'Poetry – Sonnets & Romantics',
+                        'Novel – Pride and Prejudice',
+                        'Creative Writing – Short Stories',
+                        'Grammar – Advanced Punctuation',
+                        'Non-fiction – Articles & Speeches'
+                    ],
+                    'Mathematics': [
+                        'Algebra – Equations & Graphs',
+                        'Geometry – Circles & Triangles',
+                        'Trigonometry – Sine & Cosine Rules',
+                        'Calculus – Differentiation & Integration',
+                        'Statistics – Averages & Spread',
+                        'Mechanics – Vectors & Forces'
+                    ],
+                    'Science': [
+                        'Biology – Cells & Microscopy',
+                        'Chemistry – Periodic Table & Bonding',
+                        'Physics – Forces & Motion',
+                        'Earth Science – Ecosystems',
+                        'Astronomy – Stars & Galaxies'
+                    ],
+                    'History': [
+                        'Medieval England – Crusades',
+                        'Tudors – Henry VIII & Elizabeth',
+                        'Victorian Britain – Empire',
+                        'World War I – Trenches',
+                        'World War II – Blitz',
+                        'Cold War – Britain\'s Role'
+                    ],
+                    'Geography': [
+                        'Physical – Rivers & Glaciers',
+                        'Human – Population & Settlement',
+                        'UK Geography – Cities & Regions',
+                        'Development – Global Inequality'
+                    ]
                 }
             },
             'China': {
-                grades: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'],
+                grades: ['8', '9', '10', '11', '12'],
                 subjects: {
-                    '语文 (Chinese)': ['Reading', 'Writing', 'Classical Literature', 'Modern Literature', 'Poetry'],
-                    '数学 (Mathematics)': ['Arithmetic', 'Algebra', 'Geometry', 'Trigonometry', 'Calculus'],
-                    '英语 (English)': ['Reading', 'Grammar', 'Writing', 'Listening', 'Speaking'],
-                    '物理 (Physics)': ['Mechanics', 'Thermodynamics', 'Electricity', 'Waves', 'Optics'],
-                    '化学 (Chemistry)': ['Basic Concepts', 'Chemical Reactions', 'Organic Chemistry', 'Inorganic Chemistry'],
-                    '生物 (Biology)': ['Cell Biology', 'Genetics', 'Ecology', 'Evolution']
+                    '语文 (Chinese)': [
+                        '文言文 – 唐宋八大家',
+                        '现代诗歌 – 鲁迅',
+                        '小说 – 红楼梦选段',
+                        '议论文 – 写作技巧',
+                        '语法 – 句子结构',
+                        '阅读 – 理解与分析'
+                    ],
+                    '数学 (Mathematics)': [
+                        '代数 – 方程与不等式',
+                        '几何 – 三角形与圆',
+                        '三角函数 – 公式与应用',
+                        '微积分 – 导数与积分',
+                        '统计 – 数据分析',
+                        '概率 – 事件与计算'
+                    ],
+                    '英语 (English)': [
+                        '阅读 – 小说片段',
+                        '语法 – 时态与语态',
+                        '写作 – 书信与文章',
+                        '听力 – 对话训练',
+                        '词汇 – 高阶词汇'
+                    ],
+                    '物理 (Physics)': [
+                        '力学 – 运动与力',
+                        '热学 – 温度与能量',
+                        '电学 – 电路与磁',
+                        '光学 – 反射与折射',
+                        '原子物理 – 核反应'
+                    ],
+                    '化学 (Chemistry)': [
+                        '原子结构 – 元素周期表',
+                        '化学反应 – 化学方程式',
+                        '有机化学 – 烃与衍生物',
+                        '无机化学 – 酸碱盐'
+                    ],
+                    '生物 (Biology)': [
+                        '细胞 – 结构与功能',
+                        '遗传 – DNA与基因',
+                        '进化 – 自然选择',
+                        '生态 – 食物链'
+                    ]
                 }
             },
             'Australia': {
-                grades: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'],
+                grades: ['8', '9', '10', '11', '12'],
                 subjects: {
-                    'English': ['Reading', 'Writing', 'Literature', 'Grammar', 'Media Studies'],
-                    'Mathematics': ['Algebra', 'Geometry', 'Trigonometry', 'Calculus', 'Statistics'],
-                    'Science': ['Biology', 'Chemistry', 'Physics', 'Earth Science', 'Environmental Science'],
-                    'History': ['Australian History', 'World History', 'Civics', 'Ancient History'],
-                    'Geography': ['Physical Geography', 'Human Geography', 'Australian Geography']
+                    'English': [
+                        'Novel Study – Australian Literature',
+                        'Persuasive Writing – Debates',
+                        'Poetry – Performance & Analysis',
+                        'Grammar – Tenses & Phrases',
+                        'Media – Analysis of Adverts'
+                    ],
+                    'Mathematics': [
+                        'Algebra – Linear & Quadratic',
+                        'Geometry – Trigonometry',
+                        'Calculus – Differentiation',
+                        'Statistics – Data Representation',
+                        'Financial Maths – Earning & Saving'
+                    ],
+                    'Science': [
+                        'Biology – Cells & Systems',
+                        'Chemistry – Atomic & Molecular',
+                        'Physics – Energy & Electricity',
+                        'Earth Science – Plate Tectonics',
+                        'Environmental Science – Sustainability'
+                    ],
+                    'History': [
+                        'Australian History – Colonisation',
+                        'World History – Industrial Revolution',
+                        'Civil Rights – Global Movements',
+                        'Modern History – World Wars'
+                    ],
+                    'Geography': [
+                        'Physical – Landforms & Rivers',
+                        'Human – Population & Urbanisation',
+                        'Australian Geography – States & Territories',
+                        'Climate – El Niño & Climate Change'
+                    ]
                 }
             },
             'India': {
-                grades: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'],
+                grades: ['8', '9', '10', '11', '12'],
                 subjects: {
-                    'English': ['Reading', 'Writing', 'Literature', 'Grammar', 'Communication'],
-                    'Hindi': ['Reading', 'Writing', 'Literature', 'Grammar'],
-                    'Mathematics': ['Algebra', 'Geometry', 'Trigonometry', 'Calculus', 'Statistics'],
-                    'Science': ['Physics', 'Chemistry', 'Biology', 'Environmental Science'],
-                    'Social Studies': ['History', 'Geography', 'Civics', 'Economics']
+                    'English': [
+                        'Reading – Short Stories',
+                        'Writing – Formal Letters',
+                        'Grammar – Direct & Indirect Speech',
+                        'Literature – Shakespeare Overview'
+                    ],
+                    'Hindi': [
+                        'गद्य – कहानियाँ',
+                        'पद्य – कविता विश्लेषण',
+                        'व्याकरण – संधि & समास',
+                        'निबंध – विषय विस्तार'
+                    ],
+                    'Mathematics': [
+                        'Algebra – Quadratic Equations',
+                        'Geometry – Circles & Theorems',
+                        'Trigonometry – Ratios',
+                        'Calculus – Differentiation',
+                        'Statistics – Mean, Median, Mode'
+                    ],
+                    'Science': [
+                        'Physics – Motion & Sound',
+                        'Chemistry – Acids & Bases',
+                        'Biology – Respiration & Circulation',
+                        'Environmental Science – Pollution'
+                    ],
+                    'Social Studies': [
+                        'Indian History – Independence',
+                        'World History – Cold War',
+                        'Geography – Climate & Vegetation',
+                        'Economics – Budget & Taxation'
+                    ]
                 }
             }
         };
 
+        // Default fallback for unsupported countries
         const DEFAULT_SUBJECTS = {
-            'Mathematics': ['Numbers', 'Algebra', 'Geometry', 'Data', 'Measurement'],
+            'Mathematics': ['Algebra', 'Geometry', 'Trigonometry', 'Calculus', 'Statistics'],
             'English': ['Reading', 'Writing', 'Grammar', 'Literature'],
-            'Science': ['Life Science', 'Physical Science', 'Earth Science'],
+            'Science': ['Biology', 'Chemistry', 'Physics', 'Earth Science'],
             'History': ['World History', 'Local History'],
             'Geography': ['Physical Geography', 'Human Geography']
         };
@@ -1064,7 +1285,8 @@
         function showGradeSelection() {
             const country = currentUser.country || 'South Africa';
             const data = COUNTRY_DATA[country];
-            const grades = data ? data.grades : ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10', '11', '12'];
+            // If country not found, use default grades 8-12
+            const grades = (data && data.grades) ? data.grades : ['8', '9', '10', '11', '12'];
 
             const grid = document.getElementById('gradeGrid');
             grid.innerHTML = '';
@@ -1230,15 +1452,38 @@
             }
         }
 
+        // ================================================================
+        //  PROFESSIONAL VOICE – CLEANS ALL UNNECESSARY SYMBOLS
+        // ================================================================
         function speakText(text) {
             if (!('speechSynthesis' in window)) return;
-            let clean = text.replace(/\*\*/g, '').replace(/#/g, '').replace(/[📚🎯✏️🤔💡]/g, '').replace(/\n/g, '. ');
-            if (clean.length > 300) clean = clean.substring(0, 300) + '...';
+
+            // Remove all markdown, dashes, slashes, asterisks, underscores, etc.
+            let clean = text
+                .replace(/[\\*\/_\-~#`|]/g, ' ')      // replace symbols with space
+                .replace(/[📚🎯✏️🤔💡✅❌]/g, '')        // remove emojis
+                .replace(/\s+/g, ' ')                 // collapse multiple spaces
+                .trim();
+
+            // Limit length for TTS
+            if (clean.length > 300) {
+                clean = clean.substring(0, 300) + '...';
+            }
+
             window.speechSynthesis.cancel();
-            const u = new SpeechSynthesisUtterance(clean);
-            u.lang = 'en-US';
-            u.rate = 0.85;
-            window.speechSynthesis.speak(u);
+
+            const utterance = new SpeechSynthesisUtterance(clean);
+            utterance.lang = 'en-US';
+            utterance.rate = 0.9;
+            utterance.pitch = 1.0;
+            utterance.volume = 1;
+
+            // Try to pick a natural voice
+            const voices = window.speechSynthesis.getVoices();
+            const preferred = voices.find(v => v.lang.includes('en') && (v.name.includes('Google') || v.name.includes('Natural')));
+            if (preferred) utterance.voice = preferred;
+
+            window.speechSynthesis.speak(utterance);
         }
 
         // ================================================================
