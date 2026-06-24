@@ -62,7 +62,7 @@ async function initDB() {
       )
     `);
 
-    console.log("✅ Database ready with payment columns");
+    console.log("✅ Database ready");
   } catch (err) {
     console.error("❌ DB init error:", err.message);
   }
@@ -177,7 +177,7 @@ app.post("/save-profile", async (req, res) => {
   }
 });
 
-// ================= CHAT (HUMAN-LIKE CONVERSATIONAL TUTOR) =================
+// ================= CHAT =================
 app.post("/chat", async (req, res) => {
   const { userId, message } = req.body;
   if (!userId || !message) {
@@ -230,7 +230,9 @@ app.post("/chat", async (req, res) => {
       [userId]
     );
 
-    // ===== NEW HUMAN-LIKE CONVERSATIONAL SYSTEM PROMPT =====
+    // Build level description for AI
+    const levelDesc = user.grade ? user.grade : 'Not specified';
+
     const systemPrompt = `
 You are Leago, a warm, patient, and encouraging AI tutor. Your goal is to help students learn through natural conversation.
 
@@ -239,7 +241,7 @@ CRITICAL RULES FOR EVERY CONVERSATION:
 1. START WITH QUESTIONS, NOT LECTURES:
    - NEVER start with a long explanation.
    - ALWAYS start by asking the student what they want to learn.
-   - Then ask about their level (high school, college, professional).
+   - Then ask about their level (high school, college, etc.).
    - Then ask what they already know about the topic.
    - Only after you have this information, begin teaching.
 
@@ -266,10 +268,10 @@ CRITICAL RULES FOR EVERY CONVERSATION:
    - Tell them you're here to help if they have further questions.
 
 CONVERSATION STARTER TEMPLATE:
-"Hi [student name]! I'm Leago, your AI tutor. I'm here to help you learn. What topic would you like to explore today?"
+"Hi [student name]! I'm Leago, your AI tutor. What would you like to learn about today?"
 
 Then wait for response, then ask:
-"Great! To help me tailor this to you, are you a high school student, college student, or professional?"
+"Great! To help me tailor this to you, what is your level? (Secondary, Tertiary, College)"
 
 Then wait for response, then ask:
 "Perfect! What do you already know about [topic]? This helps me know where to start."
@@ -277,7 +279,7 @@ Then wait for response, then ask:
 Then begin teaching based on their level and prior knowledge.
 
 Student: ${user.name}
-Level: ${user.grade || 'Not specified'}
+Level: ${levelDesc}
 Country: ${user.country}
 `;
 
@@ -384,27 +386,37 @@ app.post("/create-payment", async (req, res) => {
       return res.status(404).json({ error: "User not found" });
     }
 
-    // ===== PRICING: Based on Country + Level =====
+    // ===== PRICING =====
     let amount = 14999; // default international high school
     let priceDisplay = 'R149.99';
 
-    const isCollege = (user.grade === 'College' || user.grade === 'Tertiary');
+    const isSecondary = user.grade && user.grade.startsWith('Secondary');
+    const isTertiary = user.grade && (user.grade.startsWith('Tertiary') || user.grade.startsWith('College'));
     const isSouthAfrica = (user.country === 'South Africa');
 
-    if (isCollege) {
+    if (isSecondary) {
       if (isSouthAfrica) {
-        amount = 19999; // R199.99 for SA college
+        amount = 4999;
+        priceDisplay = 'R49.99';
+      } else {
+        amount = 14999;
+        priceDisplay = 'R149.99';
+      }
+    } else if (isTertiary) {
+      if (isSouthAfrica) {
+        amount = 19999;
         priceDisplay = 'R199.99';
       } else {
-        amount = 29999; // R299.99 for international college
+        amount = 29999;
         priceDisplay = 'R299.99';
       }
     } else {
+      // fallback
       if (isSouthAfrica) {
-        amount = 4999; // R49.99 for SA high school
+        amount = 4999;
         priceDisplay = 'R49.99';
       } else {
-        amount = 14999; // R149.99 for international high school
+        amount = 14999;
         priceDisplay = 'R149.99';
       }
     }
@@ -416,7 +428,7 @@ app.post("/create-payment", async (req, res) => {
       metadata: {
         userId: userId,
         country: user.country,
-        grade: user.grade || 'High School',
+        grade: user.grade || 'Secondary',
         price: amount / 100
       },
       callback_url: `${process.env.PAYSTACK_CALLBACK_URL || 'https://synapses-uwh1.onrender.com'}/payment-callback`,
@@ -531,6 +543,5 @@ app.post("/paystack-webhook", express.json(), async (req, res) => {
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log("✅ Leago AI Tutor running on port " + PORT);
-  console.log("💰 Pricing: SA HS R49.99 | SA College R199.99 | Intl HS R149.99 | Intl College R299.99");
-  console.log("🧠 Conversational AI tutor is ready!");
+  console.log("💰 Pricing: Secondary SA R49.99 | Tertiary/College SA R199.99 | Intl +");
 });
