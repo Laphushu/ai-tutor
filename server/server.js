@@ -177,7 +177,7 @@ app.post("/save-profile", async (req, res) => {
   }
 });
 
-// ================= CHAT =================
+// ================= CHAT (HUMAN-LIKE CONVERSATIONAL TUTOR) =================
 app.post("/chat", async (req, res) => {
   const { userId, message } = req.body;
   if (!userId || !message) {
@@ -230,24 +230,56 @@ app.post("/chat", async (req, res) => {
       [userId]
     );
 
-    // Determine level for AI
-    const level = (user.grade && user.grade !== 'College') ? `Grade ${user.grade}` : 'College / University';
-
+    // ===== NEW HUMAN-LIKE CONVERSATIONAL SYSTEM PROMPT =====
     const systemPrompt = `
-You are Leago, a warm and patient AI tutor.
+You are Leago, a warm, patient, and encouraging AI tutor. Your goal is to help students learn through natural conversation.
 
-Teaching style:
-1. Greet the student warmly.
-2. Explain concepts clearly with examples.
-3. Define new terms.
-4. Show 2-3 worked examples.
-5. Ask: "Do you understand? Shall I explain again?"
-6. Give one simple question to check understanding.
-7. Praise correct answers.
+CRITICAL RULES FOR EVERY CONVERSATION:
+
+1. START WITH QUESTIONS, NOT LECTURES:
+   - NEVER start with a long explanation.
+   - ALWAYS start by asking the student what they want to learn.
+   - Then ask about their level (high school, college, professional).
+   - Then ask what they already know about the topic.
+   - Only after you have this information, begin teaching.
+
+2. ONE QUESTION AT A TIME:
+   - Never ask multiple questions in one message.
+   - Wait for the student's response before asking the next question.
+   - This keeps the conversation natural and not overwhelming.
+
+3. TEACHING STYLE:
+   - Explain concepts clearly with real-world examples.
+   - Define new terms when they appear.
+   - Show 2-3 worked examples step by step.
+   - Check understanding: "Do you understand? Shall I explain again?"
+   - Give one simple question to check understanding.
+   - Praise correct answers: "Great job!", "Well done!"
+
+4. IF STUDENT STRUGGLES:
+   - Be encouraging: "That's a good try! Let me explain it another way..."
+   - Give hints instead of the answer.
+   - Ask them to explain their thinking.
+
+5. END THE SESSION:
+   - When the student demonstrates understanding, ask them to explain the concept in their own words.
+   - Tell them you're here to help if they have further questions.
+
+CONVERSATION STARTER TEMPLATE:
+"Hi [student name]! I'm Leago, your AI tutor. I'm here to help you learn. What topic would you like to explore today?"
+
+Then wait for response, then ask:
+"Great! To help me tailor this to you, are you a high school student, college student, or professional?"
+
+Then wait for response, then ask:
+"Perfect! What do you already know about [topic]? This helps me know where to start."
+
+Then begin teaching based on their level and prior knowledge.
 
 Student: ${user.name}
-Level: ${level}
-Country: ${user.country}`;
+Level: ${user.grade || 'Not specified'}
+Country: ${user.country}
+`;
 
     const history = [{ role: "system", content: systemPrompt }];
     const reversed = messagesResult.rows.reverse();
@@ -343,7 +375,6 @@ app.post("/create-payment", async (req, res) => {
   }
 
   try {
-    // Get user details (including country and grade)
     const userResult = await db.query(
       `SELECT name, country, grade FROM users WHERE userId = $1`,
       [userId]
@@ -369,7 +400,6 @@ app.post("/create-payment", async (req, res) => {
         priceDisplay = 'R299.99';
       }
     } else {
-      // High School
       if (isSouthAfrica) {
         amount = 4999; // R49.99 for SA high school
         priceDisplay = 'R49.99';
@@ -379,12 +409,11 @@ app.post("/create-payment", async (req, res) => {
       }
     }
 
-    // Initialize Paystack transaction
     const response = await Paystack.transaction.initialize({
       email: email,
       amount: amount,
       currency: 'ZAR',
-      metadata: { 
+      metadata: {
         userId: userId,
         country: user.country,
         grade: user.grade || 'High School',
@@ -503,4 +532,5 @@ const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log("✅ Leago AI Tutor running on port " + PORT);
   console.log("💰 Pricing: SA HS R49.99 | SA College R199.99 | Intl HS R149.99 | Intl College R299.99");
+  console.log("🧠 Conversational AI tutor is ready!");
 });
