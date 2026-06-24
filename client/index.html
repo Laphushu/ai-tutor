@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Leago — AI Tutor for Grade 10–12</title>
+    <title>Leago — AI Tutor for Grades 8–12 & College</title>
     <style>
         /* ===== RESET & BASE ===== */
         * {
@@ -534,7 +534,7 @@
 
         .grade-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
             gap: 12px;
             margin: 16px 0;
         }
@@ -562,6 +562,14 @@
             border-color: #6366f1;
             background: #eef2ff;
             box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
+        }
+
+        .grade-card .sub {
+            font-size: 0.7rem;
+            color: #6b7280;
+            font-weight: 400;
+            display: block;
+            margin-top: 2px;
         }
 
         .btn-confirm {
@@ -859,7 +867,7 @@
                 grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
             }
             .grade-grid {
-                grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
+                grid-template-columns: repeat(auto-fill, minmax(70px, 1fr));
             }
             .topic-grid {
                 grid-template-columns: 1fr;
@@ -900,9 +908,9 @@
     <section class="hero">
         <div class="logo">🧠 <span>Leago</span></div>
         <div class="badge">✦ Available Now</div>
-        <h1>Learn Mathematics &amp; English with AI</h1>
+        <h1>Learn with AI — High School & College</h1>
         <p>
-            Your personal AI tutor for Grades 10–12. Get step‑by‑step explanations,
+            Your personal AI tutor for Grades 8–12 and College. Get step‑by‑step explanations,
             exam preparation, and unlimited practice — all powered by artificial intelligence.
         </p>
         <div class="cta-group">
@@ -932,8 +940,8 @@
         </div>
         <div class="feature-card">
             <span class="icon">🎯</span>
-            <h3>Grades 10–12 Support</h3>
-            <p>Curriculum‑aligned content for high school learners preparing for exams.</p>
+            <h3>Grades 8–12 &amp; College</h3>
+            <p>Curriculum‑aligned content for high school and tertiary learners.</p>
         </div>
         <div class="feature-card">
             <span class="icon">📚</span>
@@ -1043,17 +1051,17 @@
             <div class="user-info">
                 <span class="name" id="userName">User</span>
                 <span class="role" id="userRole">Learner</span>
-                <span class="grade-badge" id="userGrade">Grade: Not set</span>
+                <span class="grade-badge" id="userGrade">Level: Not set</span>
                 <span id="subscriptionBadge"></span>
                 <button class="logout-btn" onclick="logout()">Logout</button>
             </div>
         </nav>
 
-        <!-- ===== PAGE: GRADE SELECTION (8–12) ===== -->
+        <!-- ===== PAGE: GRADE SELECTION (8–12 + College) ===== -->
         <div class="page-section active" id="page-grades">
             <div class="page-header">
-                <h2>📚 Select Your Grade</h2>
-                <p>Choose your grade (8–12) to get personalised lessons.</p>
+                <h2>📚 Select Your Level</h2>
+                <p>Choose your grade (8–12) or select <strong>College / Tertiary</strong> for higher education.</p>
             </div>
             <div class="grade-grid" id="gradeGrid"></div>
             <button class="btn-confirm" id="gradeConfirmBtn" onclick="confirmGrade()">Continue to Subjects →</button>
@@ -1113,12 +1121,13 @@
         let selectedGrade = '';
 
         // ================================================================
-        //  COUNTRY DATA (GRADES 8–12 ONLY & FULL TOPICS)
+        //  COUNTRY DATA (GRADES 8–12 + COLLEGE + SUBJECTS)
         // ================================================================
         const COUNTRY_DATA = {
             'South Africa': {
-                grades: ['8', '9', '10', '11', '12'],
+                grades: ['8', '9', '10', '11', '12', 'College'],
                 subjects: {
+                    // High School Subjects
                     'Mathematics': [
                         'Algebra – Linear Equations',
                         'Algebra – Quadratic Equations',
@@ -1193,11 +1202,63 @@
                         'South Africa\'s Provinces – Physical Features',
                         'Natural Resources – Management',
                         'Climate Change – Causes & Solutions'
+                    ],
+                    // College Subjects
+                    'Engineering': [
+                        'Mechanical Engineering – Basics',
+                        'Electrical Engineering – Circuits',
+                        'Civil Engineering – Structures',
+                        'Chemical Engineering – Processes',
+                        'Industrial Engineering – Optimisation',
+                        'Materials Science – Properties'
+                    ],
+                    'Computer Science': [
+                        'Programming – Python Basics',
+                        'Data Structures & Algorithms',
+                        'Database Systems – SQL',
+                        'Web Development – HTML/CSS/JS',
+                        'Artificial Intelligence – Intro',
+                        'Cyber Security – Fundamentals'
+                    ],
+                    'Business & Management': [
+                        'Principles of Management',
+                        'Marketing – Strategies',
+                        'Finance – Accounting Basics',
+                        'Entrepreneurship – Startup',
+                        'Human Resources – People Management'
+                    ],
+                    'Health Sciences': [
+                        'Anatomy – Human Body',
+                        'Physiology – Body Functions',
+                        'Pharmacology – Drug Basics',
+                        'Nursing – Patient Care',
+                        'Public Health – Epidemiology'
+                    ],
+                    'Law': [
+                        'Criminal Law – Basics',
+                        'Constitutional Law – SA',
+                        'Contract Law – Essentials',
+                        'Tort Law – Liability',
+                        'Legal Writing & Research'
+                    ],
+                    'Education': [
+                        'Teaching Methods – Pedagogy',
+                        'Educational Psychology',
+                        'Curriculum Design – SA',
+                        'Classroom Management',
+                        'Assessment & Evaluation'
+                    ],
+                    'Arts & Humanities': [
+                        'Creative Writing – Fiction',
+                        'Philosophy – Ethics',
+                        'Art History – Renaissance',
+                        'Music Theory – Basics',
+                        'Film Studies – Analysis'
                     ]
                 }
             },
             'United States': {
-                grades: ['8', '9', '10', '11', '12'],
+                grades: ['8', '9', '10', '11', '12', 'College'],
                 subjects: {
                     'English Language Arts': [
                         'Reading Literature – Fiction Analysis',
@@ -1246,11 +1307,50 @@
                         'World Geography – Continents & Countries',
                         'Climate – Climate Zones & Change',
                         'Cartography – Map Reading'
+                    ],
+                    // College Subjects (US)
+                    'Engineering': [
+                        'Mechanical Engineering – Thermofluids',
+                        'Electrical Engineering – Signals',
+                        'Civil Engineering – Structural Analysis',
+                        'Computer Engineering – Hardware',
+                        'Aerospace Engineering – Dynamics'
+                    ],
+                    'Computer Science': [
+                        'Programming – Java & C++',
+                        'Data Science – Pandas & R',
+                        'Machine Learning – Intro',
+                        'Operating Systems – Concepts',
+                        'Software Engineering – Agile'
+                    ],
+                    'Business': [
+                        'Business Administration – Core',
+                        'Marketing – Digital Marketing',
+                        'Finance – Corporate Finance',
+                        'Economics – Micro & Macro',
+                        'Entrepreneurship – Innovation'
+                    ],
+                    'Health Sciences': [
+                        'Pre-Med – Biology',
+                        'Nursing – Clinical Skills',
+                        'Public Health – Global Health',
+                        'Psychology – Behavioral'
+                    ],
+                    'Law': [
+                        'Torts – Civil Law',
+                        'Contracts – Legal Agreements',
+                        'Criminal Procedure',
+                        'Constitutional Law – US'
+                    ],
+                    'Education': [
+                        'Educational Psychology',
+                        'Curriculum Development',
+                        'Classroom Technology'
                     ]
                 }
             },
             'United Kingdom': {
-                grades: ['8', '9', '10', '11', '12', '13'],
+                grades: ['8', '9', '10', '11', '12', '13', 'College'],
                 subjects: {
                     'English': [
                         'Shakespeare – Macbeth',
@@ -1288,11 +1388,35 @@
                         'Human – Population & Settlement',
                         'UK Geography – Cities & Regions',
                         'Development – Global Inequality'
+                    ],
+                    // College Subjects (UK)
+                    'Engineering': [
+                        'Mechanical – Design & Manufacturing',
+                        'Electrical – Power & Control',
+                        'Civil – Geotechnical Engineering',
+                        'Chemical – Process Engineering',
+                        'Aerospace – Flight Mechanics'
+                    ],
+                    'Computer Science': [
+                        'Programming – Python & Java',
+                        'Algorithms – Complexity',
+                        'AI – Neural Networks',
+                        'Data Security – Cryptography'
+                    ],
+                    'Business': [
+                        'Management – Operations',
+                        'Marketing – Consumer Behaviour',
+                        'Finance – Investment'
+                    ],
+                    'Law': [
+                        'Criminal Law – UK',
+                        'Contract Law – English',
+                        'EU Law – Regulations'
                     ]
                 }
             },
             'China': {
-                grades: ['8', '9', '10', '11', '12'],
+                grades: ['8', '9', '10', '11', '12', 'College'],
                 subjects: {
                     '语文 (Chinese)': [
                         '文言文 – 唐宋八大家',
@@ -1335,11 +1459,31 @@
                         '遗传 – DNA与基因',
                         '进化 – 自然选择',
                         '生态 – 食物链'
+                    ],
+                    // College Subjects (China)
+                    '工程学 (Engineering)': [
+                        '机械工程 – 设计',
+                        '电气工程 – 电路',
+                        '土木工程 – 结构',
+                        '计算机工程 – 硬件'
+                    ],
+                    '计算机科学 (CS)': [
+                        '编程 – Python',
+                        '数据结构 – 算法',
+                        '人工智能 – 入门'
+                    ],
+                    '商学 (Business)': [
+                        '管理 – 原理',
+                        '市场营销 – 策略'
+                    ],
+                    '法学 (Law)': [
+                        '刑法 – 基础',
+                        '宪法 – 中国'
                     ]
                 }
             },
             'Australia': {
-                grades: ['8', '9', '10', '11', '12'],
+                grades: ['8', '9', '10', '11', '12', 'College'],
                 subjects: {
                     'English': [
                         'Novel Study – Australian Literature',
@@ -1373,11 +1517,29 @@
                         'Human – Population & Urbanisation',
                         'Australian Geography – States & Territories',
                         'Climate – El Niño & Climate Change'
+                    ],
+                    // College Subjects (Australia)
+                    'Engineering': [
+                        'Civil – Structural',
+                        'Mechanical – Thermodynamics',
+                        'Electrical – Power Systems'
+                    ],
+                    'Computer Science': [
+                        'Programming – Python',
+                        'Data Science – Analytics'
+                    ],
+                    'Business': [
+                        'Management – Organisational',
+                        'Marketing – Digital'
+                    ],
+                    'Health Sciences': [
+                        'Nursing – Clinical',
+                        'Public Health – Epidemiology'
                     ]
                 }
             },
             'India': {
-                grades: ['8', '9', '10', '11', '12'],
+                grades: ['8', '9', '10', '11', '12', 'College'],
                 subjects: {
                     'English': [
                         'Reading – Short Stories',
@@ -1409,6 +1571,25 @@
                         'World History – Cold War',
                         'Geography – Climate & Vegetation',
                         'Economics – Budget & Taxation'
+                    ],
+                    // College Subjects (India)
+                    'Engineering': [
+                        'Mechanical – Design',
+                        'Electrical – Circuits',
+                        'Computer – Programming'
+                    ],
+                    'Computer Science': [
+                        'Programming – C++',
+                        'Data Structures',
+                        'Web Development'
+                    ],
+                    'Business': [
+                        'Management – Principles',
+                        'Marketing – Basics'
+                    ],
+                    'Medicine (Pre-med)': [
+                        'Anatomy – Human',
+                        'Physiology – Body'
                     ]
                 }
             }
@@ -1420,7 +1601,11 @@
             'English': ['Reading', 'Writing', 'Grammar', 'Literature'],
             'Science': ['Biology', 'Chemistry', 'Physics', 'Earth Science'],
             'History': ['World History', 'Local History'],
-            'Geography': ['Physical Geography', 'Human Geography']
+            'Geography': ['Physical Geography', 'Human Geography'],
+            // College fallback
+            'Engineering': ['Mechanical', 'Electrical', 'Civil'],
+            'Computer Science': ['Programming', 'Algorithms', 'Databases'],
+            'Business': ['Management', 'Marketing', 'Finance']
         };
 
         // ================================================================
@@ -1574,7 +1759,7 @@
             currentUser = user;
             document.getElementById('userName').textContent = user.name || 'User';
             document.getElementById('userRole').textContent = user.role || 'Learner';
-            document.getElementById('userGrade').textContent = user.grade ? 'Grade ' + user.grade : 'Grade: Not set';
+            document.getElementById('userGrade').textContent = user.grade ? user.grade : 'Level: Not set';
 
             checkSubscription();
             if (user.grade) {
@@ -1598,14 +1783,16 @@
         function showGradeSelection() {
             const country = currentUser.country || 'South Africa';
             const data = COUNTRY_DATA[country];
-            const grades = (data && data.grades) ? data.grades : ['8', '9', '10', '11', '12'];
+            const grades = (data && data.grades) ? data.grades : ['8', '9', '10', '11', '12', 'College'];
 
             const grid = document.getElementById('gradeGrid');
             grid.innerHTML = '';
             grades.forEach(g => {
                 const div = document.createElement('div');
                 div.className = 'grade-card';
-                div.textContent = 'Grade ' + g;
+                const label = (g === 'College') ? 'College / Tertiary' : 'Grade ' + g;
+                const sub = (g === 'College') ? 'Higher Education' : '';
+                div.innerHTML = `${label}${sub ? `<span class="sub">${sub}</span>` : ''}`;
                 div.dataset.grade = g;
                 div.onclick = function() {
                     document.querySelectorAll('.grade-card').forEach(c => c.classList.remove('selected'));
@@ -1620,7 +1807,7 @@
 
         function confirmGrade() {
             if (!selectedGrade) {
-                alert('Please select your grade.');
+                alert('Please select your level.');
                 return;
             }
             fetch('/save-profile', {
@@ -1635,7 +1822,7 @@
             });
             currentUser.grade = selectedGrade;
             localStorage.setItem('synapse_user', JSON.stringify(currentUser));
-            document.getElementById('userGrade').textContent = 'Grade ' + selectedGrade;
+            document.getElementById('userGrade').textContent = selectedGrade;
             showSubjects();
         }
 
@@ -1644,8 +1831,9 @@
             const data = COUNTRY_DATA[country];
             const subjects = data ? data.subjects : DEFAULT_SUBJECTS;
 
+            const levelLabel = (currentUser.grade === 'College') ? 'College' : 'Grade ' + currentUser.grade;
             document.getElementById('subjectsSubtitle').textContent =
-                'Grade ' + currentUser.grade + ' · ' + country + ' · Select a subject to start learning.';
+                levelLabel + ' · ' + country + ' · Select a subject to start learning.';
 
             const grid = document.getElementById('subjectGrid');
             grid.innerHTML = '';
@@ -1671,7 +1859,21 @@
                 '化学 (Chemistry)': '🧪',
                 '生物 (Biology)': '🧬',
                 'Hindi': '🇮🇳',
-                'Social Studies': '🏛️'
+                'Social Studies': '🏛️',
+                // College subjects
+                'Engineering': '⚙️',
+                'Computer Science': '💻',
+                'Business & Management': '📊',
+                'Business': '📊',
+                'Health Sciences': '🏥',
+                'Law': '⚖️',
+                'Education': '📚',
+                'Arts & Humanities': '🎨',
+                '工程学 (Engineering)': '⚙️',
+                '计算机科学 (CS)': '💻',
+                '商学 (Business)': '📊',
+                '法学 (Law)': '⚖️',
+                'Medicine (Pre-med)': '🏥'
             };
             Object.keys(subjects).forEach(name => {
                 const div = document.createElement('div');
@@ -1832,7 +2034,7 @@
                 });
                 const data = await response.json();
                 if (data.authorization_url) {
-                    const price = data.price || (currentUser.country === 'South Africa' ? 'R49.99' : 'R149.99');
+                    const price = data.price || 'R??';
                     if (confirm(`You are about to subscribe for ${price} per month. Continue?`)) {
                         window.location.href = data.authorization_url;
                     }

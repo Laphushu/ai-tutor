@@ -230,8 +230,11 @@ app.post("/chat", async (req, res) => {
       [userId]
     );
 
+    // Determine level for AI
+    const level = (user.grade && user.grade !== 'College') ? `Grade ${user.grade}` : 'College / University';
+
     const systemPrompt = `
-You are Professor Synapse, a warm and patient teacher.
+You are Leago, a warm and patient AI tutor.
 
 Teaching style:
 1. Greet the student warmly.
@@ -243,7 +246,7 @@ Teaching style:
 7. Praise correct answers.
 
 Student: ${user.name}
-Grade: ${user.grade || 'Not set'}
+Level: ${level}
 Country: ${user.country}`;
 
     const history = [{ role: "system", content: systemPrompt }];
@@ -340,9 +343,9 @@ app.post("/create-payment", async (req, res) => {
   }
 
   try {
-    // Get user details (including country)
+    // Get user details (including country and grade)
     const userResult = await db.query(
-      `SELECT name, country FROM users WHERE userId = $1`,
+      `SELECT name, country, grade FROM users WHERE userId = $1`,
       [userId]
     );
     const user = userResult.rows[0];
@@ -350,14 +353,30 @@ app.post("/create-payment", async (req, res) => {
       return res.status(404).json({ error: "User not found" });
     }
 
-    // ===== COUNTRY-SPECIFIC PRICING =====
-    // South Africa: R49.99 | Other countries: R149.99
-    let amount = 14999; // Default: R149.99 (international)
+    // ===== PRICING: Based on Country + Level =====
+    let amount = 14999; // default international high school
     let priceDisplay = 'R149.99';
-    
-    if (user.country === 'South Africa') {
-      amount = 4999; // R49.99 for South Africa
-      priceDisplay = 'R49.99';
+
+    const isCollege = (user.grade === 'College' || user.grade === 'Tertiary');
+    const isSouthAfrica = (user.country === 'South Africa');
+
+    if (isCollege) {
+      if (isSouthAfrica) {
+        amount = 19999; // R199.99 for SA college
+        priceDisplay = 'R199.99';
+      } else {
+        amount = 29999; // R299.99 for international college
+        priceDisplay = 'R299.99';
+      }
+    } else {
+      // High School
+      if (isSouthAfrica) {
+        amount = 4999; // R49.99 for SA high school
+        priceDisplay = 'R49.99';
+      } else {
+        amount = 14999; // R149.99 for international high school
+        priceDisplay = 'R149.99';
+      }
     }
 
     // Initialize Paystack transaction
@@ -368,6 +387,7 @@ app.post("/create-payment", async (req, res) => {
       metadata: { 
         userId: userId,
         country: user.country,
+        grade: user.grade || 'High School',
         price: amount / 100
       },
       callback_url: `${process.env.PAYSTACK_CALLBACK_URL || 'https://synapses-uwh1.onrender.com'}/payment-callback`,
@@ -481,6 +501,6 @@ app.post("/paystack-webhook", express.json(), async (req, res) => {
 // ================= START =================
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
-  console.log("✅ Synapse AI Tutor running on port " + PORT);
-  console.log("💰 Country-specific pricing: SA R49.99 | International R149.99");
+  console.log("✅ Leago AI Tutor running on port " + PORT);
+  console.log("💰 Pricing: SA HS R49.99 | SA College R199.99 | Intl HS R149.99 | Intl College R299.99");
 });
