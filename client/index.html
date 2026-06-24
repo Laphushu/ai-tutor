@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Synapse — AI Tutor</title>
+    <title>Synapse — AI Tutor for Grade 10–12</title>
     <style>
         /* ===== RESET & BASE ===== */
         * {
@@ -18,13 +18,200 @@
             min-height: 100vh;
         }
 
-        /* ===== AUTH CARD ===== */
-        .auth-container {
+        /* ===== HERO SECTION ===== */
+        .hero {
+            background: linear-gradient(135deg, #0b1120 0%, #1a1a3e 100%);
+            padding: 60px 20px 80px;
+            text-align: center;
+            color: white;
+        }
+
+        .hero .logo {
+            font-size: 2.8rem;
+            font-weight: 800;
+            letter-spacing: -1px;
+        }
+
+        .hero .logo span {
+            background: linear-gradient(135deg, #818cf8, #a855f7);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            font-weight: 700;
+            margin: 20px 0 12px;
+            line-height: 1.2;
+        }
+
+        .hero p {
+            font-size: 1.25rem;
+            color: #c4b5d4;
+            max-width: 700px;
+            margin: 0 auto 30px;
+            line-height: 1.6;
+        }
+
+        .hero .badge {
+            display: inline-block;
+            background: rgba(99, 102, 241, 0.2);
+            border: 1px solid rgba(99, 102, 241, 0.4);
+            padding: 6px 20px;
+            border-radius: 30px;
+            font-size: 0.9rem;
+            color: #818cf8;
+            margin-bottom: 20px;
+        }
+
+        .hero .cta-group {
             display: flex;
             justify-content: center;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        .hero .btn-primary {
+            padding: 16px 40px;
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            color: white;
+            border: none;
+            border-radius: 14px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .hero .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 32px rgba(99, 102, 241, 0.35);
+        }
+
+        .hero .btn-secondary {
+            padding: 16px 40px;
+            background: transparent;
+            color: white;
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 14px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .hero .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: rgba(255, 255, 255, 0.4);
+        }
+
+        /* ===== FEATURES SECTION ===== */
+        .features {
+            max-width: 1100px;
+            margin: -40px auto 40px;
+            padding: 0 20px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 24px;
+        }
+
+        .feature-card {
+            background: white;
+            padding: 28px 24px;
+            border-radius: 20px;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.06);
+            text-align: center;
+            transition: transform 0.2s;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-6px);
+        }
+
+        .feature-card .icon {
+            font-size: 2.8rem;
+            display: block;
+            margin-bottom: 12px;
+        }
+
+        .feature-card h3 {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #0b1120;
+            margin-bottom: 6px;
+        }
+
+        .feature-card p {
+            font-size: 0.95rem;
+            color: #6b7280;
+            line-height: 1.5;
+        }
+
+        /* ===== STATUS BAR ===== */
+        .status-bar {
+            max-width: 1100px;
+            margin: 0 auto 40px;
+            padding: 0 20px;
+            text-align: center;
+        }
+
+        .status-bar .status {
+            display: inline-flex;
             align-items: center;
-            min-height: 100vh;
+            gap: 10px;
+            background: #d1fae5;
+            color: #065f46;
+            padding: 10px 24px;
+            border-radius: 30px;
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        .status-bar .status .dot {
+            width: 10px;
+            height: 10px;
+            background: #22c55e;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%,
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+            50% {
+                opacity: 0.6;
+                transform: scale(0.9);
+            }
+        }
+
+        /* ============================================================ */
+        /* AUTH CARD (Overlay) */
+        /* ============================================================ */
+        .auth-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(8px);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
             padding: 20px;
+        }
+
+        .auth-overlay.active {
+            display: flex;
         }
 
         .auth-card {
@@ -33,34 +220,53 @@
             padding: 40px 36px;
             max-width: 420px;
             width: 100%;
-            box-shadow: 0 24px 80px rgba(0, 0, 0, 0.08);
+            box-shadow: 0 24px 80px rgba(0, 0, 0, 0.2);
+            position: relative;
+            max-height: 90vh;
+            overflow-y: auto;
         }
 
-        .auth-card .logo {
+        .auth-card .close-btn {
+            position: absolute;
+            top: 16px;
+            right: 20px;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #9ca3af;
+            transition: color 0.2s;
+        }
+
+        .auth-card .close-btn:hover {
+            color: #0b1120;
+        }
+
+        .auth-card .logo-sm {
             text-align: center;
-            margin-bottom: 24px;
+            margin-bottom: 20px;
         }
 
-        .auth-card .logo h1 {
-            font-size: 2.2rem;
+        .auth-card .logo-sm h2 {
+            font-size: 1.6rem;
             font-weight: 800;
             color: #0b1120;
         }
 
-        .auth-card .logo h1 span {
+        .auth-card .logo-sm h2 span {
             background: linear-gradient(135deg, #6366f1, #a855f7);
             -webkit-background-clip: text;
             background-clip: text;
             -webkit-text-fill-color: transparent;
         }
 
-        .auth-card .logo p {
+        .auth-card .logo-sm p {
             color: #6b7280;
-            font-size: 0.95rem;
+            font-size: 0.9rem;
         }
 
-        .auth-card h2 {
-            font-size: 1.4rem;
+        .auth-card h3 {
+            font-size: 1.3rem;
             font-weight: 700;
             color: #0b1120;
             margin-bottom: 4px;
@@ -182,7 +388,7 @@
         }
 
         /* ============================================================ */
-        /* DASHBOARD STYLES */
+        /* DASHBOARD (Logged in) */
         /* ============================================================ */
         .dashboard {
             display: none;
@@ -622,7 +828,22 @@
             color: #6b7280;
         }
 
+        /* ============================================================ */
+        /* RESPONSIVE */
+        /* ============================================================ */
         @media (max-width: 640px) {
+            .hero h1 {
+                font-size: 2rem;
+            }
+            .hero p {
+                font-size: 1rem;
+            }
+            .features {
+                grid-template-columns: 1fr 1fr;
+            }
+            .auth-card {
+                padding: 28px 20px;
+            }
             .top-nav {
                 padding: 12px 16px;
                 flex-direction: column;
@@ -654,23 +875,93 @@
                 padding: 14px;
             }
         }
+
+        @media (max-width: 480px) {
+            .features {
+                grid-template-columns: 1fr;
+            }
+            .hero .cta-group {
+                flex-direction: column;
+                align-items: center;
+            }
+            .hero .btn-primary,
+            .hero .btn-secondary {
+                width: 100%;
+                max-width: 280px;
+            }
+        }
     </style>
 </head>
 <body>
 
     <!-- ============================================================ -->
-    <!-- AUTH CONTAINER (Login/Signup) -->
+    <!-- HERO SECTION -->
     <!-- ============================================================ -->
-    <div class="auth-container" id="authContainer">
+    <section class="hero">
+        <div class="logo">🧠 <span>Synapse</span></div>
+        <div class="badge">✦ Available Now</div>
+        <h1>Learn Mathematics &amp; English with AI</h1>
+        <p>
+            Your personal AI tutor for Grades 10–12. Get step‑by‑step explanations,
+            exam preparation, and unlimited practice — all powered by artificial intelligence.
+        </p>
+        <div class="cta-group">
+            <a class="btn-primary" onclick="openAuth('login')">Get Started — It's Free</a>
+            <a class="btn-secondary" onclick="document.querySelector('.features').scrollIntoView({behavior:'smooth'})">Learn More ↓</a>
+        </div>
+    </section>
+
+    <!-- ============================================================ -->
+    <!-- STATUS BAR -->
+    <!-- ============================================================ -->
+    <div class="status-bar">
+        <div class="status">
+            <span class="dot"></span>
+            Fully operational — start learning now
+        </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- FEATURES -->
+    <!-- ============================================================ -->
+    <section class="features" id="features">
+        <div class="feature-card">
+            <span class="icon">📐</span>
+            <h3>Mathematics &amp; English</h3>
+            <p>Master core subjects with AI‑powered explanations and practice problems.</p>
+        </div>
+        <div class="feature-card">
+            <span class="icon">🎯</span>
+            <h3>Grades 10–12 Support</h3>
+            <p>Curriculum‑aligned content for high school learners preparing for exams.</p>
+        </div>
+        <div class="feature-card">
+            <span class="icon">📚</span>
+            <h3>Step‑by‑Step Exam Prep</h3>
+            <p>Break down complex topics into manageable steps with guided practice.</p>
+        </div>
+        <div class="feature-card">
+            <span class="icon">🧠</span>
+            <h3>AI Tutor — Always On</h3>
+            <p>Get personalised help anytime, anywhere. Your tutor never sleeps.</p>
+        </div>
+    </section>
+
+    <!-- ============================================================ -->
+    <!-- AUTH OVERLAY (Login / Signup) -->
+    <!-- ============================================================ -->
+    <div class="auth-overlay" id="authOverlay">
         <div class="auth-card">
-            <div class="logo">
-                <h1>🧠 <span>Synapse</span></h1>
+            <button class="close-btn" onclick="closeAuth()">✕</button>
+
+            <div class="logo-sm">
+                <h2>🧠 <span>Synapse</span></h2>
                 <p>Your AI Tutor</p>
             </div>
 
             <!-- Login -->
             <div id="loginPage">
-                <h2>Welcome back</h2>
+                <h3>Welcome back</h3>
                 <p class="sub">Log in to continue learning.</p>
                 <div class="field">
                     <label>Email</label>
@@ -690,7 +981,7 @@
 
             <!-- Signup -->
             <div id="signupPage" style="display:none;">
-                <h2>Create account</h2>
+                <h3>Create account</h3>
                 <p class="sub">Join Synapse and start learning.</p>
                 <div class="field">
                     <label>Full name</label>
@@ -758,7 +1049,7 @@
             </div>
         </nav>
 
-        <!-- ===== PAGE: GRADE SELECTION (ONLY 8–12) ===== -->
+        <!-- ===== PAGE: GRADE SELECTION (8–12) ===== -->
         <div class="page-section active" id="page-grades">
             <div class="page-header">
                 <h2>📚 Select Your Grade</h2>
@@ -1133,8 +1424,21 @@
         };
 
         // ================================================================
-        //  AUTH FUNCTIONS
+        //  AUTH UI
         // ================================================================
+        function openAuth(page) {
+            document.getElementById('authOverlay').classList.add('active');
+            if (page === 'signup') showSignup();
+            else showLogin();
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeAuth() {
+            document.getElementById('authOverlay').classList.remove('active');
+            document.body.style.overflow = '';
+            clearErrors();
+        }
+
         function showSignup() {
             document.getElementById('loginPage').style.display = 'none';
             document.getElementById('signupPage').style.display = 'block';
@@ -1177,6 +1481,9 @@
             }
         }
 
+        // ================================================================
+        //  AUTH: LOGIN
+        // ================================================================
         async function login() {
             const email = document.getElementById('loginEmail').value.trim();
             const password = document.getElementById('loginPassword').value.trim();
@@ -1201,8 +1508,11 @@
                     localStorage.setItem('synapse_user', JSON.stringify(data.user));
                     showSuccess('loginSuccess', 'Login successful!');
                     setTimeout(() => {
-                        document.getElementById('authContainer').style.display = 'none';
+                        closeAuth();
                         document.getElementById('dashboard').classList.add('active');
+                        document.querySelector('.hero').style.display = 'none';
+                        document.querySelector('.features').style.display = 'none';
+                        document.querySelector('.status-bar').style.display = 'none';
                         initDashboard(data.user);
                     }, 500);
                 }
@@ -1213,6 +1523,9 @@
             }
         }
 
+        // ================================================================
+        //  AUTH: SIGNUP
+        // ================================================================
         async function signup() {
             const name = document.getElementById('signupName').value.trim();
             const email = document.getElementById('signupEmail').value.trim();
@@ -1452,34 +1765,24 @@
         }
 
         // ================================================================
-        //  PROFESSIONAL VOICE – CLEANS ALL UNNECESSARY SYMBOLS
+        //  VOICE
         // ================================================================
         function speakText(text) {
             if (!('speechSynthesis' in window)) return;
-
             let clean = text
                 .replace(/[\\*\/_\-~#`|]/g, ' ')
                 .replace(/[📚🎯✏️🤔💡✅❌]/g, '')
                 .replace(/\s+/g, ' ')
                 .trim();
-
-            if (clean.length > 300) {
-                clean = clean.substring(0, 300) + '...';
-            }
-
+            if (clean.length > 300) clean = clean.substring(0, 300) + '...';
             window.speechSynthesis.cancel();
-
-            const utterance = new SpeechSynthesisUtterance(clean);
-            utterance.lang = 'en-US';
-            utterance.rate = 0.9;
-            utterance.pitch = 1.0;
-            utterance.volume = 1;
-
+            const u = new SpeechSynthesisUtterance(clean);
+            u.lang = 'en-US';
+            u.rate = 0.9;
             const voices = window.speechSynthesis.getVoices();
             const preferred = voices.find(v => v.lang.includes('en') && (v.name.includes('Google') || v.name.includes('Natural')));
-            if (preferred) utterance.voice = preferred;
-
-            window.speechSynthesis.speak(utterance);
+            if (preferred) u.voice = preferred;
+            window.speechSynthesis.speak(u);
         }
 
         // ================================================================
@@ -1490,73 +1793,45 @@
                 const res = await fetch('/subscription-status/' + currentUser.id);
                 const data = await res.json();
                 const badge = document.getElementById('subscriptionBadge');
-                const subBtn = document.getElementById('subscribeBtn');
-
-                let statusText = '';
-                let statusClass = '';
-                let btnText = 'Subscribe';
-                let btnDisplay = 'inline-block';
-
+                let statusText = '',
+                    statusClass = '',
+                    btnDisplay = 'inline-block';
                 if (data.status === 'trial') {
                     statusClass = 'sub-trial';
                     statusText = `Trial • ${data.daysRemaining}d left`;
-                    btnText = 'Subscribe';
-                    btnDisplay = 'inline-block';
                 } else if (data.status === 'active') {
                     statusClass = 'sub-active';
                     statusText = 'Premium ✅';
-                    btnText = 'Renew';
                     btnDisplay = 'none';
                 } else {
                     statusClass = 'sub-expired';
                     statusText = 'Expired';
-                    btnText = 'Renew';
-                    btnDisplay = 'inline-block';
                 }
-
                 badge.innerHTML = `
                     <span class="sub-badge ${statusClass}">${statusText}</span>
                     <button id="subscribeBtn" onclick="subscribe()" style="
                         background: linear-gradient(135deg, #6366f1, #8b5cf6);
-                        color: white;
-                        border: none;
-                        padding: 6px 16px;
-                        border-radius: 20px;
-                        font-weight: 600;
-                        font-size: 0.8rem;
-                        cursor: pointer;
-                        font-family: inherit;
+                        color: white; border: none; padding: 6px 16px; border-radius: 20px;
+                        font-weight: 600; font-size: 0.8rem; cursor: pointer; font-family: inherit;
                         display: ${btnDisplay};
-                    ">${btnText}</button>
+                    ">${data.status === 'active' ? 'Renew' : 'Subscribe'}</button>
                 `;
-            } catch (err) {
-                console.error('Subscription check error:', err);
-            }
+            } catch (err) { console.error('Subscription check error:', err); }
         }
 
         // ================================================================
         //  PAYMENT: SUBSCRIBE
         // ================================================================
         async function subscribe() {
-            if (!currentUser) {
-                alert('Please log in first.');
-                return;
-            }
-
+            if (!currentUser) { alert('Please log in first.'); return; }
             try {
                 const response = await fetch('/create-payment', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        userId: currentUser.id,
-                        email: currentUser.email
-                    })
+                    body: JSON.stringify({ userId: currentUser.id, email: currentUser.email })
                 });
-
                 const data = await response.json();
-
                 if (data.authorization_url) {
-                    // Show price confirmation
                     const price = data.price || (currentUser.country === 'South Africa' ? 'R49.99' : 'R149.99');
                     if (confirm(`You are about to subscribe for ${price} per month. Continue?`)) {
                         window.location.href = data.authorization_url;
@@ -1577,9 +1852,9 @@
             if (confirm('Are you sure you want to logout?')) {
                 localStorage.removeItem('synapse_user');
                 document.getElementById('dashboard').classList.remove('active');
-                document.getElementById('authContainer').style.display = 'flex';
-                document.getElementById('loginPage').style.display = 'block';
-                document.getElementById('signupPage').style.display = 'none';
+                document.querySelector('.hero').style.display = 'block';
+                document.querySelector('.features').style.display = 'grid';
+                document.querySelector('.status-bar').style.display = 'block';
                 document.getElementById('loginEmail').value = '';
                 document.getElementById('loginPassword').value = '';
                 clearErrors();
@@ -1594,13 +1869,37 @@
             if (stored) {
                 try {
                     const user = JSON.parse(stored);
-                    document.getElementById('authContainer').style.display = 'none';
+                    document.querySelector('.hero').style.display = 'none';
+                    document.querySelector('.features').style.display = 'none';
+                    document.querySelector('.status-bar').style.display = 'none';
                     document.getElementById('dashboard').classList.add('active');
                     initDashboard(user);
-                } catch (e) {
-                    // invalid stored data, show login
-                }
+                } catch (e) { /* invalid stored data, show hero */ }
             }
+
+            // Enter key support
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter') {
+                    if (document.getElementById('loginPage').style.display !== 'none' &&
+                        document.getElementById('authOverlay').classList.contains('active')) {
+                        login();
+                    }
+                    if (document.getElementById('signupPage').style.display !== 'none' &&
+                        document.getElementById('authOverlay').classList.contains('active')) {
+                        signup();
+                    }
+                }
+            });
+
+            // Close auth overlay on Escape
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape') closeAuth();
+            });
+
+            // Close auth overlay on click outside
+            document.getElementById('authOverlay').addEventListener('click', function(e) {
+                if (e.target === this) closeAuth();
+            });
         });
     </script>
 
