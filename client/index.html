@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Leago — AI Tutor</title>
     <style>
-        /* ===== RESET & BASE ===== */
         * {
             margin: 0;
             padding: 0;
@@ -13,12 +12,11 @@
         }
 
         body {
-            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            font-family: 'Segoe UI', system-ui, sans-serif;
             background: #f0f4f8;
             min-height: 100vh;
         }
 
-        /* ===== HERO SECTION ===== */
         .hero {
             background: linear-gradient(135deg, #0b1120 0%, #1a1a3e 100%);
             padding: 60px 20px 80px;
@@ -29,7 +27,6 @@
         .hero .logo {
             font-size: 2.8rem;
             font-weight: 800;
-            letter-spacing: -1px;
         }
 
         .hero .logo span {
@@ -43,7 +40,6 @@
             font-size: 3rem;
             font-weight: 700;
             margin: 20px 0 12px;
-            line-height: 1.2;
         }
 
         .hero p {
@@ -51,7 +47,6 @@
             color: #c4b5d4;
             max-width: 700px;
             margin: 0 auto 30px;
-            line-height: 1.6;
         }
 
         .hero .badge {
@@ -81,9 +76,9 @@
             font-size: 1.1rem;
             font-weight: 700;
             cursor: pointer;
-            transition: transform 0.2s, box-shadow 0.2s;
             text-decoration: none;
             display: inline-block;
+            transition: transform 0.2s, box-shadow 0.2s;
         }
 
         .hero .btn-primary:hover {
@@ -100,9 +95,9 @@
             font-size: 1.1rem;
             font-weight: 700;
             cursor: pointer;
-            transition: all 0.2s;
             text-decoration: none;
             display: inline-block;
+            transition: all 0.2s;
         }
 
         .hero .btn-secondary:hover {
@@ -110,7 +105,6 @@
             border-color: rgba(255, 255, 255, 0.4);
         }
 
-        /* ===== FEATURES SECTION ===== */
         .features {
             max-width: 1100px;
             margin: -40px auto 40px;
@@ -152,7 +146,6 @@
             line-height: 1.5;
         }
 
-        /* ===== STATUS BAR ===== */
         .status-bar {
             max-width: 1100px;
             margin: 0 auto 40px;
@@ -192,9 +185,6 @@
             }
         }
 
-        /* ============================================================ */
-        /* AUTH CARD (Overlay) */
-        /* ============================================================ */
         .auth-overlay {
             display: none;
             position: fixed;
@@ -235,7 +225,6 @@
             font-size: 1.5rem;
             cursor: pointer;
             color: #9ca3af;
-            transition: color 0.2s;
         }
 
         .auth-card .close-btn:hover {
@@ -387,9 +376,6 @@
             }
         }
 
-        /* ============================================================ */
-        /* DASHBOARD (Logged in) */
-        /* ============================================================ */
         .dashboard {
             display: none;
             max-width: 1100px;
@@ -837,9 +823,75 @@
             color: #6b7280;
         }
 
-        /* ============================================================ */
-        /* FOOTER (added) */
-        /* ============================================================ */
+        .info-page {
+            display: none;
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 40px 36px;
+            background: white;
+            border-radius: 28px;
+            box-shadow: 0 24px 80px rgba(0, 0, 0, 0.08);
+            line-height: 1.6;
+            color: #0b1120;
+        }
+
+        .info-page.active {
+            display: block;
+        }
+
+        .info-page h1 {
+            font-size: 2rem;
+            margin-bottom: 8px;
+        }
+
+        .info-page h2 {
+            font-size: 1.3rem;
+            margin-top: 28px;
+            margin-bottom: 8px;
+        }
+
+        .info-page a {
+            color: #6366f1;
+        }
+
+        .info-page .back-link {
+            display: inline-block;
+            margin-top: 24px;
+            font-weight: 600;
+            color: #6366f1;
+            cursor: pointer;
+        }
+
+        .info-page .back-link:hover {
+            text-decoration: underline;
+        }
+
+        .info-page ul {
+            padding-left: 24px;
+        }
+
+        .info-page input,
+        .info-page textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            font-size: 1rem;
+            margin: 6px 0 16px;
+            font-family: inherit;
+        }
+
+        .info-page button {
+            padding: 14px 28px;
+            background: #6366f1;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: 700;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+
         .site-footer {
             background: #0b1120;
             color: #9ca3af;
@@ -868,6 +920,7 @@
             font-size: 0.9rem;
             padding: 4px 0;
             transition: color 0.2s;
+            cursor: pointer;
         }
 
         .site-footer .inner a:hover {
@@ -883,9 +936,6 @@
             font-size: 0.85rem;
         }
 
-        /* ============================================================ */
-        /* RESPONSIVE */
-        /* ============================================================ */
         @media (max-width: 640px) {
             .hero h1 {
                 font-size: 2rem;
@@ -929,6 +979,13 @@
                 flex: 1;
                 padding: 14px;
             }
+            .info-page {
+                padding: 24px 20px;
+                margin: 20px 16px;
+            }
+            .info-page h1 {
+                font-size: 1.6rem;
+            }
         }
 
         @media (max-width: 480px) {
@@ -949,26 +1006,19 @@
 </head>
 <body>
 
-    <!-- ============================================================ -->
-    <!-- HERO SECTION -->
-    <!-- ============================================================ -->
+    <!-- ===== HERO ===== -->
     <section class="hero" id="heroSection">
         <div class="logo">🧠 <span>Leago</span></div>
         <div class="badge">✦ Available Now</div>
         <h1>Learn with AI — High School &amp; College</h1>
-        <p>
-            Your personal AI tutor for Grades 10–12 and College. Get step‑by‑step explanations,
-            exam preparation, and unlimited practice — all powered by artificial intelligence.
-        </p>
+        <p>Your personal AI tutor for Grades 10–12 and College. Get step‑by‑step explanations, exam preparation, and unlimited practice — all powered by artificial intelligence.</p>
         <div class="cta-group">
             <a class="btn-primary" onclick="openAuth('login')">Get Started — It's Free</a>
             <a class="btn-secondary" onclick="document.querySelector('.features').scrollIntoView({behavior:'smooth'})">Learn More ↓</a>
         </div>
     </section>
 
-    <!-- ============================================================ -->
-    <!-- STATUS BAR -->
-    <!-- ============================================================ -->
+    <!-- ===== STATUS BAR ===== -->
     <div class="status-bar">
         <div class="status">
             <span class="dot"></span>
@@ -976,9 +1026,7 @@
         </div>
     </div>
 
-    <!-- ============================================================ -->
-    <!-- FEATURES -->
-    <!-- ============================================================ -->
+    <!-- ===== FEATURES ===== -->
     <section class="features" id="featuresSection">
         <div class="feature-card">
             <span class="icon">📐</span>
@@ -1002,19 +1050,114 @@
         </div>
     </section>
 
-    <!-- ============================================================ -->
-    <!-- AUTH OVERLAY (Login / Signup) -->
-    <!-- ============================================================ -->
+    <!-- ===== INFO PAGES ===== -->
+    <div class="info-page" id="page-privacy">
+        <h1>Privacy Policy</h1>
+        <p><strong>Last updated:</strong> June 2026</p>
+        <p>At Leago, we take your privacy seriously. This Privacy Policy explains how we collect, use, and protect your personal information.</p>
+        <h2>1. Information We Collect</h2>
+        <ul>
+            <li><strong>Account Information:</strong> Name, email address, and country.</li>
+            <li><strong>Usage Data:</strong> How you interact with our platform (chat history, subject preferences, etc.).</li>
+            <li><strong>Device Information:</strong> IP address, browser type, and device type.</li>
+        </ul>
+        <h2>2. How We Use Your Information</h2>
+        <ul>
+            <li>To provide and improve our AI tutor services.</li>
+            <li>To communicate with you about updates, promotions, and support.</li>
+            <li>To analyse usage and improve user experience.</li>
+        </ul>
+        <h2>3. Cookies and Tracking</h2>
+        <p>We use cookies to enhance your experience and for analytics. Google AdSense may also use cookies to serve personalised ads. You can manage your cookie preferences in your browser settings.</p>
+        <h2>4. Third-Party Services</h2>
+        <ul>
+            <li><strong>Google AdSense:</strong> We use AdSense to display ads. Google collects data to serve relevant ads. <a href="https://policies.google.com/privacy" target="_blank">Learn more</a>.</li>
+            <li><strong>Paystack:</strong> We use Paystack for payment processing. <a href="https://paystack.com/privacy" target="_blank">View Paystack's privacy policy</a>.</li>
+            <li><strong>Render:</strong> We host on Render. <a href="https://render.com/privacy" target="_blank">View Render's privacy policy</a>.</li>
+        </ul>
+        <h2>5. Your Rights</h2>
+        <ul>
+            <li>Access, update, or delete your personal data.</li>
+            <li>Opt out of marketing communications.</li>
+            <li>Request a copy of the data we hold about you.</li>
+        </ul>
+        <h2>6. Contact Us</h2>
+        <p>If you have any questions, contact us at: <a href="mailto:laphushusamuel3@gmail.com">laphushusamuel3@gmail.com</a></p>
+        <span class="back-link" onclick="showInfoPage('')">← Back to Leago</span>
+    </div>
+
+    <div class="info-page" id="page-about">
+        <h1>About Leago</h1>
+        <p><strong>Leago</strong> is an AI-powered educational platform designed to help South African students master their subjects.</p>
+        <h2>Our Mission</h2>
+        <p>To make quality education accessible to every learner in South Africa, using the power of artificial intelligence.</p>
+        <h2>Our Story</h2>
+        <p>Leago was founded with a simple belief: every student deserves a personal tutor. But not everyone can afford one. That's why we built Leago — an AI tutor that's available 24/7, affordable, and personalised to each student's needs.</p>
+        <h2>Our Team</h2>
+        <p><strong>Laphushu Tshukudu</strong> — Founder &amp; CEO. Passionate about education and technology.</p>
+        <h2>Contact</h2>
+        <p>Email: <a href="mailto:laphushusamuel3@gmail.com">laphushusamuel3@gmail.com</a></p>
+        <span class="back-link" onclick="showInfoPage('')">← Back to Leago</span>
+    </div>
+
+    <div class="info-page" id="page-contact">
+        <h1>Contact Us</h1>
+        <p>Have questions, feedback, or need help? We'd love to hear from you.</p>
+        <form method="POST" action="/submit-contact">
+            <label>Name</label>
+            <input type="text" name="name" required />
+            <label>Email</label>
+            <input type="email" name="email" required />
+            <label>Message</label>
+            <textarea name="message" rows="5" required></textarea>
+            <button type="submit">Send Message</button>
+        </form>
+        <p style="margin-top:16px;">Or email us directly: <a href="mailto:laphushusamuel3@gmail.com">laphushusamuel3@gmail.com</a></p>
+        <span class="back-link" onclick="showInfoPage('')">← Back to Leago</span>
+    </div>
+
+    <div class="info-page" id="page-tos">
+        <h1>Terms of Service</h1>
+        <p><strong>Last updated:</strong> June 2026</p>
+        <p>Welcome to Leago. By using our platform, you agree to the following terms.</p>
+        <h2>1. Acceptance of Terms</h2>
+        <p>By creating an account or using Leago, you agree to be bound by these Terms of Service.</p>
+        <h2>2. Account Responsibility</h2>
+        <p>You are responsible for maintaining the security of your account. Leago is not liable for any loss or damage arising from your failure to protect your account.</p>
+        <h2>3. Use of the Platform</h2>
+        <ul>
+            <li>You may use Leago for personal, educational purposes only.</li>
+            <li>You may not use the platform for any illegal or unauthorised purpose.</li>
+            <li>You may not attempt to reverse-engineer or exploit the platform.</li>
+        </ul>
+        <h2>4. Subscription and Payments</h2>
+        <ul>
+            <li>Leago offers a free 3-day trial.</li>
+            <li>After the trial, a subscription is required to continue using the service.</li>
+            <li>Payments are processed securely through Paystack.</li>
+            <li>You may cancel your subscription at any time via your account settings.</li>
+        </ul>
+        <h2>5. Intellectual Property</h2>
+        <p>All content on Leago, including the AI tutor, logos, and educational materials, is the property of Leago and protected by copyright laws.</p>
+        <h2>6. Disclaimer</h2>
+        <p>Leago is provided "as is" without warranties of any kind. While we strive for accuracy, the AI tutor may occasionally provide incorrect information. Use the platform as a learning aid, not as a sole source of education.</p>
+        <h2>7. Limitation of Liability</h2>
+        <p>To the fullest extent permitted by law, Leago shall not be liable for any indirect, incidental, or consequential damages arising from your use of the platform.</p>
+        <h2>8. Changes to These Terms</h2>
+        <p>We may update these terms from time to time. We will notify you of significant changes.</p>
+        <h2>9. Contact</h2>
+        <p>If you have any questions, contact us at: <a href="mailto:laphushusamuel3@gmail.com">laphushusamuel3@gmail.com</a></p>
+        <span class="back-link" onclick="showInfoPage('')">← Back to Leago</span>
+    </div>
+
+    <!-- ===== AUTH OVERLAY ===== -->
     <div class="auth-overlay" id="authOverlay">
         <div class="auth-card">
             <button class="close-btn" onclick="closeAuth()">✕</button>
-
             <div class="logo-sm">
                 <h2>🧠 <span>Leago</span></h2>
                 <p>Your AI Tutor</p>
             </div>
-
-            <!-- Login -->
             <div id="loginPage">
                 <h3>Welcome back</h3>
                 <p class="sub">Log in to continue learning.</p>
@@ -1033,8 +1176,6 @@
                     Don't have an account? <a onclick="showSignup()">Sign up</a>
                 </div>
             </div>
-
-            <!-- Signup -->
             <div id="signupPage" style="display:none;">
                 <h3>Create account</h3>
                 <p class="sub">Join Leago and start learning.</p>
@@ -1087,12 +1228,8 @@
         </div>
     </div>
 
-    <!-- ============================================================ -->
-    <!-- DASHBOARD (Hidden until logged in) -->
-    <!-- ============================================================ -->
+    <!-- ===== DASHBOARD ===== -->
     <div class="dashboard" id="dashboard">
-
-        <!-- Top Navigation -->
         <nav class="top-nav">
             <a href="#" class="logo">🧠 <span>Leago</span></a>
             <div class="user-info">
@@ -1104,7 +1241,6 @@
             </div>
         </nav>
 
-        <!-- ===== PAGE: GRADE SELECTION (10–12 + College) ===== -->
         <div class="page-section active" id="page-grades">
             <div class="page-header">
                 <h2>📚 Select Your Level</h2>
@@ -1114,7 +1250,6 @@
             <button class="btn-confirm" id="gradeConfirmBtn" onclick="confirmGrade()">Continue to Subjects →</button>
         </div>
 
-        <!-- ===== PAGE: SUBJECTS ===== -->
         <div class="page-section" id="page-subjects">
             <div class="page-header">
                 <h2>📚 Your Subjects</h2>
@@ -1123,7 +1258,6 @@
             <div class="subject-grid" id="subjectGrid"></div>
         </div>
 
-        <!-- ===== PAGE: CLASSROOM ===== -->
         <div class="page-section" id="page-classroom">
             <div class="classroom-header">
                 <h2 id="classroomTitle">Subject</h2>
@@ -1133,7 +1267,6 @@
             <div class="topic-grid" id="topicGrid"></div>
         </div>
 
-        <!-- ===== PAGE: AI TUTOR (with Back Button) ===== -->
         <div class="page-section" id="page-tutor">
             <button class="back-btn" onclick="showPage('classroom')">← Back to Topics</button>
             <div class="tutor-container">
@@ -1154,13 +1287,10 @@
                 </div>
             </div>
         </div>
-
     </div>
 
-    <!-- ============================================================ -->
-    <!-- FOOTER (AdSense pages links) -->
-    <!-- ============================================================ -->
-    <footer class="site-footer">
+    <!-- ===== FOOTER ===== -->
+    <footer class="site-footer" id="siteFooter">
         <div class="inner">
             <div>
                 <h4>🧠 Leago</h4>
@@ -1168,13 +1298,13 @@
             </div>
             <div>
                 <h4>Company</h4>
-                <a href="/about">About</a>
-                <a href="/contact">Contact</a>
+                <a onclick="showInfoPage('about')">About</a>
+                <a onclick="showInfoPage('contact')">Contact</a>
             </div>
             <div>
                 <h4>Legal</h4>
-                <a href="/privacy-policy">Privacy Policy</a>
-                <a href="/tos">Terms of Service</a>
+                <a onclick="showInfoPage('privacy')">Privacy Policy</a>
+                <a onclick="showInfoPage('tos')">Terms of Service</a>
             </div>
             <div>
                 <h4>Contact</h4>
@@ -1184,9 +1314,7 @@
         <div class="bottom">&copy; 2026 Leago. All rights reserved.</div>
     </footer>
 
-    <!-- ============================================================ -->
-    <!-- JAVASCRIPT -->
-    <!-- ============================================================ -->
+    <!-- ===== JAVASCRIPT ===== -->
     <script>
         // ================================================================
         //  STATE
@@ -1196,12 +1324,38 @@
         let selectedGrade = '';
 
         // ================================================================
-        //  COUNTRY DATA (GRADES 10–12 + COLLEGE + SUBJECTS)
+        //  INFO PAGE NAVIGATION
+        // ================================================================
+        function showInfoPage(page) {
+            document.querySelectorAll('.info-page').forEach(el => el.classList.remove('active'));
+            if (!page) {
+                document.getElementById('heroSection').style.display = 'block';
+                document.getElementById('featuresSection').style.display = 'grid';
+                document.querySelector('.status-bar').style.display = 'block';
+                if (currentUser) {
+                    document.getElementById('dashboard').classList.add('active');
+                    document.getElementById('heroSection').style.display = 'none';
+                    document.getElementById('featuresSection').style.display = 'none';
+                    document.querySelector('.status-bar').style.display = 'none';
+                }
+                return;
+            }
+            document.getElementById('heroSection').style.display = 'none';
+            document.getElementById('featuresSection').style.display = 'none';
+            document.querySelector('.status-bar').style.display = 'none';
+            document.getElementById('dashboard').classList.remove('active');
+            const target = document.getElementById('page-' + page);
+            if (target) target.classList.add('active');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // ================================================================
+        //  COUNTRY DATA (SEPARATED SECONDARY & COLLEGE)
         // ================================================================
         const COUNTRY_DATA = {
             'South Africa': {
                 grades: ['10', '11', '12', 'College'],
-                subjects: {
+                secondary_subjects: {
                     'Mathematics': [
                         'Algebra – Linear Equations',
                         'Algebra – Quadratic Equations',
@@ -1276,8 +1430,9 @@
                         'South Africa\'s Provinces – Physical Features',
                         'Natural Resources – Management',
                         'Climate Change – Causes & Solutions'
-                    ],
-                    // College subjects
+                    ]
+                },
+                college_subjects: {
                     'Engineering': [
                         'Mechanical Engineering – Basics',
                         'Electrical Engineering – Circuits',
@@ -1333,7 +1488,7 @@
             },
             'United States': {
                 grades: ['10', '11', '12', 'College'],
-                subjects: {
+                secondary_subjects: {
                     'English Language Arts': [
                         'Reading Literature – Fiction Analysis',
                         'Informational Text – Close Reading',
@@ -1381,8 +1536,9 @@
                         'World Geography – Continents & Countries',
                         'Climate – Climate Zones & Change',
                         'Cartography – Map Reading'
-                    ],
-                    // College subjects (US)
+                    ]
+                },
+                college_subjects: {
                     'Engineering': [
                         'Mechanical Engineering – Thermofluids',
                         'Electrical Engineering – Signals',
@@ -1425,7 +1581,7 @@
             },
             'United Kingdom': {
                 grades: ['10', '11', '12', '13', 'College'],
-                subjects: {
+                secondary_subjects: {
                     'English': [
                         'Shakespeare – Macbeth',
                         'Poetry – Sonnets & Romantics',
@@ -1462,8 +1618,9 @@
                         'Human – Population & Settlement',
                         'UK Geography – Cities & Regions',
                         'Development – Global Inequality'
-                    ],
-                    // College subjects (UK)
+                    ]
+                },
+                college_subjects: {
                     'Engineering': [
                         'Mechanical – Design & Manufacturing',
                         'Electrical – Power & Control',
@@ -1491,7 +1648,7 @@
             },
             'China': {
                 grades: ['10', '11', '12', 'College'],
-                subjects: {
+                secondary_subjects: {
                     '语文 (Chinese)': [
                         '文言文 – 唐宋八大家',
                         '现代诗歌 – 鲁迅',
@@ -1533,8 +1690,9 @@
                         '遗传 – DNA与基因',
                         '进化 – 自然选择',
                         '生态 – 食物链'
-                    ],
-                    // College subjects (China)
+                    ]
+                },
+                college_subjects: {
                     '工程学 (Engineering)': [
                         '机械工程 – 设计',
                         '电气工程 – 电路',
@@ -1558,7 +1716,7 @@
             },
             'Australia': {
                 grades: ['10', '11', '12', 'College'],
-                subjects: {
+                secondary_subjects: {
                     'English': [
                         'Novel Study – Australian Literature',
                         'Persuasive Writing – Debates',
@@ -1591,8 +1749,9 @@
                         'Human – Population & Urbanisation',
                         'Australian Geography – States & Territories',
                         'Climate – El Niño & Climate Change'
-                    ],
-                    // College subjects (Australia)
+                    ]
+                },
+                college_subjects: {
                     'Engineering': [
                         'Civil – Structural',
                         'Mechanical – Thermodynamics',
@@ -1614,7 +1773,7 @@
             },
             'India': {
                 grades: ['10', '11', '12', 'College'],
-                subjects: {
+                secondary_subjects: {
                     'English': [
                         'Reading – Short Stories',
                         'Writing – Formal Letters',
@@ -1645,8 +1804,9 @@
                         'World History – Cold War',
                         'Geography – Climate & Vegetation',
                         'Economics – Budget & Taxation'
-                    ],
-                    // College subjects (India)
+                    ]
+                },
+                college_subjects: {
                     'Engineering': [
                         'Mechanical – Design',
                         'Electrical – Circuits',
@@ -1676,7 +1836,6 @@
             'Science': ['Biology', 'Chemistry', 'Physics', 'Earth Science'],
             'History': ['World History', 'Local History'],
             'Geography': ['Physical Geography', 'Human Geography'],
-            // College fallback
             'Engineering': ['Mechanical', 'Electrical', 'Civil'],
             'Computer Science': ['Programming', 'Algorithms', 'Databases'],
             'Business': ['Management', 'Marketing', 'Finance']
@@ -1772,6 +1931,7 @@
                         document.querySelector('.hero').style.display = 'none';
                         document.querySelector('.features').style.display = 'none';
                         document.querySelector('.status-bar').style.display = 'none';
+                        document.getElementById('siteFooter').style.display = 'block';
                         initDashboard(data.user);
                     }, 500);
                 }
@@ -1900,12 +2060,26 @@
             showSubjects();
         }
 
+        // ================================================================
+        //  SHOW SUBJECTS (Separated Logic)
+        // ================================================================
         function showSubjects() {
             const country = currentUser.country || 'South Africa';
             const data = COUNTRY_DATA[country];
-            const subjects = data ? data.subjects : DEFAULT_SUBJECTS;
 
-            const levelLabel = (currentUser.grade === 'College') ? 'College' : 'Grade ' + currentUser.grade;
+            const grade = currentUser.grade;
+            const isSecondary = ['10', '11', '12'].includes(grade);
+            let subjects = {};
+            let levelLabel = '';
+
+            if (isSecondary) {
+                subjects = data ? data.secondary_subjects : DEFAULT_SUBJECTS;
+                levelLabel = 'Secondary (Grades 10–12)';
+            } else {
+                subjects = data ? data.college_subjects : { 'College Subjects': ['General Studies'] };
+                levelLabel = 'College / Tertiary';
+            }
+
             document.getElementById('subjectsSubtitle').textContent =
                 levelLabel + ' · ' + country + ' · Select a subject to start learning.';
 
@@ -1934,7 +2108,6 @@
                 '生物 (Biology)': '🧬',
                 'Hindi': '🇮🇳',
                 'Social Studies': '🏛️',
-                // College subjects
                 'Engineering': '⚙️',
                 'Computer Science': '💻',
                 'Business & Management': '📊',
@@ -1964,7 +2137,15 @@
             document.getElementById('classroomTitle').textContent = subject;
             const country = currentUser.country || 'South Africa';
             const data = COUNTRY_DATA[country];
-            const topics = data ? data.subjects[subject] : DEFAULT_SUBJECTS[subject] || [];
+            const grade = currentUser.grade;
+            const isSecondary = ['10', '11', '12'].includes(grade);
+
+            let topics = [];
+            if (isSecondary) {
+                topics = data ? data.secondary_subjects[subject] : DEFAULT_SUBJECTS[subject] || [];
+            } else {
+                topics = data ? data.college_subjects[subject] : (DEFAULT_SUBJECTS[subject] || []);
+            }
 
             const grid = document.getElementById('topicGrid');
             const countDiv = document.getElementById('topicCount');
@@ -2153,7 +2334,6 @@
                 } catch (e) { /* invalid stored data, show hero */ }
             }
 
-            // Enter key support
             document.addEventListener('keydown', function(e) {
                 if (e.key === 'Enter') {
                     if (document.getElementById('loginPage').style.display !== 'none' &&
@@ -2167,12 +2347,10 @@
                 }
             });
 
-            // Close auth overlay on Escape
             document.addEventListener('keydown', function(e) {
                 if (e.key === 'Escape') closeAuth();
             });
 
-            // Close auth overlay on click outside
             document.getElementById('authOverlay').addEventListener('click', function(e) {
                 if (e.target === this) closeAuth();
             });
