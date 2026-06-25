@@ -11,38 +11,49 @@
             padding: 0;
             box-sizing: border-box;
         }
+
         body {
-            font-family: 'Segoe UI', system-ui, sans-serif;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
             background: #f0f4f8;
             min-height: 100vh;
         }
+
+        /* ===== HERO SECTION ===== */
         .hero {
             background: linear-gradient(135deg, #0b1120 0%, #1a1a3e 100%);
             padding: 60px 20px 80px;
             text-align: center;
             color: white;
         }
+
         .hero .logo {
             font-size: 2.8rem;
             font-weight: 800;
+            letter-spacing: -1px;
         }
+
         .hero .logo span {
             background: linear-gradient(135deg, #818cf8, #a855f7);
             -webkit-background-clip: text;
             background-clip: text;
             -webkit-text-fill-color: transparent;
         }
+
         .hero h1 {
             font-size: 3rem;
             font-weight: 700;
             margin: 20px 0 12px;
+            line-height: 1.2;
         }
+
         .hero p {
             font-size: 1.25rem;
             color: #c4b5d4;
             max-width: 700px;
             margin: 0 auto 30px;
+            line-height: 1.6;
         }
+
         .hero .badge {
             display: inline-block;
             background: rgba(99, 102, 241, 0.2);
@@ -53,12 +64,14 @@
             color: #818cf8;
             margin-bottom: 20px;
         }
+
         .hero .cta-group {
             display: flex;
             justify-content: center;
             gap: 16px;
             flex-wrap: wrap;
         }
+
         .hero .btn-primary {
             padding: 16px 40px;
             background: linear-gradient(135deg, #6366f1, #8b5cf6);
@@ -72,10 +85,12 @@
             text-decoration: none;
             display: inline-block;
         }
+
         .hero .btn-primary:hover {
             transform: translateY(-3px);
             box-shadow: 0 12px 32px rgba(99, 102, 241, 0.35);
         }
+
         .hero .btn-secondary {
             padding: 16px 40px;
             background: transparent;
@@ -89,10 +104,13 @@
             text-decoration: none;
             display: inline-block;
         }
+
         .hero .btn-secondary:hover {
             background: rgba(255, 255, 255, 0.05);
             border-color: rgba(255, 255, 255, 0.4);
         }
+
+        /* ===== FEATURES SECTION ===== */
         .features {
             max-width: 1100px;
             margin: -40px auto 40px;
@@ -101,6 +119,7 @@
             grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
             gap: 24px;
         }
+
         .feature-card {
             background: white;
             padding: 28px 24px;
@@ -109,31 +128,38 @@
             text-align: center;
             transition: transform 0.2s;
         }
+
         .feature-card:hover {
             transform: translateY(-6px);
         }
+
         .feature-card .icon {
             font-size: 2.8rem;
             display: block;
             margin-bottom: 12px;
         }
+
         .feature-card h3 {
             font-size: 1.1rem;
             font-weight: 700;
             color: #0b1120;
             margin-bottom: 6px;
         }
+
         .feature-card p {
             font-size: 0.95rem;
             color: #6b7280;
             line-height: 1.5;
         }
+
+        /* ===== STATUS BAR ===== */
         .status-bar {
             max-width: 1100px;
             margin: 0 auto 40px;
             padding: 0 20px;
             text-align: center;
         }
+
         .status-bar .status {
             display: inline-flex;
             align-items: center;
@@ -145,6 +171,7 @@
             font-weight: 600;
             font-size: 0.95rem;
         }
+
         .status-bar .status .dot {
             width: 10px;
             height: 10px;
@@ -152,9 +179,22 @@
             border-radius: 50%;
             animation: pulse 2s infinite;
         }
-        @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.6;transform:scale(0.9)} }
 
-        /* ===== AUTH OVERLAY ===== */
+        @keyframes pulse {
+            0%,
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+            50% {
+                opacity: 0.6;
+                transform: scale(0.9);
+            }
+        }
+
+        /* ============================================================ */
+        /* AUTH CARD (Overlay) */
+        /* ============================================================ */
         .auth-overlay {
             display: none;
             position: fixed;
@@ -162,25 +202,30 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0,0,0,0.5);
+            background: rgba(0, 0, 0, 0.5);
             backdrop-filter: blur(8px);
             justify-content: center;
             align-items: center;
             z-index: 1000;
             padding: 20px;
         }
-        .auth-overlay.active { display: flex; }
+
+        .auth-overlay.active {
+            display: flex;
+        }
+
         .auth-card {
             background: white;
             border-radius: 28px;
             padding: 40px 36px;
             max-width: 420px;
             width: 100%;
-            box-shadow: 0 24px 80px rgba(0,0,0,0.2);
+            box-shadow: 0 24px 80px rgba(0, 0, 0, 0.2);
             position: relative;
             max-height: 90vh;
             overflow-y: auto;
         }
+
         .auth-card .close-btn {
             position: absolute;
             top: 16px;
@@ -190,22 +235,63 @@
             font-size: 1.5rem;
             cursor: pointer;
             color: #9ca3af;
+            transition: color 0.2s;
         }
-        .auth-card .close-btn:hover { color: #0b1120; }
-        .auth-card .logo-sm { text-align: center; margin-bottom: 20px; }
-        .auth-card .logo-sm h2 { font-size: 1.6rem; font-weight: 800; color: #0b1120; }
+
+        .auth-card .close-btn:hover {
+            color: #0b1120;
+        }
+
+        .auth-card .logo-sm {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .auth-card .logo-sm h2 {
+            font-size: 1.6rem;
+            font-weight: 800;
+            color: #0b1120;
+        }
+
         .auth-card .logo-sm h2 span {
             background: linear-gradient(135deg, #6366f1, #a855f7);
             -webkit-background-clip: text;
             background-clip: text;
             -webkit-text-fill-color: transparent;
         }
-        .auth-card .logo-sm p { color: #6b7280; font-size: 0.9rem; }
-        .auth-card h3 { font-size: 1.3rem; font-weight: 700; color: #0b1120; margin-bottom: 4px; }
-        .auth-card .sub { color: #6b7280; font-size: 0.95rem; margin-bottom: 20px; }
-        .auth-card .field { margin-bottom: 16px; }
-        .auth-card .field label { display: block; font-weight: 600; font-size: 0.85rem; color: #1f2937; margin-bottom: 4px; }
-        .auth-card .field input, .auth-card .field select {
+
+        .auth-card .logo-sm p {
+            color: #6b7280;
+            font-size: 0.9rem;
+        }
+
+        .auth-card h3 {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #0b1120;
+            margin-bottom: 4px;
+        }
+
+        .auth-card .sub {
+            color: #6b7280;
+            font-size: 0.95rem;
+            margin-bottom: 20px;
+        }
+
+        .auth-card .field {
+            margin-bottom: 16px;
+        }
+
+        .auth-card .field label {
+            display: block;
+            font-weight: 600;
+            font-size: 0.85rem;
+            color: #1f2937;
+            margin-bottom: 4px;
+        }
+
+        .auth-card .field input,
+        .auth-card .field select {
             width: 100%;
             padding: 14px 16px;
             border: 2px solid #e5e7eb;
@@ -214,7 +300,13 @@
             background: #fff;
             font-family: inherit;
         }
-        .auth-card .field input:focus, .auth-card .field select:focus { outline: none; border-color: #6366f1; }
+
+        .auth-card .field input:focus,
+        .auth-card .field select:focus {
+            outline: none;
+            border-color: #6366f1;
+        }
+
         .auth-card .btn {
             width: 100%;
             padding: 15px;
@@ -227,43 +319,95 @@
             color: #fff;
             transition: transform 0.15s;
         }
-        .auth-card .btn:hover { transform: translateY(-2px); }
-        .auth-card .btn:disabled { opacity: 0.6; cursor: not-allowed; }
-        .auth-card .auth-link { text-align: center; margin-top: 16px; font-size: 0.9rem; color: #6b7280; }
-        .auth-card .auth-link a { color: #6366f1; text-decoration: none; font-weight: 600; cursor: pointer; }
-        .auth-card .auth-link a:hover { text-decoration: underline; }
-        .auth-card .error { color: #ef4444; font-size: 0.85rem; margin-top: 4px; display: none; }
-        .auth-card .error.show { display: block; }
-        .auth-card .success { color: #22c55e; font-size: 0.85rem; margin-top: 4px; display: none; }
-        .auth-card .success.show { display: block; }
+
+        .auth-card .btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .auth-card .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .auth-card .auth-link {
+            text-align: center;
+            margin-top: 16px;
+            font-size: 0.9rem;
+            color: #6b7280;
+        }
+
+        .auth-card .auth-link a {
+            color: #6366f1;
+            text-decoration: none;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .auth-card .auth-link a:hover {
+            text-decoration: underline;
+        }
+
+        .auth-card .error {
+            color: #ef4444;
+            font-size: 0.85rem;
+            margin-top: 4px;
+            display: none;
+        }
+
+        .auth-card .error.show {
+            display: block;
+        }
+
+        .auth-card .success {
+            color: #22c55e;
+            font-size: 0.85rem;
+            margin-top: 4px;
+            display: none;
+        }
+
+        .auth-card .success.show {
+            display: block;
+        }
+
         .spinner {
             display: inline-block;
             width: 20px;
             height: 20px;
-            border: 3px solid rgba(255,255,255,0.25);
+            border: 3px solid rgba(255, 255, 255, 0.25);
             border-top-color: #fff;
             border-radius: 50%;
             animation: spin 0.7s linear infinite;
             vertical-align: middle;
             margin-right: 8px;
         }
-        @keyframes spin { to { transform: rotate(360deg); } }
 
-        /* ===== DASHBOARD ===== */
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* ============================================================ */
+        /* DASHBOARD (Logged in) */
+        /* ============================================================ */
         .dashboard {
             display: none;
             max-width: 1100px;
             margin: 0 auto;
             padding: 24px 20px;
         }
-        .dashboard.active { display: block; }
+
+        .dashboard.active {
+            display: block;
+        }
+
         .top-nav {
             background: white;
             padding: 16px 32px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
             position: sticky;
             top: 0;
             z-index: 100;
@@ -272,43 +416,190 @@
             margin-bottom: 24px;
             border-radius: 16px;
         }
-        .top-nav .logo { font-size: 1.5rem; font-weight: 800; color: #0b1120; text-decoration: none; }
+
+        .top-nav .logo {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: #0b1120;
+            text-decoration: none;
+        }
+
         .top-nav .logo span {
             background: linear-gradient(135deg, #6366f1, #a855f7);
             -webkit-background-clip: text;
             background-clip: text;
             -webkit-text-fill-color: transparent;
         }
+
         .top-nav .user-info {
             display: flex;
             align-items: center;
             gap: 16px;
             flex-wrap: wrap;
         }
-        .top-nav .user-info .name { font-weight: 600; color: #0b1120; }
-        .top-nav .user-info .role { font-size: 0.8rem; color: #6b7280; background: #f3f4f6; padding: 2px 12px; border-radius: 12px; }
-        .top-nav .user-info .grade-badge { font-size: 0.8rem; color: #6366f1; background: #eef2ff; padding: 2px 12px; border-radius: 12px; font-weight: 600; }
-        .top-nav .user-info .logout-btn { background: none; border: none; color: #9ca3af; font-size: 0.85rem; cursor: pointer; padding: 6px 14px; border-radius: 8px; transition: all 0.2s; font-family: inherit; }
-        .top-nav .user-info .logout-btn:hover { background: #f3f4f6; color: #ef4444; }
-        .sub-badge { font-size: 0.7rem; padding: 3px 12px; border-radius: 12px; font-weight: 600; }
-        .sub-trial { background: #fef3c7; color: #92400e; }
-        .sub-active { background: #d1fae5; color: #065f46; }
-        .sub-expired { background: #fee2e2; color: #991b1b; }
 
-        .page-section { display: none; animation: fadeUp 0.4s ease; }
-        .page-section.active { display: block; }
-        @keyframes fadeUp { 0% { opacity:0; transform:translateY(12px) } 100% { opacity:1; transform:translateY(0) } }
+        .top-nav .user-info .name {
+            font-weight: 600;
+            color: #0b1120;
+        }
 
-        .page-header { margin-bottom: 24px; }
-        .page-header h2 { font-size: 1.8rem; font-weight: 700; color: #0b1120; }
-        .page-header p { color: #6b7280; font-size: 1rem; }
+        .top-nav .user-info .role {
+            font-size: 0.8rem;
+            color: #6b7280;
+            background: #f3f4f6;
+            padding: 2px 12px;
+            border-radius: 12px;
+        }
 
-        .level-grid, .sublevel-grid {
+        .top-nav .user-info .grade-badge {
+            font-size: 0.8rem;
+            color: #6366f1;
+            background: #eef2ff;
+            padding: 2px 12px;
+            border-radius: 12px;
+            font-weight: 600;
+        }
+
+        .top-nav .user-info .logout-btn {
+            background: none;
+            border: none;
+            color: #9ca3af;
+            font-size: 0.85rem;
+            cursor: pointer;
+            padding: 6px 14px;
+            border-radius: 8px;
+            transition: all 0.2s;
+            font-family: inherit;
+        }
+
+        .top-nav .user-info .logout-btn:hover {
+            background: #f3f4f6;
+            color: #ef4444;
+        }
+
+        .sub-badge {
+            font-size: 0.7rem;
+            padding: 3px 12px;
+            border-radius: 12px;
+            font-weight: 600;
+        }
+
+        .sub-trial {
+            background: #fef3c7;
+            color: #92400e;
+        }
+        .sub-active {
+            background: #d1fae5;
+            color: #065f46;
+        }
+        .sub-expired {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .page-section {
+            display: none;
+            animation: fadeUp 0.4s ease;
+        }
+
+        .page-section.active {
+            display: block;
+        }
+
+        @keyframes fadeUp {
+            0% {
+                opacity: 0;
+                transform: translateY(12px);
+            }
+            100% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .page-header {
+            margin-bottom: 24px;
+        }
+
+        .page-header h2 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #0b1120;
+        }
+
+        .page-header p {
+            color: #6b7280;
+            font-size: 1rem;
+        }
+
+        /* Grade Selection */
+        .grade-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            gap: 12px;
+            margin: 16px 0;
+        }
+
+        .grade-card {
+            padding: 20px 8px;
+            border: 2px solid #e5e7eb;
+            border-radius: 14px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.25s;
+            background: white;
+            font-weight: 600;
+            font-size: 1rem;
+            color: #0b1120;
+        }
+
+        .grade-card:hover {
+            border-color: #6366f1;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 24px rgba(99, 102, 241, 0.10);
+        }
+
+        .grade-card.selected {
+            border-color: #6366f1;
+            background: #eef2ff;
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
+        }
+
+        .grade-card .sub {
+            font-size: 0.7rem;
+            color: #6b7280;
+            font-weight: 400;
+            display: block;
+            margin-top: 2px;
+        }
+
+        .btn-confirm {
+            padding: 14px 40px;
+            border: none;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            color: #fff;
+            transition: transform 0.15s;
+            font-family: inherit;
+            margin-top: 16px;
+            display: none;
+        }
+
+        .btn-confirm:hover {
+            transform: translateY(-2px);
+        }
+
+        /* Subjects (hierarchy) */
+        .subject-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
             gap: 16px;
         }
-        .level-card, .sublevel-card {
+
+        .subject-card {
             background: white;
             border: 2px solid #e5e7eb;
             border-radius: 16px;
@@ -316,19 +607,28 @@
             text-align: center;
             cursor: pointer;
             transition: all 0.25s;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
         }
-        .level-card:hover, .sublevel-card:hover {
+
+        .subject-card:hover {
             border-color: #6366f1;
             transform: translateY(-4px);
-            box-shadow: 0 12px 32px rgba(99,102,241,0.12);
+            box-shadow: 0 12px 32px rgba(99, 102, 241, 0.12);
         }
-        .level-card .icon { font-size: 2.8rem; display: block; margin-bottom: 6px; }
-        .level-card .name { font-weight: 700; font-size: 1rem; color: #0b1120; }
-        .level-card .sub { font-size: 0.8rem; color: #6b7280; }
-        .sublevel-card { padding: 20px 16px; }
-        .sublevel-card .name { font-weight: 600; font-size: 1.1rem; }
 
+        .subject-card .icon {
+            font-size: 2.8rem;
+            display: block;
+            margin-bottom: 6px;
+        }
+
+        .subject-card .name {
+            font-weight: 700;
+            font-size: 0.95rem;
+            color: #0b1120;
+        }
+
+        /* Back button */
         .back-btn {
             background: none;
             border: 1px solid #e5e7eb;
@@ -341,70 +641,77 @@
             font-family: inherit;
             margin-bottom: 16px;
         }
-        .back-btn:hover { background: #f3f4f6; }
 
-        .subject-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-            gap: 16px;
-            margin-top: 16px;
+        .back-btn:hover {
+            background: #f3f4f6;
         }
-        .subject-card {
-            background: white;
-            border: 2px solid #e5e7eb;
-            border-radius: 16px;
-            padding: 28px 16px;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.25s;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.02);
-        }
-        .subject-card:hover {
-            border-color: #6366f1;
-            transform: translateY(-4px);
-            box-shadow: 0 12px 32px rgba(99,102,241,0.12);
-        }
-        .subject-card .icon { font-size: 2.8rem; display: block; margin-bottom: 6px; }
-        .subject-card .name { font-weight: 700; font-size: 0.95rem; color: #0b1120; }
 
-        .classroom-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 12px;
+        /* Breadcrumb */
+        .breadcrumb {
+            font-size: 0.9rem;
+            color: #6b7280;
             margin-bottom: 16px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4px 8px;
         }
-        .classroom-header h2 { font-size: 1.5rem; font-weight: 700; color: #0b1120; }
 
-        .topic-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-            gap: 16px;
-        }
-        .topic-card {
-            background: white;
-            border: 2px solid #e5e7eb;
-            border-radius: 14px;
-            padding: 20px 18px;
-            transition: all 0.25s;
+        .breadcrumb span {
             cursor: pointer;
+            color: #6366f1;
         }
-        .topic-card:hover {
-            border-color: #6366f1;
-            box-shadow: 0 8px 24px rgba(99,102,241,0.08);
-        }
-        .topic-card .title { font-weight: 700; font-size: 1rem; color: #0b1120; }
-        .topic-card .meta { font-size: 0.8rem; color: #6b7280; margin-top: 4px; }
-        .topic-card .resources { margin-top: 10px; display: flex; gap: 6px; flex-wrap: wrap; }
-        .topic-card .resources .tag { background: #eef2ff; color: #6366f1; padding: 2px 12px; border-radius: 12px; font-size: 0.7rem; font-weight: 600; }
 
+        .breadcrumb span:hover {
+            text-decoration: underline;
+        }
+
+        .breadcrumb .current {
+            color: #0b1120;
+            cursor: default;
+            font-weight: 600;
+        }
+
+        .breadcrumb .separator {
+            color: #d1d5db;
+            cursor: default;
+        }
+
+        /* Lesson content */
+        .lesson-content {
+            background: #f8fafc;
+            border-radius: 12px;
+            padding: 24px;
+            margin: 16px 0;
+            border-left: 4px solid #6366f1;
+        }
+
+        .lesson-content h3 {
+            font-size: 1.3rem;
+            color: #0b1120;
+            margin-bottom: 8px;
+        }
+
+        .lesson-content p {
+            color: #1f2937;
+            line-height: 1.6;
+            margin: 8px 0;
+        }
+
+        .lesson-content ul {
+            padding-left: 24px;
+            color: #1f2937;
+            line-height: 1.6;
+        }
+
+        /* AI Tutor (existing) */
         .tutor-container {
             background: white;
             border-radius: 20px;
             padding: 28px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.04);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+            margin-top: 24px;
         }
+
         .tutor-header {
             display: flex;
             justify-content: space-between;
@@ -413,8 +720,20 @@
             flex-wrap: wrap;
             gap: 10px;
         }
-        .tutor-header h3 { font-size: 1.2rem; font-weight: 700; color: #0b1120; }
-        .tutor-header .context { font-size: 0.9rem; color: #6b7280; background: #f3f4f6; padding: 4px 16px; border-radius: 20px; }
+
+        .tutor-header h3 {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #0b1120;
+        }
+
+        .tutor-header .context {
+            font-size: 0.9rem;
+            color: #6b7280;
+            background: #f3f4f6;
+            padding: 4px 16px;
+            border-radius: 20px;
+        }
 
         .chat-box {
             background: #f8fafc;
@@ -425,6 +744,7 @@
             border: 1px solid #e5e7eb;
             margin-bottom: 16px;
         }
+
         .chat-box .msg {
             padding: 12px 16px;
             border-radius: 14px;
@@ -434,13 +754,25 @@
             line-height: 1.6;
             word-wrap: break-word;
         }
-        .chat-box .msg.user { background: #6366f1; color: #fff; margin-left: auto; text-align: right; }
-        .chat-box .msg.bot { background: #e5e7eb; color: #0b1120; margin-right: auto; }
+
+        .chat-box .msg.user {
+            background: #6366f1;
+            color: #fff;
+            margin-left: auto;
+            text-align: right;
+        }
+
+        .chat-box .msg.bot {
+            background: #e5e7eb;
+            color: #0b1120;
+            margin-right: auto;
+        }
 
         .chat-input {
             display: flex;
             gap: 10px;
         }
+
         .chat-input input {
             flex: 1;
             padding: 14px 18px;
@@ -450,7 +782,12 @@
             font-family: inherit;
             transition: border-color 0.25s;
         }
-        .chat-input input:focus { outline: none; border-color: #6366f1; }
+
+        .chat-input input:focus {
+            outline: none;
+            border-color: #6366f1;
+        }
+
         .chat-input .btn-send {
             padding: 0 28px;
             background: linear-gradient(135deg, #6366f1, #8b5cf6);
@@ -462,8 +799,15 @@
             transition: all 0.25s;
             font-family: inherit;
         }
-        .chat-input .btn-send:hover { transform: scale(1.02); }
-        .chat-input .btn-send:disabled { opacity: 0.6; cursor: not-allowed; }
+
+        .chat-input .btn-send:hover {
+            transform: scale(1.02);
+        }
+
+        .chat-input .btn-send:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
 
         .chat-options {
             display: flex;
@@ -473,99 +817,187 @@
             font-size: 0.85rem;
             color: #6b7280;
         }
-        .chat-options input[type="checkbox"] { width: 18px; height: 18px; accent-color: #6366f1; cursor: pointer; }
-        .chat-options label { cursor: pointer; }
 
-        .empty-state { grid-column: 1/-1; text-align: center; padding: 40px; color: #6b7280; }
-
-        @media (max-width: 640px) {
-            .hero h1 { font-size: 2rem; }
-            .hero p { font-size: 1rem; }
-            .features { grid-template-columns: 1fr 1fr; }
-            .auth-card { padding: 28px 20px; }
-            .top-nav { padding: 12px 16px; flex-direction: column; align-items: stretch; }
-            .top-nav .logo { text-align: center; }
-            .top-nav .user-info { justify-content: center; }
-            .level-grid, .sublevel-grid, .subject-grid { grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); }
-            .topic-grid { grid-template-columns: 1fr; }
-            .tutor-container { padding: 16px; }
-            .chat-input { flex-wrap: wrap; }
-            .chat-input .btn-send { flex: 1; padding: 14px; }
+        .chat-options input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            accent-color: #6366f1;
+            cursor: pointer;
         }
+
+        .chat-options label {
+            cursor: pointer;
+        }
+
+        .empty-state {
+            grid-column: 1/-1;
+            text-align: center;
+            padding: 40px;
+            color: #6b7280;
+        }
+
+        /* Responsive */
+        @media (max-width: 640px) {
+            .hero h1 {
+                font-size: 2rem;
+            }
+            .hero p {
+                font-size: 1rem;
+            }
+            .features {
+                grid-template-columns: 1fr 1fr;
+            }
+            .auth-card {
+                padding: 28px 20px;
+            }
+            .top-nav {
+                padding: 12px 16px;
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .top-nav .logo {
+                text-align: center;
+            }
+            .top-nav .user-info {
+                justify-content: center;
+            }
+            .subject-grid {
+                grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+            }
+            .grade-grid {
+                grid-template-columns: repeat(auto-fill, minmax(70px, 1fr));
+            }
+            .tutor-container {
+                padding: 16px;
+            }
+            .chat-input {
+                flex-wrap: wrap;
+            }
+            .chat-input .btn-send {
+                flex: 1;
+                padding: 14px;
+            }
+        }
+
         @media (max-width: 480px) {
-            .features { grid-template-columns: 1fr; }
-            .hero .cta-group { flex-direction: column; align-items: center; }
-            .hero .btn-primary, .hero .btn-secondary { width: 100%; max-width: 280px; }
+            .features {
+                grid-template-columns: 1fr;
+            }
+            .hero .cta-group {
+                flex-direction: column;
+                align-items: center;
+            }
+            .hero .btn-primary,
+            .hero .btn-secondary {
+                width: 100%;
+                max-width: 280px;
+            }
         }
     </style>
 </head>
 <body>
 
-    <!-- ===== HERO ===== -->
-    <section class="hero">
+    <!-- ============================================================ -->
+    <!-- HERO SECTION -->
+    <!-- ============================================================ -->
+    <section class="hero" id="heroSection">
         <div class="logo">🧠 <span>Leago</span></div>
         <div class="badge">✦ Available Now</div>
-        <h1>Learn with AI — Secondary, Tertiary & College</h1>
-        <p>Your personal AI tutor tailored to your level. Get step‑by‑step explanations, exam prep, and unlimited practice.</p>
+        <h1>Learn with AI — High School &amp; College</h1>
+        <p>
+            Your personal AI tutor for Grades 10–12 and College. Get step‑by‑step explanations,
+            exam preparation, and unlimited practice — all powered by artificial intelligence.
+        </p>
         <div class="cta-group">
             <a class="btn-primary" onclick="openAuth('login')">Get Started — It's Free</a>
             <a class="btn-secondary" onclick="document.querySelector('.features').scrollIntoView({behavior:'smooth'})">Learn More ↓</a>
         </div>
     </section>
 
+    <!-- ============================================================ -->
+    <!-- STATUS BAR -->
+    <!-- ============================================================ -->
     <div class="status-bar">
-        <div class="status"><span class="dot"></span>Fully operational — start learning now</div>
+        <div class="status">
+            <span class="dot"></span>
+            Fully operational — start learning now
+        </div>
     </div>
 
-    <section class="features">
+    <!-- ============================================================ -->
+    <!-- FEATURES -->
+    <!-- ============================================================ -->
+    <section class="features" id="featuresSection">
         <div class="feature-card">
             <span class="icon">📐</span>
             <h3>Mathematics &amp; English</h3>
-            <p>Master core subjects with AI‑powered explanations and practice.</p>
+            <p>Master core subjects with AI‑powered explanations and practice problems.</p>
         </div>
         <div class="feature-card">
             <span class="icon">🎯</span>
-            <h3>Secondary, Tertiary &amp; College</h3>
-            <p>Content tailored to your exact level — from Grade 10 to University.</p>
+            <h3>Grades 10–12 &amp; College</h3>
+            <p>Curriculum‑aligned content for high school and tertiary learners.</p>
         </div>
         <div class="feature-card">
             <span class="icon">📚</span>
-            <h3>Step‑by‑Step Learning</h3>
+            <h3>Step‑by‑Step Exam Prep</h3>
             <p>Break down complex topics into manageable steps with guided practice.</p>
         </div>
         <div class="feature-card">
             <span class="icon">🧠</span>
             <h3>AI Tutor — Always On</h3>
-            <p>Get personalised help anytime, anywhere.</p>
+            <p>Get personalised help anytime, anywhere. Your tutor never sleeps.</p>
         </div>
     </section>
 
-    <!-- ===== AUTH OVERLAY ===== -->
+    <!-- ============================================================ -->
+    <!-- AUTH OVERLAY (Login / Signup) -->
+    <!-- ============================================================ -->
     <div class="auth-overlay" id="authOverlay">
         <div class="auth-card">
             <button class="close-btn" onclick="closeAuth()">✕</button>
+
             <div class="logo-sm">
                 <h2>🧠 <span>Leago</span></h2>
                 <p>Your AI Tutor</p>
             </div>
+
             <!-- Login -->
             <div id="loginPage">
                 <h3>Welcome back</h3>
                 <p class="sub">Log in to continue learning.</p>
-                <div class="field"><label>Email</label><input type="email" id="loginEmail" placeholder="you@example.com" /></div>
-                <div class="field"><label>Password</label><input type="password" id="loginPassword" placeholder="Enter password" /></div>
+                <div class="field">
+                    <label>Email</label>
+                    <input type="email" id="loginEmail" placeholder="you@example.com" />
+                </div>
+                <div class="field">
+                    <label>Password</label>
+                    <input type="password" id="loginPassword" placeholder="Enter password" />
+                </div>
                 <div class="error" id="loginError"></div>
                 <div class="success" id="loginSuccess"></div>
                 <button class="btn" id="loginBtn" onclick="login()">Log In</button>
-                <div class="auth-link">Don't have an account? <a onclick="showSignup()">Sign up</a></div>
+                <div class="auth-link">
+                    Don't have an account? <a onclick="showSignup()">Sign up</a>
+                </div>
             </div>
+
             <!-- Signup -->
             <div id="signupPage" style="display:none;">
                 <h3>Create account</h3>
                 <p class="sub">Join Leago and start learning.</p>
-                <div class="field"><label>Full name</label><input type="text" id="signupName" placeholder="John Doe" /></div>
-                <div class="field"><label>Email</label><input type="email" id="signupEmail" placeholder="you@example.com" /></div>
-                <div class="field"><label>Password</label><input type="password" id="signupPassword" placeholder="Min 6 characters" /></div>
+                <div class="field">
+                    <label>Full name</label>
+                    <input type="text" id="signupName" placeholder="John Doe" />
+                </div>
+                <div class="field">
+                    <label>Email</label>
+                    <input type="email" id="signupEmail" placeholder="you@example.com" />
+                </div>
+                <div class="field">
+                    <label>Password</label>
+                    <input type="password" id="signupPassword" placeholder="Min 6 characters" />
+                </div>
                 <div class="field">
                     <label>Country</label>
                     <select id="signupCountry">
@@ -596,13 +1028,19 @@
                 <div class="error" id="signupError"></div>
                 <div class="success" id="signupSuccess"></div>
                 <button class="btn" id="signupBtn" onclick="signup()">Create Account</button>
-                <div class="auth-link">Already have an account? <a onclick="showLogin()">Log in</a></div>
+                <div class="auth-link">
+                    Already have an account? <a onclick="showLogin()">Log in</a>
+                </div>
             </div>
         </div>
     </div>
 
-    <!-- ===== DASHBOARD ===== -->
+    <!-- ============================================================ -->
+    <!-- DASHBOARD (Hidden until logged in) -->
+    <!-- ============================================================ -->
     <div class="dashboard" id="dashboard">
+
+        <!-- Top Navigation -->
         <nav class="top-nav">
             <a href="#" class="logo">🧠 <span>Leago</span></a>
             <div class="user-info">
@@ -614,64 +1052,27 @@
             </div>
         </nav>
 
-        <!-- ===== LEVEL SELECTION ===== -->
-        <div class="page-section active" id="page-levels">
+        <!-- ===== PAGE: GRADE SELECTION (10–12 + College) ===== -->
+        <div class="page-section active" id="page-grades">
             <div class="page-header">
-                <h2>📚 Choose Your Level</h2>
-                <p>Select your current education level so we can tailor the content to you.</p>
+                <h2>📚 Select Your Level</h2>
+                <p>Choose your grade (10–12) or select <strong>College / Tertiary</strong> for higher education.</p>
             </div>
-            <div class="level-grid" id="levelGrid">
-                <div class="level-card" onclick="chooseLevel('Secondary')">
-                    <span class="icon">🏫</span>
-                    <div class="name">Secondary</div>
-                    <div class="sub">Grades 10 – 12</div>
-                </div>
-                <div class="level-card" onclick="chooseLevel('Tertiary')">
-                    <span class="icon">🎓</span>
-                    <div class="name">Tertiary</div>
-                    <div class="sub">University Years 1–4</div>
-                </div>
-                <div class="level-card" onclick="chooseLevel('College')">
-                    <span class="icon">🏛️</span>
-                    <div class="name">College</div>
-                    <div class="sub">College / TVET Years 1–4</div>
-                </div>
-            </div>
+            <div class="grade-grid" id="gradeGrid"></div>
+            <button class="btn-confirm" id="gradeConfirmBtn" onclick="confirmGrade()">Continue to Subjects →</button>
         </div>
 
-        <!-- ===== SUB-LEVEL SELECTION (grades/years) ===== -->
-        <div class="page-section" id="page-sublevel">
-            <button class="back-btn" onclick="showLevels()">← Back to Levels</button>
-            <div class="page-header">
-                <h2 id="sublevelTitle">Select Your Year</h2>
-                <p id="sublevelDesc">Choose your specific grade or year.</p>
-            </div>
-            <div class="sublevel-grid" id="sublevelGrid"></div>
-        </div>
-
-        <!-- ===== SUBJECTS ===== -->
+        <!-- ===== PAGE: SUBJECTS (HIERARCHY) ===== -->
         <div class="page-section" id="page-subjects">
-            <button class="back-btn" onclick="showSublevel()">← Back to Years</button>
             <div class="page-header">
-                <h2 id="subjectTitle">Your Subjects</h2>
-                <p id="subjectsSubtitle">Select a subject to start learning.</p>
+                <h2>📚 Your Subjects</h2>
+                <p id="subjectsSubtitle">Explore your learning materials.</p>
             </div>
-            <div class="subject-grid" id="subjectGrid"></div>
+            <div id="hierarchyContainer"></div>
         </div>
 
-        <!-- ===== CLASSROOM ===== -->
-        <div class="page-section" id="page-classroom">
-            <button class="back-btn" onclick="showSubjects()">← Back to Subjects</button>
-            <div class="classroom-header">
-                <h2 id="classroomTitle">Subject</h2>
-            </div>
-            <div id="topicCount" style="font-size:0.9rem;color:#6b7280;margin-bottom:12px;"></div>
-            <div class="topic-grid" id="topicGrid"></div>
-        </div>
-
-        <!-- ===== TUTOR ===== -->
+        <!-- ===== PAGE: AI TUTOR (separate chat) ===== -->
         <div class="page-section" id="page-tutor">
-            <button class="back-btn" onclick="showClassroom()">← Back to Topics</button>
             <div class="tutor-container">
                 <div class="tutor-header">
                     <h3>💬 AI Tutor</h3>
@@ -690,23 +1091,25 @@
                 </div>
             </div>
         </div>
+
     </div>
 
+    <!-- ============================================================ -->
+    <!-- JAVASCRIPT -->
+    <!-- ============================================================ -->
     <script>
         // ================================================================
         //  STATE
         // ================================================================
         let currentUser = null;
-        let currentLevel = '';          // 'Secondary', 'Tertiary', 'College'
-        let currentSublevel = '';       // '10', '11', '12', '1', '2', '3', '4'
-        let currentSubject = '';
         let selectedGrade = '';
 
         // ================================================================
-        //  COUNTRY DATA (SUBJECTS + TOPICS)
+        //  COUNTRY DATA (GRADES 10–12 + COLLEGE + SUBJECTS)
         // ================================================================
         const COUNTRY_DATA = {
             'South Africa': {
+                grades: ['10', '11', '12', 'College'],
                 subjects: {
                     'Mathematics': [
                         'Algebra – Linear Equations',
@@ -783,7 +1186,7 @@
                         'Natural Resources – Management',
                         'Climate Change – Causes & Solutions'
                     ],
-                    // Tertiary/College subjects
+                    // College subjects
                     'Engineering': [
                         'Mechanical Engineering – Basics',
                         'Electrical Engineering – Circuits',
@@ -837,28 +1240,170 @@
                     ]
                 }
             },
-            // ... (other countries with similar structure, but for brevity I'll omit; you can reuse your existing data)
-            // For simplicity, we'll fall back to default if country not matched.
+            // other countries can be added similarly, but we keep your existing structure.
+            // We'll keep only SA for brevity, but you can add others.
         };
 
-        // Default subjects for any country
+        // Default fallback for unsupported countries
         const DEFAULT_SUBJECTS = {
             'Mathematics': ['Algebra', 'Geometry', 'Trigonometry', 'Calculus', 'Statistics'],
             'English': ['Reading', 'Writing', 'Grammar', 'Literature'],
             'Science': ['Biology', 'Chemistry', 'Physics', 'Earth Science'],
             'History': ['World History', 'Local History'],
-            'Geography': ['Physical Geography', 'Human Geography'],
-            'Engineering': ['Mechanical', 'Electrical', 'Civil'],
-            'Computer Science': ['Programming', 'Algorithms', 'Databases'],
-            'Business': ['Management', 'Marketing', 'Finance'],
-            'Health Sciences': ['Anatomy', 'Physiology'],
-            'Law': ['Criminal', 'Contract'],
-            'Education': ['Pedagogy', 'Psychology'],
-            'Arts & Humanities': ['Creative Writing', 'Art History']
+            'Geography': ['Physical Geography', 'Human Geography']
         };
 
         // ================================================================
-        //  AUTH UI (same as before)
+        //  SUBJECT HIERARCHY (NEW) – Add more subjects as needed
+        // ================================================================
+        const SUBJECT_HIERARCHY = {
+            'Mathematics': {
+                courses: {
+                    'Algebra 1': {
+                        units: {
+                            'Linear Equations': {
+                                lessons: [
+                                    {
+                                        title: 'Slope-Intercept Form',
+                                        content: `
+                                            <h3>Slope-Intercept Form</h3>
+                                            <p>The equation <strong>y = mx + b</strong> is called slope-intercept form.</p>
+                                            <ul>
+                                                <li><strong>m</strong> = slope (rise over run)</li>
+                                                <li><strong>b</strong> = y-intercept (where the line crosses the y-axis)</li>
+                                            </ul>
+                                            <p><strong>Example:</strong> y = 2x + 3 → slope = 2, y-intercept = 3</p>
+                                        `
+                                    },
+                                    {
+                                        title: 'Point-Slope Form',
+                                        content: `
+                                            <h3>Point-Slope Form</h3>
+                                            <p>The equation <strong>y - y₁ = m(x - x₁)</strong> is point-slope form.</p>
+                                            <ul>
+                                                <li><strong>(x₁, y₁)</strong> = a point on the line</li>
+                                                <li><strong>m</strong> = slope</li>
+                                            </ul>
+                                            <p><strong>Example:</strong> Through (2,3) with slope 4 → y - 3 = 4(x - 2)</p>
+                                        `
+                                    },
+                                    {
+                                        title: 'Graphing Lines',
+                                        content: `
+                                            <h3>Graphing Lines</h3>
+                                            <p>To graph a line, plot the y-intercept, then use the slope to find another point.</p>
+                                            <p><strong>Steps:</strong></p>
+                                            <ol>
+                                                <li>Plot the y-intercept (b) on the y-axis.</li>
+                                                <li>From that point, move according to the slope (rise/run).</li>
+                                                <li>Draw a straight line through the points.</li>
+                                            </ol>
+                                        `
+                                    }
+                                ]
+                            },
+                            'Inequalities': {
+                                lessons: [
+                                    {
+                                        title: 'Graphing Inequalities',
+                                        content: `
+                                            <h3>Graphing Inequalities</h3>
+                                            <p>Use a dashed line for <strong>&lt;</strong> or <strong>&gt;</strong>, and a solid line for <strong>≤</strong> or <strong>≥</strong>.</p>
+                                            <p>Test a point to determine which side to shade.</p>
+                                        `
+                                    }
+                                ]
+                            }
+                        }
+                    },
+                    'Geometry': {
+                        units: {
+                            'Triangles': {
+                                lessons: [
+                                    {
+                                        title: 'Area of a Triangle',
+                                        content: `
+                                            <h3>Area of a Triangle</h3>
+                                            <p><strong>Formula:</strong> A = ½ × base × height</p>
+                                            <p>Example: Base = 6, height = 4 → A = ½ × 6 × 4 = 12</p>
+                                        `
+                                    }
+                                ]
+                            }
+                        }
+                    }
+                }
+            },
+            'English': {
+                courses: {
+                    'English 10': {
+                        units: {
+                            'Grammar': {
+                                lessons: [
+                                    {
+                                        title: 'Parts of Speech',
+                                        content: `
+                                            <h3>Parts of Speech</h3>
+                                            <p><strong>Nouns:</strong> person, place, thing (dog, city, happiness)</p>
+                                            <p><strong>Verbs:</strong> actions or states (run, is, think)</p>
+                                            <p><strong>Adjectives:</strong> describe nouns (big, red, exciting)</p>
+                                            <p><strong>Adverbs:</strong> describe verbs (quickly, very, well)</p>
+                                        `
+                                    },
+                                    {
+                                        title: 'Subject-Verb Agreement',
+                                        content: `
+                                            <h3>Subject-Verb Agreement</h3>
+                                            <p><strong>Rule:</strong> Singular subjects take singular verbs, plural subjects take plural verbs.</p>
+                                            <p><strong>Example:</strong></p>
+                                            <ul>
+                                                <li>She <strong>runs</strong> fast. (singular)</li>
+                                                <li>They <strong>run</strong> fast. (plural)</li>
+                                            </ul>
+                                        `
+                                    }
+                                ]
+                            }
+                        }
+                    }
+                }
+            }
+        };
+
+        // Icons for subjects (used in hierarchy)
+        const SUBJECTS_ICONS = {
+            'Mathematics': '📐',
+            'English': '📖',
+            'Science': '🔬',
+            'History': '🏛️',
+            'Geography': '🌍',
+            'Life Orientation': '🧘',
+            'Accounting': '💰',
+            'Business Studies': '📊',
+            'Economics': '📈',
+            'Life Sciences': '🧬',
+            'Physical Sciences': '⚛️',
+            'Technology': '💻',
+            'Engineering': '⚙️',
+            'Computer Science': '💻',
+            'Business & Management': '📊',
+            'Health Sciences': '🏥',
+            'Law': '⚖️',
+            'Education': '📚',
+            'Arts & Humanities': '🎨'
+        };
+
+        // ================================================================
+        //  HIERARCHY STATE
+        // ================================================================
+        let hierarchyView = 'subjects'; // 'subjects' | 'courses' | 'units' | 'lessons' | 'lesson'
+        let currentSubject = '';
+        let currentCourse = '';
+        let currentUnit = '';
+        let currentLesson = null;
+
+        // ================================================================
+        //  AUTH UI
         // ================================================================
         function openAuth(page) {
             document.getElementById('authOverlay').classList.add('active');
@@ -866,37 +1411,44 @@
             else showLogin();
             document.body.style.overflow = 'hidden';
         }
+
         function closeAuth() {
             document.getElementById('authOverlay').classList.remove('active');
             document.body.style.overflow = '';
             clearErrors();
         }
+
         function showSignup() {
             document.getElementById('loginPage').style.display = 'none';
             document.getElementById('signupPage').style.display = 'block';
             clearErrors();
         }
+
         function showLogin() {
             document.getElementById('loginPage').style.display = 'block';
             document.getElementById('signupPage').style.display = 'none';
             clearErrors();
         }
+
         function clearErrors() {
             document.querySelectorAll('.auth-card .error, .auth-card .success').forEach(el => {
                 el.classList.remove('show');
                 el.textContent = '';
             });
         }
+
         function showError(id, msg) {
             const el = document.getElementById(id);
             el.textContent = msg;
             el.classList.add('show');
         }
+
         function showSuccess(id, msg) {
             const el = document.getElementById(id);
             el.textContent = msg;
             el.classList.add('show');
         }
+
         function setButtonLoading(id, loading) {
             const btn = document.getElementById(id);
             if (loading) {
@@ -909,7 +1461,7 @@
         }
 
         // ================================================================
-        //  AUTH: LOGIN / SIGNUP
+        //  AUTH: LOGIN
         // ================================================================
         async function login() {
             const email = document.getElementById('loginEmail').value.trim();
@@ -936,10 +1488,10 @@
                     showSuccess('loginSuccess', 'Login successful!');
                     setTimeout(() => {
                         closeAuth();
-                        document.getElementById('dashboard').classList.add('active');
-                        document.querySelector('.hero').style.display = 'none';
-                        document.querySelector('.features').style.display = 'none';
+                        document.getElementById('heroSection').style.display = 'none';
+                        document.getElementById('featuresSection').style.display = 'none';
                         document.querySelector('.status-bar').style.display = 'none';
+                        document.getElementById('dashboard').classList.add('active');
                         initDashboard(data.user);
                     }, 500);
                 }
@@ -950,6 +1502,9 @@
             }
         }
 
+        // ================================================================
+        //  AUTH: SIGNUP
+        // ================================================================
         async function signup() {
             const name = document.getElementById('signupName').value.trim();
             const email = document.getElementById('signupEmail').value.trim();
@@ -1002,177 +1557,56 @@
 
             checkSubscription();
             if (user.grade) {
-                // parse existing grade to navigate correctly
-                const parts = user.grade.split(' ');
-                if (parts.length === 2) {
-                    currentLevel = parts[0];
-                    currentSublevel = parts[1];
-                    // go directly to subjects?
-                    // we'll show subjects if level and sublevel exist
-                    showSubjects();
-                } else {
-                    showLevels();
-                }
+                selectedGrade = user.grade;
+                showSubjects();
             } else {
-                showLevels();
+                showGradeSelection();
             }
         }
 
         // ================================================================
-        //  NAVIGATION: LEVELS, SUBLEVELS, SUBJECTS, CLASSROOM, TUTOR
+        //  PAGE NAVIGATION
         // ================================================================
-        function showLevels() {
+        function showPage(page) {
             document.querySelectorAll('.page-section').forEach(el => el.classList.remove('active'));
-            document.getElementById('page-levels').classList.add('active');
+            const target = document.getElementById('page-' + page);
+            if (target) target.classList.add('active');
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        function chooseLevel(level) {
-            currentLevel = level;
-            // show sublevel selection
-            document.querySelectorAll('.page-section').forEach(el => el.classList.remove('active'));
-            document.getElementById('page-sublevel').classList.add('active');
-
-            const title = document.getElementById('sublevelTitle');
-            const desc = document.getElementById('sublevelDesc');
-            if (level === 'Secondary') {
-                title.textContent = 'Select Your Grade';
-                desc.textContent = 'Choose your grade (10, 11, or 12)';
-            } else if (level === 'Tertiary' || level === 'College') {
-                title.textContent = 'Select Your Year';
-                desc.textContent = 'Choose your year (1, 2, 3, or 4)';
-            }
-
-            const grid = document.getElementById('sublevelGrid');
-            grid.innerHTML = '';
-            let options = [];
-            if (level === 'Secondary') options = ['10', '11', '12'];
-            else if (level === 'Tertiary' || level === 'College') options = ['1', '2', '3', '4'];
-
-            options.forEach(val => {
-                const card = document.createElement('div');
-                card.className = 'sublevel-card';
-                card.innerHTML = `<div class="name">${level === 'Secondary' ? 'Grade ' + val : 'Year ' + val}</div>`;
-                card.onclick = () => {
-                    currentSublevel = val;
-                    // Save grade to profile
-                    const gradeStr = currentLevel + ' ' + currentSublevel;
-                    saveGrade(gradeStr);
-                    document.getElementById('userGrade').textContent = gradeStr;
-                    showSubjects();
-                };
-                grid.appendChild(card);
-            });
-
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-
-        function showSublevel() {
-            document.querySelectorAll('.page-section').forEach(el => el.classList.remove('active'));
-            document.getElementById('page-sublevel').classList.add('active');
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-
-        function showSubjects() {
-            document.querySelectorAll('.page-section').forEach(el => el.classList.remove('active'));
-            document.getElementById('page-subjects').classList.add('active');
-
-            const title = document.getElementById('subjectTitle');
-            const subtitle = document.getElementById('subjectsSubtitle');
-            const levelLabel = (currentLevel === 'Secondary') ? 'Secondary (Grade ' + currentSublevel + ')' :
-                              (currentLevel === 'Tertiary' || currentLevel === 'College') ? currentLevel + ' (Year ' + currentSublevel + ')' :
-                              'Unknown';
-            title.textContent = 'Your Subjects';
-            subtitle.textContent = levelLabel + ' · ' + (currentUser ? currentUser.country : '') + ' · Select a subject to start learning.';
-
-            // Get subjects based on country and level
-            const country = currentUser ? currentUser.country : 'South Africa';
+        // ================================================================
+        //  GRADE SELECTION
+        // ================================================================
+        function showGradeSelection() {
+            const country = currentUser.country || 'South Africa';
             const data = COUNTRY_DATA[country];
-            let subjects = data ? data.subjects : DEFAULT_SUBJECTS;
+            const grades = (data && data.grades) ? data.grades : ['10', '11', '12', 'College'];
 
-            // If Secondary, filter only high-school subjects (Math, English, etc.) – we'll keep all for simplicity, but we could filter.
-            // For now, we show all subjects.
-
-            const grid = document.getElementById('subjectGrid');
+            const grid = document.getElementById('gradeGrid');
             grid.innerHTML = '';
-            const icons = {
-                'Mathematics': '📐',
-                'English': '📖',
-                'Life Sciences': '🧬',
-                'Physical Sciences': '⚛️',
-                'History': '🏛️',
-                'Geography': '🌍',
-                'Engineering': '⚙️',
-                'Computer Science': '💻',
-                'Business & Management': '📊',
-                'Health Sciences': '🏥',
-                'Law': '⚖️',
-                'Education': '📚',
-                'Arts & Humanities': '🎨'
-            };
-            Object.keys(subjects).forEach(name => {
+            grades.forEach(g => {
                 const div = document.createElement('div');
-                div.className = 'subject-card';
-                div.innerHTML = `<span class="icon">${icons[name] || '📚'}</span><span class="name">${name}</span>`;
-                div.onclick = () => openSubject(name);
+                div.className = 'grade-card';
+                const label = (g === 'College') ? 'College / Tertiary' : 'Grade ' + g;
+                const sub = (g === 'College') ? 'Higher Education' : '';
+                div.innerHTML = `${label}${sub ? `<span class="sub">${sub}</span>` : ''}`;
+                div.dataset.grade = g;
+                div.onclick = function() {
+                    document.querySelectorAll('.grade-card').forEach(c => c.classList.remove('selected'));
+                    this.classList.add('selected');
+                    selectedGrade = this.dataset.grade;
+                    document.getElementById('gradeConfirmBtn').style.display = 'block';
+                };
                 grid.appendChild(div);
             });
-            window.scrollTo({ top: 0, behavior: 'smooth' });
+            showPage('grades');
         }
 
-        function openSubject(subject) {
-            currentSubject = subject;
-            document.querySelectorAll('.page-section').forEach(el => el.classList.remove('active'));
-            document.getElementById('page-classroom').classList.add('active');
-
-            document.getElementById('classroomTitle').textContent = subject;
-
-            const country = currentUser ? currentUser.country : 'South Africa';
-            const data = COUNTRY_DATA[country];
-            const topics = data ? data.subjects[subject] : DEFAULT_SUBJECTS[subject] || [];
-
-            const grid = document.getElementById('topicGrid');
-            const countDiv = document.getElementById('topicCount');
-            countDiv.textContent = 'Showing ' + topics.length + ' topics';
-
-            if (topics.length === 0) {
-                grid.innerHTML = `<div class="empty-state">No topics available for this subject yet.</div>`;
-            } else {
-                grid.innerHTML = topics.map(t => `
-                    <div class="topic-card" onclick="openTutor('${subject}', '${t}')">
-                        <div class="title">${t}</div>
-                        <div class="meta">${subject}</div>
-                        <div class="resources"><span class="tag">Lesson</span><span class="tag">Quiz</span><span class="tag">Worksheet</span></div>
-                    </div>
-                `).join('');
+        function confirmGrade() {
+            if (!selectedGrade) {
+                alert('Please select your level.');
+                return;
             }
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-
-        function showClassroom() {
-            document.querySelectorAll('.page-section').forEach(el => el.classList.remove('active'));
-            document.getElementById('page-classroom').classList.add('active');
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-
-        function openTutor(subject, topic) {
-            currentSubject = subject;
-            document.querySelectorAll('.page-section').forEach(el => el.classList.remove('active'));
-            document.getElementById('page-tutor').classList.add('active');
-
-            document.getElementById('tutorContext').textContent = subject + ' - ' + topic;
-            const box = document.getElementById('chatBox');
-            box.innerHTML = `<div class="msg bot">👋 Welcome! Ask me anything — I'll guide you step by step.</div>`;
-            document.getElementById('chatInput').value = 'I\'m learning about "' + topic + '" in ' + subject + '. Can you teach me step by step?';
-            setTimeout(sendChat, 500);
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-
-        // ================================================================
-        //  SAVE GRADE
-        // ================================================================
-        function saveGrade(gradeStr) {
-            if (!currentUser) return;
             fetch('/save-profile', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -1180,15 +1614,144 @@
                     userId: currentUser.id,
                     name: currentUser.name,
                     country: currentUser.country,
-                    grade: gradeStr
+                    grade: selectedGrade
                 })
             });
-            currentUser.grade = gradeStr;
+            currentUser.grade = selectedGrade;
             localStorage.setItem('synapse_user', JSON.stringify(currentUser));
+            document.getElementById('userGrade').textContent = selectedGrade;
+            showSubjects();
         }
 
         // ================================================================
-        //  CHAT
+        //  SUBJECT HIERARCHY RENDER
+        // ================================================================
+        function renderHierarchy() {
+            const container = document.getElementById('hierarchyContainer');
+            if (!container) return;
+
+            let html = '';
+
+            if (hierarchyView === 'subjects') {
+                const subjectNames = Object.keys(SUBJECT_HIERARCHY);
+                html = `<div class="subject-grid">`;
+                subjectNames.forEach(subj => {
+                    html += `
+                        <div class="subject-card" onclick="navigateHierarchy('subject', '${subj}')">
+                            <span class="icon">${SUBJECTS_ICONS[subj] || '📚'}</span>
+                            <span class="name">${subj}</span>
+                        </div>
+                    `;
+                });
+                html += `</div>`;
+            } else if (hierarchyView === 'courses') {
+                const courses = SUBJECT_HIERARCHY[currentSubject].courses;
+                html = `<button class="back-btn" onclick="navigateHierarchy('back')">← Back to Subjects</button><div class="subject-grid">`;
+                Object.keys(courses).forEach(course => {
+                    html += `
+                        <div class="subject-card" onclick="navigateHierarchy('course', '${course}')">
+                            <span class="icon">📘</span>
+                            <span class="name">${course}</span>
+                        </div>
+                    `;
+                });
+                html += `</div>`;
+            } else if (hierarchyView === 'units') {
+                const units = SUBJECT_HIERARCHY[currentSubject].courses[currentCourse].units;
+                html = `<button class="back-btn" onclick="navigateHierarchy('back')">← Back to Courses</button><div class="subject-grid">`;
+                Object.keys(units).forEach(unit => {
+                    html += `
+                        <div class="subject-card" onclick="navigateHierarchy('unit', '${unit}')">
+                            <span class="icon">📁</span>
+                            <span class="name">${unit}</span>
+                        </div>
+                    `;
+                });
+                html += `</div>`;
+            } else if (hierarchyView === 'lessons') {
+                const lessons = SUBJECT_HIERARCHY[currentSubject].courses[currentCourse].units[currentUnit].lessons;
+                html = `<button class="back-btn" onclick="navigateHierarchy('back')">← Back to Units</button><div class="subject-grid">`;
+                lessons.forEach((lesson, index) => {
+                    html += `
+                        <div class="subject-card" onclick="navigateHierarchy('lesson', ${index})">
+                            <span class="icon">📄</span>
+                            <span class="name">${lesson.title}</span>
+                        </div>
+                    `;
+                });
+                html += `</div>`;
+            } else if (hierarchyView === 'lesson') {
+                const lesson = currentLesson;
+                html = `
+                    <div class="breadcrumb">
+                        <span onclick="navigateHierarchy('subjects')">${currentSubject}</span>
+                        <span class="separator"> / </span>
+                        <span onclick="navigateHierarchy('courses')">${currentCourse}</span>
+                        <span class="separator"> / </span>
+                        <span onclick="navigateHierarchy('units')">${currentUnit}</span>
+                        <span class="separator"> / </span>
+                        <span class="current">${lesson.title}</span>
+                    </div>
+                    <div class="lesson-content">
+                        ${lesson.content}
+                    </div>
+                    <button class="back-btn" onclick="navigateHierarchy('back')">← Back to Lessons</button>
+                `;
+            }
+
+            container.innerHTML = html;
+        }
+
+        function navigateHierarchy(action, value) {
+            if (action === 'subject') {
+                currentSubject = value;
+                hierarchyView = 'courses';
+            } else if (action === 'course') {
+                currentCourse = value;
+                hierarchyView = 'units';
+            } else if (action === 'unit') {
+                currentUnit = value;
+                hierarchyView = 'lessons';
+            } else if (action === 'lesson') {
+                const lessons = SUBJECT_HIERARCHY[currentSubject].courses[currentCourse].units[currentUnit].lessons;
+                currentLesson = lessons[value];
+                hierarchyView = 'lesson';
+            } else if (action === 'back') {
+                if (hierarchyView === 'courses') hierarchyView = 'subjects';
+                else if (hierarchyView === 'units') hierarchyView = 'courses';
+                else if (hierarchyView === 'lessons') hierarchyView = 'units';
+                else if (hierarchyView === 'lesson') hierarchyView = 'lessons';
+            } else if (action === 'subjects') {
+                hierarchyView = 'subjects';
+            } else if (action === 'courses') {
+                hierarchyView = 'courses';
+            } else if (action === 'units') {
+                hierarchyView = 'units';
+            }
+            renderHierarchy();
+        }
+
+        // ================================================================
+        //  SHOW SUBJECTS (called after grade selection)
+        // ================================================================
+        function showSubjects() {
+            const country = currentUser.country || 'South Africa';
+            const data = COUNTRY_DATA[country];
+            const subjects = data ? data.subjects : DEFAULT_SUBJECTS;
+
+            const levelLabel = (currentUser.grade === 'College') ? 'College' : 'Grade ' + currentUser.grade;
+            document.getElementById('subjectsSubtitle').textContent =
+                levelLabel + ' · ' + country + ' · Explore your learning materials.';
+
+            // Initialize hierarchy view
+            hierarchyView = 'subjects';
+            renderHierarchy();
+
+            showPage('subjects');
+        }
+
+        // ================================================================
+        //  AI TUTOR CHAT (existing)
         // ================================================================
         async function sendChat() {
             const input = document.getElementById('chatInput');
@@ -1234,7 +1797,7 @@
         }
 
         // ================================================================
-        //  VOICE
+        //  VOICE (optional)
         // ================================================================
         function speakText(text) {
             if (!('speechSynthesis' in window)) return;
@@ -1318,8 +1881,8 @@
             if (confirm('Are you sure you want to logout?')) {
                 localStorage.removeItem('synapse_user');
                 document.getElementById('dashboard').classList.remove('active');
-                document.querySelector('.hero').style.display = 'block';
-                document.querySelector('.features').style.display = 'grid';
+                document.getElementById('heroSection').style.display = 'block';
+                document.getElementById('featuresSection').style.display = 'grid';
                 document.querySelector('.status-bar').style.display = 'block';
                 document.getElementById('loginEmail').value = '';
                 document.getElementById('loginPassword').value = '';
@@ -1335,14 +1898,15 @@
             if (stored) {
                 try {
                     const user = JSON.parse(stored);
-                    document.querySelector('.hero').style.display = 'none';
-                    document.querySelector('.features').style.display = 'none';
+                    document.getElementById('heroSection').style.display = 'none';
+                    document.getElementById('featuresSection').style.display = 'none';
                     document.querySelector('.status-bar').style.display = 'none';
                     document.getElementById('dashboard').classList.add('active');
                     initDashboard(user);
                 } catch (e) { /* invalid stored data, show hero */ }
             }
 
+            // Enter key for login/signup
             document.addEventListener('keydown', function(e) {
                 if (e.key === 'Enter') {
                     if (document.getElementById('loginPage').style.display !== 'none' &&
@@ -1356,10 +1920,12 @@
                 }
             });
 
+            // Escape to close auth
             document.addEventListener('keydown', function(e) {
                 if (e.key === 'Escape') closeAuth();
             });
 
+            // Click outside to close auth
             document.getElementById('authOverlay').addEventListener('click', function(e) {
                 if (e.target === this) closeAuth();
             });
