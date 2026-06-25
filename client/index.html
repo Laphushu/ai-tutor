@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Leago — AI Tutor</title>
     <style>
+        /* ===== RESET & BASE ===== */
         * {
             margin: 0;
             padding: 0;
@@ -17,6 +18,7 @@
             min-height: 100vh;
         }
 
+        /* ===== HERO SECTION ===== */
         .hero {
             background: linear-gradient(135deg, #0b1120 0%, #1a1a3e 100%);
             padding: 60px 20px 80px;
@@ -105,6 +107,7 @@
             border-color: rgba(255, 255, 255, 0.4);
         }
 
+        /* ===== FEATURES SECTION ===== */
         .features {
             max-width: 1100px;
             margin: -40px auto 40px;
@@ -146,6 +149,7 @@
             line-height: 1.5;
         }
 
+        /* ===== STATUS BAR ===== */
         .status-bar {
             max-width: 1100px;
             margin: 0 auto 40px;
@@ -185,6 +189,9 @@
             }
         }
 
+        /* ============================================================ */
+        /* AUTH CARD (Overlay) */
+        /* ============================================================ */
         .auth-overlay {
             display: none;
             position: fixed;
@@ -376,6 +383,9 @@
             }
         }
 
+        /* ============================================================ */
+        /* DASHBOARD (Logged in) */
+        /* ============================================================ */
         .dashboard {
             display: none;
             max-width: 1100px;
@@ -637,6 +647,8 @@
             color: #4b5563;
             transition: all 0.2s;
             font-family: inherit;
+            display: inline-block;
+            margin-bottom: 16px;
         }
 
         .back-btn:hover {
@@ -823,6 +835,9 @@
             color: #6b7280;
         }
 
+        /* ============================================================ */
+        /* INFO PAGES (Privacy, About, Contact, TOS) */
+        /* ============================================================ */
         .info-page {
             display: none;
             max-width: 800px;
@@ -892,6 +907,9 @@
             font-size: 1rem;
         }
 
+        /* ============================================================ */
+        /* FOOTER */
+        /* ============================================================ */
         .site-footer {
             background: #0b1120;
             color: #9ca3af;
@@ -936,6 +954,9 @@
             font-size: 0.85rem;
         }
 
+        /* ============================================================ */
+        /* RESPONSIVE */
+        /* ============================================================ */
         @media (max-width: 640px) {
             .hero h1 {
                 font-size: 2rem;
@@ -1006,19 +1027,26 @@
 </head>
 <body>
 
-    <!-- ===== HERO ===== -->
+    <!-- ============================================================ -->
+    <!-- HERO SECTION -->
+    <!-- ============================================================ -->
     <section class="hero" id="heroSection">
         <div class="logo">🧠 <span>Leago</span></div>
         <div class="badge">✦ Available Now</div>
         <h1>Learn with AI — High School &amp; College</h1>
-        <p>Your personal AI tutor for Grades 10–12 and College. Get step‑by‑step explanations, exam preparation, and unlimited practice — all powered by artificial intelligence.</p>
+        <p>
+            Your personal AI tutor for Grades 10–12 and College. Get step‑by‑step explanations,
+            exam preparation, and unlimited practice — all powered by artificial intelligence.
+        </p>
         <div class="cta-group">
             <a class="btn-primary" onclick="openAuth('login')">Get Started — It's Free</a>
             <a class="btn-secondary" onclick="document.querySelector('.features').scrollIntoView({behavior:'smooth'})">Learn More ↓</a>
         </div>
     </section>
 
-    <!-- ===== STATUS BAR ===== -->
+    <!-- ============================================================ -->
+    <!-- STATUS BAR -->
+    <!-- ============================================================ -->
     <div class="status-bar">
         <div class="status">
             <span class="dot"></span>
@@ -1026,7 +1054,9 @@
         </div>
     </div>
 
-    <!-- ===== FEATURES ===== -->
+    <!-- ============================================================ -->
+    <!-- FEATURES -->
+    <!-- ============================================================ -->
     <section class="features" id="featuresSection">
         <div class="feature-card">
             <span class="icon">📐</span>
@@ -1050,7 +1080,11 @@
         </div>
     </section>
 
-    <!-- ===== INFO PAGES ===== -->
+    <!-- ============================================================ -->
+    <!-- INFO PAGES (Privacy, About, Contact, TOS) -->
+    <!-- ============================================================ -->
+
+    <!-- PRIVACY POLICY -->
     <div class="info-page" id="page-privacy">
         <h1>Privacy Policy</h1>
         <p><strong>Last updated:</strong> June 2026</p>
@@ -1086,6 +1120,7 @@
         <span class="back-link" onclick="showInfoPage('')">← Back to Leago</span>
     </div>
 
+    <!-- ABOUT -->
     <div class="info-page" id="page-about">
         <h1>About Leago</h1>
         <p><strong>Leago</strong> is an AI-powered educational platform designed to help South African students master their subjects.</p>
@@ -1100,6 +1135,7 @@
         <span class="back-link" onclick="showInfoPage('')">← Back to Leago</span>
     </div>
 
+    <!-- CONTACT -->
     <div class="info-page" id="page-contact">
         <h1>Contact Us</h1>
         <p>Have questions, feedback, or need help? We'd love to hear from you.</p>
@@ -1116,6 +1152,7 @@
         <span class="back-link" onclick="showInfoPage('')">← Back to Leago</span>
     </div>
 
+    <!-- TERMS OF SERVICE -->
     <div class="info-page" id="page-tos">
         <h1>Terms of Service</h1>
         <p><strong>Last updated:</strong> June 2026</p>
@@ -1150,14 +1187,19 @@
         <span class="back-link" onclick="showInfoPage('')">← Back to Leago</span>
     </div>
 
-    <!-- ===== AUTH OVERLAY ===== -->
+    <!-- ============================================================ -->
+    <!-- AUTH OVERLAY (Login / Signup) -->
+    <!-- ============================================================ -->
     <div class="auth-overlay" id="authOverlay">
         <div class="auth-card">
             <button class="close-btn" onclick="closeAuth()">✕</button>
+
             <div class="logo-sm">
                 <h2>🧠 <span>Leago</span></h2>
                 <p>Your AI Tutor</p>
             </div>
+
+            <!-- Login -->
             <div id="loginPage">
                 <h3>Welcome back</h3>
                 <p class="sub">Log in to continue learning.</p>
@@ -1176,6 +1218,8 @@
                     Don't have an account? <a onclick="showSignup()">Sign up</a>
                 </div>
             </div>
+
+            <!-- Signup -->
             <div id="signupPage" style="display:none;">
                 <h3>Create account</h3>
                 <p class="sub">Join Leago and start learning.</p>
@@ -1228,8 +1272,12 @@
         </div>
     </div>
 
-    <!-- ===== DASHBOARD ===== -->
+    <!-- ============================================================ -->
+    <!-- DASHBOARD (Hidden until logged in) -->
+    <!-- ============================================================ -->
     <div class="dashboard" id="dashboard">
+
+        <!-- Top Navigation -->
         <nav class="top-nav">
             <a href="#" class="logo">🧠 <span>Leago</span></a>
             <div class="user-info">
@@ -1241,6 +1289,7 @@
             </div>
         </nav>
 
+        <!-- ===== PAGE: GRADE SELECTION (10–12 + College) ===== -->
         <div class="page-section active" id="page-grades">
             <div class="page-header">
                 <h2>📚 Select Your Level</h2>
@@ -1250,7 +1299,9 @@
             <button class="btn-confirm" id="gradeConfirmBtn" onclick="confirmGrade()">Continue to Subjects →</button>
         </div>
 
+        <!-- ===== PAGE: SUBJECTS (with Back Button) ===== -->
         <div class="page-section" id="page-subjects">
+            <button class="back-btn" onclick="showGradeSelection()">← Back to Levels</button>
             <div class="page-header">
                 <h2>📚 Your Subjects</h2>
                 <p id="subjectsSubtitle">Select a subject to start learning.</p>
@@ -1258,15 +1309,17 @@
             <div class="subject-grid" id="subjectGrid"></div>
         </div>
 
+        <!-- ===== PAGE: CLASSROOM (with Back Button) ===== -->
         <div class="page-section" id="page-classroom">
+            <button class="back-btn" onclick="showPage('subjects')">← Back to Subjects</button>
             <div class="classroom-header">
                 <h2 id="classroomTitle">Subject</h2>
-                <button class="back-btn" onclick="showPage('subjects')">← Back to Subjects</button>
             </div>
             <div id="topicCount" style="font-size:0.9rem;color:#6b7280;margin-bottom:12px;"></div>
             <div class="topic-grid" id="topicGrid"></div>
         </div>
 
+        <!-- ===== PAGE: AI TUTOR (with Back Button) ===== -->
         <div class="page-section" id="page-tutor">
             <button class="back-btn" onclick="showPage('classroom')">← Back to Topics</button>
             <div class="tutor-container">
@@ -1287,9 +1340,12 @@
                 </div>
             </div>
         </div>
+
     </div>
 
-    <!-- ===== FOOTER ===== -->
+    <!-- ============================================================ -->
+    <!-- FOOTER (AdSense pages links) -->
+    <!-- ============================================================ -->
     <footer class="site-footer" id="siteFooter">
         <div class="inner">
             <div>
@@ -1314,7 +1370,9 @@
         <div class="bottom">&copy; 2026 Leago. All rights reserved.</div>
     </footer>
 
-    <!-- ===== JAVASCRIPT ===== -->
+    <!-- ============================================================ -->
+    <!-- JAVASCRIPT -->
+    <!-- ============================================================ -->
     <script>
         // ================================================================
         //  STATE
@@ -1350,7 +1408,7 @@
         }
 
         // ================================================================
-        //  COUNTRY DATA (SEPARATED SECONDARY & COLLEGE)
+        //  COUNTRY DATA (Separated Secondary & College)
         // ================================================================
         const COUNTRY_DATA = {
             'South Africa': {
@@ -2334,6 +2392,7 @@
                 } catch (e) { /* invalid stored data, show hero */ }
             }
 
+            // Enter key support
             document.addEventListener('keydown', function(e) {
                 if (e.key === 'Enter') {
                     if (document.getElementById('loginPage').style.display !== 'none' &&
@@ -2347,10 +2406,12 @@
                 }
             });
 
+            // Close auth overlay on Escape
             document.addEventListener('keydown', function(e) {
                 if (e.key === 'Escape') closeAuth();
             });
 
+            // Close auth overlay on click outside
             document.getElementById('authOverlay').addEventListener('click', function(e) {
                 if (e.target === this) closeAuth();
             });
