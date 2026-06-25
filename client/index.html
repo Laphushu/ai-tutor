@@ -838,79 +838,7 @@
         }
 
         /* ============================================================ */
-        /* INFO PAGES (Privacy, About, Contact, TOS) */
-        /* ============================================================ */
-        .info-page {
-            display: none;
-            max-width: 800px;
-            margin: 40px auto;
-            padding: 40px 36px;
-            background: white;
-            border-radius: 28px;
-            box-shadow: 0 24px 80px rgba(0, 0, 0, 0.08);
-            line-height: 1.6;
-            color: #0b1120;
-        }
-
-        .info-page.active {
-            display: block;
-        }
-
-        .info-page h1 {
-            font-size: 2rem;
-            margin-bottom: 8px;
-        }
-
-        .info-page h2 {
-            font-size: 1.3rem;
-            margin-top: 28px;
-            margin-bottom: 8px;
-        }
-
-        .info-page a {
-            color: #6366f1;
-        }
-
-        .info-page .back-link {
-            display: inline-block;
-            margin-top: 24px;
-            font-weight: 600;
-            color: #6366f1;
-            cursor: pointer;
-        }
-
-        .info-page .back-link:hover {
-            text-decoration: underline;
-        }
-
-        .info-page ul {
-            padding-left: 24px;
-        }
-
-        .info-page input,
-        .info-page textarea {
-            width: 100%;
-            padding: 12px;
-            border: 2px solid #e5e7eb;
-            border-radius: 8px;
-            font-size: 1rem;
-            margin: 6px 0 16px;
-            font-family: inherit;
-        }
-
-        .info-page button {
-            padding: 14px 28px;
-            background: #6366f1;
-            color: white;
-            border: none;
-            border-radius: 8px;
-            font-weight: 700;
-            cursor: pointer;
-            font-size: 1rem;
-        }
-
-        /* ============================================================ */
-        /* FOOTER */
+        /* FOOTER (added) */
         /* ============================================================ */
         .site-footer {
             background: #0b1120;
@@ -940,7 +868,6 @@
             font-size: 0.9rem;
             padding: 4px 0;
             transition: color 0.2s;
-            cursor: pointer;
         }
 
         .site-footer .inner a:hover {
@@ -1001,13 +928,6 @@
             .chat-input .btn-send {
                 flex: 1;
                 padding: 14px;
-            }
-            .info-page {
-                padding: 24px 20px;
-                margin: 20px 16px;
-            }
-            .info-page h1 {
-                font-size: 1.6rem;
             }
         }
 
@@ -1081,113 +1001,6 @@
             <p>Get personalised help anytime, anywhere. Your tutor never sleeps.</p>
         </div>
     </section>
-
-    <!-- ============================================================ -->
-    <!-- INFO PAGES (Privacy, About, Contact, TOS) -->
-    <!-- ============================================================ -->
-
-    <!-- PRIVACY POLICY -->
-    <div class="info-page" id="page-privacy">
-        <h1>Privacy Policy</h1>
-        <p><strong>Last updated:</strong> June 2026</p>
-        <p>At Leago, we take your privacy seriously. This Privacy Policy explains how we collect, use, and protect your personal information.</p>
-        <h2>1. Information We Collect</h2>
-        <ul>
-            <li><strong>Account Information:</strong> Name, email address, and country.</li>
-            <li><strong>Usage Data:</strong> How you interact with our platform (chat history, subject preferences, etc.).</li>
-            <li><strong>Device Information:</strong> IP address, browser type, and device type.</li>
-        </ul>
-        <h2>2. How We Use Your Information</h2>
-        <ul>
-            <li>To provide and improve our AI tutor services.</li>
-            <li>To communicate with you about updates, promotions, and support.</li>
-            <li>To analyse usage and improve user experience.</li>
-        </ul>
-        <h2>3. Cookies and Tracking</h2>
-        <p>We use cookies to enhance your experience and for analytics. Google AdSense may also use cookies to serve personalised ads. You can manage your cookie preferences in your browser settings.</p>
-        <h2>4. Third-Party Services</h2>
-        <ul>
-            <li><strong>Google AdSense:</strong> We use AdSense to display ads. Google collects data to serve relevant ads. <a href="https://policies.google.com/privacy" target="_blank">Learn more</a>.</li>
-            <li><strong>Paystack:</strong> We use Paystack for payment processing. <a href="https://paystack.com/privacy" target="_blank">View Paystack's privacy policy</a>.</li>
-            <li><strong>Render:</strong> We host on Render. <a href="https://render.com/privacy" target="_blank">View Render's privacy policy</a>.</li>
-        </ul>
-        <h2>5. Your Rights</h2>
-        <ul>
-            <li>Access, update, or delete your personal data.</li>
-            <li>Opt out of marketing communications.</li>
-            <li>Request a copy of the data we hold about you.</li>
-        </ul>
-        <h2>6. Contact Us</h2>
-        <p>If you have any questions, contact us at: <a href="mailto:laphushusamuel3@gmail.com">laphushusamuel3@gmail.com</a></p>
-        <span class="back-link" onclick="showInfoPage('')">← Back to Leago</span>
-    </div>
-
-    <!-- ABOUT -->
-    <div class="info-page" id="page-about">
-        <h1>About Leago</h1>
-        <p><strong>Leago</strong> is an AI-powered educational platform designed to help South African students master their subjects.</p>
-        <h2>Our Mission</h2>
-        <p>To make quality education accessible to every learner in South Africa, using the power of artificial intelligence.</p>
-        <h2>Our Story</h2>
-        <p>Leago was founded with a simple belief: every student deserves a personal tutor. But not everyone can afford one. That's why we built Leago — an AI tutor that's available 24/7, affordable, and personalised to each student's needs.</p>
-        <h2>Our Team</h2>
-        <p><strong>Laphushu Tshukudu</strong> — Founder &amp; CEO. Passionate about education and technology.</p>
-        <h2>Contact</h2>
-        <p>Email: <a href="mailto:laphushusamuel3@gmail.com">laphushusamuel3@gmail.com</a></p>
-        <span class="back-link" onclick="showInfoPage('')">← Back to Leago</span>
-    </div>
-
-    <!-- CONTACT -->
-    <div class="info-page" id="page-contact">
-        <h1>Contact Us</h1>
-        <p>Have questions, feedback, or need help? We'd love to hear from you.</p>
-        <form method="POST" action="/submit-contact">
-            <label>Name</label>
-            <input type="text" name="name" required />
-            <label>Email</label>
-            <input type="email" name="email" required />
-            <label>Message</label>
-            <textarea name="message" rows="5" required></textarea>
-            <button type="submit">Send Message</button>
-        </form>
-        <p style="margin-top:16px;">Or email us directly: <a href="mailto:laphushusamuel3@gmail.com">laphushusamuel3@gmail.com</a></p>
-        <span class="back-link" onclick="showInfoPage('')">← Back to Leago</span>
-    </div>
-
-    <!-- TERMS OF SERVICE -->
-    <div class="info-page" id="page-tos">
-        <h1>Terms of Service</h1>
-        <p><strong>Last updated:</strong> June 2026</p>
-        <p>Welcome to Leago. By using our platform, you agree to the following terms.</p>
-        <h2>1. Acceptance of Terms</h2>
-        <p>By creating an account or using Leago, you agree to be bound by these Terms of Service.</p>
-        <h2>2. Account Responsibility</h2>
-        <p>You are responsible for maintaining the security of your account. Leago is not liable for any loss or damage arising from your failure to protect your account.</p>
-        <h2>3. Use of the Platform</h2>
-        <ul>
-            <li>You may use Leago for personal, educational purposes only.</li>
-            <li>You may not use the platform for any illegal or unauthorised purpose.</li>
-            <li>You may not attempt to reverse-engineer or exploit the platform.</li>
-        </ul>
-        <h2>4. Subscription and Payments</h2>
-        <ul>
-            <li>Leago offers a free 3-day trial.</li>
-            <li>After the trial, a subscription is required to continue using the service.</li>
-            <li>Payments are processed securely through Paystack.</li>
-            <li>You may cancel your subscription at any time via your account settings.</li>
-        </ul>
-        <h2>5. Intellectual Property</h2>
-        <p>All content on Leago, including the AI tutor, logos, and educational materials, is the property of Leago and protected by copyright laws.</p>
-        <h2>6. Disclaimer</h2>
-        <p>Leago is provided "as is" without warranties of any kind. While we strive for accuracy, the AI tutor may occasionally provide incorrect information. Use the platform as a learning aid, not as a sole source of education.</p>
-        <h2>7. Limitation of Liability</h2>
-        <p>To the fullest extent permitted by law, Leago shall not be liable for any indirect, incidental, or consequential damages arising from your use of the platform.</p>
-        <h2>8. Changes to These Terms</h2>
-        <p>We may update these terms from time to time. We will notify you of significant changes.</p>
-        <h2>9. Contact</h2>
-        <p>If you have any questions, contact us at: <a href="mailto:laphushusamuel3@gmail.com">laphushusamuel3@gmail.com</a></p>
-        <span class="back-link" onclick="showInfoPage('')">← Back to Leago</span>
-    </div>
 
     <!-- ============================================================ -->
     <!-- AUTH OVERLAY (Login / Signup) -->
@@ -1347,7 +1160,7 @@
     <!-- ============================================================ -->
     <!-- FOOTER (AdSense pages links) -->
     <!-- ============================================================ -->
-    <footer class="site-footer" id="siteFooter">
+    <footer class="site-footer">
         <div class="inner">
             <div>
                 <h4>🧠 Leago</h4>
@@ -1355,13 +1168,13 @@
             </div>
             <div>
                 <h4>Company</h4>
-                <a onclick="showInfoPage('about')">About</a>
-                <a onclick="showInfoPage('contact')">Contact</a>
+                <a href="/about">About</a>
+                <a href="/contact">Contact</a>
             </div>
             <div>
                 <h4>Legal</h4>
-                <a onclick="showInfoPage('privacy')">Privacy Policy</a>
-                <a onclick="showInfoPage('tos')">Terms of Service</a>
+                <a href="/privacy-policy">Privacy Policy</a>
+                <a href="/tos">Terms of Service</a>
             </div>
             <div>
                 <h4>Contact</h4>
@@ -1381,41 +1194,6 @@
         let currentUser = null;
         let currentSubject = '';
         let selectedGrade = '';
-
-        // ================================================================
-        //  INFO PAGE NAVIGATION
-        // ================================================================
-        function showInfoPage(page) {
-            // Hide all info pages
-            document.querySelectorAll('.info-page').forEach(el => el.classList.remove('active'));
-
-            // Show hero/features/status if going back
-            if (!page) {
-                document.getElementById('heroSection').style.display = 'block';
-                document.getElementById('featuresSection').style.display = 'grid';
-                document.querySelector('.status-bar').style.display = 'block';
-                // If user is logged in, show dashboard instead
-                if (currentUser) {
-                    document.getElementById('dashboard').classList.add('active');
-                    document.getElementById('heroSection').style.display = 'none';
-                    document.getElementById('featuresSection').style.display = 'none';
-                    document.querySelector('.status-bar').style.display = 'none';
-                }
-                return;
-            }
-
-            // Hide hero/features/status when showing info page
-            document.getElementById('heroSection').style.display = 'none';
-            document.getElementById('featuresSection').style.display = 'none';
-            document.querySelector('.status-bar').style.display = 'none';
-            document.getElementById('dashboard').classList.remove('active');
-
-            // Show the requested page
-            const target = document.getElementById('page-' + page);
-            if (target) target.classList.add('active');
-
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
 
         // ================================================================
         //  COUNTRY DATA (GRADES 10–12 + COLLEGE + SUBJECTS)
@@ -1499,6 +1277,7 @@
                         'Natural Resources – Management',
                         'Climate Change – Causes & Solutions'
                     ],
+                    // College subjects
                     'Engineering': [
                         'Mechanical Engineering – Basics',
                         'Electrical Engineering – Circuits',
@@ -1603,6 +1382,7 @@
                         'Climate – Climate Zones & Change',
                         'Cartography – Map Reading'
                     ],
+                    // College subjects (US)
                     'Engineering': [
                         'Mechanical Engineering – Thermofluids',
                         'Electrical Engineering – Signals',
@@ -1683,6 +1463,7 @@
                         'UK Geography – Cities & Regions',
                         'Development – Global Inequality'
                     ],
+                    // College subjects (UK)
                     'Engineering': [
                         'Mechanical – Design & Manufacturing',
                         'Electrical – Power & Control',
@@ -1753,6 +1534,7 @@
                         '进化 – 自然选择',
                         '生态 – 食物链'
                     ],
+                    // College subjects (China)
                     '工程学 (Engineering)': [
                         '机械工程 – 设计',
                         '电气工程 – 电路',
@@ -1810,6 +1592,7 @@
                         'Australian Geography – States & Territories',
                         'Climate – El Niño & Climate Change'
                     ],
+                    // College subjects (Australia)
                     'Engineering': [
                         'Civil – Structural',
                         'Mechanical – Thermodynamics',
@@ -1863,6 +1646,7 @@
                         'Geography – Climate & Vegetation',
                         'Economics – Budget & Taxation'
                     ],
+                    // College subjects (India)
                     'Engineering': [
                         'Mechanical – Design',
                         'Electrical – Circuits',
@@ -1892,6 +1676,7 @@
             'Science': ['Biology', 'Chemistry', 'Physics', 'Earth Science'],
             'History': ['World History', 'Local History'],
             'Geography': ['Physical Geography', 'Human Geography'],
+            // College fallback
             'Engineering': ['Mechanical', 'Electrical', 'Civil'],
             'Computer Science': ['Programming', 'Algorithms', 'Databases'],
             'Business': ['Management', 'Marketing', 'Finance']
@@ -1987,7 +1772,6 @@
                         document.querySelector('.hero').style.display = 'none';
                         document.querySelector('.features').style.display = 'none';
                         document.querySelector('.status-bar').style.display = 'none';
-                        document.getElementById('siteFooter').style.display = 'block';
                         initDashboard(data.user);
                     }, 500);
                 }
@@ -2150,6 +1934,7 @@
                 '生物 (Biology)': '🧬',
                 'Hindi': '🇮🇳',
                 'Social Studies': '🏛️',
+                // College subjects
                 'Engineering': '⚙️',
                 'Computer Science': '💻',
                 'Business & Management': '📊',
