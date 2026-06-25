@@ -532,7 +532,6 @@
             font-size: 1rem;
         }
 
-        /* Grade Selection */
         .grade-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
@@ -592,7 +591,6 @@
             transform: translateY(-2px);
         }
 
-        /* Subjects (hierarchy) */
         .subject-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
@@ -628,7 +626,21 @@
             color: #0b1120;
         }
 
-        /* Back button */
+        .classroom-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .classroom-header h2 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #0b1120;
+        }
+
         .back-btn {
             background: none;
             border: 1px solid #e5e7eb;
@@ -639,77 +651,65 @@
             color: #4b5563;
             transition: all 0.2s;
             font-family: inherit;
-            margin-bottom: 16px;
         }
 
         .back-btn:hover {
             background: #f3f4f6;
         }
 
-        /* Breadcrumb */
-        .breadcrumb {
-            font-size: 0.9rem;
-            color: #6b7280;
-            margin-bottom: 16px;
-            display: flex;
-            flex-wrap: wrap;
-            gap: 4px 8px;
+        .topic-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+            gap: 16px;
         }
 
-        .breadcrumb span {
+        .topic-card {
+            background: white;
+            border: 2px solid #e5e7eb;
+            border-radius: 14px;
+            padding: 20px 18px;
+            transition: all 0.25s;
             cursor: pointer;
-            color: #6366f1;
         }
 
-        .breadcrumb span:hover {
-            text-decoration: underline;
+        .topic-card:hover {
+            border-color: #6366f1;
+            box-shadow: 0 8px 24px rgba(99, 102, 241, 0.08);
         }
 
-        .breadcrumb .current {
+        .topic-card .title {
+            font-weight: 700;
+            font-size: 1rem;
             color: #0b1120;
-            cursor: default;
+        }
+
+        .topic-card .meta {
+            font-size: 0.8rem;
+            color: #6b7280;
+            margin-top: 4px;
+        }
+
+        .topic-card .resources {
+            margin-top: 10px;
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+
+        .topic-card .resources .tag {
+            background: #eef2ff;
+            color: #6366f1;
+            padding: 2px 12px;
+            border-radius: 12px;
+            font-size: 0.7rem;
             font-weight: 600;
         }
 
-        .breadcrumb .separator {
-            color: #d1d5db;
-            cursor: default;
-        }
-
-        /* Lesson content */
-        .lesson-content {
-            background: #f8fafc;
-            border-radius: 12px;
-            padding: 24px;
-            margin: 16px 0;
-            border-left: 4px solid #6366f1;
-        }
-
-        .lesson-content h3 {
-            font-size: 1.3rem;
-            color: #0b1120;
-            margin-bottom: 8px;
-        }
-
-        .lesson-content p {
-            color: #1f2937;
-            line-height: 1.6;
-            margin: 8px 0;
-        }
-
-        .lesson-content ul {
-            padding-left: 24px;
-            color: #1f2937;
-            line-height: 1.6;
-        }
-
-        /* AI Tutor (existing) */
         .tutor-container {
             background: white;
             border-radius: 20px;
             padding: 28px;
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
-            margin-top: 24px;
         }
 
         .tutor-header {
@@ -836,7 +836,9 @@
             color: #6b7280;
         }
 
-        /* Responsive */
+        /* ============================================================ */
+        /* RESPONSIVE */
+        /* ============================================================ */
         @media (max-width: 640px) {
             .hero h1 {
                 font-size: 2rem;
@@ -866,6 +868,9 @@
             }
             .grade-grid {
                 grid-template-columns: repeat(auto-fill, minmax(70px, 1fr));
+            }
+            .topic-grid {
+                grid-template-columns: 1fr;
             }
             .tutor-container {
                 padding: 16px;
@@ -900,7 +905,7 @@
     <!-- ============================================================ -->
     <!-- HERO SECTION -->
     <!-- ============================================================ -->
-    <section class="hero" id="heroSection">
+    <section class="hero">
         <div class="logo">🧠 <span>Leago</span></div>
         <div class="badge">✦ Available Now</div>
         <h1>Learn with AI — High School &amp; College</h1>
@@ -927,7 +932,7 @@
     <!-- ============================================================ -->
     <!-- FEATURES -->
     <!-- ============================================================ -->
-    <section class="features" id="featuresSection">
+    <section class="features" id="features">
         <div class="feature-card">
             <span class="icon">📐</span>
             <h3>Mathematics &amp; English</h3>
@@ -1062,16 +1067,26 @@
             <button class="btn-confirm" id="gradeConfirmBtn" onclick="confirmGrade()">Continue to Subjects →</button>
         </div>
 
-        <!-- ===== PAGE: SUBJECTS (HIERARCHY) ===== -->
+        <!-- ===== PAGE: SUBJECTS ===== -->
         <div class="page-section" id="page-subjects">
             <div class="page-header">
                 <h2>📚 Your Subjects</h2>
-                <p id="subjectsSubtitle">Explore your learning materials.</p>
+                <p id="subjectsSubtitle">Select a subject to start learning.</p>
             </div>
-            <div id="hierarchyContainer"></div>
+            <div class="subject-grid" id="subjectGrid"></div>
         </div>
 
-        <!-- ===== PAGE: AI TUTOR (separate chat) ===== -->
+        <!-- ===== PAGE: CLASSROOM ===== -->
+        <div class="page-section" id="page-classroom">
+            <div class="classroom-header">
+                <h2 id="classroomTitle">Subject</h2>
+                <button class="back-btn" onclick="showPage('subjects')">← Back to Subjects</button>
+            </div>
+            <div id="topicCount" style="font-size:0.9rem;color:#6b7280;margin-bottom:12px;"></div>
+            <div class="topic-grid" id="topicGrid"></div>
+        </div>
+
+        <!-- ===== PAGE: AI TUTOR ===== -->
         <div class="page-section" id="page-tutor">
             <div class="tutor-container">
                 <div class="tutor-header">
@@ -1102,6 +1117,7 @@
         //  STATE
         // ================================================================
         let currentUser = null;
+        let currentSubject = '';
         let selectedGrade = '';
 
         // ================================================================
@@ -1240,167 +1256,356 @@
                     ]
                 }
             },
-            // other countries can be added similarly, but we keep your existing structure.
-            // We'll keep only SA for brevity, but you can add others.
+            'United States': {
+                grades: ['10', '11', '12', 'College'],
+                subjects: {
+                    'English Language Arts': [
+                        'Reading Literature – Fiction Analysis',
+                        'Informational Text – Close Reading',
+                        'Writing – Expository Essays',
+                        'Writing – Persuasive Essays',
+                        'Grammar – Sentence Structure',
+                        'Vocabulary – Academic Words',
+                        'Speaking & Listening – Discussions',
+                        'Media Literacy – Evaluating Sources'
+                    ],
+                    'Mathematics': [
+                        'Algebra I – Linear Functions',
+                        'Algebra II – Quadratics & Polynomials',
+                        'Geometry – Proofs & Constructions',
+                        'Trigonometry – Ratios & Identities',
+                        'Pre-calculus – Functions & Graphs',
+                        'Calculus – Limits & Derivatives',
+                        'Statistics – Probability & Data',
+                        'Financial Algebra – Interest & Loans'
+                    ],
+                    'Science': [
+                        'Biology – Cell Structures',
+                        'Biology – Genetics & Evolution',
+                        'Chemistry – Atomic Structure',
+                        'Chemistry – Chemical Reactions',
+                        'Physics – Motion & Forces',
+                        'Physics – Energy & Waves',
+                        'Earth Science – Weather & Oceans',
+                        'Astronomy – Solar System & Beyond'
+                    ],
+                    'History': [
+                        'American Revolution – Causes & Impact',
+                        'Civil War – Slavery & Emancipation',
+                        'World War I – US Involvement',
+                        'Great Depression – New Deal',
+                        'World War II – Homefront',
+                        'Cold War – Space Race',
+                        'Civil Rights Movement',
+                        'Modern America – 21st Century'
+                    ],
+                    'Geography': [
+                        'Physical Geography – Landforms',
+                        'Human Geography – Culture & Migration',
+                        'US Geography – Regions & Capitals',
+                        'World Geography – Continents & Countries',
+                        'Climate – Climate Zones & Change',
+                        'Cartography – Map Reading'
+                    ],
+                    // College subjects (US)
+                    'Engineering': [
+                        'Mechanical Engineering – Thermofluids',
+                        'Electrical Engineering – Signals',
+                        'Civil Engineering – Structural Analysis',
+                        'Computer Engineering – Hardware',
+                        'Aerospace Engineering – Dynamics'
+                    ],
+                    'Computer Science': [
+                        'Programming – Java & C++',
+                        'Data Science – Pandas & R',
+                        'Machine Learning – Intro',
+                        'Operating Systems – Concepts',
+                        'Software Engineering – Agile'
+                    ],
+                    'Business': [
+                        'Business Administration – Core',
+                        'Marketing – Digital Marketing',
+                        'Finance – Corporate Finance',
+                        'Economics – Micro & Macro',
+                        'Entrepreneurship – Innovation'
+                    ],
+                    'Health Sciences': [
+                        'Pre-Med – Biology',
+                        'Nursing – Clinical Skills',
+                        'Public Health – Global Health',
+                        'Psychology – Behavioral'
+                    ],
+                    'Law': [
+                        'Torts – Civil Law',
+                        'Contracts – Legal Agreements',
+                        'Criminal Procedure',
+                        'Constitutional Law – US'
+                    ],
+                    'Education': [
+                        'Educational Psychology',
+                        'Curriculum Development',
+                        'Classroom Technology'
+                    ]
+                }
+            },
+            'United Kingdom': {
+                grades: ['10', '11', '12', '13', 'College'],
+                subjects: {
+                    'English': [
+                        'Shakespeare – Macbeth',
+                        'Poetry – Sonnets & Romantics',
+                        'Novel – Pride and Prejudice',
+                        'Creative Writing – Short Stories',
+                        'Grammar – Advanced Punctuation',
+                        'Non-fiction – Articles & Speeches'
+                    ],
+                    'Mathematics': [
+                        'Algebra – Equations & Graphs',
+                        'Geometry – Circles & Triangles',
+                        'Trigonometry – Sine & Cosine Rules',
+                        'Calculus – Differentiation & Integration',
+                        'Statistics – Averages & Spread',
+                        'Mechanics – Vectors & Forces'
+                    ],
+                    'Science': [
+                        'Biology – Cells & Microscopy',
+                        'Chemistry – Periodic Table & Bonding',
+                        'Physics – Forces & Motion',
+                        'Earth Science – Ecosystems',
+                        'Astronomy – Stars & Galaxies'
+                    ],
+                    'History': [
+                        'Medieval England – Crusades',
+                        'Tudors – Henry VIII & Elizabeth',
+                        'Victorian Britain – Empire',
+                        'World War I – Trenches',
+                        'World War II – Blitz',
+                        'Cold War – Britain\'s Role'
+                    ],
+                    'Geography': [
+                        'Physical – Rivers & Glaciers',
+                        'Human – Population & Settlement',
+                        'UK Geography – Cities & Regions',
+                        'Development – Global Inequality'
+                    ],
+                    // College subjects (UK)
+                    'Engineering': [
+                        'Mechanical – Design & Manufacturing',
+                        'Electrical – Power & Control',
+                        'Civil – Geotechnical Engineering',
+                        'Chemical – Process Engineering',
+                        'Aerospace – Flight Mechanics'
+                    ],
+                    'Computer Science': [
+                        'Programming – Python & Java',
+                        'Algorithms – Complexity',
+                        'AI – Neural Networks',
+                        'Data Security – Cryptography'
+                    ],
+                    'Business': [
+                        'Management – Operations',
+                        'Marketing – Consumer Behaviour',
+                        'Finance – Investment'
+                    ],
+                    'Law': [
+                        'Criminal Law – UK',
+                        'Contract Law – English',
+                        'EU Law – Regulations'
+                    ]
+                }
+            },
+            'China': {
+                grades: ['10', '11', '12', 'College'],
+                subjects: {
+                    '语文 (Chinese)': [
+                        '文言文 – 唐宋八大家',
+                        '现代诗歌 – 鲁迅',
+                        '小说 – 红楼梦选段',
+                        '议论文 – 写作技巧',
+                        '语法 – 句子结构',
+                        '阅读 – 理解与分析'
+                    ],
+                    '数学 (Mathematics)': [
+                        '代数 – 方程与不等式',
+                        '几何 – 三角形与圆',
+                        '三角函数 – 公式与应用',
+                        '微积分 – 导数与积分',
+                        '统计 – 数据分析',
+                        '概率 – 事件与计算'
+                    ],
+                    '英语 (English)': [
+                        '阅读 – 小说片段',
+                        '语法 – 时态与语态',
+                        '写作 – 书信与文章',
+                        '听力 – 对话训练',
+                        '词汇 – 高阶词汇'
+                    ],
+                    '物理 (Physics)': [
+                        '力学 – 运动与力',
+                        '热学 – 温度与能量',
+                        '电学 – 电路与磁',
+                        '光学 – 反射与折射',
+                        '原子物理 – 核反应'
+                    ],
+                    '化学 (Chemistry)': [
+                        '原子结构 – 元素周期表',
+                        '化学反应 – 化学方程式',
+                        '有机化学 – 烃与衍生物',
+                        '无机化学 – 酸碱盐'
+                    ],
+                    '生物 (Biology)': [
+                        '细胞 – 结构与功能',
+                        '遗传 – DNA与基因',
+                        '进化 – 自然选择',
+                        '生态 – 食物链'
+                    ],
+                    // College subjects (China)
+                    '工程学 (Engineering)': [
+                        '机械工程 – 设计',
+                        '电气工程 – 电路',
+                        '土木工程 – 结构',
+                        '计算机工程 – 硬件'
+                    ],
+                    '计算机科学 (CS)': [
+                        '编程 – Python',
+                        '数据结构 – 算法',
+                        '人工智能 – 入门'
+                    ],
+                    '商学 (Business)': [
+                        '管理 – 原理',
+                        '市场营销 – 策略'
+                    ],
+                    '法学 (Law)': [
+                        '刑法 – 基础',
+                        '宪法 – 中国'
+                    ]
+                }
+            },
+            'Australia': {
+                grades: ['10', '11', '12', 'College'],
+                subjects: {
+                    'English': [
+                        'Novel Study – Australian Literature',
+                        'Persuasive Writing – Debates',
+                        'Poetry – Performance & Analysis',
+                        'Grammar – Tenses & Phrases',
+                        'Media – Analysis of Adverts'
+                    ],
+                    'Mathematics': [
+                        'Algebra – Linear & Quadratic',
+                        'Geometry – Trigonometry',
+                        'Calculus – Differentiation',
+                        'Statistics – Data Representation',
+                        'Financial Maths – Earning & Saving'
+                    ],
+                    'Science': [
+                        'Biology – Cells & Systems',
+                        'Chemistry – Atomic & Molecular',
+                        'Physics – Energy & Electricity',
+                        'Earth Science – Plate Tectonics',
+                        'Environmental Science – Sustainability'
+                    ],
+                    'History': [
+                        'Australian History – Colonisation',
+                        'World History – Industrial Revolution',
+                        'Civil Rights – Global Movements',
+                        'Modern History – World Wars'
+                    ],
+                    'Geography': [
+                        'Physical – Landforms & Rivers',
+                        'Human – Population & Urbanisation',
+                        'Australian Geography – States & Territories',
+                        'Climate – El Niño & Climate Change'
+                    ],
+                    // College subjects (Australia)
+                    'Engineering': [
+                        'Civil – Structural',
+                        'Mechanical – Thermodynamics',
+                        'Electrical – Power Systems'
+                    ],
+                    'Computer Science': [
+                        'Programming – Python',
+                        'Data Science – Analytics'
+                    ],
+                    'Business': [
+                        'Management – Organisational',
+                        'Marketing – Digital'
+                    ],
+                    'Health Sciences': [
+                        'Nursing – Clinical',
+                        'Public Health – Epidemiology'
+                    ]
+                }
+            },
+            'India': {
+                grades: ['10', '11', '12', 'College'],
+                subjects: {
+                    'English': [
+                        'Reading – Short Stories',
+                        'Writing – Formal Letters',
+                        'Grammar – Direct & Indirect Speech',
+                        'Literature – Shakespeare Overview'
+                    ],
+                    'Hindi': [
+                        'गद्य – कहानियाँ',
+                        'पद्य – कविता विश्लेषण',
+                        'व्याकरण – संधि & समास',
+                        'निबंध – विषय विस्तार'
+                    ],
+                    'Mathematics': [
+                        'Algebra – Quadratic Equations',
+                        'Geometry – Circles & Theorems',
+                        'Trigonometry – Ratios',
+                        'Calculus – Differentiation',
+                        'Statistics – Mean, Median, Mode'
+                    ],
+                    'Science': [
+                        'Physics – Motion & Sound',
+                        'Chemistry – Acids & Bases',
+                        'Biology – Respiration & Circulation',
+                        'Environmental Science – Pollution'
+                    ],
+                    'Social Studies': [
+                        'Indian History – Independence',
+                        'World History – Cold War',
+                        'Geography – Climate & Vegetation',
+                        'Economics – Budget & Taxation'
+                    ],
+                    // College subjects (India)
+                    'Engineering': [
+                        'Mechanical – Design',
+                        'Electrical – Circuits',
+                        'Computer – Programming'
+                    ],
+                    'Computer Science': [
+                        'Programming – C++',
+                        'Data Structures',
+                        'Web Development'
+                    ],
+                    'Business': [
+                        'Management – Principles',
+                        'Marketing – Basics'
+                    ],
+                    'Medicine (Pre-med)': [
+                        'Anatomy – Human',
+                        'Physiology – Body'
+                    ]
+                }
+            }
         };
 
-        // Default fallback for unsupported countries
+        // Default fallback
         const DEFAULT_SUBJECTS = {
             'Mathematics': ['Algebra', 'Geometry', 'Trigonometry', 'Calculus', 'Statistics'],
             'English': ['Reading', 'Writing', 'Grammar', 'Literature'],
             'Science': ['Biology', 'Chemistry', 'Physics', 'Earth Science'],
             'History': ['World History', 'Local History'],
-            'Geography': ['Physical Geography', 'Human Geography']
+            'Geography': ['Physical Geography', 'Human Geography'],
+            // College fallback
+            'Engineering': ['Mechanical', 'Electrical', 'Civil'],
+            'Computer Science': ['Programming', 'Algorithms', 'Databases'],
+            'Business': ['Management', 'Marketing', 'Finance']
         };
-
-        // ================================================================
-        //  SUBJECT HIERARCHY (NEW) – Add more subjects as needed
-        // ================================================================
-        const SUBJECT_HIERARCHY = {
-            'Mathematics': {
-                courses: {
-                    'Algebra 1': {
-                        units: {
-                            'Linear Equations': {
-                                lessons: [
-                                    {
-                                        title: 'Slope-Intercept Form',
-                                        content: `
-                                            <h3>Slope-Intercept Form</h3>
-                                            <p>The equation <strong>y = mx + b</strong> is called slope-intercept form.</p>
-                                            <ul>
-                                                <li><strong>m</strong> = slope (rise over run)</li>
-                                                <li><strong>b</strong> = y-intercept (where the line crosses the y-axis)</li>
-                                            </ul>
-                                            <p><strong>Example:</strong> y = 2x + 3 → slope = 2, y-intercept = 3</p>
-                                        `
-                                    },
-                                    {
-                                        title: 'Point-Slope Form',
-                                        content: `
-                                            <h3>Point-Slope Form</h3>
-                                            <p>The equation <strong>y - y₁ = m(x - x₁)</strong> is point-slope form.</p>
-                                            <ul>
-                                                <li><strong>(x₁, y₁)</strong> = a point on the line</li>
-                                                <li><strong>m</strong> = slope</li>
-                                            </ul>
-                                            <p><strong>Example:</strong> Through (2,3) with slope 4 → y - 3 = 4(x - 2)</p>
-                                        `
-                                    },
-                                    {
-                                        title: 'Graphing Lines',
-                                        content: `
-                                            <h3>Graphing Lines</h3>
-                                            <p>To graph a line, plot the y-intercept, then use the slope to find another point.</p>
-                                            <p><strong>Steps:</strong></p>
-                                            <ol>
-                                                <li>Plot the y-intercept (b) on the y-axis.</li>
-                                                <li>From that point, move according to the slope (rise/run).</li>
-                                                <li>Draw a straight line through the points.</li>
-                                            </ol>
-                                        `
-                                    }
-                                ]
-                            },
-                            'Inequalities': {
-                                lessons: [
-                                    {
-                                        title: 'Graphing Inequalities',
-                                        content: `
-                                            <h3>Graphing Inequalities</h3>
-                                            <p>Use a dashed line for <strong>&lt;</strong> or <strong>&gt;</strong>, and a solid line for <strong>≤</strong> or <strong>≥</strong>.</p>
-                                            <p>Test a point to determine which side to shade.</p>
-                                        `
-                                    }
-                                ]
-                            }
-                        }
-                    },
-                    'Geometry': {
-                        units: {
-                            'Triangles': {
-                                lessons: [
-                                    {
-                                        title: 'Area of a Triangle',
-                                        content: `
-                                            <h3>Area of a Triangle</h3>
-                                            <p><strong>Formula:</strong> A = ½ × base × height</p>
-                                            <p>Example: Base = 6, height = 4 → A = ½ × 6 × 4 = 12</p>
-                                        `
-                                    }
-                                ]
-                            }
-                        }
-                    }
-                }
-            },
-            'English': {
-                courses: {
-                    'English 10': {
-                        units: {
-                            'Grammar': {
-                                lessons: [
-                                    {
-                                        title: 'Parts of Speech',
-                                        content: `
-                                            <h3>Parts of Speech</h3>
-                                            <p><strong>Nouns:</strong> person, place, thing (dog, city, happiness)</p>
-                                            <p><strong>Verbs:</strong> actions or states (run, is, think)</p>
-                                            <p><strong>Adjectives:</strong> describe nouns (big, red, exciting)</p>
-                                            <p><strong>Adverbs:</strong> describe verbs (quickly, very, well)</p>
-                                        `
-                                    },
-                                    {
-                                        title: 'Subject-Verb Agreement',
-                                        content: `
-                                            <h3>Subject-Verb Agreement</h3>
-                                            <p><strong>Rule:</strong> Singular subjects take singular verbs, plural subjects take plural verbs.</p>
-                                            <p><strong>Example:</strong></p>
-                                            <ul>
-                                                <li>She <strong>runs</strong> fast. (singular)</li>
-                                                <li>They <strong>run</strong> fast. (plural)</li>
-                                            </ul>
-                                        `
-                                    }
-                                ]
-                            }
-                        }
-                    }
-                }
-            }
-        };
-
-        // Icons for subjects (used in hierarchy)
-        const SUBJECTS_ICONS = {
-            'Mathematics': '📐',
-            'English': '📖',
-            'Science': '🔬',
-            'History': '🏛️',
-            'Geography': '🌍',
-            'Life Orientation': '🧘',
-            'Accounting': '💰',
-            'Business Studies': '📊',
-            'Economics': '📈',
-            'Life Sciences': '🧬',
-            'Physical Sciences': '⚛️',
-            'Technology': '💻',
-            'Engineering': '⚙️',
-            'Computer Science': '💻',
-            'Business & Management': '📊',
-            'Health Sciences': '🏥',
-            'Law': '⚖️',
-            'Education': '📚',
-            'Arts & Humanities': '🎨'
-        };
-
-        // ================================================================
-        //  HIERARCHY STATE
-        // ================================================================
-        let hierarchyView = 'subjects'; // 'subjects' | 'courses' | 'units' | 'lessons' | 'lesson'
-        let currentSubject = '';
-        let currentCourse = '';
-        let currentUnit = '';
-        let currentLesson = null;
 
         // ================================================================
         //  AUTH UI
@@ -1488,10 +1693,10 @@
                     showSuccess('loginSuccess', 'Login successful!');
                     setTimeout(() => {
                         closeAuth();
-                        document.getElementById('heroSection').style.display = 'none';
-                        document.getElementById('featuresSection').style.display = 'none';
-                        document.querySelector('.status-bar').style.display = 'none';
                         document.getElementById('dashboard').classList.add('active');
+                        document.querySelector('.hero').style.display = 'none';
+                        document.querySelector('.features').style.display = 'none';
+                        document.querySelector('.status-bar').style.display = 'none';
                         initDashboard(data.user);
                     }, 500);
                 }
@@ -1565,7 +1770,7 @@
         }
 
         // ================================================================
-        //  PAGE NAVIGATION
+        //  DASHBOARD FUNCTIONS
         // ================================================================
         function showPage(page) {
             document.querySelectorAll('.page-section').forEach(el => el.classList.remove('active'));
@@ -1574,9 +1779,6 @@
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        // ================================================================
-        //  GRADE SELECTION
-        // ================================================================
         function showGradeSelection() {
             const country = currentUser.country || 'South Africa';
             const data = COUNTRY_DATA[country];
@@ -1623,117 +1825,6 @@
             showSubjects();
         }
 
-        // ================================================================
-        //  SUBJECT HIERARCHY RENDER
-        // ================================================================
-        function renderHierarchy() {
-            const container = document.getElementById('hierarchyContainer');
-            if (!container) return;
-
-            let html = '';
-
-            if (hierarchyView === 'subjects') {
-                const subjectNames = Object.keys(SUBJECT_HIERARCHY);
-                html = `<div class="subject-grid">`;
-                subjectNames.forEach(subj => {
-                    html += `
-                        <div class="subject-card" onclick="navigateHierarchy('subject', '${subj}')">
-                            <span class="icon">${SUBJECTS_ICONS[subj] || '📚'}</span>
-                            <span class="name">${subj}</span>
-                        </div>
-                    `;
-                });
-                html += `</div>`;
-            } else if (hierarchyView === 'courses') {
-                const courses = SUBJECT_HIERARCHY[currentSubject].courses;
-                html = `<button class="back-btn" onclick="navigateHierarchy('back')">← Back to Subjects</button><div class="subject-grid">`;
-                Object.keys(courses).forEach(course => {
-                    html += `
-                        <div class="subject-card" onclick="navigateHierarchy('course', '${course}')">
-                            <span class="icon">📘</span>
-                            <span class="name">${course}</span>
-                        </div>
-                    `;
-                });
-                html += `</div>`;
-            } else if (hierarchyView === 'units') {
-                const units = SUBJECT_HIERARCHY[currentSubject].courses[currentCourse].units;
-                html = `<button class="back-btn" onclick="navigateHierarchy('back')">← Back to Courses</button><div class="subject-grid">`;
-                Object.keys(units).forEach(unit => {
-                    html += `
-                        <div class="subject-card" onclick="navigateHierarchy('unit', '${unit}')">
-                            <span class="icon">📁</span>
-                            <span class="name">${unit}</span>
-                        </div>
-                    `;
-                });
-                html += `</div>`;
-            } else if (hierarchyView === 'lessons') {
-                const lessons = SUBJECT_HIERARCHY[currentSubject].courses[currentCourse].units[currentUnit].lessons;
-                html = `<button class="back-btn" onclick="navigateHierarchy('back')">← Back to Units</button><div class="subject-grid">`;
-                lessons.forEach((lesson, index) => {
-                    html += `
-                        <div class="subject-card" onclick="navigateHierarchy('lesson', ${index})">
-                            <span class="icon">📄</span>
-                            <span class="name">${lesson.title}</span>
-                        </div>
-                    `;
-                });
-                html += `</div>`;
-            } else if (hierarchyView === 'lesson') {
-                const lesson = currentLesson;
-                html = `
-                    <div class="breadcrumb">
-                        <span onclick="navigateHierarchy('subjects')">${currentSubject}</span>
-                        <span class="separator"> / </span>
-                        <span onclick="navigateHierarchy('courses')">${currentCourse}</span>
-                        <span class="separator"> / </span>
-                        <span onclick="navigateHierarchy('units')">${currentUnit}</span>
-                        <span class="separator"> / </span>
-                        <span class="current">${lesson.title}</span>
-                    </div>
-                    <div class="lesson-content">
-                        ${lesson.content}
-                    </div>
-                    <button class="back-btn" onclick="navigateHierarchy('back')">← Back to Lessons</button>
-                `;
-            }
-
-            container.innerHTML = html;
-        }
-
-        function navigateHierarchy(action, value) {
-            if (action === 'subject') {
-                currentSubject = value;
-                hierarchyView = 'courses';
-            } else if (action === 'course') {
-                currentCourse = value;
-                hierarchyView = 'units';
-            } else if (action === 'unit') {
-                currentUnit = value;
-                hierarchyView = 'lessons';
-            } else if (action === 'lesson') {
-                const lessons = SUBJECT_HIERARCHY[currentSubject].courses[currentCourse].units[currentUnit].lessons;
-                currentLesson = lessons[value];
-                hierarchyView = 'lesson';
-            } else if (action === 'back') {
-                if (hierarchyView === 'courses') hierarchyView = 'subjects';
-                else if (hierarchyView === 'units') hierarchyView = 'courses';
-                else if (hierarchyView === 'lessons') hierarchyView = 'units';
-                else if (hierarchyView === 'lesson') hierarchyView = 'lessons';
-            } else if (action === 'subjects') {
-                hierarchyView = 'subjects';
-            } else if (action === 'courses') {
-                hierarchyView = 'courses';
-            } else if (action === 'units') {
-                hierarchyView = 'units';
-            }
-            renderHierarchy();
-        }
-
-        // ================================================================
-        //  SHOW SUBJECTS (called after grade selection)
-        // ================================================================
         function showSubjects() {
             const country = currentUser.country || 'South Africa';
             const data = COUNTRY_DATA[country];
@@ -1741,17 +1832,95 @@
 
             const levelLabel = (currentUser.grade === 'College') ? 'College' : 'Grade ' + currentUser.grade;
             document.getElementById('subjectsSubtitle').textContent =
-                levelLabel + ' · ' + country + ' · Explore your learning materials.';
+                levelLabel + ' · ' + country + ' · Select a subject to start learning.';
 
-            // Initialize hierarchy view
-            hierarchyView = 'subjects';
-            renderHierarchy();
-
+            const grid = document.getElementById('subjectGrid');
+            grid.innerHTML = '';
+            const icons = {
+                'Mathematics': '📐',
+                'Math': '📐',
+                'English': '📖',
+                'Science': '🔬',
+                'History': '🏛️',
+                'Geography': '🌍',
+                'Life Orientation': '🧘',
+                'Accounting': '💰',
+                'Business Studies': '📊',
+                'Economics': '📈',
+                'Life Sciences': '🧬',
+                'Physical Sciences': '⚛️',
+                'Technology': '💻',
+                'English Language Arts': '📖',
+                '语文 (Chinese)': '🀄',
+                '数学 (Mathematics)': '📐',
+                '英语 (English)': '📖',
+                '物理 (Physics)': '⚡',
+                '化学 (Chemistry)': '🧪',
+                '生物 (Biology)': '🧬',
+                'Hindi': '🇮🇳',
+                'Social Studies': '🏛️',
+                // College subjects
+                'Engineering': '⚙️',
+                'Computer Science': '💻',
+                'Business & Management': '📊',
+                'Business': '📊',
+                'Health Sciences': '🏥',
+                'Law': '⚖️',
+                'Education': '📚',
+                'Arts & Humanities': '🎨',
+                '工程学 (Engineering)': '⚙️',
+                '计算机科学 (CS)': '💻',
+                '商学 (Business)': '📊',
+                '法学 (Law)': '⚖️',
+                'Medicine (Pre-med)': '🏥'
+            };
+            Object.keys(subjects).forEach(name => {
+                const div = document.createElement('div');
+                div.className = 'subject-card';
+                div.innerHTML = `<span class="icon">${icons[name] || '📚'}</span><span class="name">${name}</span>`;
+                div.onclick = () => openSubject(name);
+                grid.appendChild(div);
+            });
             showPage('subjects');
         }
 
+        function openSubject(subject) {
+            currentSubject = subject;
+            document.getElementById('classroomTitle').textContent = subject;
+            const country = currentUser.country || 'South Africa';
+            const data = COUNTRY_DATA[country];
+            const topics = data ? data.subjects[subject] : DEFAULT_SUBJECTS[subject] || [];
+
+            const grid = document.getElementById('topicGrid');
+            const countDiv = document.getElementById('topicCount');
+            countDiv.textContent = 'Showing ' + topics.length + ' topics';
+
+            if (topics.length === 0) {
+                grid.innerHTML = `<div class="empty-state">No topics available for this subject yet.</div>`;
+            } else {
+                grid.innerHTML = topics.map(t => `
+                    <div class="topic-card" onclick="openTutor('${subject}', '${t}')">
+                        <div class="title">${t}</div>
+                        <div class="meta">${subject}</div>
+                        <div class="resources"><span class="tag">Lesson</span><span class="tag">Quiz</span><span class="tag">Worksheet</span></div>
+                    </div>
+                `).join('');
+            }
+            showPage('classroom');
+        }
+
+        function openTutor(subject, topic) {
+            currentSubject = subject;
+            document.getElementById('tutorContext').textContent = subject + ' - ' + topic;
+            showPage('tutor');
+            const box = document.getElementById('chatBox');
+            box.innerHTML = `<div class="msg bot">👋 Welcome! Ask me anything — I'll guide you step by step.</div>`;
+            document.getElementById('chatInput').value = 'I\'m learning about "' + topic + '" in ' + subject + '. Can you teach me step by step?';
+            setTimeout(sendChat, 500);
+        }
+
         // ================================================================
-        //  AI TUTOR CHAT (existing)
+        //  CHAT
         // ================================================================
         async function sendChat() {
             const input = document.getElementById('chatInput');
@@ -1797,7 +1966,7 @@
         }
 
         // ================================================================
-        //  VOICE (optional)
+        //  VOICE
         // ================================================================
         function speakText(text) {
             if (!('speechSynthesis' in window)) return;
@@ -1851,6 +2020,9 @@
             } catch (err) { console.error('Subscription check error:', err); }
         }
 
+        // ================================================================
+        //  PAYMENT: SUBSCRIBE
+        // ================================================================
         async function subscribe() {
             if (!currentUser) { alert('Please log in first.'); return; }
             try {
@@ -1881,8 +2053,8 @@
             if (confirm('Are you sure you want to logout?')) {
                 localStorage.removeItem('synapse_user');
                 document.getElementById('dashboard').classList.remove('active');
-                document.getElementById('heroSection').style.display = 'block';
-                document.getElementById('featuresSection').style.display = 'grid';
+                document.querySelector('.hero').style.display = 'block';
+                document.querySelector('.features').style.display = 'grid';
                 document.querySelector('.status-bar').style.display = 'block';
                 document.getElementById('loginEmail').value = '';
                 document.getElementById('loginPassword').value = '';
@@ -1898,15 +2070,15 @@
             if (stored) {
                 try {
                     const user = JSON.parse(stored);
-                    document.getElementById('heroSection').style.display = 'none';
-                    document.getElementById('featuresSection').style.display = 'none';
+                    document.querySelector('.hero').style.display = 'none';
+                    document.querySelector('.features').style.display = 'none';
                     document.querySelector('.status-bar').style.display = 'none';
                     document.getElementById('dashboard').classList.add('active');
                     initDashboard(user);
                 } catch (e) { /* invalid stored data, show hero */ }
             }
 
-            // Enter key for login/signup
+            // Enter key support
             document.addEventListener('keydown', function(e) {
                 if (e.key === 'Enter') {
                     if (document.getElementById('loginPage').style.display !== 'none' &&
@@ -1920,12 +2092,12 @@
                 }
             });
 
-            // Escape to close auth
+            // Close auth overlay on Escape
             document.addEventListener('keydown', function(e) {
                 if (e.key === 'Escape') closeAuth();
             });
 
-            // Click outside to close auth
+            // Close auth overlay on click outside
             document.getElementById('authOverlay').addEventListener('click', function(e) {
                 if (e.target === this) closeAuth();
             });
