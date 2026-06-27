@@ -6,8 +6,23 @@ const path = require("path");
 const OpenAI = require("openai");
 const { Pool } = require("pg");
 const Paystack = require('paystack')(process.env.PAYSTACK_SECRET_KEY);
+const jwt = require('jsonwebtoken');
+const bcrypt = require('bcryptjs');
+const { Resend } = require('resend');
+const http = require('http');
+const socketIo = require('socket.io');
 
 const app = express();
+const server = http.createServer(app);
+const io = socketIo(server, {
+  cors: {
+    origin: process.env.CLIENT_URL || 'https://synapses-uwh1.onrender.com',
+    credentials: true
+  }
+});
+
+// ================= RESEND EMAIL =================
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 // ================= MIDDLEWARE =================
 app.use(cors());
@@ -37,6 +52,8 @@ async function initDB() {
         country TEXT,
         grade TEXT,
         role TEXT DEFAULT 'learner',
+        is_admin BOOLEAN DEFAULT false,
+        is_banned BOOLEAN DEFAULT false,
         created_at TIMESTAMP DEFAULT NOW()
       )
     `);
@@ -62,7 +79,7 @@ async function initDB() {
       )
     `);
 
-    console.log("✅ Database ready");
+    console.log("✅ Database ready with admin columns");
   } catch (err) {
     console.error("❌ DB init error:", err.message);
   }
@@ -90,30 +107,79 @@ async function ensureTrial(userId) {
   }
 }
 
+// ================= SEND EMAIL =================
+async function sendEmail(to, subject, html) {
+  try {
+    const { data, error } = await resend.emails.send({
+      from: 'Leago <onboarding@resend.dev>',
+      to: [to],
+      subject: subject,
+      html: html,
+    });
+    if (error) { console.error('Email error:', error); return false; }
+    console.log('✅ Email sent to', to);
+    return true;
+  } catch (err) {
+    console.error('Email send error:', err);
+    return false;
+  }
+}
+
+// ================= AUTH MIDDLEWARE =================
+function authenticateToken(req, res, next) {
+  const authHeader = req.headers['authorization'];
+  const token = authHeader && authHeader.split(' ')[1];
+  if (!token) return res.status(401).json({ error: 'Access denied. No token provided.' });
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    req.user = decoded;
+    next();
+  } catch (err) {
+    return res.status(403).json({ error: 'Invalid or expired token.' });
+  }
+}
+
+function adminOnly(req, res, next) {
+  if (!req.user.is_admin) {
+    return res.status(403).json({ error: 'Admin access required.' });
+  }
+  next();
+}
+
 // ================= AUTH: SIGNUP =================
 app.post("/signup", async (req, res) => {
   const { email, password, name, country, role } = req.body;
-
   if (!email || !password || !name || !country) {
     return res.status(400).json({ error: "All fields required" });
   }
   if (password.length < 6) {
     return res.status(400).json({ error: "Password must be at least 6 characters" });
   }
-
   try {
     const existing = await db.query(`SELECT * FROM users WHERE email = $1`, [email]);
     if (existing.rows.length > 0) {
       return res.status(400).json({ error: "Email already registered" });
     }
-
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(password, salt);
     const userId = 'user_' + email.replace(/[^a-zA-Z0-9]/g, '_');
     await db.query(
       `INSERT INTO users (userId, email, password, name, country, role)
        VALUES ($1, $2, $3, $4, $5, $6)`,
-      [userId, email, password, name, country, role || 'learner']
+      [userId, email, hashedPassword, name, country, role || 'learner']
     );
     await ensureTrial(userId);
+
+    await sendEmail(
+      email,
+      '🎉 Welcome to Leago!',
+      `
+      <h1>Welcome ${name}!</h1>
+      <p>Your AI tutor is ready to help you learn.</p>
+      <p>You have a <strong>3-day free trial</strong> to explore all subjects.</p>
+      <p><a href="https://synapses-uwh1.onrender.com" style="background:#6366f1;color:white;padding:12px 24px;border-radius:8px;text-decoration:none;">Start Learning Now →</a></p>
+      `
+    );
 
     res.json({
       success: true,
@@ -128,38 +194,48 @@ app.post("/signup", async (req, res) => {
 // ================= AUTH: LOGIN =================
 app.post("/login", async (req, res) => {
   const { email, password } = req.body;
-
   if (!email || !password) {
     return res.status(400).json({ error: "Email and password required" });
   }
-
   try {
-    const result = await db.query(
-      `SELECT * FROM users WHERE email = $1 AND password = $2`,
-      [email, password]
-    );
-
+    const result = await db.query(`SELECT * FROM users WHERE email = $1`, [email]);
     if (result.rows.length === 0) {
       return res.status(401).json({ error: "Invalid email or password" });
     }
-
     const user = result.rows[0];
-    await ensureTrial(user.userid);
+
+    if (user.is_banned) {
+      return res.status(403).json({ error: "Your account has been suspended." });
+    }
+
+    const passwordMatch = await bcrypt.compare(password, user.password);
+    if (!passwordMatch) {
+      return res.status(401).json({ error: "Invalid email or password" });
+    }
+
+    const token = jwt.sign(
+      { id: user.userid, email: user.email, is_admin: user.is_admin || false },
+      process.env.JWT_SECRET,
+      { expiresIn: process.env.JWT_EXPIRE || '7d' }
+    );
 
     res.json({
       success: true,
+      token,
       user: {
         id: user.userid,
         email: user.email,
         name: user.name,
         country: user.country,
         role: user.role,
-        grade: user.grade
+        grade: user.grade,
+        is_admin: user.is_admin || false,
+        is_banned: user.is_banned || false
       }
     });
   } catch (err) {
     console.error("Login error:", err);
-    res.status(500).json({ error: "Server error. Please try again." });
+    res.status(500).json({ error: "Server error" });
   }
 });
 
@@ -183,13 +259,15 @@ app.post("/chat", async (req, res) => {
   if (!userId || !message) {
     return res.status(400).json({ reply: "Missing userId or message" });
   }
-
   try {
     await ensureTrial(userId);
     const userResult = await db.query(`SELECT * FROM users WHERE userId = $1`, [userId]);
     const user = userResult.rows[0];
     if (!user) {
       return res.json({ reply: "Please create your profile first." });
+    }
+    if (user.is_banned) {
+      return res.json({ reply: "Your account has been suspended. Please contact support." });
     }
 
     const subResult = await db.query(`SELECT * FROM subscriptions WHERE userId = $1`, [userId]);
@@ -198,7 +276,6 @@ app.post("/chat", async (req, res) => {
       return res.json({ reply: "Subscription error." });
     }
 
-    // ===== SUBSCRIPTION CHECK =====
     const trialDays = 3;
     const start = new Date(sub.startdate || sub.startDate);
     const now = new Date();
@@ -217,66 +294,28 @@ app.post("/chat", async (req, res) => {
         reply: "Your 3-day free trial has ended. Please subscribe to continue learning."
       });
     }
-
     if (sub.status === 'expired') {
       return res.json({
         reply: "Your subscription has expired. Please renew to continue learning."
       });
     }
 
-    // Get chat history
     const messagesResult = await db.query(
       `SELECT role, content FROM messages WHERE userId = $1 ORDER BY id DESC LIMIT 10`,
       [userId]
     );
 
-    // Build level description for AI
     const levelDesc = user.grade ? user.grade : 'Not specified';
-
     const systemPrompt = `
-You are Leago, a warm, patient, and encouraging AI tutor. Your goal is to help students learn through natural conversation.
+You are Leago, a warm, patient, and encouraging AI tutor.
 
-CRITICAL RULES FOR EVERY CONVERSATION:
-
-1. START WITH QUESTIONS, NOT LECTURES:
-   - NEVER start with a long explanation.
-   - ALWAYS start by asking the student what they want to learn.
-   - Then ask about their level (high school, college, etc.).
-   - Then ask what they already know about the topic.
-   - Only after you have this information, begin teaching.
-
-2. ONE QUESTION AT A TIME:
-   - Never ask multiple questions in one message.
-   - Wait for the student's response before asking the next question.
-   - This keeps the conversation natural and not overwhelming.
-
-3. TEACHING STYLE:
-   - Explain concepts clearly with real-world examples.
-   - Define new terms when they appear.
-   - Show 2-3 worked examples step by step.
-   - Check understanding: "Do you understand? Shall I explain again?"
-   - Give one simple question to check understanding.
-   - Praise correct answers: "Great job!", "Well done!"
-
-4. IF STUDENT STRUGGLES:
-   - Be encouraging: "That's a good try! Let me explain it another way..."
-   - Give hints instead of the answer.
-   - Ask them to explain their thinking.
-
-5. END THE SESSION:
-   - When the student demonstrates understanding, ask them to explain the concept in their own words.
-   - Tell them you're here to help if they have further questions.
-
-CONVERSATION STARTER TEMPLATE:
-"Hi [student name]! I'm Leago, your AI tutor. What would you like to learn about today?"
-
-Then wait for response, then ask:
-"Great! To help me tailor this to you, what is your level? (Secondary, Tertiary, College)"
-
-Then wait for response, then ask:
-"Perfect! What do you already know about [topic]? This helps me know where to start."
-
-Then begin teaching based on their level and prior knowledge.
+CRITICAL RULES:
+1. START WITH QUESTIONS, NOT LECTURES
+2. ONE QUESTION AT A TIME
+3. Explain concepts clearly with examples, define new terms, show 2-3 worked examples.
+4. Check understanding: "Do you understand? Shall I explain again?"
+5. Be encouraging: "That's a good try! Let me explain it another way..."
+6. When the student demonstrates understanding, ask them to explain the concept in their own words.
 
 Student: ${user.name}
 Level: ${levelDesc}
@@ -308,6 +347,8 @@ Country: ${user.country}
       [userId, "assistant", reply]
     );
 
+    io.emit('new_message', { userId, message, reply, timestamp: new Date() });
+
     res.json({ reply });
   } catch (err) {
     console.error("Chat error:", err);
@@ -323,11 +364,9 @@ app.get("/subscription-status/:userId", async (req, res) => {
       `SELECT status, startDate, subscriptionEndDate, planType FROM subscriptions WHERE userId = $1`,
       [userId]
     );
-
     if (result.rows.length === 0) {
       return res.json({ status: 'trial', daysRemaining: 3, planType: 'free' });
     }
-
     const sub = result.rows[0];
     const now = new Date();
     const start = new Date(sub.startdate);
@@ -336,178 +375,87 @@ app.get("/subscription-status/:userId", async (req, res) => {
 
     let status = sub.status;
     let planType = sub.plantype || 'free';
-
     if (sub.status === 'active' && sub.subscriptionenddate) {
       const endDate = new Date(sub.subscriptionenddate);
       if (now > endDate) {
         status = 'expired';
-        await db.query(
-          `UPDATE subscriptions SET status = 'expired' WHERE userId = $1`,
-          [userId]
-        );
+        await db.query(`UPDATE subscriptions SET status = 'expired' WHERE userId = $1`, [userId]);
       }
     }
-
     if (sub.status === 'trial' && diffDays > 3) {
       status = 'expired';
-      await db.query(
-        `UPDATE subscriptions SET status = 'expired' WHERE userId = $1`,
-        [userId]
-      );
+      await db.query(`UPDATE subscriptions SET status = 'expired' WHERE userId = $1`, [userId]);
     }
-
-    res.json({
-      status: status,
-      daysRemaining: daysRemaining,
-      planType: planType,
-      subscriptionEndDate: sub.subscriptionenddate
-    });
+    res.json({ status, daysRemaining, planType, subscriptionEndDate: sub.subscriptionenddate });
   } catch (err) {
     console.error("Status check error:", err);
     res.status(500).json({ error: err.message });
   }
 });
 
-// ================= PAYMENT: Create Transaction =================
+// ================= PAYMENT =================
 app.post("/create-payment", async (req, res) => {
   const { userId, email } = req.body;
-
   if (!userId || !email) {
     return res.status(400).json({ error: "Missing userId or email" });
   }
-
   try {
-    const userResult = await db.query(
-      `SELECT name, country, grade FROM users WHERE userId = $1`,
-      [userId]
-    );
+    const userResult = await db.query(`SELECT name, country, grade FROM users WHERE userId = $1`, [userId]);
     const user = userResult.rows[0];
     if (!user) {
       return res.status(404).json({ error: "User not found" });
     }
-
-    // ===== PRICING =====
-    let amount = 14999; // default international high school
+    let amount = 14999;
     let priceDisplay = 'R149.99';
-
-    const isSecondary = user.grade && user.grade.startsWith('Secondary');
-    const isTertiary = user.grade && (user.grade.startsWith('Tertiary') || user.grade.startsWith('College'));
+    const isCollege = (user.grade === 'College' || user.grade === 'Tertiary');
     const isSouthAfrica = (user.country === 'South Africa');
-
-    if (isSecondary) {
-      if (isSouthAfrica) {
-        amount = 4999;
-        priceDisplay = 'R49.99';
-      } else {
-        amount = 14999;
-        priceDisplay = 'R149.99';
-      }
-    } else if (isTertiary) {
-      if (isSouthAfrica) {
-        amount = 19999;
-        priceDisplay = 'R199.99';
-      } else {
-        amount = 29999;
-        priceDisplay = 'R299.99';
-      }
+    if (isCollege) {
+      if (isSouthAfrica) { amount = 19999; priceDisplay = 'R199.99'; }
+      else { amount = 29999; priceDisplay = 'R299.99'; }
     } else {
-      // fallback
-      if (isSouthAfrica) {
-        amount = 4999;
-        priceDisplay = 'R49.99';
-      } else {
-        amount = 14999;
-        priceDisplay = 'R149.99';
-      }
+      if (isSouthAfrica) { amount = 4999; priceDisplay = 'R49.99'; }
+      else { amount = 14999; priceDisplay = 'R149.99'; }
     }
-
     const response = await Paystack.transaction.initialize({
       email: email,
       amount: amount,
       currency: 'ZAR',
-      metadata: {
-        userId: userId,
-        country: user.country,
-        grade: user.grade || 'Secondary',
-        price: amount / 100
-      },
+      metadata: { userId: userId, country: user.country, grade: user.grade || 'High School', price: amount / 100 },
       callback_url: `${process.env.PAYSTACK_CALLBACK_URL || 'https://synapses-uwh1.onrender.com'}/payment-callback`,
     });
-
-    res.json({
-      success: true,
-      authorization_url: response.data.authorization_url,
-      reference: response.data.reference,
-      price: priceDisplay,
-      amount: amount / 100
-    });
-
+    res.json({ success: true, authorization_url: response.data.authorization_url, reference: response.data.reference, price: priceDisplay, amount: amount / 100 });
   } catch (err) {
     console.error("Payment error:", err);
     res.status(500).json({ error: err.message });
   }
 });
 
-// ================= PAYMENT: Callback =================
 app.get("/payment-callback", async (req, res) => {
   const { reference } = req.query;
-  if (!reference) {
-    return res.status(400).send("Missing reference");
-  }
-
+  if (!reference) { return res.status(400).send("Missing reference"); }
   try {
     const response = await Paystack.transaction.verify(reference);
     if (response.data.status === 'success') {
       const userId = response.data.metadata.userId;
       await db.query(
-        `UPDATE subscriptions 
-         SET status = 'active', 
-             subscriptionEndDate = NOW() + INTERVAL '30 days',
-             planType = 'premium'
-         WHERE userId = $1`,
+        `UPDATE subscriptions SET status = 'active', subscriptionEndDate = NOW() + INTERVAL '30 days', planType = 'premium' WHERE userId = $1`,
         [userId]
       );
       res.send(`
         <!DOCTYPE html>
-        <html>
-        <head><title>Payment Successful</title>
-        <style>
-          body { font-family: sans-serif; text-align: center; padding: 60px; background: #f0f4f8; }
-          .card { background: white; padding: 40px; border-radius: 20px; max-width: 500px; margin: 0 auto; }
-          h1 { color: #22c55e; }
-          .btn { display: inline-block; padding: 14px 30px; background: #6366f1; color: white; text-decoration: none; border-radius: 12px; margin-top: 20px; }
-        </style>
-        </head>
-        <body>
-          <div class="card">
-            <h1>✅ Payment Successful!</h1>
-            <p>Your subscription is now active. You have premium access for 30 days.</p>
-            <a href="/" class="btn">Go to Dashboard</a>
-          </div>
-          <script>setTimeout(() => { window.location.href = '/'; }, 5000);</script>
-        </body>
-        </html>
+        <html><head><title>Payment Successful</title>
+        <style>body{font-family:sans-serif;text-align:center;padding:60px;background:#f0f4f8;}.card{background:white;padding:40px;border-radius:20px;max-width:500px;margin:0 auto;}h1{color:#22c55e;}.btn{display:inline-block;padding:14px 30px;background:#6366f1;color:white;text-decoration:none;border-radius:12px;margin-top:20px;}
+        </style></head>
+        <body><div class="card"><h1>✅ Payment Successful!</h1><p>Your subscription is now active. You have premium access for 30 days.</p><a href="/" class="btn">Go to Dashboard</a></div>
+        <script>setTimeout(()=>{window.location.href='/'},5000);</script></body></html>
       `);
     } else {
       res.send(`
         <!DOCTYPE html>
-        <html>
-        <head><title>Payment Failed</title>
-        <style>
-          body { font-family: sans-serif; text-align: center; padding: 60px; background: #f0f4f8; }
-          .card { background: white; padding: 40px; border-radius: 20px; max-width: 500px; margin: 0 auto; }
-          h1 { color: #ef4444; }
-          .btn { display: inline-block; padding: 14px 30px; background: #6366f1; color: white; text-decoration: none; border-radius: 12px; margin-top: 20px; }
-        </style>
-        </head>
-        <body>
-          <div class="card">
-            <h1>❌ Payment Failed</h1>
-            <p>Please try again.</p>
-            <a href="/" class="btn">Try Again</a>
-          </div>
-        </body>
-        </html>
+        <html><head><title>Payment Failed</title>
+        <style>body{font-family:sans-serif;text-align:center;padding:60px;background:#f0f4f8;}.card{background:white;padding:40px;border-radius:20px;max-width:500px;margin:0 auto;}h1{color:#ef4444;}.btn{display:inline-block;padding:14px 30px;background:#6366f1;color:white;text-decoration:none;border-radius:12px;margin-top:20px;}
+        </style></head>
+        <body><div class="card"><h1>❌ Payment Failed</h1><p>Please try again.</p><a href="/" class="btn">Try Again</a></div></body></html>
       `);
     }
   } catch (err) {
@@ -516,7 +464,6 @@ app.get("/payment-callback", async (req, res) => {
   }
 });
 
-// ================= PAYMENT: Webhook =================
 app.post("/paystack-webhook", express.json(), async (req, res) => {
   const event = req.body;
   if (event.event === 'charge.success') {
@@ -524,24 +471,156 @@ app.post("/paystack-webhook", express.json(), async (req, res) => {
     const userId = data.metadata.userId;
     try {
       await db.query(
-        `UPDATE subscriptions 
-         SET status = 'active', 
-             subscriptionEndDate = NOW() + INTERVAL '30 days',
-             planType = 'premium'
-         WHERE userId = $1`,
+        `UPDATE subscriptions SET status = 'active', subscriptionEndDate = NOW() + INTERVAL '30 days', planType = 'premium' WHERE userId = $1`,
         [userId]
       );
       console.log(`✅ Webhook: Subscription activated for ${userId}`);
-    } catch (err) {
-      console.error("Webhook error:", err);
-    }
+    } catch (err) { console.error("Webhook error:", err); }
   }
   res.sendStatus(200);
 });
 
-// ================= START =================
+// ================================================================
+// 🚀 ADMIN ROUTES
+// ================================================================
+
+app.get("/admin/users", authenticateToken, adminOnly, async (req, res) => {
+  try {
+    const result = await db.query(`
+      SELECT userId, email, name, country, grade, role, is_admin, is_banned, created_at 
+      FROM users 
+      ORDER BY created_at DESC
+    `);
+    res.json(result.rows);
+  } catch (err) {
+    console.error("Admin users error:", err);
+    res.status(500).json({ error: err.message });
+  }
+});
+
+app.get("/admin/messages", authenticateToken, adminOnly, async (req, res) => {
+  try {
+    const result = await db.query(`
+      SELECT m.*, u.email, u.name 
+      FROM messages m
+      JOIN users u ON m.userId = u.userId
+      ORDER BY m.created_at DESC
+      LIMIT 500
+    `);
+    res.json(result.rows);
+  } catch (err) {
+    console.error("Admin messages error:", err);
+    res.status(500).json({ error: err.message });
+  }
+});
+
+app.get("/admin/user/:userId/messages", authenticateToken, adminOnly, async (req, res) => {
+  const { userId } = req.params;
+  try {
+    const result = await db.query(`SELECT * FROM messages WHERE userId = $1 ORDER BY created_at ASC`, [userId]);
+    res.json(result.rows);
+  } catch (err) {
+    console.error("Admin user messages error:", err);
+    res.status(500).json({ error: err.message });
+  }
+});
+
+app.get("/admin/stats", authenticateToken, adminOnly, async (req, res) => {
+  try {
+    const totalUsers = await db.query(`SELECT COUNT(*) FROM users`);
+    const totalMessages = await db.query(`SELECT COUNT(*) FROM messages`);
+    const activeUsers = await db.query(
+      `SELECT COUNT(DISTINCT userId) FROM messages WHERE created_at > NOW() - INTERVAL '7 days'`
+    );
+    const bannedUsers = await db.query(`SELECT COUNT(*) FROM users WHERE is_banned = true`);
+    const messageTrend = await db.query(`
+      SELECT DATE(created_at) as date, COUNT(*) as count 
+      FROM messages 
+      WHERE created_at > NOW() - INTERVAL '7 days' 
+      GROUP BY DATE(created_at) 
+      ORDER BY date ASC
+    `);
+    const userTrend = await db.query(`
+      SELECT DATE(created_at) as date, COUNT(*) as count 
+      FROM users 
+      WHERE created_at > NOW() - INTERVAL '7 days' 
+      GROUP BY DATE(created_at) 
+      ORDER BY date ASC
+    `);
+    res.json({
+      totalUsers: parseInt(totalUsers.rows[0].count),
+      totalMessages: parseInt(totalMessages.rows[0].count),
+      activeUsers7Days: parseInt(activeUsers.rows[0].count),
+      bannedUsers: parseInt(bannedUsers.rows[0].count),
+      messageTrend: messageTrend.rows,
+      userTrend: userTrend.rows
+    });
+  } catch (err) {
+    console.error("Admin stats error:", err);
+    res.status(500).json({ error: err.message });
+  }
+});
+
+app.post("/admin/user/:userId/toggle-ban", authenticateToken, adminOnly, async (req, res) => {
+  const { userId } = req.params;
+  try {
+    const result = await db.query(`SELECT is_banned FROM users WHERE userId = $1`, [userId]);
+    if (result.rows.length === 0) {
+      return res.status(404).json({ error: "User not found" });
+    }
+    const currentStatus = result.rows[0].is_banned;
+    const newStatus = !currentStatus;
+    await db.query(`UPDATE users SET is_banned = $1 WHERE userId = $2`, [newStatus, userId]);
+    io.emit('user_banned', { userId, is_banned: newStatus });
+    res.json({ success: true, is_banned: newStatus });
+  } catch (err) {
+    console.error("Toggle ban error:", err);
+    res.status(500).json({ error: err.message });
+  }
+});
+
+app.get("/admin/export/messages", authenticateToken, adminOnly, async (req, res) => {
+  try {
+    const result = await db.query(`
+      SELECT m.*, u.email, u.name 
+      FROM messages m
+      JOIN users u ON m.userId = u.userId
+      ORDER BY m.created_at DESC
+    `);
+    const rows = result.rows;
+    if (rows.length === 0) {
+      return res.status(404).json({ error: "No messages to export" });
+    }
+    let csv = 'ID,User,Email,Role,Content,Created At\n';
+    rows.forEach(r => {
+      const content = (r.content || '').replace(/,/g, ' ').replace(/\n/g, ' ');
+      csv += `${r.id},${r.name || r.userId},${r.email || ''},${r.role},${content},${r.created_at}\n`;
+    });
+    res.setHeader('Content-Type', 'text/csv');
+    res.setHeader('Content-Disposition', `attachment; filename=leago_chat_export_${new Date().toISOString().split('T')[0]}.csv`);
+    res.send(csv);
+  } catch (err) {
+    console.error("Export error:", err);
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// ================================================================
+// SOCKET.IO — Real-time admin updates
+// ================================================================
+io.on('connection', (socket) => {
+  console.log('🔌 Admin connected:', socket.id);
+  socket.on('disconnect', () => {
+    console.log('🔌 Admin disconnected:', socket.id);
+  });
+});
+
+// ================================================================
+// START
+// ================================================================
 const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => {
+server.listen(PORT, () => {
   console.log("✅ Leago AI Tutor running on port " + PORT);
-  console.log("💰 Pricing: Secondary SA R49.99 | Tertiary/College SA R199.99 | Intl +");
+  console.log("🔐 Admin dashboard available at /admin.html");
+  console.log("📊 Real-time analytics enabled");
 });
