@@ -9,17 +9,8 @@ const Paystack = require('paystack')(process.env.PAYSTACK_SECRET_KEY);
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const { Resend } = require('resend');
-const http = require('http');
-const socketIo = require('socket.io');
 
 const app = express();
-const server = http.createServer(app);
-const io = socketIo(server, {
-  cors: {
-    origin: process.env.CLIENT_URL || 'https://synapses-uwh1.onrender.com',
-    credentials: true
-  }
-});
 
 // ================= RESEND EMAIL =================
 const resend = new Resend(process.env.RESEND_API_KEY);
@@ -52,8 +43,6 @@ async function initDB() {
         country TEXT,
         grade TEXT,
         role TEXT DEFAULT 'learner',
-        is_admin BOOLEAN DEFAULT false,
-        is_banned BOOLEAN DEFAULT false,
         created_at TIMESTAMP DEFAULT NOW()
       )
     `);
@@ -79,7 +68,7 @@ async function initDB() {
       )
     `);
 
-    console.log("✅ Database ready with admin columns");
+    console.log("✅ Database ready");
   } catch (err) {
     console.error("❌ DB init error:", err.message);
   }
@@ -139,13 +128,6 @@ function authenticateToken(req, res, next) {
   }
 }
 
-function adminOnly(req, res, next) {
-  if (!req.user.is_admin) {
-    return res.status(403).json({ error: 'Admin access required.' });
-  }
-  next();
-}
-
 // ================= AUTH: SIGNUP =================
 app.post("/signup", async (req, res) => {
   const { email, password, name, country, role } = req.body;
@@ -170,6 +152,7 @@ app.post("/signup", async (req, res) => {
     );
     await ensureTrial(userId);
 
+    // Send welcome email
     await sendEmail(
       email,
       '🎉 Welcome to Leago!',
@@ -204,17 +187,13 @@ app.post("/login", async (req, res) => {
     }
     const user = result.rows[0];
 
-    if (user.is_banned) {
-      return res.status(403).json({ error: "Your account has been suspended." });
-    }
-
     const passwordMatch = await bcrypt.compare(password, user.password);
     if (!passwordMatch) {
       return res.status(401).json({ error: "Invalid email or password" });
     }
 
     const token = jwt.sign(
-      { id: user.userid, email: user.email, is_admin: user.is_admin || false },
+      { id: user.userid, email: user.email },
       process.env.JWT_SECRET,
       { expiresIn: process.env.JWT_EXPIRE || '7d' }
     );
@@ -228,9 +207,7 @@ app.post("/login", async (req, res) => {
         name: user.name,
         country: user.country,
         role: user.role,
-        grade: user.grade,
-        is_admin: user.is_admin || false,
-        is_banned: user.is_banned || false
+        grade: user.grade
       }
     });
   } catch (err) {
@@ -265,9 +242,6 @@ app.post("/chat", async (req, res) => {
     const user = userResult.rows[0];
     if (!user) {
       return res.json({ reply: "Please create your profile first." });
-    }
-    if (user.is_banned) {
-      return res.json({ reply: "Your account has been suspended. Please contact support." });
     }
 
     const subResult = await db.query(`SELECT * FROM subscriptions WHERE userId = $1`, [userId]);
@@ -346,8 +320,6 @@ Country: ${user.country}
       `INSERT INTO messages (userId, role, content) VALUES ($1, $2, $3)`,
       [userId, "assistant", reply]
     );
-
-    io.emit('new_message', { userId, message, reply, timestamp: new Date() });
 
     res.json({ reply });
   } catch (err) {
@@ -481,146 +453,10 @@ app.post("/paystack-webhook", express.json(), async (req, res) => {
 });
 
 // ================================================================
-// 🚀 ADMIN ROUTES
-// ================================================================
-
-app.get("/admin/users", authenticateToken, adminOnly, async (req, res) => {
-  try {
-    const result = await db.query(`
-      SELECT userId, email, name, country, grade, role, is_admin, is_banned, created_at 
-      FROM users 
-      ORDER BY created_at DESC
-    `);
-    res.json(result.rows);
-  } catch (err) {
-    console.error("Admin users error:", err);
-    res.status(500).json({ error: err.message });
-  }
-});
-
-app.get("/admin/messages", authenticateToken, adminOnly, async (req, res) => {
-  try {
-    const result = await db.query(`
-      SELECT m.*, u.email, u.name 
-      FROM messages m
-      JOIN users u ON m.userId = u.userId
-      ORDER BY m.created_at DESC
-      LIMIT 500
-    `);
-    res.json(result.rows);
-  } catch (err) {
-    console.error("Admin messages error:", err);
-    res.status(500).json({ error: err.message });
-  }
-});
-
-app.get("/admin/user/:userId/messages", authenticateToken, adminOnly, async (req, res) => {
-  const { userId } = req.params;
-  try {
-    const result = await db.query(`SELECT * FROM messages WHERE userId = $1 ORDER BY created_at ASC`, [userId]);
-    res.json(result.rows);
-  } catch (err) {
-    console.error("Admin user messages error:", err);
-    res.status(500).json({ error: err.message });
-  }
-});
-
-app.get("/admin/stats", authenticateToken, adminOnly, async (req, res) => {
-  try {
-    const totalUsers = await db.query(`SELECT COUNT(*) FROM users`);
-    const totalMessages = await db.query(`SELECT COUNT(*) FROM messages`);
-    const activeUsers = await db.query(
-      `SELECT COUNT(DISTINCT userId) FROM messages WHERE created_at > NOW() - INTERVAL '7 days'`
-    );
-    const bannedUsers = await db.query(`SELECT COUNT(*) FROM users WHERE is_banned = true`);
-    const messageTrend = await db.query(`
-      SELECT DATE(created_at) as date, COUNT(*) as count 
-      FROM messages 
-      WHERE created_at > NOW() - INTERVAL '7 days' 
-      GROUP BY DATE(created_at) 
-      ORDER BY date ASC
-    `);
-    const userTrend = await db.query(`
-      SELECT DATE(created_at) as date, COUNT(*) as count 
-      FROM users 
-      WHERE created_at > NOW() - INTERVAL '7 days' 
-      GROUP BY DATE(created_at) 
-      ORDER BY date ASC
-    `);
-    res.json({
-      totalUsers: parseInt(totalUsers.rows[0].count),
-      totalMessages: parseInt(totalMessages.rows[0].count),
-      activeUsers7Days: parseInt(activeUsers.rows[0].count),
-      bannedUsers: parseInt(bannedUsers.rows[0].count),
-      messageTrend: messageTrend.rows,
-      userTrend: userTrend.rows
-    });
-  } catch (err) {
-    console.error("Admin stats error:", err);
-    res.status(500).json({ error: err.message });
-  }
-});
-
-app.post("/admin/user/:userId/toggle-ban", authenticateToken, adminOnly, async (req, res) => {
-  const { userId } = req.params;
-  try {
-    const result = await db.query(`SELECT is_banned FROM users WHERE userId = $1`, [userId]);
-    if (result.rows.length === 0) {
-      return res.status(404).json({ error: "User not found" });
-    }
-    const currentStatus = result.rows[0].is_banned;
-    const newStatus = !currentStatus;
-    await db.query(`UPDATE users SET is_banned = $1 WHERE userId = $2`, [newStatus, userId]);
-    io.emit('user_banned', { userId, is_banned: newStatus });
-    res.json({ success: true, is_banned: newStatus });
-  } catch (err) {
-    console.error("Toggle ban error:", err);
-    res.status(500).json({ error: err.message });
-  }
-});
-
-app.get("/admin/export/messages", authenticateToken, adminOnly, async (req, res) => {
-  try {
-    const result = await db.query(`
-      SELECT m.*, u.email, u.name 
-      FROM messages m
-      JOIN users u ON m.userId = u.userId
-      ORDER BY m.created_at DESC
-    `);
-    const rows = result.rows;
-    if (rows.length === 0) {
-      return res.status(404).json({ error: "No messages to export" });
-    }
-    let csv = 'ID,User,Email,Role,Content,Created At\n';
-    rows.forEach(r => {
-      const content = (r.content || '').replace(/,/g, ' ').replace(/\n/g, ' ');
-      csv += `${r.id},${r.name || r.userId},${r.email || ''},${r.role},${content},${r.created_at}\n`;
-    });
-    res.setHeader('Content-Type', 'text/csv');
-    res.setHeader('Content-Disposition', `attachment; filename=leago_chat_export_${new Date().toISOString().split('T')[0]}.csv`);
-    res.send(csv);
-  } catch (err) {
-    console.error("Export error:", err);
-    res.status(500).json({ error: err.message });
-  }
-});
-
-// ================================================================
-// SOCKET.IO — Real-time admin updates
-// ================================================================
-io.on('connection', (socket) => {
-  console.log('🔌 Admin connected:', socket.id);
-  socket.on('disconnect', () => {
-    console.log('🔌 Admin disconnected:', socket.id);
-  });
-});
-
-// ================================================================
 // START
 // ================================================================
 const PORT = process.env.PORT || 5000;
-server.listen(PORT, () => {
+app.listen(PORT, () => {
   console.log("✅ Leago AI Tutor running on port " + PORT);
-  console.log("🔐 Admin dashboard available at /admin.html");
-  console.log("📊 Real-time analytics enabled");
+  console.log("💳 Payments enabled");
 });
