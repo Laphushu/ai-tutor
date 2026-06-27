@@ -779,6 +779,12 @@
             text-align: center;
         }
 
+        .sidebar-left .subject-list li .progress-dot {
+            margin-left: auto;
+            font-size: 0.7rem;
+            color: #6b7280;
+        }
+
         .progress-item {
             margin: 8px 0;
         }
@@ -994,6 +1000,16 @@
             color: #0b1120;
         }
 
+        .subject-card .progress-badge {
+            display: inline-block;
+            font-size: 0.7rem;
+            color: #6366f1;
+            background: #eef2ff;
+            padding: 2px 10px;
+            border-radius: 12px;
+            margin-top: 6px;
+        }
+
         .classroom-header {
             display: flex;
             justify-content: space-between;
@@ -1040,11 +1056,17 @@
             padding: 20px 18px;
             transition: all 0.25s;
             cursor: pointer;
+            position: relative;
         }
 
         .topic-card:hover {
             border-color: #6366f1;
             box-shadow: 0 8px 24px rgba(99, 102, 241, 0.08);
+        }
+
+        .topic-card.completed {
+            border-color: #22c55e;
+            background: #f0fdf4;
         }
 
         .topic-card .title {
@@ -1073,6 +1095,23 @@
             border-radius: 12px;
             font-size: 0.7rem;
             font-weight: 600;
+        }
+
+        .topic-card .status-badge {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            padding: 2px 10px;
+            border-radius: 12px;
+            background: #e5e7eb;
+            color: #6b7280;
+        }
+
+        .topic-card.completed .status-badge {
+            background: #d1fae5;
+            color: #065f46;
         }
 
         .tutor-container {
@@ -1909,6 +1948,88 @@
         let currentView = 'welcome';
 
         // ================================================================
+        //  PROGRESS TRACKING (per subject)
+        // ================================================================
+        let progressData = {};
+
+        function getProgressKey() {
+            if (!currentUser) return null;
+            return 'leago_progress_' + currentUser.id;
+        }
+
+        function loadProgress() {
+            const key = getProgressKey();
+            if (!key) return;
+            const stored = localStorage.getItem(key);
+            if (stored) {
+                try {
+                    progressData = JSON.parse(stored);
+                } catch (e) {
+                    progressData = {};
+                }
+            } else {
+                progressData = {};
+            }
+        }
+
+        function saveProgress() {
+            const key = getProgressKey();
+            if (!key) return;
+            localStorage.setItem(key, JSON.stringify(progressData));
+        }
+
+        function initProgress(subjects) {
+            // subjects is an object { subjectName: [topic1, topic2, ...] }
+            let changed = false;
+            for (const [subject, topics] of Object.entries(subjects)) {
+                if (!progressData[subject]) {
+                    progressData[subject] = {
+                        completed: [],
+                        total: topics.length
+                    };
+                    changed = true;
+                } else {
+                    // update total in case topics changed
+                    if (progressData[subject].total !== topics.length) {
+                        progressData[subject].total = topics.length;
+                        changed = true;
+                    }
+                }
+            }
+            if (changed) saveProgress();
+        }
+
+        function getSubjectProgress(subject) {
+            if (!progressData[subject]) return { completed: 0, total: 0, percent: 0 };
+            const data = progressData[subject];
+            const completed = data.completed ? data.completed.length : 0;
+            const total = data.total || 0;
+            const percent = total > 0 ? Math.round((completed / total) * 100) : 0;
+            return { completed, total, percent };
+        }
+
+        function markTopicCompleted(subject, topic) {
+            if (!progressData[subject]) {
+                progressData[subject] = { completed: [], total: 0 };
+            }
+            if (!progressData[subject].completed) {
+                progressData[subject].completed = [];
+            }
+            if (!progressData[subject].completed.includes(topic)) {
+                progressData[subject].completed.push(topic);
+                saveProgress();
+                return true;
+            }
+            return false;
+        }
+
+        function isTopicCompleted(subject, topic) {
+            if (!progressData[subject]) return false;
+            if (!progressData[subject].completed) return false;
+            return progressData[subject].completed.includes(topic);
+        }
+
+        // ================================================================
         //  COUNTRY DATA (Separated Secondary & College)
         // ================================================================
         const COUNTRY_DATA = {
@@ -2216,6 +2337,7 @@
                         document.querySelector('.status-bar').style.display = 'none';
                         document.getElementById('pricing').style.display = 'none';
                         document.getElementById('siteFooter').style.display = 'block';
+                        loadProgress();
                         initDashboard(data.user);
                     }, 500);
                 }
@@ -2281,7 +2403,6 @@
 
             checkSubscription();
 
-            // Show grade selection or dashboard
             if (user.grade) {
                 selectedGrade = user.grade;
                 showDashboardHome();
@@ -2298,6 +2419,19 @@
             currentView = 'welcome';
             const container = document.getElementById('dynamicContent');
             const levelLabel = (currentUser.grade === 'College') ? 'College / Tertiary' : 'Grade ' + currentUser.grade;
+
+            // Calculate overall progress
+            let totalCompleted = 0,
+                totalTopics = 0;
+            for (const subject in progressData) {
+                const data = progressData[subject];
+                if (data && data.completed && data.total) {
+                    totalCompleted += data.completed.length;
+                    totalTopics += data.total;
+                }
+            }
+            const overallPercent = totalTopics > 0 ? Math.round((totalCompleted / totalTopics) * 100) : 0;
+
             container.innerHTML = `
                 <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin-top:16px;">
                     <div class="card" style="background:linear-gradient(135deg,#eef2ff,white);border-color:#6366f1;padding:24px;border-radius:16px;border:2px solid #6366f1;box-shadow:0 4px 16px rgba(99,102,241,0.06);">
@@ -2311,7 +2445,7 @@
                         <div style="font-weight:700;font-size:1.1rem;color:#0b1120;margin-top:4px;">Today's Goal</div>
                         <div style="font-size:0.9rem;color:#6b7280;">Complete 1 lesson</div>
                         <div style="margin-top:8px;height:6px;background:#e5e7eb;border-radius:4px;overflow:hidden;">
-                            <div style="width:30%;height:100%;background:linear-gradient(90deg,#6366f1,#8b5cf6);border-radius:4px;"></div>
+                            <div style="width:${overallPercent}%;height:100%;background:linear-gradient(90deg,#6366f1,#8b5cf6);border-radius:4px;"></div>
                         </div>
                     </div>
                     <div class="card" style="padding:24px;border-radius:16px;border:1px solid #e5e7eb;background:white;">
@@ -2322,7 +2456,7 @@
                     <div class="card" style="padding:24px;border-radius:16px;border:1px solid #e5e7eb;background:white;">
                         <div style="font-size:2rem;">🏆</div>
                         <div style="font-weight:700;font-size:1.1rem;color:#0b1120;margin-top:4px;">Achievements</div>
-                        <div style="font-size:0.9rem;color:#6b7280;">5 badges earned</div>
+                        <div style="font-size:0.9rem;color:#6b7280;">${totalCompleted} topics completed</div>
                     </div>
                 </div>
                 <div style="margin-top:20px;text-align:center;padding:20px;background:#f8fafc;border-radius:16px;border:1px solid #e5e7eb;">
@@ -2415,16 +2549,22 @@
                 levelLabel = 'College / Tertiary';
             }
 
+            // Initialize progress for these subjects
+            initProgress(subjects);
+
             document.getElementById('welcomeMessage').textContent = 'Your Subjects';
             document.getElementById('welcomeSub').innerHTML = levelLabel + ' · ' + country + ' · Select a subject to start learning.';
 
             const container = document.getElementById('dynamicContent');
             let html = `<div class="subject-grid">`;
             Object.keys(subjects).forEach(name => {
+                const prog = getSubjectProgress(name);
+                const percent = prog.percent;
                 html += `
                     <div class="subject-card" onclick="openSubject('${name}')">
                         <span class="icon">${SUBJECT_ICONS[name] || '📚'}</span>
                         <span class="name">${name}</span>
+                        <div class="progress-badge">${percent}%</div>
                     </div>
                 `;
             });
@@ -2452,6 +2592,12 @@
                 topics = data ? data.college_subjects[subject] : (DEFAULT_SUBJECTS[subject] || []);
             }
 
+            // Ensure progress for this subject exists
+            if (!progressData[subject]) {
+                progressData[subject] = { completed: [], total: topics.length };
+                saveProgress();
+            }
+
             document.getElementById('welcomeMessage').textContent = subject;
             document.getElementById('welcomeSub').textContent = 'Select a topic to start learning.';
 
@@ -2462,11 +2608,15 @@
             } else {
                 html += `<div class="topic-grid">`;
                 topics.forEach(t => {
+                    const completed = isTopicCompleted(subject, t);
+                    const cls = completed ? 'topic-card completed' : 'topic-card';
+                    const badgeText = completed ? '✅ Completed' : 'Not started';
                     html += `
-                        <div class="topic-card" onclick="openTutor('${subject}', '${t}')">
+                        <div class="${cls}" onclick="openTutor('${subject}', '${t}')">
                             <div class="title">${t}</div>
                             <div class="meta">${subject}</div>
                             <div class="resources"><span class="tag">Lesson</span><span class="tag">Quiz</span><span class="tag">Worksheet</span></div>
+                            <div class="status-badge">${badgeText}</div>
                         </div>
                     `;
                 });
@@ -2476,6 +2626,7 @@
             container.innerHTML = html;
 
             renderRightSidebar();
+            renderSidebar();
         }
 
         // ================================================================
@@ -2486,6 +2637,9 @@
             document.getElementById('welcomeMessage').textContent = '💬 AI Tutor';
             document.getElementById('welcomeSub').textContent = subject + ' — ' + topic;
 
+            // Mark topic as completed (optional, user can also mark later)
+            // But we'll add a button to mark as complete after learning.
+
             const container = document.getElementById('dynamicContent');
             container.innerHTML = `
                 <button class="back-btn" onclick="openSubject('${subject}')">← Back to Topics</button>
@@ -2493,6 +2647,9 @@
                     <div class="tutor-header">
                         <h3>AI Tutor</h3>
                         <span class="context">${subject} - ${topic}</span>
+                        <button id="completeBtn" onclick="markComplete('${subject}','${topic}')" style="padding:6px 16px;border-radius:8px;border:2px solid #22c55e;background:white;color:#22c55e;font-weight:600;cursor:pointer;transition:all 0.2s;">
+                            ${isTopicCompleted(subject, topic) ? '✅ Completed' : 'Mark as Complete'}
+                        </button>
                     </div>
                     <div class="chat-box" id="chatBox">
                         <div class="msg bot">👋 Welcome! Ask me anything — I'll guide you step by step.</div>
@@ -2508,12 +2665,33 @@
                 </div>
             `;
 
+            // Auto-send initial message
             setTimeout(() => {
                 document.getElementById('chatInput').value = 'I\'m learning about "' + topic + '" in ' + subject + '. Can you teach me step by step?';
                 sendChat();
             }, 500);
 
             renderSidebar();
+        }
+
+        function markComplete(subject, topic) {
+            if (isTopicCompleted(subject, topic)) {
+                alert('This topic is already completed!');
+                return;
+            }
+            if (markTopicCompleted(subject, topic)) {
+                // Update UI
+                const btn = document.getElementById('completeBtn');
+                if (btn) {
+                    btn.textContent = '✅ Completed';
+                    btn.style.background = '#d1fae5';
+                    btn.style.borderColor = '#22c55e';
+                    btn.style.color = '#065f46';
+                }
+                alert('🎉 Great job! Topic marked as complete.');
+                // Refresh progress
+                renderSidebar();
+            }
         }
 
         // ================================================================
@@ -2584,7 +2762,7 @@
         }
 
         // ================================================================
-        //  SIDEBAR RENDER
+        //  SIDEBAR RENDER (with progress per subject)
         // ================================================================
         function renderSidebar() {
             const country = currentUser.country || 'South Africa';
@@ -2599,15 +2777,20 @@
                 subjects = data ? data.college_subjects : { 'College Subjects': ['General Studies'] };
             }
 
+            // Ensure progress init
+            initProgress(subjects);
+
             const list = document.getElementById('subjectList');
             list.innerHTML = '';
             Object.keys(subjects).forEach(key => {
+                const prog = getSubjectProgress(key);
+                const percent = prog.percent;
                 const li = document.createElement('li');
                 li.className = key === currentSubject ? 'active' : '';
                 li.innerHTML = `
                     <span class="icon">${SUBJECT_ICONS[key] || '📚'}</span>
                     ${key}
-                    <span class="progress-dot" style="margin-left:auto;width:6px;height:6px;border-radius:50%;background:#d1d5db;"></span>
+                    <span class="progress-dot">${percent}%</span>
                 `;
                 li.onclick = () => {
                     currentSubject = key;
@@ -2617,16 +2800,26 @@
                 list.appendChild(li);
             });
 
-            // Progress
+            // Progress summary
             const progressContainer = document.getElementById('progressContainer');
+            let totalCompleted = 0,
+                totalTopics = 0;
+            for (const subject in progressData) {
+                const data = progressData[subject];
+                if (data && data.completed && data.total) {
+                    totalCompleted += data.completed.length;
+                    totalTopics += data.total;
+                }
+            }
+            const overallPercent = totalTopics > 0 ? Math.round((totalCompleted / totalTopics) * 100) : 0;
             progressContainer.innerHTML = `
                 <div class="progress-item">
-                    <div class="label"><span>Overall Progress</span><span>45%</span></div>
-                    <div class="bar"><div class="fill" style="width:45%;"></div></div>
+                    <div class="label"><span>Overall Progress</span><span>${overallPercent}%</span></div>
+                    <div class="bar"><div class="fill" style="width:${overallPercent}%;"></div></div>
                 </div>
                 <div class="progress-item">
-                    <div class="label"><span>This Week</span><span>3 lessons</span></div>
-                    <div class="bar"><div class="fill" style="width:60%;"></div></div>
+                    <div class="label"><span>Topics Completed</span><span>${totalCompleted}/${totalTopics}</span></div>
+                    <div class="bar"><div class="fill" style="width:${overallPercent}%;"></div></div>
                 </div>
             `;
 
@@ -2773,6 +2966,7 @@
                     document.querySelector('.status-bar').style.display = 'none';
                     document.getElementById('pricing').style.display = 'none';
                     document.getElementById('dashboard').classList.add('active');
+                    loadProgress();
                     initDashboard(user);
                 } catch (e) { /* invalid stored data, show hero */ }
             }
