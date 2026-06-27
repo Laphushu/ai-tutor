@@ -666,6 +666,12 @@
             padding: 2px 12px;
             border-radius: 12px;
             font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .top-nav .user-info .grade-badge:hover {
+            background: #dbeafe;
         }
 
         .top-nav .user-info .logout-btn {
@@ -841,6 +847,18 @@
             margin-bottom: 20px;
         }
 
+        .center-panel .welcome-sub .change-grade-link {
+            color: #6366f1;
+            cursor: pointer;
+            font-weight: 600;
+            text-decoration: underline;
+            text-underline-offset: 2px;
+        }
+
+        .center-panel .welcome-sub .change-grade-link:hover {
+            color: #4f46e5;
+        }
+
         .center-panel .breadcrumb {
             font-size: 0.8rem;
             color: #6b7280;
@@ -884,13 +902,13 @@
 
         .grade-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
             gap: 12px;
             margin: 16px 0;
         }
 
         .grade-card {
-            padding: 20px 8px;
+            padding: 24px 12px;
             border: 2px solid #e5e7eb;
             border-radius: 14px;
             text-align: center;
@@ -919,7 +937,7 @@
             color: #6b7280;
             font-weight: 400;
             display: block;
-            margin-top: 2px;
+            margin-top: 4px;
         }
 
         .btn-confirm {
@@ -1412,7 +1430,7 @@
                 grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
             }
             .grade-grid {
-                grid-template-columns: repeat(auto-fill, minmax(70px, 1fr));
+                grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
             }
             .topic-grid {
                 grid-template-columns: 1fr;
@@ -1461,6 +1479,9 @@
             .stats-bar {
                 grid-template-columns: 1fr;
             }
+            .grade-grid {
+                grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
+            }
         }
     </style>
 </head>
@@ -1475,7 +1496,7 @@
         <div class="logo">🧠 <span>Leago</span></div>
         <div class="badge">✦ Available Now</div>
         <h1>Learn with <span class="highlight">AI</span> — High School &amp; College</h1>
-        <p>Your personal AI tutor for Grades 10–12 and College. Step‑by‑step explanations, exam preparation, and unlimited practice.</p>
+        <p>Your personal AI tutor for Grades 10–12 and College / Tertiary. Step‑by‑step explanations, exam preparation, and unlimited practice.</p>
         <div class="cta-group">
             <a class="btn-primary" onclick="openAuth('login')">Get Started — It's Free</a>
             <a class="btn-secondary" onclick="document.querySelector('.features').scrollIntoView({behavior:'smooth'})">Learn More ↓</a>
@@ -1791,7 +1812,7 @@
             <div class="user-info">
                 <span class="name" id="userName">User</span>
                 <span class="role" id="userRole">Learner</span>
-                <span class="grade-badge" id="userGrade">Level: Not set</span>
+                <span class="grade-badge" id="userGrade" onclick="showGradeSelection()">Level: Not set</span>
                 <span id="subscriptionBadge"></span>
                 <button class="logout-btn" onclick="logout()">Logout</button>
             </div>
@@ -1821,8 +1842,11 @@
             <!-- Center Panel -->
             <main class="center-panel" id="centerPanel">
                 <!-- Dynamic content -->
-                <div class="welcome" id="welcomeMessage">Welcome back, Samuel 👋</div>
-                <div class="welcome-sub" id="welcomeSub">Today's goal: Complete your next lesson.</div>
+                <div class="welcome" id="welcomeMessage">Welcome back, Student 👋</div>
+                <div class="welcome-sub" id="welcomeSub">
+                    Today's goal: Complete your next lesson.
+                    <span class="change-grade-link" onclick="showGradeSelection()">Change Level</span>
+                </div>
                 <div id="dynamicContent">
                     <!-- Rendered by JavaScript -->
                 </div>
@@ -1882,7 +1906,7 @@
         let currentUser = null;
         let currentSubject = '';
         let selectedGrade = '';
-        let currentView = 'welcome'; // welcome | grades | subjects | classroom | tutor
+        let currentView = 'welcome';
 
         // ================================================================
         //  COUNTRY DATA (Separated Secondary & College)
@@ -2253,10 +2277,11 @@
             currentUser = user;
             document.getElementById('userName').textContent = user.name || 'User';
             document.getElementById('userRole').textContent = user.role || 'Learner';
-            document.getElementById('userGrade').textContent = user.grade ? user.grade : 'Level: Not set';
-            document.getElementById('welcomeMessage').textContent = 'Welcome back, ' + (user.name || 'Student') + ' 👋';
+            document.getElementById('userGrade').textContent = user.grade || 'Level: Not set';
 
             checkSubscription();
+
+            // Show grade selection or dashboard
             if (user.grade) {
                 selectedGrade = user.grade;
                 showDashboardHome();
@@ -2272,16 +2297,16 @@
         function showDashboardHome() {
             currentView = 'welcome';
             const container = document.getElementById('dynamicContent');
-            const levelLabel = (currentUser.grade === 'College') ? 'College' : 'Grade ' + currentUser.grade;
+            const levelLabel = (currentUser.grade === 'College') ? 'College / Tertiary' : 'Grade ' + currentUser.grade;
             container.innerHTML = `
                 <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin-top:16px;">
-                    <div class="card" style="background:linear-gradient(135deg,#eef2ff,white);border-color:#6366f1;">
+                    <div class="card" style="background:linear-gradient(135deg,#eef2ff,white);border-color:#6366f1;padding:24px;border-radius:16px;border:2px solid #6366f1;box-shadow:0 4px 16px rgba(99,102,241,0.06);">
                         <div style="font-size:2rem;">📚</div>
                         <div style="font-weight:700;font-size:1.1rem;color:#0b1120;margin-top:4px;">Continue Learning</div>
                         <div style="font-size:0.9rem;color:#6b7280;">Resume your last lesson</div>
                         <button onclick="showSubjects()" style="margin-top:10px;padding:8px 20px;background:#6366f1;color:white;border:none;border-radius:8px;cursor:pointer;font-weight:600;">Resume</button>
                     </div>
-                    <div class="card">
+                    <div class="card" style="padding:24px;border-radius:16px;border:1px solid #e5e7eb;background:white;">
                         <div style="font-size:2rem;">🎯</div>
                         <div style="font-weight:700;font-size:1.1rem;color:#0b1120;margin-top:4px;">Today's Goal</div>
                         <div style="font-size:0.9rem;color:#6b7280;">Complete 1 lesson</div>
@@ -2289,12 +2314,12 @@
                             <div style="width:30%;height:100%;background:linear-gradient(90deg,#6366f1,#8b5cf6);border-radius:4px;"></div>
                         </div>
                     </div>
-                    <div class="card">
+                    <div class="card" style="padding:24px;border-radius:16px;border:1px solid #e5e7eb;background:white;">
                         <div style="font-size:2rem;">📝</div>
                         <div style="font-weight:700;font-size:1.1rem;color:#0b1120;margin-top:4px;">Homework</div>
                         <div style="font-size:0.9rem;color:#6b7280;">2 tasks due soon</div>
                     </div>
-                    <div class="card">
+                    <div class="card" style="padding:24px;border-radius:16px;border:1px solid #e5e7eb;background:white;">
                         <div style="font-size:2rem;">🏆</div>
                         <div style="font-weight:700;font-size:1.1rem;color:#0b1120;margin-top:4px;">Achievements</div>
                         <div style="font-size:0.9rem;color:#6b7280;">5 badges earned</div>
@@ -2306,7 +2331,8 @@
                     <button onclick="showSubjects()" style="margin-top:12px;padding:12px 32px;background:linear-gradient(135deg,#6366f1,#8b5cf6);color:white;border:none;border-radius:12px;cursor:pointer;font-weight:700;font-size:1rem;">Go to Subjects →</button>
                 </div>
             `;
-            document.getElementById('welcomeSub').textContent = 'Today\'s goal: Complete your next lesson.';
+            document.getElementById('welcomeMessage').textContent = 'Welcome back, ' + (currentUser.name || 'Student') + ' 👋';
+            document.getElementById('welcomeSub').innerHTML = 'Today\'s goal: Complete your next lesson. <span class="change-grade-link" onclick="showGradeSelection()">Change Level</span>';
         }
 
         // ================================================================
@@ -2319,7 +2345,7 @@
             const grades = (data && data.grades) ? data.grades : ['10', '11', '12', 'College'];
 
             document.getElementById('welcomeMessage').textContent = 'Select Your Level';
-            document.getElementById('welcomeSub').textContent = 'Choose your grade (10–12) or College.';
+            document.getElementById('welcomeSub').innerHTML = 'Choose your grade (10–12) or <strong>College / Tertiary</strong>.';
 
             const container = document.getElementById('dynamicContent');
             let html = `<div class="grade-grid">`;
@@ -2390,7 +2416,7 @@
             }
 
             document.getElementById('welcomeMessage').textContent = 'Your Subjects';
-            document.getElementById('welcomeSub').textContent = levelLabel + ' · ' + country + ' · Select a subject to start learning.';
+            document.getElementById('welcomeSub').innerHTML = levelLabel + ' · ' + country + ' · Select a subject to start learning.';
 
             const container = document.getElementById('dynamicContent');
             let html = `<div class="subject-grid">`;
@@ -2403,10 +2429,8 @@
                 `;
             });
             html += `</div>`;
+            html += `<button class="back-btn" onclick="showDashboardHome()" style="margin-top:16px;">← Back to Dashboard</button>`;
             container.innerHTML = html;
-
-            // Add a "Back to Dashboard" button
-            container.innerHTML += `<button class="back-btn" onclick="showDashboardHome()" style="margin-top:16px;">← Back to Dashboard</button>`;
 
             renderSidebar();
         }
@@ -2451,7 +2475,6 @@
             html += `<button class="back-btn" onclick="showSubjects()" style="margin-top:16px;">← Back to Subjects</button>`;
             container.innerHTML = html;
 
-            // Update right sidebar
             renderRightSidebar();
         }
 
@@ -2485,7 +2508,6 @@
                 </div>
             `;
 
-            // Auto-send initial message
             setTimeout(() => {
                 document.getElementById('chatInput').value = 'I\'m learning about "' + topic + '" in ' + subject + '. Can you teach me step by step?';
                 sendChat();
@@ -2541,7 +2563,7 @@
         }
 
         // ================================================================
-        //  VOICE (Text-to-Speech)
+        //  VOICE
         // ================================================================
         function speakText(text) {
             if (!('speechSynthesis' in window)) return;
@@ -2635,7 +2657,6 @@
             const flashcardContainer = document.getElementById('flashcardContainer');
             const errorContainer = document.getElementById('errorContainer');
 
-            // Sample flashcards (in real app, this would come from the backend)
             flashcardContainer.innerHTML = `
                 <div class="flashcard-item">
                     <div class="term">Slope (m)</div>
@@ -2756,7 +2777,6 @@
                 } catch (e) { /* invalid stored data, show hero */ }
             }
 
-            // Enter key support
             document.addEventListener('keydown', function(e) {
                 if (e.key === 'Enter') {
                     if (document.getElementById('loginPage').style.display !== 'none' &&
@@ -2770,12 +2790,10 @@
                 }
             });
 
-            // Close auth overlay on Escape
             document.addEventListener('keydown', function(e) {
                 if (e.key === 'Escape') closeAuth();
             });
 
-            // Close auth overlay on click outside
             document.getElementById('authOverlay').addEventListener('click', function(e) {
                 if (e.target === this) closeAuth();
             });
