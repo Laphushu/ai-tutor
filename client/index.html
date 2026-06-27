@@ -13,22 +13,37 @@
         }
 
         body {
-            font-family: 'Segoe UI', system-ui, sans-serif;
-            background: #f0f4f8;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: #f8fafc;
             min-height: 100vh;
         }
 
-        /* ===== HERO SECTION ===== */
+        /* ===== LANDING PAGE ===== */
         .hero {
             background: linear-gradient(135deg, #0b1120 0%, #1a1a3e 100%);
-            padding: 60px 20px 80px;
+            padding: 80px 20px 100px;
             text-align: center;
             color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -20%;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(99, 102, 241, 0.1) 0%, transparent 70%);
+            border-radius: 50%;
         }
 
         .hero .logo {
             font-size: 2.8rem;
             font-weight: 800;
+            position: relative;
+            z-index: 1;
         }
 
         .hero .logo span {
@@ -38,28 +53,44 @@
             -webkit-text-fill-color: transparent;
         }
 
-        .hero h1 {
-            font-size: 3rem;
-            font-weight: 700;
-            margin: 20px 0 12px;
-        }
-
-        .hero p {
-            font-size: 1.25rem;
-            color: #c4b5d4;
-            max-width: 700px;
-            margin: 0 auto 30px;
-        }
-
         .hero .badge {
             display: inline-block;
             background: rgba(99, 102, 241, 0.2);
             border: 1px solid rgba(99, 102, 241, 0.4);
             padding: 6px 20px;
             border-radius: 30px;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
             color: #818cf8;
-            margin-bottom: 20px;
+            margin: 20px 0 16px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            font-weight: 700;
+            max-width: 800px;
+            margin: 0 auto 16px;
+            line-height: 1.2;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero h1 .highlight {
+            background: linear-gradient(135deg, #818cf8, #a855f7);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            color: #c4b5d4;
+            max-width: 600px;
+            margin: 0 auto 32px;
+            line-height: 1.6;
+            position: relative;
+            z-index: 1;
         }
 
         .hero .cta-group {
@@ -67,6 +98,8 @@
             justify-content: center;
             gap: 16px;
             flex-wrap: wrap;
+            position: relative;
+            z-index: 1;
         }
 
         .hero .btn-primary {
@@ -80,54 +113,109 @@
             cursor: pointer;
             text-decoration: none;
             display: inline-block;
-            transition: transform 0.2s, box-shadow 0.2s;
+            transition: all 0.3s;
+            box-shadow: 0 8px 30px rgba(99, 102, 241, 0.3);
         }
 
         .hero .btn-primary:hover {
             transform: translateY(-3px);
-            box-shadow: 0 12px 32px rgba(99, 102, 241, 0.35);
+            box-shadow: 0 12px 40px rgba(99, 102, 241, 0.4);
         }
 
         .hero .btn-secondary {
             padding: 16px 40px;
-            background: transparent;
+            background: rgba(255, 255, 255, 0.05);
             color: white;
-            border: 2px solid rgba(255, 255, 255, 0.2);
+            border: 2px solid rgba(255, 255, 255, 0.15);
             border-radius: 14px;
             font-size: 1.1rem;
             font-weight: 700;
             cursor: pointer;
             text-decoration: none;
             display: inline-block;
-            transition: all 0.2s;
+            transition: all 0.3s;
         }
 
         .hero .btn-secondary:hover {
-            background: rgba(255, 255, 255, 0.05);
-            border-color: rgba(255, 255, 255, 0.4);
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.3);
         }
 
-        /* ===== FEATURES SECTION ===== */
-        .features {
+        /* ===== STATS BAR ===== */
+        .stats-bar {
             max-width: 1100px;
-            margin: -40px auto 40px;
+            margin: -30px auto 40px;
             padding: 0 20px;
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 20px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 24px 20px;
+            border-radius: 16px;
+            text-align: center;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.06);
+        }
+
+        .stat-card .number {
+            font-size: 2rem;
+            font-weight: 800;
+            color: #0b1120;
+        }
+
+        .stat-card .label {
+            font-size: 0.9rem;
+            color: #6b7280;
+            margin-top: 4px;
+        }
+
+        /* ===== FEATURES ===== */
+        .features {
+            max-width: 1100px;
+            margin: 0 auto 60px;
+            padding: 0 20px;
+        }
+
+        .features .section-title {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .features .section-title h2 {
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: #0b1120;
+        }
+
+        .features .section-title p {
+            color: #6b7280;
+            font-size: 1.05rem;
+            margin-top: 8px;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
             gap: 24px;
         }
 
         .feature-card {
             background: white;
-            padding: 28px 24px;
+            padding: 32px 24px;
             border-radius: 20px;
-            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.06);
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
             text-align: center;
-            transition: transform 0.2s;
+            transition: all 0.3s;
+            border: 1px solid rgba(0, 0, 0, 0.04);
         }
 
         .feature-card:hover {
             transform: translateY(-6px);
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.08);
         }
 
         .feature-card .icon {
@@ -189,8 +277,134 @@
             }
         }
 
+        /* ===== PRICING ===== */
+        .pricing {
+            max-width: 1100px;
+            margin: 0 auto 60px;
+            padding: 0 20px;
+        }
+
+        .pricing .section-title {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .pricing .section-title h2 {
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: #0b1120;
+        }
+
+        .pricing .section-title p {
+            color: #6b7280;
+            font-size: 1.05rem;
+            margin-top: 8px;
+        }
+
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 24px;
+        }
+
+        .pricing-card {
+            background: white;
+            padding: 40px 28px;
+            border-radius: 20px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
+            text-align: center;
+            border: 2px solid transparent;
+            transition: all 0.3s;
+        }
+
+        .pricing-card:hover {
+            border-color: #6366f1;
+            box-shadow: 0 12px 40px rgba(99, 102, 241, 0.08);
+        }
+
+        .pricing-card.popular {
+            border-color: #6366f1;
+            background: linear-gradient(135deg, #ffffff, #f8faff);
+        }
+
+        .pricing-card .plan {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 600;
+            color: #6b7280;
+        }
+
+        .pricing-card .price {
+            font-size: 2.8rem;
+            font-weight: 800;
+            color: #0b1120;
+            margin: 12px 0 4px;
+        }
+
+        .pricing-card .price span {
+            font-size: 1rem;
+            font-weight: 400;
+            color: #6b7280;
+        }
+
+        .pricing-card .description {
+            color: #6b7280;
+            font-size: 0.95rem;
+            margin-bottom: 20px;
+        }
+
+        .pricing-card .features-list {
+            list-style: none;
+            text-align: left;
+            margin: 20px 0 28px;
+        }
+
+        .pricing-card .features-list li {
+            padding: 8px 0;
+            font-size: 0.95rem;
+            color: #1f2937;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .pricing-card .features-list li::before {
+            content: '✓';
+            color: #22c55e;
+            font-weight: 700;
+        }
+
+        .pricing-card .btn-pricing {
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            color: white;
+            transition: all 0.3s;
+        }
+
+        .pricing-card .btn-pricing:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(99, 102, 241, 0.3);
+        }
+
+        .pricing-card .btn-pricing.outline {
+            background: white;
+            color: #6366f1;
+            border: 2px solid #6366f1;
+        }
+
+        .pricing-card .btn-pricing.outline:hover {
+            background: #f8faff;
+        }
+
         /* ============================================================ */
-        /* AUTH CARD (Overlay) */
+        /* AUTH OVERLAY (Login / Signup) */
         /* ============================================================ */
         .auth-overlay {
             display: none;
@@ -388,9 +602,9 @@
         /* ============================================================ */
         .dashboard {
             display: none;
-            max-width: 1100px;
+            max-width: 1200px;
             margin: 0 auto;
-            padding: 24px 20px;
+            padding: 20px;
         }
 
         .dashboard.active {
@@ -399,22 +613,19 @@
 
         .top-nav {
             background: white;
-            padding: 16px 32px;
+            padding: 16px 28px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
-            position: sticky;
-            top: 0;
-            z-index: 100;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
+            border-radius: 16px;
+            margin-bottom: 24px;
             flex-wrap: wrap;
             gap: 12px;
-            margin-bottom: 24px;
-            border-radius: 16px;
         }
 
         .top-nav .logo {
-            font-size: 1.5rem;
+            font-size: 1.4rem;
             font-weight: 800;
             color: #0b1120;
             text-decoration: none;
@@ -437,10 +648,11 @@
         .top-nav .user-info .name {
             font-weight: 600;
             color: #0b1120;
+            font-size: 0.95rem;
         }
 
         .top-nav .user-info .role {
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             color: #6b7280;
             background: #f3f4f6;
             padding: 2px 12px;
@@ -448,7 +660,7 @@
         }
 
         .top-nav .user-info .grade-badge {
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             color: #6366f1;
             background: #eef2ff;
             padding: 2px 12px;
@@ -493,39 +705,181 @@
             color: #991b1b;
         }
 
-        .page-section {
-            display: none;
-            animation: fadeUp 0.4s ease;
+        /* Dashboard Grid */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 240px 1fr 280px;
+            gap: 20px;
         }
 
-        .page-section.active {
-            display: block;
-        }
-
-        @keyframes fadeUp {
-            0% {
-                opacity: 0;
-                transform: translateY(12px);
-            }
-            100% {
-                opacity: 1;
-                transform: translateY(0);
+        @media (max-width: 1024px) {
+            .dashboard-grid {
+                grid-template-columns: 1fr;
             }
         }
 
-        .page-header {
-            margin-bottom: 24px;
+        /* Left Sidebar */
+        .sidebar-left {
+            background: white;
+            border-radius: 16px;
+            padding: 24px 18px;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
+            height: fit-content;
         }
 
-        .page-header h2 {
-            font-size: 1.8rem;
+        .sidebar-left .section-title {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            color: #6b7280;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            margin: 16px 0 8px;
+        }
+
+        .sidebar-left .section-title:first-child {
+            margin-top: 0;
+        }
+
+        .sidebar-left .subject-list {
+            list-style: none;
+        }
+
+        .sidebar-left .subject-list li {
+            padding: 10px 14px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 0.9rem;
+            color: #1f2937;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 2px;
+        }
+
+        .sidebar-left .subject-list li:hover {
+            background: #f3f4f6;
+        }
+
+        .sidebar-left .subject-list li.active {
+            background: #eef2ff;
+            color: #6366f1;
+            font-weight: 600;
+        }
+
+        .sidebar-left .subject-list li .icon {
+            font-size: 1.2rem;
+            width: 24px;
+            text-align: center;
+        }
+
+        .progress-item {
+            margin: 8px 0;
+        }
+
+        .progress-item .label {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.8rem;
+            color: #4b5563;
+        }
+
+        .progress-item .bar {
+            height: 6px;
+            background: #e5e7eb;
+            border-radius: 4px;
+            margin-top: 4px;
+            overflow: hidden;
+        }
+
+        .progress-item .bar .fill {
+            height: 100%;
+            border-radius: 4px;
+            background: linear-gradient(90deg, #6366f1, #8b5cf6);
+            transition: width 0.6s ease;
+        }
+
+        .recent-item {
+            padding: 10px 12px;
+            border-radius: 10px;
+            background: #f8fafc;
+            margin-bottom: 6px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            color: #1f2937;
+            transition: all 0.2s;
+        }
+
+        .recent-item:hover {
+            background: #eef2ff;
+        }
+
+        .recent-item .sub {
+            font-size: 0.75rem;
+            color: #6b7280;
+        }
+
+        /* Center Panel */
+        .center-panel {
+            background: white;
+            border-radius: 16px;
+            padding: 28px 32px;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
+            min-height: 500px;
+        }
+
+        .center-panel .welcome {
+            font-size: 1.6rem;
             font-weight: 700;
             color: #0b1120;
+            margin-bottom: 4px;
         }
 
-        .page-header p {
+        .center-panel .welcome-sub {
             color: #6b7280;
-            font-size: 1rem;
+            font-size: 0.95rem;
+            margin-bottom: 20px;
+        }
+
+        .center-panel .breadcrumb {
+            font-size: 0.8rem;
+            color: #6b7280;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .center-panel .breadcrumb span {
+            color: #0b1120;
+            font-weight: 500;
+        }
+
+        .center-panel .breadcrumb .sep {
+            color: #d1d5db;
+        }
+
+        .center-panel .breadcrumb .clickable {
+            cursor: pointer;
+            color: #6366f1;
+        }
+
+        .center-panel .breadcrumb .clickable:hover {
+            text-decoration: underline;
+        }
+
+        .center-panel h2 {
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: #0b1120;
+            margin-bottom: 4px;
+        }
+
+        .center-panel .subtitle {
+            color: #6b7280;
+            font-size: 0.95rem;
+            margin-bottom: 20px;
         }
 
         .grade-grid {
@@ -835,6 +1189,73 @@
             color: #6b7280;
         }
 
+        /* Right Sidebar */
+        .sidebar-right {
+            background: white;
+            border-radius: 16px;
+            padding: 24px 18px;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
+            height: fit-content;
+        }
+
+        .sidebar-right .section-title {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            color: #6b7280;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            margin: 16px 0 8px;
+        }
+
+        .sidebar-right .section-title:first-child {
+            margin-top: 0;
+        }
+
+        .flashcard-item {
+            padding: 10px 14px;
+            background: #f8fafc;
+            border-radius: 10px;
+            margin-bottom: 6px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .flashcard-item:hover {
+            background: #eef2ff;
+        }
+
+        .flashcard-item .term {
+            font-weight: 600;
+            color: #0b1120;
+        }
+
+        .flashcard-item .def {
+            font-size: 0.8rem;
+            color: #6b7280;
+            margin-top: 2px;
+        }
+
+        .error-item {
+            padding: 10px 14px;
+            background: #fef2f2;
+            border-radius: 10px;
+            margin-bottom: 6px;
+            font-size: 0.85rem;
+            border-left: 3px solid #ef4444;
+        }
+
+        .error-item .concept {
+            font-weight: 600;
+            color: #991b1b;
+        }
+
+        .error-item .hint {
+            font-size: 0.8rem;
+            color: #6b7280;
+            margin-top: 2px;
+        }
+
         /* ============================================================ */
         /* INFO PAGES (Privacy, About, Contact, TOS) */
         /* ============================================================ */
@@ -957,15 +1378,21 @@
         /* ============================================================ */
         /* RESPONSIVE */
         /* ============================================================ */
-        @media (max-width: 640px) {
+        @media (max-width: 768px) {
             .hero h1 {
-                font-size: 2rem;
+                font-size: 2.2rem;
             }
             .hero p {
                 font-size: 1rem;
             }
-            .features {
+            .stats-bar {
                 grid-template-columns: 1fr 1fr;
+            }
+            .features-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+            .pricing-grid {
+                grid-template-columns: 1fr;
             }
             .auth-card {
                 padding: 28px 20px;
@@ -990,6 +1417,12 @@
             .topic-grid {
                 grid-template-columns: 1fr;
             }
+            .center-panel {
+                padding: 16px;
+            }
+            .center-panel .welcome {
+                font-size: 1.2rem;
+            }
             .tutor-container {
                 padding: 16px;
             }
@@ -1010,8 +1443,8 @@
         }
 
         @media (max-width: 480px) {
-            .features {
-                grid-template-columns: 1fr;
+            .hero h1 {
+                font-size: 1.8rem;
             }
             .hero .cta-group {
                 flex-direction: column;
@@ -1022,31 +1455,84 @@
                 width: 100%;
                 max-width: 280px;
             }
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+            .stats-bar {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
 </head>
 <body>
 
     <!-- ============================================================ -->
-    <!-- HERO SECTION -->
+    <!-- LANDING PAGE -->
     <!-- ============================================================ -->
+
+    <!-- Hero -->
     <section class="hero" id="heroSection">
         <div class="logo">🧠 <span>Leago</span></div>
         <div class="badge">✦ Available Now</div>
-        <h1>Learn with AI — High School &amp; College</h1>
-        <p>
-            Your personal AI tutor for Grades 10–12 and College. Get step‑by‑step explanations,
-            exam preparation, and unlimited practice — all powered by artificial intelligence.
-        </p>
+        <h1>Learn with <span class="highlight">AI</span> — High School &amp; College</h1>
+        <p>Your personal AI tutor for Grades 10–12 and College. Step‑by‑step explanations, exam preparation, and unlimited practice.</p>
         <div class="cta-group">
             <a class="btn-primary" onclick="openAuth('login')">Get Started — It's Free</a>
             <a class="btn-secondary" onclick="document.querySelector('.features').scrollIntoView({behavior:'smooth'})">Learn More ↓</a>
         </div>
     </section>
 
-    <!-- ============================================================ -->
-    <!-- STATUS BAR -->
-    <!-- ============================================================ -->
+    <!-- Stats -->
+    <div class="stats-bar">
+        <div class="stat-card">
+            <div class="number">12+</div>
+            <div class="label">Subjects</div>
+        </div>
+        <div class="stat-card">
+            <div class="number">100+</div>
+            <div class="label">Topics</div>
+        </div>
+        <div class="stat-card">
+            <div class="number">24/7</div>
+            <div class="label">AI Tutor</div>
+        </div>
+        <div class="stat-card">
+            <div class="number">3-Day</div>
+            <div class="label">Free Trial</div>
+        </div>
+    </div>
+
+    <!-- Features -->
+    <section class="features" id="features">
+        <div class="section-title">
+            <h2>Everything You Need to Succeed</h2>
+            <p>AI-powered learning designed for South African students.</p>
+        </div>
+        <div class="features-grid">
+            <div class="feature-card">
+                <span class="icon">📐</span>
+                <h3>Mathematics &amp; English</h3>
+                <p>Master core subjects with AI‑powered explanations and practice.</p>
+            </div>
+            <div class="feature-card">
+                <span class="icon">🎯</span>
+                <h3>Grades 10–12 &amp; College</h3>
+                <p>Curriculum‑aligned content for high school and tertiary learners.</p>
+            </div>
+            <div class="feature-card">
+                <span class="icon">📚</span>
+                <h3>Step‑by‑Step Exam Prep</h3>
+                <p>Break down complex topics into manageable steps with guided practice.</p>
+            </div>
+            <div class="feature-card">
+                <span class="icon">🧠</span>
+                <h3>AI Tutor — Always On</h3>
+                <p>Get personalised help anytime, anywhere. Your tutor never sleeps.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Status Bar -->
     <div class="status-bar">
         <div class="status">
             <span class="dot"></span>
@@ -1054,29 +1540,51 @@
         </div>
     </div>
 
-    <!-- ============================================================ -->
-    <!-- FEATURES -->
-    <!-- ============================================================ -->
-    <section class="features" id="featuresSection">
-        <div class="feature-card">
-            <span class="icon">📐</span>
-            <h3>Mathematics &amp; English</h3>
-            <p>Master core subjects with AI‑powered explanations and practice problems.</p>
+    <!-- Pricing -->
+    <section class="pricing" id="pricing">
+        <div class="section-title">
+            <h2>Simple, Transparent Pricing</h2>
+            <p>Choose the plan that works for you.</p>
         </div>
-        <div class="feature-card">
-            <span class="icon">🎯</span>
-            <h3>Grades 10–12 &amp; College</h3>
-            <p>Curriculum‑aligned content for high school and tertiary learners.</p>
-        </div>
-        <div class="feature-card">
-            <span class="icon">📚</span>
-            <h3>Step‑by‑Step Exam Prep</h3>
-            <p>Break down complex topics into manageable steps with guided practice.</p>
-        </div>
-        <div class="feature-card">
-            <span class="icon">🧠</span>
-            <h3>AI Tutor — Always On</h3>
-            <p>Get personalised help anytime, anywhere. Your tutor never sleeps.</p>
+        <div class="pricing-grid">
+            <div class="pricing-card">
+                <div class="plan">Free Trial</div>
+                <div class="price">R0 <span>/ 3 days</span></div>
+                <div class="description">Explore all features risk-free.</div>
+                <ul class="features-list">
+                    <li>Access to all subjects</li>
+                    <li>AI Tutor chat</li>
+                    <li>Practice questions</li>
+                    <li>No credit card required</li>
+                </ul>
+                <button class="btn-pricing outline" onclick="openAuth('login')">Start Free Trial</button>
+            </div>
+            <div class="pricing-card popular">
+                <div style="font-size:0.75rem;color:#6366f1;font-weight:700;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;">Most Popular</div>
+                <div class="plan">Premium</div>
+                <div class="price">R49.99 <span>/ month</span></div>
+                <div class="description">Full access for South African students.</div>
+                <ul class="features-list">
+                    <li>Everything in Free Trial</li>
+                    <li>Unlimited AI Tutor sessions</li>
+                    <li>Progress tracking</li>
+                    <li>Exam preparation tools</li>
+                    <li>Priority support</li>
+                </ul>
+                <button class="btn-pricing" onclick="openAuth('login')">Subscribe Now</button>
+            </div>
+            <div class="pricing-card">
+                <div class="plan">International</div>
+                <div class="price">R149.99 <span>/ month</span></div>
+                <div class="description">For international students.</div>
+                <ul class="features-list">
+                    <li>Everything in Premium</li>
+                    <li>International curriculum</li>
+                    <li>Multi-language support</li>
+                    <li>Advanced analytics</li>
+                </ul>
+                <button class="btn-pricing outline" onclick="openAuth('login')">Subscribe Now</button>
+            </div>
         </div>
     </section>
 
@@ -1084,7 +1592,7 @@
     <!-- INFO PAGES (Privacy, About, Contact, TOS) -->
     <!-- ============================================================ -->
 
-    <!-- PRIVACY POLICY -->
+    <!-- Privacy Policy -->
     <div class="info-page" id="page-privacy">
         <h1>Privacy Policy</h1>
         <p><strong>Last updated:</strong> June 2026</p>
@@ -1120,7 +1628,7 @@
         <span class="back-link" onclick="showInfoPage('')">← Back to Leago</span>
     </div>
 
-    <!-- ABOUT -->
+    <!-- About -->
     <div class="info-page" id="page-about">
         <h1>About Leago</h1>
         <p><strong>Leago</strong> is an AI-powered educational platform designed to help South African students master their subjects.</p>
@@ -1135,7 +1643,7 @@
         <span class="back-link" onclick="showInfoPage('')">← Back to Leago</span>
     </div>
 
-    <!-- CONTACT -->
+    <!-- Contact -->
     <div class="info-page" id="page-contact">
         <h1>Contact Us</h1>
         <p>Have questions, feedback, or need help? We'd love to hear from you.</p>
@@ -1152,7 +1660,7 @@
         <span class="back-link" onclick="showInfoPage('')">← Back to Leago</span>
     </div>
 
-    <!-- TERMS OF SERVICE -->
+    <!-- Terms of Service -->
     <div class="info-page" id="page-tos">
         <h1>Terms of Service</h1>
         <p><strong>Last updated:</strong> June 2026</p>
@@ -1289,62 +1797,56 @@
             </div>
         </nav>
 
-        <!-- ===== PAGE: GRADE SELECTION (10–12 + College) ===== -->
-        <div class="page-section active" id="page-grades">
-            <div class="page-header">
-                <h2>📚 Select Your Level</h2>
-                <p>Choose your grade (10–12) or select <strong>College / Tertiary</strong> for higher education.</p>
-            </div>
-            <div class="grade-grid" id="gradeGrid"></div>
-            <button class="btn-confirm" id="gradeConfirmBtn" onclick="confirmGrade()">Continue to Subjects →</button>
-        </div>
+        <!-- Dashboard 3-Column Layout -->
+        <div class="dashboard-grid">
 
-        <!-- ===== PAGE: SUBJECTS (with Back Button) ===== -->
-        <div class="page-section" id="page-subjects">
-            <button class="back-btn" onclick="showGradeSelection()">← Back to Levels</button>
-            <div class="page-header">
-                <h2>📚 Your Subjects</h2>
-                <p id="subjectsSubtitle">Select a subject to start learning.</p>
-            </div>
-            <div class="subject-grid" id="subjectGrid"></div>
-        </div>
+            <!-- Left Sidebar -->
+            <aside class="sidebar-left" id="sidebarLeft">
+                <div class="section-title">Subjects</div>
+                <ul class="subject-list" id="subjectList">
+                    <!-- Populated by JavaScript -->
+                </ul>
 
-        <!-- ===== PAGE: CLASSROOM (with Back Button) ===== -->
-        <div class="page-section" id="page-classroom">
-            <button class="back-btn" onclick="showPage('subjects')">← Back to Subjects</button>
-            <div class="classroom-header">
-                <h2 id="classroomTitle">Subject</h2>
-            </div>
-            <div id="topicCount" style="font-size:0.9rem;color:#6b7280;margin-bottom:12px;"></div>
-            <div class="topic-grid" id="topicGrid"></div>
-        </div>
+                <div class="section-title" style="margin-top:20px;">Your Progress</div>
+                <div id="progressContainer">
+                    <!-- Populated by JavaScript -->
+                </div>
 
-        <!-- ===== PAGE: AI TUTOR (with Back Button) ===== -->
-        <div class="page-section" id="page-tutor">
-            <button class="back-btn" onclick="showPage('classroom')">← Back to Topics</button>
-            <div class="tutor-container">
-                <div class="tutor-header">
-                    <h3>💬 AI Tutor</h3>
-                    <span class="context" id="tutorContext">General</span>
+                <div class="section-title" style="margin-top:20px;">Recent</div>
+                <div id="recentContainer">
+                    <!-- Populated by JavaScript -->
                 </div>
-                <div class="chat-box" id="chatBox">
-                    <div class="msg bot">👋 Welcome! Ask me anything — I'll guide you step by step.</div>
+            </aside>
+
+            <!-- Center Panel -->
+            <main class="center-panel" id="centerPanel">
+                <!-- Dynamic content -->
+                <div class="welcome" id="welcomeMessage">Welcome back, Samuel 👋</div>
+                <div class="welcome-sub" id="welcomeSub">Today's goal: Complete your next lesson.</div>
+                <div id="dynamicContent">
+                    <!-- Rendered by JavaScript -->
                 </div>
-                <div class="chat-input">
-                    <input type="text" id="chatInput" placeholder="Type your message..." onkeypress="if(event.key==='Enter') sendChat()" />
-                    <button class="btn-send" id="sendBtn" onclick="sendChat()">Send</button>
+            </main>
+
+            <!-- Right Sidebar -->
+            <aside class="sidebar-right" id="sidebarRight">
+                <div class="section-title">Key Terms</div>
+                <div id="flashcardContainer">
+                    <!-- Populated by JavaScript -->
                 </div>
-                <div class="chat-options">
-                    <input type="checkbox" id="speakToggle" />
-                    <label for="speakToggle">🔊 AI reads responses aloud</label>
+
+                <div class="section-title" style="margin-top:20px;">Weak Spots</div>
+                <div id="errorContainer">
+                    <!-- Populated by JavaScript -->
                 </div>
-            </div>
+            </aside>
+
         </div>
 
     </div>
 
     <!-- ============================================================ -->
-    <!-- FOOTER (AdSense pages links) -->
+    <!-- FOOTER -->
     <!-- ============================================================ -->
     <footer class="site-footer" id="siteFooter">
         <div class="inner">
@@ -1380,32 +1882,7 @@
         let currentUser = null;
         let currentSubject = '';
         let selectedGrade = '';
-
-        // ================================================================
-        //  INFO PAGE NAVIGATION
-        // ================================================================
-        function showInfoPage(page) {
-            document.querySelectorAll('.info-page').forEach(el => el.classList.remove('active'));
-            if (!page) {
-                document.getElementById('heroSection').style.display = 'block';
-                document.getElementById('featuresSection').style.display = 'grid';
-                document.querySelector('.status-bar').style.display = 'block';
-                if (currentUser) {
-                    document.getElementById('dashboard').classList.add('active');
-                    document.getElementById('heroSection').style.display = 'none';
-                    document.getElementById('featuresSection').style.display = 'none';
-                    document.querySelector('.status-bar').style.display = 'none';
-                }
-                return;
-            }
-            document.getElementById('heroSection').style.display = 'none';
-            document.getElementById('featuresSection').style.display = 'none';
-            document.querySelector('.status-bar').style.display = 'none';
-            document.getElementById('dashboard').classList.remove('active');
-            const target = document.getElementById('page-' + page);
-            if (target) target.classList.add('active');
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
+        let currentView = 'welcome'; // welcome | grades | subjects | classroom | tutor
 
         // ================================================================
         //  COUNTRY DATA (Separated Secondary & College)
@@ -1543,347 +2020,6 @@
                         'Film Studies – Analysis'
                     ]
                 }
-            },
-            'United States': {
-                grades: ['10', '11', '12', 'College'],
-                secondary_subjects: {
-                    'English Language Arts': [
-                        'Reading Literature – Fiction Analysis',
-                        'Informational Text – Close Reading',
-                        'Writing – Expository Essays',
-                        'Writing – Persuasive Essays',
-                        'Grammar – Sentence Structure',
-                        'Vocabulary – Academic Words',
-                        'Speaking & Listening – Discussions',
-                        'Media Literacy – Evaluating Sources'
-                    ],
-                    'Mathematics': [
-                        'Algebra I – Linear Functions',
-                        'Algebra II – Quadratics & Polynomials',
-                        'Geometry – Proofs & Constructions',
-                        'Trigonometry – Ratios & Identities',
-                        'Pre-calculus – Functions & Graphs',
-                        'Calculus – Limits & Derivatives',
-                        'Statistics – Probability & Data',
-                        'Financial Algebra – Interest & Loans'
-                    ],
-                    'Science': [
-                        'Biology – Cell Structures',
-                        'Biology – Genetics & Evolution',
-                        'Chemistry – Atomic Structure',
-                        'Chemistry – Chemical Reactions',
-                        'Physics – Motion & Forces',
-                        'Physics – Energy & Waves',
-                        'Earth Science – Weather & Oceans',
-                        'Astronomy – Solar System & Beyond'
-                    ],
-                    'History': [
-                        'American Revolution – Causes & Impact',
-                        'Civil War – Slavery & Emancipation',
-                        'World War I – US Involvement',
-                        'Great Depression – New Deal',
-                        'World War II – Homefront',
-                        'Cold War – Space Race',
-                        'Civil Rights Movement',
-                        'Modern America – 21st Century'
-                    ],
-                    'Geography': [
-                        'Physical Geography – Landforms',
-                        'Human Geography – Culture & Migration',
-                        'US Geography – Regions & Capitals',
-                        'World Geography – Continents & Countries',
-                        'Climate – Climate Zones & Change',
-                        'Cartography – Map Reading'
-                    ]
-                },
-                college_subjects: {
-                    'Engineering': [
-                        'Mechanical Engineering – Thermofluids',
-                        'Electrical Engineering – Signals',
-                        'Civil Engineering – Structural Analysis',
-                        'Computer Engineering – Hardware',
-                        'Aerospace Engineering – Dynamics'
-                    ],
-                    'Computer Science': [
-                        'Programming – Java & C++',
-                        'Data Science – Pandas & R',
-                        'Machine Learning – Intro',
-                        'Operating Systems – Concepts',
-                        'Software Engineering – Agile'
-                    ],
-                    'Business': [
-                        'Business Administration – Core',
-                        'Marketing – Digital Marketing',
-                        'Finance – Corporate Finance',
-                        'Economics – Micro & Macro',
-                        'Entrepreneurship – Innovation'
-                    ],
-                    'Health Sciences': [
-                        'Pre-Med – Biology',
-                        'Nursing – Clinical Skills',
-                        'Public Health – Global Health',
-                        'Psychology – Behavioral'
-                    ],
-                    'Law': [
-                        'Torts – Civil Law',
-                        'Contracts – Legal Agreements',
-                        'Criminal Procedure',
-                        'Constitutional Law – US'
-                    ],
-                    'Education': [
-                        'Educational Psychology',
-                        'Curriculum Development',
-                        'Classroom Technology'
-                    ]
-                }
-            },
-            'United Kingdom': {
-                grades: ['10', '11', '12', '13', 'College'],
-                secondary_subjects: {
-                    'English': [
-                        'Shakespeare – Macbeth',
-                        'Poetry – Sonnets & Romantics',
-                        'Novel – Pride and Prejudice',
-                        'Creative Writing – Short Stories',
-                        'Grammar – Advanced Punctuation',
-                        'Non-fiction – Articles & Speeches'
-                    ],
-                    'Mathematics': [
-                        'Algebra – Equations & Graphs',
-                        'Geometry – Circles & Triangles',
-                        'Trigonometry – Sine & Cosine Rules',
-                        'Calculus – Differentiation & Integration',
-                        'Statistics – Averages & Spread',
-                        'Mechanics – Vectors & Forces'
-                    ],
-                    'Science': [
-                        'Biology – Cells & Microscopy',
-                        'Chemistry – Periodic Table & Bonding',
-                        'Physics – Forces & Motion',
-                        'Earth Science – Ecosystems',
-                        'Astronomy – Stars & Galaxies'
-                    ],
-                    'History': [
-                        'Medieval England – Crusades',
-                        'Tudors – Henry VIII & Elizabeth',
-                        'Victorian Britain – Empire',
-                        'World War I – Trenches',
-                        'World War II – Blitz',
-                        'Cold War – Britain\'s Role'
-                    ],
-                    'Geography': [
-                        'Physical – Rivers & Glaciers',
-                        'Human – Population & Settlement',
-                        'UK Geography – Cities & Regions',
-                        'Development – Global Inequality'
-                    ]
-                },
-                college_subjects: {
-                    'Engineering': [
-                        'Mechanical – Design & Manufacturing',
-                        'Electrical – Power & Control',
-                        'Civil – Geotechnical Engineering',
-                        'Chemical – Process Engineering',
-                        'Aerospace – Flight Mechanics'
-                    ],
-                    'Computer Science': [
-                        'Programming – Python & Java',
-                        'Algorithms – Complexity',
-                        'AI – Neural Networks',
-                        'Data Security – Cryptography'
-                    ],
-                    'Business': [
-                        'Management – Operations',
-                        'Marketing – Consumer Behaviour',
-                        'Finance – Investment'
-                    ],
-                    'Law': [
-                        'Criminal Law – UK',
-                        'Contract Law – English',
-                        'EU Law – Regulations'
-                    ]
-                }
-            },
-            'China': {
-                grades: ['10', '11', '12', 'College'],
-                secondary_subjects: {
-                    '语文 (Chinese)': [
-                        '文言文 – 唐宋八大家',
-                        '现代诗歌 – 鲁迅',
-                        '小说 – 红楼梦选段',
-                        '议论文 – 写作技巧',
-                        '语法 – 句子结构',
-                        '阅读 – 理解与分析'
-                    ],
-                    '数学 (Mathematics)': [
-                        '代数 – 方程与不等式',
-                        '几何 – 三角形与圆',
-                        '三角函数 – 公式与应用',
-                        '微积分 – 导数与积分',
-                        '统计 – 数据分析',
-                        '概率 – 事件与计算'
-                    ],
-                    '英语 (English)': [
-                        '阅读 – 小说片段',
-                        '语法 – 时态与语态',
-                        '写作 – 书信与文章',
-                        '听力 – 对话训练',
-                        '词汇 – 高阶词汇'
-                    ],
-                    '物理 (Physics)': [
-                        '力学 – 运动与力',
-                        '热学 – 温度与能量',
-                        '电学 – 电路与磁',
-                        '光学 – 反射与折射',
-                        '原子物理 – 核反应'
-                    ],
-                    '化学 (Chemistry)': [
-                        '原子结构 – 元素周期表',
-                        '化学反应 – 化学方程式',
-                        '有机化学 – 烃与衍生物',
-                        '无机化学 – 酸碱盐'
-                    ],
-                    '生物 (Biology)': [
-                        '细胞 – 结构与功能',
-                        '遗传 – DNA与基因',
-                        '进化 – 自然选择',
-                        '生态 – 食物链'
-                    ]
-                },
-                college_subjects: {
-                    '工程学 (Engineering)': [
-                        '机械工程 – 设计',
-                        '电气工程 – 电路',
-                        '土木工程 – 结构',
-                        '计算机工程 – 硬件'
-                    ],
-                    '计算机科学 (CS)': [
-                        '编程 – Python',
-                        '数据结构 – 算法',
-                        '人工智能 – 入门'
-                    ],
-                    '商学 (Business)': [
-                        '管理 – 原理',
-                        '市场营销 – 策略'
-                    ],
-                    '法学 (Law)': [
-                        '刑法 – 基础',
-                        '宪法 – 中国'
-                    ]
-                }
-            },
-            'Australia': {
-                grades: ['10', '11', '12', 'College'],
-                secondary_subjects: {
-                    'English': [
-                        'Novel Study – Australian Literature',
-                        'Persuasive Writing – Debates',
-                        'Poetry – Performance & Analysis',
-                        'Grammar – Tenses & Phrases',
-                        'Media – Analysis of Adverts'
-                    ],
-                    'Mathematics': [
-                        'Algebra – Linear & Quadratic',
-                        'Geometry – Trigonometry',
-                        'Calculus – Differentiation',
-                        'Statistics – Data Representation',
-                        'Financial Maths – Earning & Saving'
-                    ],
-                    'Science': [
-                        'Biology – Cells & Systems',
-                        'Chemistry – Atomic & Molecular',
-                        'Physics – Energy & Electricity',
-                        'Earth Science – Plate Tectonics',
-                        'Environmental Science – Sustainability'
-                    ],
-                    'History': [
-                        'Australian History – Colonisation',
-                        'World History – Industrial Revolution',
-                        'Civil Rights – Global Movements',
-                        'Modern History – World Wars'
-                    ],
-                    'Geography': [
-                        'Physical – Landforms & Rivers',
-                        'Human – Population & Urbanisation',
-                        'Australian Geography – States & Territories',
-                        'Climate – El Niño & Climate Change'
-                    ]
-                },
-                college_subjects: {
-                    'Engineering': [
-                        'Civil – Structural',
-                        'Mechanical – Thermodynamics',
-                        'Electrical – Power Systems'
-                    ],
-                    'Computer Science': [
-                        'Programming – Python',
-                        'Data Science – Analytics'
-                    ],
-                    'Business': [
-                        'Management – Organisational',
-                        'Marketing – Digital'
-                    ],
-                    'Health Sciences': [
-                        'Nursing – Clinical',
-                        'Public Health – Epidemiology'
-                    ]
-                }
-            },
-            'India': {
-                grades: ['10', '11', '12', 'College'],
-                secondary_subjects: {
-                    'English': [
-                        'Reading – Short Stories',
-                        'Writing – Formal Letters',
-                        'Grammar – Direct & Indirect Speech',
-                        'Literature – Shakespeare Overview'
-                    ],
-                    'Hindi': [
-                        'गद्य – कहानियाँ',
-                        'पद्य – कविता विश्लेषण',
-                        'व्याकरण – संधि & समास',
-                        'निबंध – विषय विस्तार'
-                    ],
-                    'Mathematics': [
-                        'Algebra – Quadratic Equations',
-                        'Geometry – Circles & Theorems',
-                        'Trigonometry – Ratios',
-                        'Calculus – Differentiation',
-                        'Statistics – Mean, Median, Mode'
-                    ],
-                    'Science': [
-                        'Physics – Motion & Sound',
-                        'Chemistry – Acids & Bases',
-                        'Biology – Respiration & Circulation',
-                        'Environmental Science – Pollution'
-                    ],
-                    'Social Studies': [
-                        'Indian History – Independence',
-                        'World History – Cold War',
-                        'Geography – Climate & Vegetation',
-                        'Economics – Budget & Taxation'
-                    ]
-                },
-                college_subjects: {
-                    'Engineering': [
-                        'Mechanical – Design',
-                        'Electrical – Circuits',
-                        'Computer – Programming'
-                    ],
-                    'Computer Science': [
-                        'Programming – C++',
-                        'Data Structures',
-                        'Web Development'
-                    ],
-                    'Business': [
-                        'Management – Principles',
-                        'Marketing – Basics'
-                    ],
-                    'Medicine (Pre-med)': [
-                        'Anatomy – Human',
-                        'Physiology – Body'
-                    ]
-                }
             }
         };
 
@@ -1898,6 +2034,70 @@
             'Computer Science': ['Programming', 'Algorithms', 'Databases'],
             'Business': ['Management', 'Marketing', 'Finance']
         };
+
+        // Icons for subjects
+        const SUBJECT_ICONS = {
+            'Mathematics': '📐',
+            'English': '📖',
+            'Life Sciences': '🧬',
+            'Physical Sciences': '⚛️',
+            'History': '🏛️',
+            'Geography': '🌍',
+            'Engineering': '⚙️',
+            'Computer Science': '💻',
+            'Business & Management': '📊',
+            'Business': '📊',
+            'Health Sciences': '🏥',
+            'Law': '⚖️',
+            'Education': '📚',
+            'Arts & Humanities': '🎨',
+            'English Language Arts': '📖',
+            '语文 (Chinese)': '🀄',
+            '数学 (Mathematics)': '📐',
+            '英语 (English)': '📖',
+            '物理 (Physics)': '⚡',
+            '化学 (Chemistry)': '🧪',
+            '生物 (Biology)': '🧬',
+            'Hindi': '🇮🇳',
+            'Social Studies': '🏛️',
+            '工程学 (Engineering)': '⚙️',
+            '计算机科学 (CS)': '💻',
+            '商学 (Business)': '📊',
+            '法学 (Law)': '⚖️',
+            'Medicine (Pre-med)': '🏥'
+        };
+
+        // ================================================================
+        //  INFO PAGE NAVIGATION
+        // ================================================================
+        function showInfoPage(page) {
+            document.querySelectorAll('.info-page').forEach(el => el.classList.remove('active'));
+            if (!page) {
+                document.getElementById('heroSection').style.display = 'block';
+                document.querySelector('.stats-bar').style.display = 'grid';
+                document.getElementById('features').style.display = 'block';
+                document.querySelector('.status-bar').style.display = 'block';
+                document.getElementById('pricing').style.display = 'block';
+                if (currentUser) {
+                    document.getElementById('dashboard').classList.add('active');
+                    document.getElementById('heroSection').style.display = 'none';
+                    document.querySelector('.stats-bar').style.display = 'none';
+                    document.getElementById('features').style.display = 'none';
+                    document.querySelector('.status-bar').style.display = 'none';
+                    document.getElementById('pricing').style.display = 'none';
+                }
+                return;
+            }
+            document.getElementById('heroSection').style.display = 'none';
+            document.querySelector('.stats-bar').style.display = 'none';
+            document.getElementById('features').style.display = 'none';
+            document.querySelector('.status-bar').style.display = 'none';
+            document.getElementById('pricing').style.display = 'none';
+            document.getElementById('dashboard').classList.remove('active');
+            const target = document.getElementById('page-' + page);
+            if (target) target.classList.add('active');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
 
         // ================================================================
         //  AUTH UI
@@ -1986,9 +2186,11 @@
                     setTimeout(() => {
                         closeAuth();
                         document.getElementById('dashboard').classList.add('active');
-                        document.querySelector('.hero').style.display = 'none';
-                        document.querySelector('.features').style.display = 'none';
+                        document.getElementById('heroSection').style.display = 'none';
+                        document.querySelector('.stats-bar').style.display = 'none';
+                        document.getElementById('features').style.display = 'none';
                         document.querySelector('.status-bar').style.display = 'none';
+                        document.getElementById('pricing').style.display = 'none';
                         document.getElementById('siteFooter').style.display = 'block';
                         initDashboard(data.user);
                     }, 500);
@@ -2052,56 +2254,105 @@
             document.getElementById('userName').textContent = user.name || 'User';
             document.getElementById('userRole').textContent = user.role || 'Learner';
             document.getElementById('userGrade').textContent = user.grade ? user.grade : 'Level: Not set';
+            document.getElementById('welcomeMessage').textContent = 'Welcome back, ' + (user.name || 'Student') + ' 👋';
 
             checkSubscription();
             if (user.grade) {
                 selectedGrade = user.grade;
-                showSubjects();
+                showDashboardHome();
             } else {
                 showGradeSelection();
             }
+            renderSidebar();
         }
 
         // ================================================================
-        //  DASHBOARD FUNCTIONS
+        //  DASHBOARD VIEWS
         // ================================================================
-        function showPage(page) {
-            document.querySelectorAll('.page-section').forEach(el => el.classList.remove('active'));
-            const target = document.getElementById('page-' + page);
-            if (target) target.classList.add('active');
-            window.scrollTo({ top: 0, behavior: 'smooth' });
+        function showDashboardHome() {
+            currentView = 'welcome';
+            const container = document.getElementById('dynamicContent');
+            const levelLabel = (currentUser.grade === 'College') ? 'College' : 'Grade ' + currentUser.grade;
+            container.innerHTML = `
+                <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin-top:16px;">
+                    <div class="card" style="background:linear-gradient(135deg,#eef2ff,white);border-color:#6366f1;">
+                        <div style="font-size:2rem;">📚</div>
+                        <div style="font-weight:700;font-size:1.1rem;color:#0b1120;margin-top:4px;">Continue Learning</div>
+                        <div style="font-size:0.9rem;color:#6b7280;">Resume your last lesson</div>
+                        <button onclick="showSubjects()" style="margin-top:10px;padding:8px 20px;background:#6366f1;color:white;border:none;border-radius:8px;cursor:pointer;font-weight:600;">Resume</button>
+                    </div>
+                    <div class="card">
+                        <div style="font-size:2rem;">🎯</div>
+                        <div style="font-weight:700;font-size:1.1rem;color:#0b1120;margin-top:4px;">Today's Goal</div>
+                        <div style="font-size:0.9rem;color:#6b7280;">Complete 1 lesson</div>
+                        <div style="margin-top:8px;height:6px;background:#e5e7eb;border-radius:4px;overflow:hidden;">
+                            <div style="width:30%;height:100%;background:linear-gradient(90deg,#6366f1,#8b5cf6);border-radius:4px;"></div>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div style="font-size:2rem;">📝</div>
+                        <div style="font-weight:700;font-size:1.1rem;color:#0b1120;margin-top:4px;">Homework</div>
+                        <div style="font-size:0.9rem;color:#6b7280;">2 tasks due soon</div>
+                    </div>
+                    <div class="card">
+                        <div style="font-size:2rem;">🏆</div>
+                        <div style="font-weight:700;font-size:1.1rem;color:#0b1120;margin-top:4px;">Achievements</div>
+                        <div style="font-size:0.9rem;color:#6b7280;">5 badges earned</div>
+                    </div>
+                </div>
+                <div style="margin-top:20px;text-align:center;padding:20px;background:#f8fafc;border-radius:16px;border:1px solid #e5e7eb;">
+                    <div style="font-size:1.1rem;font-weight:600;color:#0b1120;">Ready to learn?</div>
+                    <div style="color:#6b7280;font-size:0.95rem;">You're in ${levelLabel}. Pick a subject to get started.</div>
+                    <button onclick="showSubjects()" style="margin-top:12px;padding:12px 32px;background:linear-gradient(135deg,#6366f1,#8b5cf6);color:white;border:none;border-radius:12px;cursor:pointer;font-weight:700;font-size:1rem;">Go to Subjects →</button>
+                </div>
+            `;
+            document.getElementById('welcomeSub').textContent = 'Today\'s goal: Complete your next lesson.';
         }
 
+        // ================================================================
+        //  GRADE SELECTION
+        // ================================================================
         function showGradeSelection() {
+            currentView = 'grades';
             const country = currentUser.country || 'South Africa';
             const data = COUNTRY_DATA[country];
             const grades = (data && data.grades) ? data.grades : ['10', '11', '12', 'College'];
 
-            const grid = document.getElementById('gradeGrid');
-            grid.innerHTML = '';
+            document.getElementById('welcomeMessage').textContent = 'Select Your Level';
+            document.getElementById('welcomeSub').textContent = 'Choose your grade (10–12) or College.';
+
+            const container = document.getElementById('dynamicContent');
+            let html = `<div class="grade-grid">`;
             grades.forEach(g => {
-                const div = document.createElement('div');
-                div.className = 'grade-card';
                 const label = (g === 'College') ? 'College / Tertiary' : 'Grade ' + g;
                 const sub = (g === 'College') ? 'Higher Education' : '';
-                div.innerHTML = `${label}${sub ? `<span class="sub">${sub}</span>` : ''}`;
-                div.dataset.grade = g;
-                div.onclick = function() {
-                    document.querySelectorAll('.grade-card').forEach(c => c.classList.remove('selected'));
-                    this.classList.add('selected');
-                    selectedGrade = this.dataset.grade;
-                    document.getElementById('gradeConfirmBtn').style.display = 'block';
-                };
-                grid.appendChild(div);
+                html += `
+                    <div class="grade-card" data-grade="${g}" onclick="selectGrade('${g}')">
+                        ${label}
+                        ${sub ? `<span class="sub">${sub}</span>` : ''}
+                    </div>
+                `;
             });
-            showPage('grades');
+            html += `</div>`;
+            html += `<button class="btn-confirm" id="gradeConfirmBtn" onclick="confirmGrade()">Continue to Subjects →</button>`;
+            container.innerHTML = html;
+        }
+
+        let tempSelectedGrade = '';
+
+        function selectGrade(grade) {
+            tempSelectedGrade = grade;
+            document.querySelectorAll('.grade-card').forEach(c => c.classList.remove('selected'));
+            document.querySelector(`.grade-card[data-grade="${grade}"]`).classList.add('selected');
+            document.getElementById('gradeConfirmBtn').style.display = 'block';
         }
 
         function confirmGrade() {
-            if (!selectedGrade) {
+            if (!tempSelectedGrade) {
                 alert('Please select your level.');
                 return;
             }
+            selectedGrade = tempSelectedGrade;
             fetch('/save-profile', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -2119,12 +2370,12 @@
         }
 
         // ================================================================
-        //  SHOW SUBJECTS (Separated Logic)
+        //  SUBJECTS
         // ================================================================
         function showSubjects() {
+            currentView = 'subjects';
             const country = currentUser.country || 'South Africa';
             const data = COUNTRY_DATA[country];
-
             const grade = currentUser.grade;
             const isSecondary = ['10', '11', '12'].includes(grade);
             let subjects = {};
@@ -2138,61 +2389,33 @@
                 levelLabel = 'College / Tertiary';
             }
 
-            document.getElementById('subjectsSubtitle').textContent =
-                levelLabel + ' · ' + country + ' · Select a subject to start learning.';
+            document.getElementById('welcomeMessage').textContent = 'Your Subjects';
+            document.getElementById('welcomeSub').textContent = levelLabel + ' · ' + country + ' · Select a subject to start learning.';
 
-            const grid = document.getElementById('subjectGrid');
-            grid.innerHTML = '';
-            const icons = {
-                'Mathematics': '📐',
-                'Math': '📐',
-                'English': '📖',
-                'Science': '🔬',
-                'History': '🏛️',
-                'Geography': '🌍',
-                'Life Orientation': '🧘',
-                'Accounting': '💰',
-                'Business Studies': '📊',
-                'Economics': '📈',
-                'Life Sciences': '🧬',
-                'Physical Sciences': '⚛️',
-                'Technology': '💻',
-                'English Language Arts': '📖',
-                '语文 (Chinese)': '🀄',
-                '数学 (Mathematics)': '📐',
-                '英语 (English)': '📖',
-                '物理 (Physics)': '⚡',
-                '化学 (Chemistry)': '🧪',
-                '生物 (Biology)': '🧬',
-                'Hindi': '🇮🇳',
-                'Social Studies': '🏛️',
-                'Engineering': '⚙️',
-                'Computer Science': '💻',
-                'Business & Management': '📊',
-                'Business': '📊',
-                'Health Sciences': '🏥',
-                'Law': '⚖️',
-                'Education': '📚',
-                'Arts & Humanities': '🎨',
-                '工程学 (Engineering)': '⚙️',
-                '计算机科学 (CS)': '💻',
-                '商学 (Business)': '📊',
-                '法学 (Law)': '⚖️',
-                'Medicine (Pre-med)': '🏥'
-            };
+            const container = document.getElementById('dynamicContent');
+            let html = `<div class="subject-grid">`;
             Object.keys(subjects).forEach(name => {
-                const div = document.createElement('div');
-                div.className = 'subject-card';
-                div.innerHTML = `<span class="icon">${icons[name] || '📚'}</span><span class="name">${name}</span>`;
-                div.onclick = () => openSubject(name);
-                grid.appendChild(div);
+                html += `
+                    <div class="subject-card" onclick="openSubject('${name}')">
+                        <span class="icon">${SUBJECT_ICONS[name] || '📚'}</span>
+                        <span class="name">${name}</span>
+                    </div>
+                `;
             });
-            showPage('subjects');
+            html += `</div>`;
+            container.innerHTML = html;
+
+            // Add a "Back to Dashboard" button
+            container.innerHTML += `<button class="back-btn" onclick="showDashboardHome()" style="margin-top:16px;">← Back to Dashboard</button>`;
+
+            renderSidebar();
         }
 
+        // ================================================================
+        //  CLASSROOM
+        // ================================================================
         function openSubject(subject) {
             currentSubject = subject;
-            document.getElementById('classroomTitle').textContent = subject;
             const country = currentUser.country || 'South Africa';
             const data = COUNTRY_DATA[country];
             const grade = currentUser.grade;
@@ -2205,32 +2428,70 @@
                 topics = data ? data.college_subjects[subject] : (DEFAULT_SUBJECTS[subject] || []);
             }
 
-            const grid = document.getElementById('topicGrid');
-            const countDiv = document.getElementById('topicCount');
-            countDiv.textContent = 'Showing ' + topics.length + ' topics';
+            document.getElementById('welcomeMessage').textContent = subject;
+            document.getElementById('welcomeSub').textContent = 'Select a topic to start learning.';
 
+            const container = document.getElementById('dynamicContent');
+            let html = `<div style="margin-bottom:12px;color:#6b7280;font-size:0.9rem;">Showing ${topics.length} topics</div>`;
             if (topics.length === 0) {
-                grid.innerHTML = `<div class="empty-state">No topics available for this subject yet.</div>`;
+                html += `<div class="empty-state">No topics available for this subject yet.</div>`;
             } else {
-                grid.innerHTML = topics.map(t => `
-                    <div class="topic-card" onclick="openTutor('${subject}', '${t}')">
-                        <div class="title">${t}</div>
-                        <div class="meta">${subject}</div>
-                        <div class="resources"><span class="tag">Lesson</span><span class="tag">Quiz</span><span class="tag">Worksheet</span></div>
-                    </div>
-                `).join('');
+                html += `<div class="topic-grid">`;
+                topics.forEach(t => {
+                    html += `
+                        <div class="topic-card" onclick="openTutor('${subject}', '${t}')">
+                            <div class="title">${t}</div>
+                            <div class="meta">${subject}</div>
+                            <div class="resources"><span class="tag">Lesson</span><span class="tag">Quiz</span><span class="tag">Worksheet</span></div>
+                        </div>
+                    `;
+                });
+                html += `</div>`;
             }
-            showPage('classroom');
+            html += `<button class="back-btn" onclick="showSubjects()" style="margin-top:16px;">← Back to Subjects</button>`;
+            container.innerHTML = html;
+
+            // Update right sidebar
+            renderRightSidebar();
         }
 
+        // ================================================================
+        //  AI TUTOR
+        // ================================================================
         function openTutor(subject, topic) {
-            currentSubject = subject;
-            document.getElementById('tutorContext').textContent = subject + ' - ' + topic;
-            showPage('tutor');
-            const box = document.getElementById('chatBox');
-            box.innerHTML = `<div class="msg bot">👋 Welcome! Ask me anything — I'll guide you step by step.</div>`;
-            document.getElementById('chatInput').value = 'I\'m learning about "' + topic + '" in ' + subject + '. Can you teach me step by step?';
-            setTimeout(sendChat, 500);
+            currentView = 'tutor';
+            document.getElementById('welcomeMessage').textContent = '💬 AI Tutor';
+            document.getElementById('welcomeSub').textContent = subject + ' — ' + topic;
+
+            const container = document.getElementById('dynamicContent');
+            container.innerHTML = `
+                <button class="back-btn" onclick="openSubject('${subject}')">← Back to Topics</button>
+                <div class="tutor-container">
+                    <div class="tutor-header">
+                        <h3>AI Tutor</h3>
+                        <span class="context">${subject} - ${topic}</span>
+                    </div>
+                    <div class="chat-box" id="chatBox">
+                        <div class="msg bot">👋 Welcome! Ask me anything — I'll guide you step by step.</div>
+                    </div>
+                    <div class="chat-input">
+                        <input type="text" id="chatInput" placeholder="Type your message..." onkeypress="if(event.key==='Enter') sendChat()" />
+                        <button class="btn-send" id="sendBtn" onclick="sendChat()">Send</button>
+                    </div>
+                    <div class="chat-options">
+                        <input type="checkbox" id="speakToggle" />
+                        <label for="speakToggle">🔊 AI reads responses aloud</label>
+                    </div>
+                </div>
+            `;
+
+            // Auto-send initial message
+            setTimeout(() => {
+                document.getElementById('chatInput').value = 'I\'m learning about "' + topic + '" in ' + subject + '. Can you teach me step by step?';
+                sendChat();
+            }, 500);
+
+            renderSidebar();
         }
 
         // ================================================================
@@ -2247,7 +2508,7 @@
             btn.disabled = true;
             btn.innerHTML = '<span class="spinner"></span>';
             try {
-                const context = document.getElementById('tutorContext').textContent;
+                const context = document.getElementById('welcomeSub').textContent;
                 const fullMsg = context + ': ' + message;
                 const res = await fetch('/chat', {
                     method: 'POST',
@@ -2280,7 +2541,7 @@
         }
 
         // ================================================================
-        //  VOICE
+        //  VOICE (Text-to-Speech)
         // ================================================================
         function speakText(text) {
             if (!('speechSynthesis' in window)) return;
@@ -2298,6 +2559,108 @@
             const preferred = voices.find(v => v.lang.includes('en') && (v.name.includes('Google') || v.name.includes('Natural')));
             if (preferred) u.voice = preferred;
             window.speechSynthesis.speak(u);
+        }
+
+        // ================================================================
+        //  SIDEBAR RENDER
+        // ================================================================
+        function renderSidebar() {
+            const country = currentUser.country || 'South Africa';
+            const data = COUNTRY_DATA[country];
+            const grade = currentUser.grade;
+            const isSecondary = ['10', '11', '12'].includes(grade);
+
+            let subjects = {};
+            if (isSecondary) {
+                subjects = data ? data.secondary_subjects : DEFAULT_SUBJECTS;
+            } else {
+                subjects = data ? data.college_subjects : { 'College Subjects': ['General Studies'] };
+            }
+
+            const list = document.getElementById('subjectList');
+            list.innerHTML = '';
+            Object.keys(subjects).forEach(key => {
+                const li = document.createElement('li');
+                li.className = key === currentSubject ? 'active' : '';
+                li.innerHTML = `
+                    <span class="icon">${SUBJECT_ICONS[key] || '📚'}</span>
+                    ${key}
+                    <span class="progress-dot" style="margin-left:auto;width:6px;height:6px;border-radius:50%;background:#d1d5db;"></span>
+                `;
+                li.onclick = () => {
+                    currentSubject = key;
+                    renderSidebar();
+                    openSubject(key);
+                };
+                list.appendChild(li);
+            });
+
+            // Progress
+            const progressContainer = document.getElementById('progressContainer');
+            progressContainer.innerHTML = `
+                <div class="progress-item">
+                    <div class="label"><span>Overall Progress</span><span>45%</span></div>
+                    <div class="bar"><div class="fill" style="width:45%;"></div></div>
+                </div>
+                <div class="progress-item">
+                    <div class="label"><span>This Week</span><span>3 lessons</span></div>
+                    <div class="bar"><div class="fill" style="width:60%;"></div></div>
+                </div>
+            `;
+
+            // Recent
+            const recentContainer = document.getElementById('recentContainer');
+            const subjectKeys = Object.keys(subjects);
+            if (subjectKeys.length > 0) {
+                const firstSubject = subjectKeys[0];
+                const firstTopics = subjects[firstSubject] || [];
+                const topic = firstTopics.length > 0 ? firstTopics[0] : 'Getting Started';
+                recentContainer.innerHTML = `
+                    <div class="recent-item" onclick="openTutor('${firstSubject}', '${topic}')">
+                        ${topic} <span class="sub">${firstSubject}</span>
+                    </div>
+                    <div class="recent-item" onclick="showSubjects()">
+                        Browse Subjects <span class="sub">All subjects</span>
+                    </div>
+                `;
+            } else {
+                recentContainer.innerHTML = `<div style="font-size:0.85rem;color:#6b7280;">No recent activity</div>`;
+            }
+        }
+
+        // ================================================================
+        //  RIGHT SIDEBAR RENDER
+        // ================================================================
+        function renderRightSidebar() {
+            const flashcardContainer = document.getElementById('flashcardContainer');
+            const errorContainer = document.getElementById('errorContainer');
+
+            // Sample flashcards (in real app, this would come from the backend)
+            flashcardContainer.innerHTML = `
+                <div class="flashcard-item">
+                    <div class="term">Slope (m)</div>
+                    <div class="def">The steepness of a line, rise over run.</div>
+                </div>
+                <div class="flashcard-item">
+                    <div class="term">Y-Intercept (b)</div>
+                    <div class="def">Where the line crosses the y-axis.</div>
+                </div>
+                <div class="flashcard-item">
+                    <div class="term">Slope-Intercept Form</div>
+                    <div class="def">y = mx + b</div>
+                </div>
+            `;
+
+            errorContainer.innerHTML = `
+                <div class="error-item">
+                    <div class="concept">⚠️ Slope direction</div>
+                    <div class="hint">Negative slope goes down, positive goes up.</div>
+                </div>
+                <div class="error-item">
+                    <div class="concept">⚠️ Y-Intercept</div>
+                    <div class="hint">Remember to check where the line crosses the y-axis.</div>
+                </div>
+            `;
         }
 
         // ================================================================
@@ -2334,9 +2697,6 @@
             } catch (err) { console.error('Subscription check error:', err); }
         }
 
-        // ================================================================
-        //  PAYMENT: SUBSCRIBE
-        // ================================================================
         async function subscribe() {
             if (!currentUser) { alert('Please log in first.'); return; }
             try {
@@ -2367,9 +2727,11 @@
             if (confirm('Are you sure you want to logout?')) {
                 localStorage.removeItem('synapse_user');
                 document.getElementById('dashboard').classList.remove('active');
-                document.querySelector('.hero').style.display = 'block';
-                document.querySelector('.features').style.display = 'grid';
+                document.getElementById('heroSection').style.display = 'block';
+                document.querySelector('.stats-bar').style.display = 'grid';
+                document.getElementById('features').style.display = 'block';
                 document.querySelector('.status-bar').style.display = 'block';
+                document.getElementById('pricing').style.display = 'block';
                 document.getElementById('loginEmail').value = '';
                 document.getElementById('loginPassword').value = '';
                 clearErrors();
@@ -2384,9 +2746,11 @@
             if (stored) {
                 try {
                     const user = JSON.parse(stored);
-                    document.querySelector('.hero').style.display = 'none';
-                    document.querySelector('.features').style.display = 'none';
+                    document.getElementById('heroSection').style.display = 'none';
+                    document.querySelector('.stats-bar').style.display = 'none';
+                    document.getElementById('features').style.display = 'none';
                     document.querySelector('.status-bar').style.display = 'none';
+                    document.getElementById('pricing').style.display = 'none';
                     document.getElementById('dashboard').classList.add('active');
                     initDashboard(user);
                 } catch (e) { /* invalid stored data, show hero */ }
