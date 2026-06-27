@@ -4,6 +4,8 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Leago — AI Tutor</title>
+    <!-- ===== MARKED CDN (for Markdown rendering) ===== -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <style>
         /* ===== RESET & BASE ===== */
         * {
@@ -1178,6 +1180,53 @@
             margin-right: auto;
         }
 
+        /* ===== Markdown styles in chat ===== */
+        .chat-box .msg.bot h1,
+        .chat-box .msg.bot h2,
+        .chat-box .msg.bot h3,
+        .chat-box .msg.bot h4,
+        .chat-box .msg.bot h5,
+        .chat-box .msg.bot h6 {
+            margin: 8px 0 4px;
+            font-weight: 700;
+            color: #0b1120;
+        }
+        .chat-box .msg.bot h1 { font-size: 1.6rem; }
+        .chat-box .msg.bot h2 { font-size: 1.3rem; }
+        .chat-box .msg.bot h3 { font-size: 1.1rem; }
+        .chat-box .msg.bot h4 { font-size: 1rem; }
+        .chat-box .msg.bot h5 { font-size: 0.95rem; }
+        .chat-box .msg.bot h6 { font-size: 0.9rem; }
+        .chat-box .msg.bot ul,
+        .chat-box .msg.bot ol {
+            padding-left: 20px;
+            margin: 4px 0 8px;
+        }
+        .chat-box .msg.bot li {
+            margin-bottom: 2px;
+        }
+        .chat-box .msg.bot p {
+            margin: 6px 0;
+        }
+        .chat-box .msg.bot code {
+            background: #e5e7eb;
+            padding: 1px 6px;
+            border-radius: 4px;
+            font-size: 0.9em;
+        }
+        .chat-box .msg.bot pre {
+            background: #e5e7eb;
+            padding: 10px;
+            border-radius: 8px;
+            overflow-x: auto;
+        }
+        .chat-box .msg.bot strong {
+            font-weight: 700;
+        }
+        .chat-box .msg.bot em {
+            font-style: italic;
+        }
+
         .chat-input {
             display: flex;
             gap: 10px;
@@ -1979,7 +2028,6 @@
         }
 
         function initProgress(subjects) {
-            // subjects is an object { subjectName: [topic1, topic2, ...] }
             let changed = false;
             for (const [subject, topics] of Object.entries(subjects)) {
                 if (!progressData[subject]) {
@@ -1989,7 +2037,6 @@
                     };
                     changed = true;
                 } else {
-                    // update total in case topics changed
                     if (progressData[subject].total !== topics.length) {
                         progressData[subject].total = topics.length;
                         changed = true;
@@ -2420,7 +2467,6 @@
             const container = document.getElementById('dynamicContent');
             const levelLabel = (currentUser.grade === 'College') ? 'College / Tertiary' : 'Grade ' + currentUser.grade;
 
-            // Calculate overall progress
             let totalCompleted = 0,
                 totalTopics = 0;
             for (const subject in progressData) {
@@ -2549,7 +2595,6 @@
                 levelLabel = 'College / Tertiary';
             }
 
-            // Initialize progress for these subjects
             initProgress(subjects);
 
             document.getElementById('welcomeMessage').textContent = 'Your Subjects';
@@ -2592,7 +2637,6 @@
                 topics = data ? data.college_subjects[subject] : (DEFAULT_SUBJECTS[subject] || []);
             }
 
-            // Ensure progress for this subject exists
             if (!progressData[subject]) {
                 progressData[subject] = { completed: [], total: topics.length };
                 saveProgress();
@@ -2637,9 +2681,6 @@
             document.getElementById('welcomeMessage').textContent = '💬 AI Tutor';
             document.getElementById('welcomeSub').textContent = subject + ' — ' + topic;
 
-            // Mark topic as completed (optional, user can also mark later)
-            // But we'll add a button to mark as complete after learning.
-
             const container = document.getElementById('dynamicContent');
             container.innerHTML = `
                 <button class="back-btn" onclick="openSubject('${subject}')">← Back to Topics</button>
@@ -2665,7 +2706,6 @@
                 </div>
             `;
 
-            // Auto-send initial message
             setTimeout(() => {
                 document.getElementById('chatInput').value = 'I\'m learning about "' + topic + '" in ' + subject + '. Can you teach me step by step?';
                 sendChat();
@@ -2680,7 +2720,6 @@
                 return;
             }
             if (markTopicCompleted(subject, topic)) {
-                // Update UI
                 const btn = document.getElementById('completeBtn');
                 if (btn) {
                     btn.textContent = '✅ Completed';
@@ -2689,13 +2728,12 @@
                     btn.style.color = '#065f46';
                 }
                 alert('🎉 Great job! Topic marked as complete.');
-                // Refresh progress
                 renderSidebar();
             }
         }
 
         // ================================================================
-        //  CHAT
+        //  CHAT (with Markdown rendering)
         // ================================================================
         async function sendChat() {
             const input = document.getElementById('chatInput');
@@ -2728,41 +2766,54 @@
             }
         }
 
+        // ================================================================
+        //  ADD MESSAGE (with Markdown rendering + voice cleanup)
+        // ================================================================
         function addMessage(role, text) {
             const box = document.getElementById('chatBox');
             const div = document.createElement('div');
             div.className = 'msg ' + (role === 'user' ? 'user' : 'bot');
-            div.innerHTML = text.replace(/\n/g, '<br>');
+
+            if (role === 'bot' && typeof marked !== 'undefined') {
+                // Configure marked for safe HTML
+                marked.setOptions({
+                    breaks: true,
+                    gfm: true,
+                    sanitize: false
+                });
+                div.innerHTML = marked.parse(text);
+            } else {
+                div.textContent = text;
+            }
+
             box.appendChild(div);
             box.scrollTop = box.scrollHeight;
+
+            // Voice output (clean Markdown)
             if (role === 'bot' && document.getElementById('speakToggle').checked) {
-                speakText(text);
+                let clean = text
+                    .replace(/#{1,6}\s?/g, '')          // headings
+                    .replace(/\*\*/g, '')               // bold
+                    .replace(/\*/g, '')                 // italics
+                    .replace(/`/g, '')                  // code
+                    .replace(/[\\*\/_\-~#`|]/g, ' ')    // other symbols
+                    .replace(/[📚🎯✏️🤔💡✅❌]/g, '')    // emojis
+                    .replace(/\s+/g, ' ')
+                    .trim();
+                if (clean.length > 300) clean = clean.substring(0, 300) + '...';
+                window.speechSynthesis.cancel();
+                const u = new SpeechSynthesisUtterance(clean);
+                u.lang = 'en-US';
+                u.rate = 0.9;
+                const voices = window.speechSynthesis.getVoices();
+                const preferred = voices.find(v => v.lang.includes('en') && (v.name.includes('Google') || v.name.includes('Natural')));
+                if (preferred) u.voice = preferred;
+                window.speechSynthesis.speak(u);
             }
         }
 
         // ================================================================
-        //  VOICE
-        // ================================================================
-        function speakText(text) {
-            if (!('speechSynthesis' in window)) return;
-            let clean = text
-                .replace(/[\\*\/_\-~#`|]/g, ' ')
-                .replace(/[📚🎯✏️🤔💡✅❌]/g, '')
-                .replace(/\s+/g, ' ')
-                .trim();
-            if (clean.length > 300) clean = clean.substring(0, 300) + '...';
-            window.speechSynthesis.cancel();
-            const u = new SpeechSynthesisUtterance(clean);
-            u.lang = 'en-US';
-            u.rate = 0.9;
-            const voices = window.speechSynthesis.getVoices();
-            const preferred = voices.find(v => v.lang.includes('en') && (v.name.includes('Google') || v.name.includes('Natural')));
-            if (preferred) u.voice = preferred;
-            window.speechSynthesis.speak(u);
-        }
-
-        // ================================================================
-        //  SIDEBAR RENDER (with progress per subject)
+        //  SIDEBAR RENDER
         // ================================================================
         function renderSidebar() {
             const country = currentUser.country || 'South Africa';
@@ -2777,7 +2828,6 @@
                 subjects = data ? data.college_subjects : { 'College Subjects': ['General Studies'] };
             }
 
-            // Ensure progress init
             initProgress(subjects);
 
             const list = document.getElementById('subjectList');
@@ -2800,8 +2850,6 @@
                 list.appendChild(li);
             });
 
-            // Progress summary
-            const progressContainer = document.getElementById('progressContainer');
             let totalCompleted = 0,
                 totalTopics = 0;
             for (const subject in progressData) {
@@ -2812,6 +2860,7 @@
                 }
             }
             const overallPercent = totalTopics > 0 ? Math.round((totalCompleted / totalTopics) * 100) : 0;
+            const progressContainer = document.getElementById('progressContainer');
             progressContainer.innerHTML = `
                 <div class="progress-item">
                     <div class="label"><span>Overall Progress</span><span>${overallPercent}%</span></div>
@@ -2823,7 +2872,6 @@
                 </div>
             `;
 
-            // Recent
             const recentContainer = document.getElementById('recentContainer');
             const subjectKeys = Object.keys(subjects);
             if (subjectKeys.length > 0) {
