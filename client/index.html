@@ -4,15 +4,18 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Leago — AI Tutor</title>
+    <!-- ===== MARKED CDN (for Markdown rendering) ===== -->
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <style>
+        /* ===== RESET & BASE ===== */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
+
         body {
-            font-family: 'Segoe UI', system-ui, sans-serif;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
             background: #f8fafc;
             min-height: 100vh;
         }
@@ -26,6 +29,7 @@
             position: relative;
             overflow: hidden;
         }
+
         .hero::before {
             content: '';
             position: absolute;
@@ -36,18 +40,21 @@
             background: radial-gradient(circle, rgba(99, 102, 241, 0.1) 0%, transparent 70%);
             border-radius: 50%;
         }
+
         .hero .logo {
             font-size: 2.8rem;
             font-weight: 800;
             position: relative;
             z-index: 1;
         }
+
         .hero .logo span {
             background: linear-gradient(135deg, #818cf8, #a855f7);
             -webkit-background-clip: text;
             background-clip: text;
             -webkit-text-fill-color: transparent;
         }
+
         .hero .badge {
             display: inline-block;
             background: rgba(99, 102, 241, 0.2);
@@ -60,6 +67,7 @@
             position: relative;
             z-index: 1;
         }
+
         .hero h1 {
             font-size: 3.5rem;
             font-weight: 700;
@@ -69,12 +77,14 @@
             position: relative;
             z-index: 1;
         }
+
         .hero h1 .highlight {
             background: linear-gradient(135deg, #818cf8, #a855f7);
             -webkit-background-clip: text;
             background-clip: text;
             -webkit-text-fill-color: transparent;
         }
+
         .hero p {
             font-size: 1.2rem;
             color: #c4b5d4;
@@ -84,6 +94,7 @@
             position: relative;
             z-index: 1;
         }
+
         .hero .cta-group {
             display: flex;
             justify-content: center;
@@ -92,6 +103,7 @@
             position: relative;
             z-index: 1;
         }
+
         .hero .btn-primary {
             padding: 16px 40px;
             background: linear-gradient(135deg, #6366f1, #8b5cf6);
@@ -106,10 +118,12 @@
             transition: all 0.3s;
             box-shadow: 0 8px 30px rgba(99, 102, 241, 0.3);
         }
+
         .hero .btn-primary:hover {
             transform: translateY(-3px);
             box-shadow: 0 12px 40px rgba(99, 102, 241, 0.4);
         }
+
         .hero .btn-secondary {
             padding: 16px 40px;
             background: rgba(255, 255, 255, 0.05);
@@ -123,11 +137,13 @@
             display: inline-block;
             transition: all 0.3s;
         }
+
         .hero .btn-secondary:hover {
             background: rgba(255, 255, 255, 0.1);
             border-color: rgba(255, 255, 255, 0.3);
         }
 
+        /* ===== STATS BAR ===== */
         .stats-bar {
             max-width: 1100px;
             margin: -30px auto 40px;
@@ -138,6 +154,7 @@
             position: relative;
             z-index: 2;
         }
+
         .stat-card {
             background: white;
             padding: 24px 20px;
@@ -145,41 +162,49 @@
             text-align: center;
             box-shadow: 0 8px 30px rgba(0, 0, 0, 0.06);
         }
+
         .stat-card .number {
             font-size: 2rem;
             font-weight: 800;
             color: #0b1120;
         }
+
         .stat-card .label {
             font-size: 0.9rem;
             color: #6b7280;
             margin-top: 4px;
         }
 
+        /* ===== FEATURES ===== */
         .features {
             max-width: 1100px;
             margin: 0 auto 60px;
             padding: 0 20px;
         }
+
         .features .section-title {
             text-align: center;
             margin-bottom: 40px;
         }
+
         .features .section-title h2 {
             font-size: 2.2rem;
             font-weight: 700;
             color: #0b1120;
         }
+
         .features .section-title p {
             color: #6b7280;
             font-size: 1.05rem;
             margin-top: 8px;
         }
+
         .features-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
             gap: 24px;
         }
+
         .feature-card {
             background: white;
             padding: 32px 24px;
@@ -189,33 +214,39 @@
             transition: all 0.3s;
             border: 1px solid rgba(0, 0, 0, 0.04);
         }
+
         .feature-card:hover {
             transform: translateY(-6px);
             box-shadow: 0 12px 40px rgba(0, 0, 0, 0.08);
         }
+
         .feature-card .icon {
             font-size: 2.8rem;
             display: block;
             margin-bottom: 12px;
         }
+
         .feature-card h3 {
             font-size: 1.1rem;
             font-weight: 700;
             color: #0b1120;
             margin-bottom: 6px;
         }
+
         .feature-card p {
             font-size: 0.95rem;
             color: #6b7280;
             line-height: 1.5;
         }
 
+        /* ===== STATUS BAR ===== */
         .status-bar {
             max-width: 1100px;
             margin: 0 auto 40px;
             padding: 0 20px;
             text-align: center;
         }
+
         .status-bar .status {
             display: inline-flex;
             align-items: center;
@@ -227,6 +258,7 @@
             font-weight: 600;
             font-size: 0.95rem;
         }
+
         .status-bar .status .dot {
             width: 10px;
             height: 10px;
@@ -234,6 +266,7 @@
             border-radius: 50%;
             animation: pulse 2s infinite;
         }
+
         @keyframes pulse {
             0%,
             100% {
@@ -246,30 +279,36 @@
             }
         }
 
+        /* ===== PRICING ===== */
         .pricing {
             max-width: 1100px;
             margin: 0 auto 60px;
             padding: 0 20px;
         }
+
         .pricing .section-title {
             text-align: center;
             margin-bottom: 40px;
         }
+
         .pricing .section-title h2 {
             font-size: 2.2rem;
             font-weight: 700;
             color: #0b1120;
         }
+
         .pricing .section-title p {
             color: #6b7280;
             font-size: 1.05rem;
             margin-top: 8px;
         }
+
         .pricing-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
             gap: 24px;
         }
+
         .pricing-card {
             background: white;
             padding: 40px 28px;
@@ -279,14 +318,17 @@
             border: 2px solid transparent;
             transition: all 0.3s;
         }
+
         .pricing-card:hover {
             border-color: #6366f1;
             box-shadow: 0 12px 40px rgba(99, 102, 241, 0.08);
         }
+
         .pricing-card.popular {
             border-color: #6366f1;
             background: linear-gradient(135deg, #ffffff, #f8faff);
         }
+
         .pricing-card .plan {
             font-size: 0.85rem;
             text-transform: uppercase;
@@ -294,27 +336,32 @@
             font-weight: 600;
             color: #6b7280;
         }
+
         .pricing-card .price {
             font-size: 2.8rem;
             font-weight: 800;
             color: #0b1120;
             margin: 12px 0 4px;
         }
+
         .pricing-card .price span {
             font-size: 1rem;
             font-weight: 400;
             color: #6b7280;
         }
+
         .pricing-card .description {
             color: #6b7280;
             font-size: 0.95rem;
             margin-bottom: 20px;
         }
+
         .pricing-card .features-list {
             list-style: none;
             text-align: left;
             margin: 20px 0 28px;
         }
+
         .pricing-card .features-list li {
             padding: 8px 0;
             font-size: 0.95rem;
@@ -323,11 +370,13 @@
             align-items: center;
             gap: 10px;
         }
+
         .pricing-card .features-list li::before {
             content: '✓';
             color: #22c55e;
             font-weight: 700;
         }
+
         .pricing-card .btn-pricing {
             width: 100%;
             padding: 14px;
@@ -340,20 +389,25 @@
             color: white;
             transition: all 0.3s;
         }
+
         .pricing-card .btn-pricing:hover {
             transform: translateY(-2px);
             box-shadow: 0 8px 24px rgba(99, 102, 241, 0.3);
         }
+
         .pricing-card .btn-pricing.outline {
             background: white;
             color: #6366f1;
             border: 2px solid #6366f1;
         }
+
         .pricing-card .btn-pricing.outline:hover {
             background: #f8faff;
         }
 
-        /* ===== AUTH OVERLAY ===== */
+        /* ============================================================ */
+        /* AUTH OVERLAY (Login / Signup) */
+        /* ============================================================ */
         .auth-overlay {
             display: none;
             position: fixed;
@@ -368,9 +422,11 @@
             z-index: 1000;
             padding: 20px;
         }
+
         .auth-overlay.active {
             display: flex;
         }
+
         .auth-card {
             background: white;
             border-radius: 28px;
@@ -382,6 +438,7 @@
             max-height: 90vh;
             overflow-y: auto;
         }
+
         .auth-card .close-btn {
             position: absolute;
             top: 16px;
@@ -392,42 +449,51 @@
             cursor: pointer;
             color: #9ca3af;
         }
+
         .auth-card .close-btn:hover {
             color: #0b1120;
         }
+
         .auth-card .logo-sm {
             text-align: center;
             margin-bottom: 20px;
         }
+
         .auth-card .logo-sm h2 {
             font-size: 1.6rem;
             font-weight: 800;
             color: #0b1120;
         }
+
         .auth-card .logo-sm h2 span {
             background: linear-gradient(135deg, #6366f1, #a855f7);
             -webkit-background-clip: text;
             background-clip: text;
             -webkit-text-fill-color: transparent;
         }
+
         .auth-card .logo-sm p {
             color: #6b7280;
             font-size: 0.9rem;
         }
+
         .auth-card h3 {
             font-size: 1.3rem;
             font-weight: 700;
             color: #0b1120;
             margin-bottom: 4px;
         }
+
         .auth-card .sub {
             color: #6b7280;
             font-size: 0.95rem;
             margin-bottom: 20px;
         }
+
         .auth-card .field {
             margin-bottom: 16px;
         }
+
         .auth-card .field label {
             display: block;
             font-weight: 600;
@@ -435,6 +501,7 @@
             color: #1f2937;
             margin-bottom: 4px;
         }
+
         .auth-card .field input,
         .auth-card .field select {
             width: 100%;
@@ -445,11 +512,13 @@
             background: #fff;
             font-family: inherit;
         }
+
         .auth-card .field input:focus,
         .auth-card .field select:focus {
             outline: none;
             border-color: #6366f1;
         }
+
         .auth-card .btn {
             width: 100%;
             padding: 15px;
@@ -462,46 +531,56 @@
             color: #fff;
             transition: transform 0.15s;
         }
+
         .auth-card .btn:hover {
             transform: translateY(-2px);
         }
+
         .auth-card .btn:disabled {
             opacity: 0.6;
             cursor: not-allowed;
         }
+
         .auth-card .auth-link {
             text-align: center;
             margin-top: 16px;
             font-size: 0.9rem;
             color: #6b7280;
         }
+
         .auth-card .auth-link a {
             color: #6366f1;
             text-decoration: none;
             font-weight: 600;
             cursor: pointer;
         }
+
         .auth-card .auth-link a:hover {
             text-decoration: underline;
         }
+
         .auth-card .error {
             color: #ef4444;
             font-size: 0.85rem;
             margin-top: 4px;
             display: none;
         }
+
         .auth-card .error.show {
             display: block;
         }
+
         .auth-card .success {
             color: #22c55e;
             font-size: 0.85rem;
             margin-top: 4px;
             display: none;
         }
+
         .auth-card .success.show {
             display: block;
         }
+
         .spinner {
             display: inline-block;
             width: 20px;
@@ -513,22 +592,27 @@
             vertical-align: middle;
             margin-right: 8px;
         }
+
         @keyframes spin {
             to {
                 transform: rotate(360deg);
             }
         }
 
-        /* ===== DASHBOARD ===== */
+        /* ============================================================ */
+        /* DASHBOARD (Logged in) */
+        /* ============================================================ */
         .dashboard {
             display: none;
             max-width: 1200px;
             margin: 0 auto;
             padding: 20px;
         }
+
         .dashboard.active {
             display: block;
         }
+
         .top-nav {
             background: white;
             padding: 16px 28px;
@@ -541,29 +625,34 @@
             flex-wrap: wrap;
             gap: 12px;
         }
+
         .top-nav .logo {
             font-size: 1.4rem;
             font-weight: 800;
             color: #0b1120;
             text-decoration: none;
         }
+
         .top-nav .logo span {
             background: linear-gradient(135deg, #6366f1, #a855f7);
             -webkit-background-clip: text;
             background-clip: text;
             -webkit-text-fill-color: transparent;
         }
+
         .top-nav .user-info {
             display: flex;
             align-items: center;
             gap: 16px;
             flex-wrap: wrap;
         }
+
         .top-nav .user-info .name {
             font-weight: 600;
             color: #0b1120;
             font-size: 0.95rem;
         }
+
         .top-nav .user-info .role {
             font-size: 0.75rem;
             color: #6b7280;
@@ -571,6 +660,7 @@
             padding: 2px 12px;
             border-radius: 12px;
         }
+
         .top-nav .user-info .grade-badge {
             font-size: 0.75rem;
             color: #6366f1;
@@ -581,9 +671,11 @@
             cursor: pointer;
             transition: background 0.2s;
         }
+
         .top-nav .user-info .grade-badge:hover {
             background: #dbeafe;
         }
+
         .top-nav .user-info .logout-btn {
             background: none;
             border: none;
@@ -595,16 +687,19 @@
             transition: all 0.2s;
             font-family: inherit;
         }
+
         .top-nav .user-info .logout-btn:hover {
             background: #f3f4f6;
             color: #ef4444;
         }
+
         .sub-badge {
             font-size: 0.7rem;
             padding: 3px 12px;
             border-radius: 12px;
             font-weight: 600;
         }
+
         .sub-trial {
             background: #fef3c7;
             color: #92400e;
@@ -618,17 +713,20 @@
             color: #991b1b;
         }
 
+        /* Dashboard Grid */
         .dashboard-grid {
             display: grid;
             grid-template-columns: 240px 1fr 280px;
             gap: 20px;
         }
+
         @media (max-width: 1024px) {
             .dashboard-grid {
                 grid-template-columns: 1fr;
             }
         }
 
+        /* Left Sidebar */
         .sidebar-left {
             background: white;
             border-radius: 16px;
@@ -636,6 +734,7 @@
             box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
             height: fit-content;
         }
+
         .sidebar-left .section-title {
             font-size: 0.7rem;
             text-transform: uppercase;
@@ -644,12 +743,15 @@
             letter-spacing: 0.5px;
             margin: 16px 0 8px;
         }
+
         .sidebar-left .section-title:first-child {
             margin-top: 0;
         }
+
         .sidebar-left .subject-list {
             list-style: none;
         }
+
         .sidebar-left .subject-list li {
             padding: 10px 14px;
             border-radius: 10px;
@@ -662,19 +764,23 @@
             gap: 10px;
             margin-bottom: 2px;
         }
+
         .sidebar-left .subject-list li:hover {
             background: #f3f4f6;
         }
+
         .sidebar-left .subject-list li.active {
             background: #eef2ff;
             color: #6366f1;
             font-weight: 600;
         }
+
         .sidebar-left .subject-list li .icon {
             font-size: 1.2rem;
             width: 24px;
             text-align: center;
         }
+
         .sidebar-left .subject-list li .progress-dot {
             margin-left: auto;
             font-size: 0.7rem;
@@ -684,12 +790,14 @@
         .progress-item {
             margin: 8px 0;
         }
+
         .progress-item .label {
             display: flex;
             justify-content: space-between;
             font-size: 0.8rem;
             color: #4b5563;
         }
+
         .progress-item .bar {
             height: 6px;
             background: #e5e7eb;
@@ -697,6 +805,7 @@
             margin-top: 4px;
             overflow: hidden;
         }
+
         .progress-item .bar .fill {
             height: 100%;
             border-radius: 4px;
@@ -714,14 +823,17 @@
             color: #1f2937;
             transition: all 0.2s;
         }
+
         .recent-item:hover {
             background: #eef2ff;
         }
+
         .recent-item .sub {
             font-size: 0.75rem;
             color: #6b7280;
         }
 
+        /* Center Panel */
         .center-panel {
             background: white;
             border-radius: 16px;
@@ -729,17 +841,20 @@
             box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
             min-height: 500px;
         }
+
         .center-panel .welcome {
             font-size: 1.6rem;
             font-weight: 700;
             color: #0b1120;
             margin-bottom: 4px;
         }
+
         .center-panel .welcome-sub {
             color: #6b7280;
             font-size: 0.95rem;
             margin-bottom: 20px;
         }
+
         .center-panel .welcome-sub .change-grade-link {
             color: #6366f1;
             cursor: pointer;
@@ -747,8 +862,50 @@
             text-decoration: underline;
             text-underline-offset: 2px;
         }
+
         .center-panel .welcome-sub .change-grade-link:hover {
             color: #4f46e5;
+        }
+
+        .center-panel .breadcrumb {
+            font-size: 0.8rem;
+            color: #6b7280;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .center-panel .breadcrumb span {
+            color: #0b1120;
+            font-weight: 500;
+        }
+
+        .center-panel .breadcrumb .sep {
+            color: #d1d5db;
+        }
+
+        .center-panel .breadcrumb .clickable {
+            cursor: pointer;
+            color: #6366f1;
+        }
+
+        .center-panel .breadcrumb .clickable:hover {
+            text-decoration: underline;
+        }
+
+        .center-panel h2 {
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: #0b1120;
+            margin-bottom: 4px;
+        }
+
+        .center-panel .subtitle {
+            color: #6b7280;
+            font-size: 0.95rem;
+            margin-bottom: 20px;
         }
 
         .grade-grid {
@@ -757,6 +914,7 @@
             gap: 12px;
             margin: 16px 0;
         }
+
         .grade-card {
             padding: 24px 12px;
             border: 2px solid #e5e7eb;
@@ -769,16 +927,19 @@
             font-size: 1rem;
             color: #0b1120;
         }
+
         .grade-card:hover {
             border-color: #6366f1;
             transform: translateY(-3px);
             box-shadow: 0 8px 24px rgba(99, 102, 241, 0.10);
         }
+
         .grade-card.selected {
             border-color: #6366f1;
             background: #eef2ff;
             box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
         }
+
         .grade-card .sub {
             font-size: 0.7rem;
             color: #6b7280;
@@ -786,6 +947,7 @@
             display: block;
             margin-top: 4px;
         }
+
         .btn-confirm {
             padding: 14px 40px;
             border: none;
@@ -800,6 +962,7 @@
             margin-top: 16px;
             display: none;
         }
+
         .btn-confirm:hover {
             transform: translateY(-2px);
         }
@@ -809,6 +972,7 @@
             grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
             gap: 16px;
         }
+
         .subject-card {
             background: white;
             border: 2px solid #e5e7eb;
@@ -819,21 +983,25 @@
             transition: all 0.25s;
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
         }
+
         .subject-card:hover {
             border-color: #6366f1;
             transform: translateY(-4px);
             box-shadow: 0 12px 32px rgba(99, 102, 241, 0.12);
         }
+
         .subject-card .icon {
             font-size: 2.8rem;
             display: block;
             margin-bottom: 6px;
         }
+
         .subject-card .name {
             font-weight: 700;
             font-size: 0.95rem;
             color: #0b1120;
         }
+
         .subject-card .progress-badge {
             display: inline-block;
             font-size: 0.7rem;
@@ -842,6 +1010,21 @@
             padding: 2px 10px;
             border-radius: 12px;
             margin-top: 6px;
+        }
+
+        .classroom-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .classroom-header h2 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #0b1120;
         }
 
         .back-btn {
@@ -857,6 +1040,7 @@
             display: inline-block;
             margin-bottom: 16px;
         }
+
         .back-btn:hover {
             background: #f3f4f6;
         }
@@ -866,6 +1050,7 @@
             grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
             gap: 16px;
         }
+
         .topic-card {
             background: white;
             border: 2px solid #e5e7eb;
@@ -875,30 +1060,36 @@
             cursor: pointer;
             position: relative;
         }
+
         .topic-card:hover {
             border-color: #6366f1;
             box-shadow: 0 8px 24px rgba(99, 102, 241, 0.08);
         }
+
         .topic-card.completed {
             border-color: #22c55e;
             background: #f0fdf4;
         }
+
         .topic-card .title {
             font-weight: 700;
             font-size: 1rem;
             color: #0b1120;
         }
+
         .topic-card .meta {
             font-size: 0.8rem;
             color: #6b7280;
             margin-top: 4px;
         }
+
         .topic-card .resources {
             margin-top: 10px;
             display: flex;
             gap: 6px;
             flex-wrap: wrap;
         }
+
         .topic-card .resources .tag {
             background: #eef2ff;
             color: #6366f1;
@@ -907,6 +1098,7 @@
             font-size: 0.7rem;
             font-weight: 600;
         }
+
         .topic-card .status-badge {
             position: absolute;
             top: 12px;
@@ -918,6 +1110,7 @@
             background: #e5e7eb;
             color: #6b7280;
         }
+
         .topic-card.completed .status-badge {
             background: #d1fae5;
             color: #065f46;
@@ -930,6 +1123,7 @@
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
             margin-top: 12px;
         }
+
         .tutor-header {
             display: flex;
             justify-content: space-between;
@@ -938,11 +1132,13 @@
             flex-wrap: wrap;
             gap: 10px;
         }
+
         .tutor-header h3 {
             font-size: 1.2rem;
             font-weight: 700;
             color: #0b1120;
         }
+
         .tutor-header .context {
             font-size: 0.9rem;
             color: #6b7280;
@@ -960,6 +1156,7 @@
             border: 1px solid #e5e7eb;
             margin-bottom: 16px;
         }
+
         .chat-box .msg {
             padding: 12px 16px;
             border-radius: 14px;
@@ -969,17 +1166,21 @@
             line-height: 1.6;
             word-wrap: break-word;
         }
+
         .chat-box .msg.user {
             background: #6366f1;
             color: #fff;
             margin-left: auto;
             text-align: right;
         }
+
         .chat-box .msg.bot {
             background: #e5e7eb;
             color: #0b1120;
             margin-right: auto;
         }
+
+        /* ===== Markdown styles in chat ===== */
         .chat-box .msg.bot h1,
         .chat-box .msg.bot h2,
         .chat-box .msg.bot h3,
@@ -990,24 +1191,12 @@
             font-weight: 700;
             color: #0b1120;
         }
-        .chat-box .msg.bot h1 {
-            font-size: 1.6rem;
-        }
-        .chat-box .msg.bot h2 {
-            font-size: 1.3rem;
-        }
-        .chat-box .msg.bot h3 {
-            font-size: 1.1rem;
-        }
-        .chat-box .msg.bot h4 {
-            font-size: 1rem;
-        }
-        .chat-box .msg.bot h5 {
-            font-size: 0.95rem;
-        }
-        .chat-box .msg.bot h6 {
-            font-size: 0.9rem;
-        }
+        .chat-box .msg.bot h1 { font-size: 1.6rem; }
+        .chat-box .msg.bot h2 { font-size: 1.3rem; }
+        .chat-box .msg.bot h3 { font-size: 1.1rem; }
+        .chat-box .msg.bot h4 { font-size: 1rem; }
+        .chat-box .msg.bot h5 { font-size: 0.95rem; }
+        .chat-box .msg.bot h6 { font-size: 0.9rem; }
         .chat-box .msg.bot ul,
         .chat-box .msg.bot ol {
             padding-left: 20px;
@@ -1042,6 +1231,7 @@
             display: flex;
             gap: 10px;
         }
+
         .chat-input input {
             flex: 1;
             padding: 14px 18px;
@@ -1051,10 +1241,12 @@
             font-family: inherit;
             transition: border-color 0.25s;
         }
+
         .chat-input input:focus {
             outline: none;
             border-color: #6366f1;
         }
+
         .chat-input .btn-send {
             padding: 0 28px;
             background: linear-gradient(135deg, #6366f1, #8b5cf6);
@@ -1066,13 +1258,16 @@
             transition: all 0.25s;
             font-family: inherit;
         }
+
         .chat-input .btn-send:hover {
             transform: scale(1.02);
         }
+
         .chat-input .btn-send:disabled {
             opacity: 0.6;
             cursor: not-allowed;
         }
+
         .chat-options {
             display: flex;
             align-items: center;
@@ -1081,12 +1276,14 @@
             font-size: 0.85rem;
             color: #6b7280;
         }
+
         .chat-options input[type="checkbox"] {
             width: 18px;
             height: 18px;
             accent-color: #6366f1;
             cursor: pointer;
         }
+
         .chat-options label {
             cursor: pointer;
         }
@@ -1098,6 +1295,7 @@
             color: #6b7280;
         }
 
+        /* Right Sidebar */
         .sidebar-right {
             background: white;
             border-radius: 16px;
@@ -1105,6 +1303,7 @@
             box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
             height: fit-content;
         }
+
         .sidebar-right .section-title {
             font-size: 0.7rem;
             text-transform: uppercase;
@@ -1113,6 +1312,7 @@
             letter-spacing: 0.5px;
             margin: 16px 0 8px;
         }
+
         .sidebar-right .section-title:first-child {
             margin-top: 0;
         }
@@ -1126,13 +1326,16 @@
             cursor: pointer;
             transition: all 0.2s;
         }
+
         .flashcard-item:hover {
             background: #eef2ff;
         }
+
         .flashcard-item .term {
             font-weight: 600;
             color: #0b1120;
         }
+
         .flashcard-item .def {
             font-size: 0.8rem;
             color: #6b7280;
@@ -1147,17 +1350,21 @@
             font-size: 0.85rem;
             border-left: 3px solid #ef4444;
         }
+
         .error-item .concept {
             font-weight: 600;
             color: #991b1b;
         }
+
         .error-item .hint {
             font-size: 0.8rem;
             color: #6b7280;
             margin-top: 2px;
         }
 
-        /* ===== INFO PAGES ===== */
+        /* ============================================================ */
+        /* INFO PAGES (Privacy, About, Contact, TOS) */
+        /* ============================================================ */
         .info-page {
             display: none;
             max-width: 800px;
@@ -1169,21 +1376,26 @@
             line-height: 1.6;
             color: #0b1120;
         }
+
         .info-page.active {
             display: block;
         }
+
         .info-page h1 {
             font-size: 2rem;
             margin-bottom: 8px;
         }
+
         .info-page h2 {
             font-size: 1.3rem;
             margin-top: 28px;
             margin-bottom: 8px;
         }
+
         .info-page a {
             color: #6366f1;
         }
+
         .info-page .back-link {
             display: inline-block;
             margin-top: 24px;
@@ -1191,12 +1403,15 @@
             color: #6366f1;
             cursor: pointer;
         }
+
         .info-page .back-link:hover {
             text-decoration: underline;
         }
+
         .info-page ul {
             padding-left: 24px;
         }
+
         .info-page input,
         .info-page textarea {
             width: 100%;
@@ -1207,6 +1422,7 @@
             margin: 6px 0 16px;
             font-family: inherit;
         }
+
         .info-page button {
             padding: 14px 28px;
             background: #6366f1;
@@ -1218,13 +1434,16 @@
             font-size: 1rem;
         }
 
-        /* ===== FOOTER ===== */
+        /* ============================================================ */
+        /* FOOTER */
+        /* ============================================================ */
         .site-footer {
             background: #0b1120;
             color: #9ca3af;
             padding: 40px 20px;
             margin-top: 60px;
         }
+
         .site-footer .inner {
             max-width: 1100px;
             margin: 0 auto;
@@ -1232,11 +1451,13 @@
             grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
             gap: 32px;
         }
+
         .site-footer .inner h4 {
             color: white;
             font-size: 1.1rem;
             margin-bottom: 12px;
         }
+
         .site-footer .inner a {
             display: block;
             color: #9ca3af;
@@ -1246,9 +1467,11 @@
             transition: color 0.2s;
             cursor: pointer;
         }
+
         .site-footer .inner a:hover {
             color: white;
         }
+
         .site-footer .bottom {
             max-width: 1100px;
             margin: 20px auto 0;
@@ -1258,7 +1481,9 @@
             font-size: 0.85rem;
         }
 
-        /* ===== RESPONSIVE ===== */
+        /* ============================================================ */
+        /* RESPONSIVE */
+        /* ============================================================ */
         @media (max-width: 768px) {
             .hero h1 {
                 font-size: 2.2rem;
@@ -1322,6 +1547,7 @@
                 font-size: 1.6rem;
             }
         }
+
         @media (max-width: 480px) {
             .hero h1 {
                 font-size: 1.8rem;
@@ -1349,7 +1575,11 @@
 </head>
 <body>
 
-    <!-- ===== LANDING PAGE ===== -->
+    <!-- ============================================================ -->
+    <!-- LANDING PAGE -->
+    <!-- ============================================================ -->
+
+    <!-- Hero -->
     <section class="hero" id="heroSection">
         <div class="logo">🧠 <span>Leago</span></div>
         <div class="badge">✦ Available Now</div>
@@ -1361,30 +1591,65 @@
         </div>
     </section>
 
+    <!-- Stats -->
     <div class="stats-bar">
-        <div class="stat-card"><div class="number">12+</div><div class="label">Subjects</div></div>
-        <div class="stat-card"><div class="number">100+</div><div class="label">Topics</div></div>
-        <div class="stat-card"><div class="number">24/7</div><div class="label">AI Tutor</div></div>
-        <div class="stat-card"><div class="number">3-Day</div><div class="label">Free Trial</div></div>
+        <div class="stat-card">
+            <div class="number">12+</div>
+            <div class="label">Subjects</div>
+        </div>
+        <div class="stat-card">
+            <div class="number">100+</div>
+            <div class="label">Topics</div>
+        </div>
+        <div class="stat-card">
+            <div class="number">24/7</div>
+            <div class="label">AI Tutor</div>
+        </div>
+        <div class="stat-card">
+            <div class="number">3-Day</div>
+            <div class="label">Free Trial</div>
+        </div>
     </div>
 
+    <!-- Features -->
     <section class="features" id="features">
         <div class="section-title">
             <h2>Everything You Need to Succeed</h2>
             <p>AI-powered learning designed for South African students.</p>
         </div>
         <div class="features-grid">
-            <div class="feature-card"><span class="icon">📐</span><h3>Mathematics &amp; English</h3><p>Master core subjects with AI‑powered explanations and practice.</p></div>
-            <div class="feature-card"><span class="icon">🎯</span><h3>Grades 10–12 &amp; College</h3><p>Curriculum‑aligned content for high school and tertiary learners.</p></div>
-            <div class="feature-card"><span class="icon">📚</span><h3>Step‑by‑Step Exam Prep</h3><p>Break down complex topics into manageable steps with guided practice.</p></div>
-            <div class="feature-card"><span class="icon">🧠</span><h3>AI Tutor — Always On</h3><p>Get personalised help anytime, anywhere. Your tutor never sleeps.</p></div>
+            <div class="feature-card">
+                <span class="icon">📐</span>
+                <h3>Mathematics &amp; English</h3>
+                <p>Master core subjects with AI‑powered explanations and practice.</p>
+            </div>
+            <div class="feature-card">
+                <span class="icon">🎯</span>
+                <h3>Grades 10–12 &amp; College</h3>
+                <p>Curriculum‑aligned content for high school and tertiary learners.</p>
+            </div>
+            <div class="feature-card">
+                <span class="icon">📚</span>
+                <h3>Step‑by‑Step Exam Prep</h3>
+                <p>Break down complex topics into manageable steps with guided practice.</p>
+            </div>
+            <div class="feature-card">
+                <span class="icon">🧠</span>
+                <h3>AI Tutor — Always On</h3>
+                <p>Get personalised help anytime, anywhere. Your tutor never sleeps.</p>
+            </div>
         </div>
     </section>
 
+    <!-- Status Bar -->
     <div class="status-bar">
-        <div class="status"><span class="dot"></span>Fully operational — start learning now</div>
+        <div class="status">
+            <span class="dot"></span>
+            Fully operational — start learning now
+        </div>
     </div>
 
+    <!-- Pricing -->
     <section class="pricing" id="pricing">
         <div class="section-title">
             <h2>Simple, Transparent Pricing</h2>
@@ -1395,7 +1660,12 @@
                 <div class="plan">Free Trial</div>
                 <div class="price">R0 <span>/ 3 days</span></div>
                 <div class="description">Explore all features risk-free.</div>
-                <ul class="features-list"><li>Access to all subjects</li><li>AI Tutor chat</li><li>Practice questions</li><li>No credit card required</li></ul>
+                <ul class="features-list">
+                    <li>Access to all subjects</li>
+                    <li>AI Tutor chat</li>
+                    <li>Practice questions</li>
+                    <li>No credit card required</li>
+                </ul>
                 <button class="btn-pricing outline" onclick="openAuth('login')">Start Free Trial</button>
             </div>
             <div class="pricing-card popular">
@@ -1403,54 +1673,228 @@
                 <div class="plan">Premium</div>
                 <div class="price">R49.99 <span>/ month</span></div>
                 <div class="description">Full access for South African students.</div>
-                <ul class="features-list"><li>Everything in Free Trial</li><li>Unlimited AI Tutor sessions</li><li>Progress tracking</li><li>Exam preparation tools</li><li>Priority support</li></ul>
+                <ul class="features-list">
+                    <li>Everything in Free Trial</li>
+                    <li>Unlimited AI Tutor sessions</li>
+                    <li>Progress tracking</li>
+                    <li>Exam preparation tools</li>
+                    <li>Priority support</li>
+                </ul>
                 <button class="btn-pricing" onclick="openAuth('login')">Subscribe Now</button>
             </div>
             <div class="pricing-card">
                 <div class="plan">International</div>
                 <div class="price">R149.99 <span>/ month</span></div>
                 <div class="description">For international students.</div>
-                <ul class="features-list"><li>Everything in Premium</li><li>International curriculum</li><li>Multi-language support</li><li>Advanced analytics</li></ul>
+                <ul class="features-list">
+                    <li>Everything in Premium</li>
+                    <li>International curriculum</li>
+                    <li>Multi-language support</li>
+                    <li>Advanced analytics</li>
+                </ul>
                 <button class="btn-pricing outline" onclick="openAuth('login')">Subscribe Now</button>
             </div>
         </div>
     </section>
 
-    <!-- ===== INFO PAGES ===== -->
-    <div class="info-page" id="page-privacy"><h1>Privacy Policy</h1><p><strong>Last updated:</strong> June 2026</p><p>At Leago, we take your privacy seriously...</p><span class="back-link" onclick="showInfoPage('')">← Back to Leago</span></div>
-    <div class="info-page" id="page-about"><h1>About Leago</h1><p><strong>Leago</strong> is an AI-powered educational platform...</p><span class="back-link" onclick="showInfoPage('')">← Back to Leago</span></div>
-    <div class="info-page" id="page-contact"><h1>Contact Us</h1><p>Have questions? We'd love to hear from you.</p><span class="back-link" onclick="showInfoPage('')">← Back to Leago</span></div>
-    <div class="info-page" id="page-tos"><h1>Terms of Service</h1><p><strong>Last updated:</strong> June 2026</p><p>Welcome to Leago...</p><span class="back-link" onclick="showInfoPage('')">← Back to Leago</span></div>
+    <!-- ============================================================ -->
+    <!-- INFO PAGES (Privacy, About, Contact, TOS) -->
+    <!-- ============================================================ -->
 
-    <!-- ===== AUTH OVERLAY ===== -->
+    <!-- Privacy Policy -->
+    <div class="info-page" id="page-privacy">
+        <h1>Privacy Policy</h1>
+        <p><strong>Last updated:</strong> June 2026</p>
+        <p>At Leago, we take your privacy seriously. This Privacy Policy explains how we collect, use, and protect your personal information.</p>
+        <h2>1. Information We Collect</h2>
+        <ul>
+            <li><strong>Account Information:</strong> Name, email address, and country.</li>
+            <li><strong>Usage Data:</strong> How you interact with our platform (chat history, subject preferences, etc.).</li>
+            <li><strong>Device Information:</strong> IP address, browser type, and device type.</li>
+        </ul>
+        <h2>2. How We Use Your Information</h2>
+        <ul>
+            <li>To provide and improve our AI tutor services.</li>
+            <li>To communicate with you about updates, promotions, and support.</li>
+            <li>To analyse usage and improve user experience.</li>
+        </ul>
+        <h2>3. Cookies and Tracking</h2>
+        <p>We use cookies to enhance your experience and for analytics. Google AdSense may also use cookies to serve personalised ads. You can manage your cookie preferences in your browser settings.</p>
+        <h2>4. Third-Party Services</h2>
+        <ul>
+            <li><strong>Google AdSense:</strong> We use AdSense to display ads. Google collects data to serve relevant ads. <a href="https://policies.google.com/privacy" target="_blank">Learn more</a>.</li>
+            <li><strong>Paystack:</strong> We use Paystack for payment processing. <a href="https://paystack.com/privacy" target="_blank">View Paystack's privacy policy</a>.</li>
+            <li><strong>Render:</strong> We host on Render. <a href="https://render.com/privacy" target="_blank">View Render's privacy policy</a>.</li>
+        </ul>
+        <h2>5. Your Rights</h2>
+        <ul>
+            <li>Access, update, or delete your personal data.</li>
+            <li>Opt out of marketing communications.</li>
+            <li>Request a copy of the data we hold about you.</li>
+        </ul>
+        <h2>6. Contact Us</h2>
+        <p>If you have any questions, contact us at: <a href="mailto:laphushusamuel3@gmail.com">laphushusamuel3@gmail.com</a></p>
+        <span class="back-link" onclick="showInfoPage('')">← Back to Leago</span>
+    </div>
+
+    <!-- About -->
+    <div class="info-page" id="page-about">
+        <h1>About Leago</h1>
+        <p><strong>Leago</strong> is an AI-powered educational platform designed to help South African students master their subjects.</p>
+        <h2>Our Mission</h2>
+        <p>To make quality education accessible to every learner in South Africa, using the power of artificial intelligence.</p>
+        <h2>Our Story</h2>
+        <p>Leago was founded with a simple belief: every student deserves a personal tutor. But not everyone can afford one. That's why we built Leago — an AI tutor that's available 24/7, affordable, and personalised to each student's needs.</p>
+        <h2>Our Team</h2>
+        <p><strong>Laphushu Tshukudu</strong> — Founder &amp; CEO. Passionate about education and technology.</p>
+        <h2>Contact</h2>
+        <p>Email: <a href="mailto:laphushusamuel3@gmail.com">laphushusamuel3@gmail.com</a></p>
+        <span class="back-link" onclick="showInfoPage('')">← Back to Leago</span>
+    </div>
+
+    <!-- Contact -->
+    <div class="info-page" id="page-contact">
+        <h1>Contact Us</h1>
+        <p>Have questions, feedback, or need help? We'd love to hear from you.</p>
+        <form method="POST" action="/submit-contact">
+            <label>Name</label>
+            <input type="text" name="name" required />
+            <label>Email</label>
+            <input type="email" name="email" required />
+            <label>Message</label>
+            <textarea name="message" rows="5" required></textarea>
+            <button type="submit">Send Message</button>
+        </form>
+        <p style="margin-top:16px;">Or email us directly: <a href="mailto:laphushusamuel3@gmail.com">laphushusamuel3@gmail.com</a></p>
+        <span class="back-link" onclick="showInfoPage('')">← Back to Leago</span>
+    </div>
+
+    <!-- Terms of Service -->
+    <div class="info-page" id="page-tos">
+        <h1>Terms of Service</h1>
+        <p><strong>Last updated:</strong> June 2026</p>
+        <p>Welcome to Leago. By using our platform, you agree to the following terms.</p>
+        <h2>1. Acceptance of Terms</h2>
+        <p>By creating an account or using Leago, you agree to be bound by these Terms of Service.</p>
+        <h2>2. Account Responsibility</h2>
+        <p>You are responsible for maintaining the security of your account. Leago is not liable for any loss or damage arising from your failure to protect your account.</p>
+        <h2>3. Use of the Platform</h2>
+        <ul>
+            <li>You may use Leago for personal, educational purposes only.</li>
+            <li>You may not use the platform for any illegal or unauthorised purpose.</li>
+            <li>You may not attempt to reverse-engineer or exploit the platform.</li>
+        </ul>
+        <h2>4. Subscription and Payments</h2>
+        <ul>
+            <li>Leago offers a free 3-day trial.</li>
+            <li>After the trial, a subscription is required to continue using the service.</li>
+            <li>Payments are processed securely through Paystack.</li>
+            <li>You may cancel your subscription at any time via your account settings.</li>
+        </ul>
+        <h2>5. Intellectual Property</h2>
+        <p>All content on Leago, including the AI tutor, logos, and educational materials, is the property of Leago and protected by copyright laws.</p>
+        <h2>6. Disclaimer</h2>
+        <p>Leago is provided "as is" without warranties of any kind. While we strive for accuracy, the AI tutor may occasionally provide incorrect information. Use the platform as a learning aid, not as a sole source of education.</p>
+        <h2>7. Limitation of Liability</h2>
+        <p>To the fullest extent permitted by law, Leago shall not be liable for any indirect, incidental, or consequential damages arising from your use of the platform.</p>
+        <h2>8. Changes to These Terms</h2>
+        <p>We may update these terms from time to time. We will notify you of significant changes.</p>
+        <h2>9. Contact</h2>
+        <p>If you have any questions, contact us at: <a href="mailto:laphushusamuel3@gmail.com">laphushusamuel3@gmail.com</a></p>
+        <span class="back-link" onclick="showInfoPage('')">← Back to Leago</span>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- AUTH OVERLAY (Login / Signup) -->
+    <!-- ============================================================ -->
     <div class="auth-overlay" id="authOverlay">
         <div class="auth-card">
             <button class="close-btn" onclick="closeAuth()">✕</button>
-            <div class="logo-sm"><h2>🧠 <span>Leago</span></h2><p>Your AI Tutor</p></div>
-            <div id="loginPage">
-                <h3>Welcome back</h3><p class="sub">Log in to continue learning.</p>
-                <div class="field"><label>Email</label><input type="email" id="loginEmail" placeholder="you@example.com" /></div>
-                <div class="field"><label>Password</label><input type="password" id="loginPassword" placeholder="Enter password" /></div>
-                <div class="error" id="loginError"></div><div class="success" id="loginSuccess"></div>
-                <button class="btn" id="loginBtn" onclick="login()">Log In</button>
-                <div class="auth-link">Don't have an account? <a onclick="showSignup()">Sign up</a></div>
+
+            <div class="logo-sm">
+                <h2>🧠 <span>Leago</span></h2>
+                <p>Your AI Tutor</p>
             </div>
+
+            <!-- Login -->
+            <div id="loginPage">
+                <h3>Welcome back</h3>
+                <p class="sub">Log in to continue learning.</p>
+                <div class="field">
+                    <label>Email</label>
+                    <input type="email" id="loginEmail" placeholder="you@example.com" />
+                </div>
+                <div class="field">
+                    <label>Password</label>
+                    <input type="password" id="loginPassword" placeholder="Enter password" />
+                </div>
+                <div class="error" id="loginError"></div>
+                <div class="success" id="loginSuccess"></div>
+                <button class="btn" id="loginBtn" onclick="login()">Log In</button>
+                <div class="auth-link">
+                    Don't have an account? <a onclick="showSignup()">Sign up</a>
+                </div>
+            </div>
+
+            <!-- Signup -->
             <div id="signupPage" style="display:none;">
-                <h3>Create account</h3><p class="sub">Join Leago and start learning.</p>
-                <div class="field"><label>Full name</label><input type="text" id="signupName" placeholder="John Doe" /></div>
-                <div class="field"><label>Email</label><input type="email" id="signupEmail" placeholder="you@example.com" /></div>
-                <div class="field"><label>Password</label><input type="password" id="signupPassword" placeholder="Min 6 characters" /></div>
-                <div class="field"><label>Country</label><select id="signupCountry"><option value="South Africa">South Africa</option><option value="China">China</option><option value="United Kingdom">United Kingdom</option><option value="United States">United States</option><option value="Australia">Australia</option><option value="India">India</option><option value="Nigeria">Nigeria</option><option value="Kenya">Kenya</option><option value="Egypt">Egypt</option><option value="Germany">Germany</option><option value="France">France</option><option value="Japan">Japan</option><option value="Brazil">Brazil</option><option value="Canada">Canada</option><option value="New Zealand">New Zealand</option></select></div>
-                <div class="field"><label>Role</label><select id="signupRole"><option value="learner">Learner</option><option value="teacher">Teacher</option></select></div>
-                <div class="error" id="signupError"></div><div class="success" id="signupSuccess"></div>
+                <h3>Create account</h3>
+                <p class="sub">Join Leago and start learning.</p>
+                <div class="field">
+                    <label>Full name</label>
+                    <input type="text" id="signupName" placeholder="John Doe" />
+                </div>
+                <div class="field">
+                    <label>Email</label>
+                    <input type="email" id="signupEmail" placeholder="you@example.com" />
+                </div>
+                <div class="field">
+                    <label>Password</label>
+                    <input type="password" id="signupPassword" placeholder="Min 6 characters" />
+                </div>
+                <div class="field">
+                    <label>Country</label>
+                    <select id="signupCountry">
+                        <option value="South Africa">South Africa</option>
+                        <option value="China">China</option>
+                        <option value="United Kingdom">United Kingdom</option>
+                        <option value="United States">United States</option>
+                        <option value="Australia">Australia</option>
+                        <option value="India">India</option>
+                        <option value="Nigeria">Nigeria</option>
+                        <option value="Kenya">Kenya</option>
+                        <option value="Egypt">Egypt</option>
+                        <option value="Germany">Germany</option>
+                        <option value="France">France</option>
+                        <option value="Japan">Japan</option>
+                        <option value="Brazil">Brazil</option>
+                        <option value="Canada">Canada</option>
+                        <option value="New Zealand">New Zealand</option>
+                    </select>
+                </div>
+                <div class="field">
+                    <label>Role</label>
+                    <select id="signupRole">
+                        <option value="learner">Learner</option>
+                        <option value="teacher">Teacher</option>
+                    </select>
+                </div>
+                <div class="error" id="signupError"></div>
+                <div class="success" id="signupSuccess"></div>
                 <button class="btn" id="signupBtn" onclick="signup()">Create Account</button>
-                <div class="auth-link">Already have an account? <a onclick="showLogin()">Log in</a></div>
+                <div class="auth-link">
+                    Already have an account? <a onclick="showLogin()">Log in</a>
+                </div>
             </div>
         </div>
     </div>
 
-    <!-- ===== DASHBOARD ===== -->
+    <!-- ============================================================ -->
+    <!-- DASHBOARD (Hidden until logged in) -->
+    <!-- ============================================================ -->
     <div class="dashboard" id="dashboard">
+
+        <!-- Top Navigation -->
         <nav class="top-nav">
             <a href="#" class="logo">🧠 <span>Leago</span></a>
             <div class="user-info">
@@ -1462,41 +1906,87 @@
             </div>
         </nav>
 
+        <!-- Dashboard 3-Column Layout -->
         <div class="dashboard-grid">
+
+            <!-- Left Sidebar -->
             <aside class="sidebar-left" id="sidebarLeft">
                 <div class="section-title">Subjects</div>
-                <ul class="subject-list" id="subjectList"></ul>
+                <ul class="subject-list" id="subjectList">
+                    <!-- Populated by JavaScript -->
+                </ul>
+
                 <div class="section-title" style="margin-top:20px;">Your Progress</div>
-                <div id="progressContainer"></div>
+                <div id="progressContainer">
+                    <!-- Populated by JavaScript -->
+                </div>
+
                 <div class="section-title" style="margin-top:20px;">Recent</div>
-                <div id="recentContainer"></div>
+                <div id="recentContainer">
+                    <!-- Populated by JavaScript -->
+                </div>
             </aside>
 
+            <!-- Center Panel -->
             <main class="center-panel" id="centerPanel">
+                <!-- Dynamic content -->
                 <div class="welcome" id="welcomeMessage">Welcome back, Student 👋</div>
-                <div class="welcome-sub" id="welcomeSub">Today's goal: Complete your next lesson. <span class="change-grade-link" onclick="showGradeSelection()">Change Level</span></div>
-                <div id="dynamicContent"></div>
+                <div class="welcome-sub" id="welcomeSub">
+                    Today's goal: Complete your next lesson.
+                    <span class="change-grade-link" onclick="showGradeSelection()">Change Level</span>
+                </div>
+                <div id="dynamicContent">
+                    <!-- Rendered by JavaScript -->
+                </div>
             </main>
 
+            <!-- Right Sidebar -->
             <aside class="sidebar-right" id="sidebarRight">
                 <div class="section-title">Key Terms</div>
-                <div id="flashcardContainer"></div>
+                <div id="flashcardContainer">
+                    <!-- Populated by JavaScript -->
+                </div>
+
                 <div class="section-title" style="margin-top:20px;">Weak Spots</div>
-                <div id="errorContainer"></div>
+                <div id="errorContainer">
+                    <!-- Populated by JavaScript -->
+                </div>
             </aside>
+
         </div>
+
     </div>
 
+    <!-- ============================================================ -->
+    <!-- FOOTER -->
+    <!-- ============================================================ -->
     <footer class="site-footer" id="siteFooter">
         <div class="inner">
-            <div><h4>🧠 Leago</h4><p style="font-size:0.9rem;">Your AI tutor for Grades 10–12 &amp; College.</p></div>
-            <div><h4>Company</h4><a onclick="showInfoPage('about')">About</a><a onclick="showInfoPage('contact')">Contact</a></div>
-            <div><h4>Legal</h4><a onclick="showInfoPage('privacy')">Privacy Policy</a><a onclick="showInfoPage('tos')">Terms of Service</a></div>
-            <div><h4>Contact</h4><a href="mailto:laphushusamuel3@gmail.com">laphushusamuel3@gmail.com</a></div>
+            <div>
+                <h4>🧠 Leago</h4>
+                <p style="font-size:0.9rem;">Your AI tutor for Grades 10–12 &amp; College.</p>
+            </div>
+            <div>
+                <h4>Company</h4>
+                <a onclick="showInfoPage('about')">About</a>
+                <a onclick="showInfoPage('contact')">Contact</a>
+            </div>
+            <div>
+                <h4>Legal</h4>
+                <a onclick="showInfoPage('privacy')">Privacy Policy</a>
+                <a onclick="showInfoPage('tos')">Terms of Service</a>
+            </div>
+            <div>
+                <h4>Contact</h4>
+                <a href="mailto:laphushusamuel3@gmail.com">laphushusamuel3@gmail.com</a>
+            </div>
         </div>
         <div class="bottom">&copy; 2026 Leago. All rights reserved.</div>
     </footer>
 
+    <!-- ============================================================ -->
+    <!-- JAVASCRIPT -->
+    <!-- ============================================================ -->
     <script>
         // ================================================================
         //  STATE
@@ -1505,53 +1995,272 @@
         let currentSubject = '';
         let selectedGrade = '';
         let currentView = 'welcome';
-        let progressData = {};
-
-        function getProgressKey() { if (!currentUser) return null; return 'leago_progress_' + currentUser.id; }
-
-        function loadProgress() { const key = getProgressKey(); if (!key) return; const stored = localStorage.getItem(key); if (stored) { try { progressData = JSON.parse(stored); } catch (e) { progressData = {}; } } else { progressData = {}; } }
-
-        function saveProgress() { const key = getProgressKey(); if (!key) return; localStorage.setItem(key, JSON.stringify(progressData)); }
-
-        function initProgress(subjects) { let changed = false; for (const [subject, topics] of Object.entries(subjects)) { if (!progressData[subject]) { progressData[subject] = { completed: [], total: topics.length }; changed = true; } else { if (progressData[subject].total !== topics.length) { progressData[subject].total = topics.length; changed = true; } } } if (changed) saveProgress(); }
-
-        function getSubjectProgress(subject) { if (!progressData[subject]) return { completed: 0, total: 0, percent: 0 }; const data = progressData[subject]; const completed = data.completed ? data.completed.length : 0; const total = data.total || 0; const percent = total > 0 ? Math.round((completed / total) * 100) : 0; return { completed, total, percent }; }
-
-        function markTopicCompleted(subject, topic) { if (!progressData[subject]) { progressData[subject] = { completed: [], total: 0 }; } if (!progressData[subject].completed) { progressData[subject].completed = []; } if (!progressData[subject].completed.includes(topic)) { progressData[subject].completed.push(topic); saveProgress(); return true; } return false; }
-
-        function isTopicCompleted(subject, topic) { if (!progressData[subject]) return false; if (!progressData[subject].completed) return false; return progressData[subject].completed.includes(topic); }
 
         // ================================================================
-        //  COUNTRY DATA
+        //  PROGRESS TRACKING (per subject)
+        // ================================================================
+        let progressData = {};
+
+        function getProgressKey() {
+            if (!currentUser) return null;
+            return 'leago_progress_' + currentUser.id;
+        }
+
+        function loadProgress() {
+            const key = getProgressKey();
+            if (!key) return;
+            const stored = localStorage.getItem(key);
+            if (stored) {
+                try {
+                    progressData = JSON.parse(stored);
+                } catch (e) {
+                    progressData = {};
+                }
+            } else {
+                progressData = {};
+            }
+        }
+
+        function saveProgress() {
+            const key = getProgressKey();
+            if (!key) return;
+            localStorage.setItem(key, JSON.stringify(progressData));
+        }
+
+        function initProgress(subjects) {
+            let changed = false;
+            for (const [subject, topics] of Object.entries(subjects)) {
+                if (!progressData[subject]) {
+                    progressData[subject] = {
+                        completed: [],
+                        total: topics.length
+                    };
+                    changed = true;
+                } else {
+                    if (progressData[subject].total !== topics.length) {
+                        progressData[subject].total = topics.length;
+                        changed = true;
+                    }
+                }
+            }
+            if (changed) saveProgress();
+        }
+
+        function getSubjectProgress(subject) {
+            if (!progressData[subject]) return { completed: 0, total: 0, percent: 0 };
+            const data = progressData[subject];
+            const completed = data.completed ? data.completed.length : 0;
+            const total = data.total || 0;
+            const percent = total > 0 ? Math.round((completed / total) * 100) : 0;
+            return { completed, total, percent };
+        }
+
+        function markTopicCompleted(subject, topic) {
+            if (!progressData[subject]) {
+                progressData[subject] = { completed: [], total: 0 };
+            }
+            if (!progressData[subject].completed) {
+                progressData[subject].completed = [];
+            }
+            if (!progressData[subject].completed.includes(topic)) {
+                progressData[subject].completed.push(topic);
+                saveProgress();
+                return true;
+            }
+            return false;
+        }
+
+        function isTopicCompleted(subject, topic) {
+            if (!progressData[subject]) return false;
+            if (!progressData[subject].completed) return false;
+            return progressData[subject].completed.includes(topic);
+        }
+
+        // ================================================================
+        //  COUNTRY DATA (Separated Secondary & College)
         // ================================================================
         const COUNTRY_DATA = {
             'South Africa': {
                 grades: ['10', '11', '12', 'College'],
                 secondary_subjects: {
-                    'Mathematics': ['Algebra – Linear Equations', 'Algebra – Quadratic Equations', 'Algebra – Exponents & Surds', 'Geometry – Euclidean Geometry', 'Geometry – Trigonometry', 'Geometry – Mensuration', 'Functions & Graphs', 'Statistics – Data Handling', 'Probability – Basics', 'Calculus – Differentiation (Gr 12)', 'Calculus – Integration (Gr 12)', 'Financial Maths – Compound Interest'],
-                    'English': ['Reading Comprehension – Analytical Skills', 'Creative Writing – Essays & Short Stories', 'Literature – Poetry Analysis', 'Literature – Novel Study', 'Grammar – Tense & Agreement', 'Vocabulary Building – Context Clues', 'Speech – Persuasive Techniques', 'Visual Literacy – Advertisements', 'Summary Writing', 'Critical Thinking – Debates'],
-                    'Life Sciences': ['Cell Biology – Structure & Function', 'Cell Division – Mitosis & Meiosis', 'Genetics – Mendelian Laws', 'Evolution – Natural Selection', 'Human Body – Digestive System', 'Human Body – Respiratory System', 'Human Body – Circulatory System', 'Ecology – Food Chains & Webs', 'Biodiversity – Classification', 'Biotechnology – Applications'],
-                    'Physical Sciences': ['Mechanics – Kinematics', 'Mechanics – Newton\'s Laws', 'Mechanics – Work, Energy & Power', 'Waves – Sound & Light', 'Electricity – Circuits', 'Magnetism – Electromagnetism', 'Chemical Bonding – Ionic & Covalent', 'Stoichiometry – Mole Concept', 'Acids & Bases – Reactions', 'Thermodynamics – Heat & Temperature', 'Nuclear Physics – Radioactivity'],
-                    'History': ['The French Revolution – Causes & Effects', 'Industrial Revolution – Impact on Society', 'World War I – Causes & Outcomes', 'World War II – Rise of Dictators', 'The Holocaust – Remembering', 'Apartheid in South Africa – Origins', 'Anti-Apartheid Movement', 'Democracy in South Africa 1994', 'Cold War – Causes & Consequences', 'Globalisation – Economic & Cultural'],
-                    'Geography': ['Map Skills – Topographic Maps', 'Atmosphere – Weather & Climate', 'Plate Tectonics – Earth\'s Structure', 'Rivers – Drainage Systems', 'Oceans – Currents & Tides', 'Population – Distribution & Density', 'Urbanisation – Challenges', 'South Africa\'s Provinces – Physical Features', 'Natural Resources – Management', 'Climate Change – Causes & Solutions']
+                    'Mathematics': [
+                        'Algebra – Linear Equations',
+                        'Algebra – Quadratic Equations',
+                        'Algebra – Exponents & Surds',
+                        'Geometry – Euclidean Geometry',
+                        'Geometry – Trigonometry',
+                        'Geometry – Mensuration',
+                        'Functions & Graphs',
+                        'Statistics – Data Handling',
+                        'Probability – Basics',
+                        'Calculus – Differentiation (Gr 12)',
+                        'Calculus – Integration (Gr 12)',
+                        'Financial Maths – Compound Interest'
+                    ],
+                    'English': [
+                        'Reading Comprehension – Analytical Skills',
+                        'Creative Writing – Essays & Short Stories',
+                        'Literature – Poetry Analysis',
+                        'Literature – Novel Study',
+                        'Grammar – Tense & Agreement',
+                        'Vocabulary Building – Context Clues',
+                        'Speech – Persuasive Techniques',
+                        'Visual Literacy – Advertisements',
+                        'Summary Writing',
+                        'Critical Thinking – Debates'
+                    ],
+                    'Life Sciences': [
+                        'Cell Biology – Structure & Function',
+                        'Cell Division – Mitosis & Meiosis',
+                        'Genetics – Mendelian Laws',
+                        'Evolution – Natural Selection',
+                        'Human Body – Digestive System',
+                        'Human Body – Respiratory System',
+                        'Human Body – Circulatory System',
+                        'Ecology – Food Chains & Webs',
+                        'Biodiversity – Classification',
+                        'Biotechnology – Applications'
+                    ],
+                    'Physical Sciences': [
+                        'Mechanics – Kinematics',
+                        'Mechanics – Newton\'s Laws',
+                        'Mechanics – Work, Energy & Power',
+                        'Waves – Sound & Light',
+                        'Electricity – Circuits',
+                        'Magnetism – Electromagnetism',
+                        'Chemical Bonding – Ionic & Covalent',
+                        'Stoichiometry – Mole Concept',
+                        'Acids & Bases – Reactions',
+                        'Thermodynamics – Heat & Temperature',
+                        'Nuclear Physics – Radioactivity'
+                    ],
+                    'History': [
+                        'The French Revolution – Causes & Effects',
+                        'Industrial Revolution – Impact on Society',
+                        'World War I – Causes & Outcomes',
+                        'World War II – Rise of Dictators',
+                        'The Holocaust – Remembering',
+                        'Apartheid in South Africa – Origins',
+                        'Anti-Apartheid Movement',
+                        'Democracy in South Africa 1994',
+                        'Cold War – Causes & Consequences',
+                        'Globalisation – Economic & Cultural'
+                    ],
+                    'Geography': [
+                        'Map Skills – Topographic Maps',
+                        'Atmosphere – Weather & Climate',
+                        'Plate Tectonics – Earth\'s Structure',
+                        'Rivers – Drainage Systems',
+                        'Oceans – Currents & Tides',
+                        'Population – Distribution & Density',
+                        'Urbanisation – Challenges',
+                        'South Africa\'s Provinces – Physical Features',
+                        'Natural Resources – Management',
+                        'Climate Change – Causes & Solutions'
+                    ]
                 },
                 college_subjects: {
-                    'Engineering': ['Mechanical Engineering – Basics', 'Electrical Engineering – Circuits', 'Civil Engineering – Structures', 'Chemical Engineering – Processes', 'Industrial Engineering – Optimisation', 'Materials Science – Properties'],
-                    'Computer Science': ['Programming – Python Basics', 'Data Structures & Algorithms', 'Database Systems – SQL', 'Web Development – HTML/CSS/JS', 'Artificial Intelligence – Intro', 'Cyber Security – Fundamentals'],
-                    'Business & Management': ['Principles of Management', 'Marketing – Strategies', 'Finance – Accounting Basics', 'Entrepreneurship – Startup', 'Human Resources – People Management'],
-                    'Health Sciences': ['Anatomy – Human Body', 'Physiology – Body Functions', 'Pharmacology – Drug Basics', 'Nursing – Patient Care', 'Public Health – Epidemiology'],
-                    'Law': ['Criminal Law – Basics', 'Constitutional Law – SA', 'Contract Law – Essentials', 'Tort Law – Liability', 'Legal Writing & Research'],
-                    'Education': ['Teaching Methods – Pedagogy', 'Educational Psychology', 'Curriculum Design – SA', 'Classroom Management', 'Assessment & Evaluation'],
-                    'Arts & Humanities': ['Creative Writing – Fiction', 'Philosophy – Ethics', 'Art History – Renaissance', 'Music Theory – Basics', 'Film Studies – Analysis']
+                    'Engineering': [
+                        'Mechanical Engineering – Basics',
+                        'Electrical Engineering – Circuits',
+                        'Civil Engineering – Structures',
+                        'Chemical Engineering – Processes',
+                        'Industrial Engineering – Optimisation',
+                        'Materials Science – Properties'
+                    ],
+                    'Computer Science': [
+                        'Programming – Python Basics',
+                        'Data Structures & Algorithms',
+                        'Database Systems – SQL',
+                        'Web Development – HTML/CSS/JS',
+                        'Artificial Intelligence – Intro',
+                        'Cyber Security – Fundamentals'
+                    ],
+                    'Business & Management': [
+                        'Principles of Management',
+                        'Marketing – Strategies',
+                        'Finance – Accounting Basics',
+                        'Entrepreneurship – Startup',
+                        'Human Resources – People Management'
+                    ],
+                    'Health Sciences': [
+                        'Anatomy – Human Body',
+                        'Physiology – Body Functions',
+                        'Pharmacology – Drug Basics',
+                        'Nursing – Patient Care',
+                        'Public Health – Epidemiology'
+                    ],
+                    'Law': [
+                        'Criminal Law – Basics',
+                        'Constitutional Law – SA',
+                        'Contract Law – Essentials',
+                        'Tort Law – Liability',
+                        'Legal Writing & Research'
+                    ],
+                    'Education': [
+                        'Teaching Methods – Pedagogy',
+                        'Educational Psychology',
+                        'Curriculum Design – SA',
+                        'Classroom Management',
+                        'Assessment & Evaluation'
+                    ],
+                    'Arts & Humanities': [
+                        'Creative Writing – Fiction',
+                        'Philosophy – Ethics',
+                        'Art History – Renaissance',
+                        'Music Theory – Basics',
+                        'Film Studies – Analysis'
+                    ]
                 }
             }
         };
 
-        const DEFAULT_SUBJECTS = { 'Mathematics': ['Algebra', 'Geometry', 'Trigonometry', 'Calculus', 'Statistics'], 'English': ['Reading', 'Writing', 'Grammar', 'Literature'], 'Science': ['Biology', 'Chemistry', 'Physics', 'Earth Science'], 'History': ['World History', 'Local History'], 'Geography': ['Physical Geography', 'Human Geography'], 'Engineering': ['Mechanical', 'Electrical', 'Civil'], 'Computer Science': ['Programming', 'Algorithms', 'Databases'], 'Business': ['Management', 'Marketing', 'Finance'] };
-        const SUBJECT_ICONS = { 'Mathematics': '📐', 'English': '📖', 'Life Sciences': '🧬', 'Physical Sciences': '⚛️', 'History': '🏛️', 'Geography': '🌍', 'Engineering': '⚙️', 'Computer Science': '💻', 'Business & Management': '📊', 'Business': '📊', 'Health Sciences': '🏥', 'Law': '⚖️', 'Education': '📚', 'Arts & Humanities': '🎨', 'English Language Arts': '📖', '语文 (Chinese)': '🀄', '数学 (Mathematics)': '📐', '英语 (English)': '📖', '物理 (Physics)': '⚡', '化学 (Chemistry)': '🧪', '生物 (Biology)': '🧬', 'Hindi': '🇮🇳', 'Social Studies': '🏛️', '工程学 (Engineering)': '⚙️', '计算机科学 (CS)': '💻', '商学 (Business)': '📊', '法学 (Law)': '⚖️', 'Medicine (Pre-med)': '🏥' };
+        // Default fallback
+        const DEFAULT_SUBJECTS = {
+            'Mathematics': ['Algebra', 'Geometry', 'Trigonometry', 'Calculus', 'Statistics'],
+            'English': ['Reading', 'Writing', 'Grammar', 'Literature'],
+            'Science': ['Biology', 'Chemistry', 'Physics', 'Earth Science'],
+            'History': ['World History', 'Local History'],
+            'Geography': ['Physical Geography', 'Human Geography'],
+            'Engineering': ['Mechanical', 'Electrical', 'Civil'],
+            'Computer Science': ['Programming', 'Algorithms', 'Databases'],
+            'Business': ['Management', 'Marketing', 'Finance']
+        };
+
+        // Icons for subjects
+        const SUBJECT_ICONS = {
+            'Mathematics': '📐',
+            'English': '📖',
+            'Life Sciences': '🧬',
+            'Physical Sciences': '⚛️',
+            'History': '🏛️',
+            'Geography': '🌍',
+            'Engineering': '⚙️',
+            'Computer Science': '💻',
+            'Business & Management': '📊',
+            'Business': '📊',
+            'Health Sciences': '🏥',
+            'Law': '⚖️',
+            'Education': '📚',
+            'Arts & Humanities': '🎨',
+            'English Language Arts': '📖',
+            '语文 (Chinese)': '🀄',
+            '数学 (Mathematics)': '📐',
+            '英语 (English)': '📖',
+            '物理 (Physics)': '⚡',
+            '化学 (Chemistry)': '🧪',
+            '生物 (Biology)': '🧬',
+            'Hindi': '🇮🇳',
+            'Social Studies': '🏛️',
+            '工程学 (Engineering)': '⚙️',
+            '计算机科学 (CS)': '💻',
+            '商学 (Business)': '📊',
+            '法学 (Law)': '⚖️',
+            'Medicine (Pre-med)': '🏥'
+        };
 
         // ================================================================
-        //  NAVIGATION
+        //  INFO PAGE NAVIGATION
         // ================================================================
         function showInfoPage(page) {
             document.querySelectorAll('.info-page').forEach(el => el.classList.remove('active'));
@@ -1561,7 +2270,14 @@
                 document.getElementById('features').style.display = 'block';
                 document.querySelector('.status-bar').style.display = 'block';
                 document.getElementById('pricing').style.display = 'block';
-                if (currentUser) { document.getElementById('dashboard').classList.add('active'); document.getElementById('heroSection').style.display = 'none'; document.querySelector('.stats-bar').style.display = 'none'; document.getElementById('features').style.display = 'none'; document.querySelector('.status-bar').style.display = 'none'; document.getElementById('pricing').style.display = 'none'; }
+                if (currentUser) {
+                    document.getElementById('dashboard').classList.add('active');
+                    document.getElementById('heroSection').style.display = 'none';
+                    document.querySelector('.stats-bar').style.display = 'none';
+                    document.getElementById('features').style.display = 'none';
+                    document.querySelector('.status-bar').style.display = 'none';
+                    document.getElementById('pricing').style.display = 'none';
+                }
                 return;
             }
             document.getElementById('heroSection').style.display = 'none';
@@ -1576,37 +2292,88 @@
         }
 
         // ================================================================
-        //  AUTH
+        //  AUTH UI
         // ================================================================
-        function openAuth(page) { document.getElementById('authOverlay').classList.add('active'); if (page === 'signup') showSignup(); else showLogin(); document.body.style.overflow = 'hidden'; }
+        function openAuth(page) {
+            document.getElementById('authOverlay').classList.add('active');
+            if (page === 'signup') showSignup();
+            else showLogin();
+            document.body.style.overflow = 'hidden';
+        }
 
-        function closeAuth() { document.getElementById('authOverlay').classList.remove('active'); document.body.style.overflow = ''; clearErrors(); }
+        function closeAuth() {
+            document.getElementById('authOverlay').classList.remove('active');
+            document.body.style.overflow = '';
+            clearErrors();
+        }
 
-        function showSignup() { document.getElementById('loginPage').style.display = 'none'; document.getElementById('signupPage').style.display = 'block'; clearErrors(); }
+        function showSignup() {
+            document.getElementById('loginPage').style.display = 'none';
+            document.getElementById('signupPage').style.display = 'block';
+            clearErrors();
+        }
 
-        function showLogin() { document.getElementById('loginPage').style.display = 'block'; document.getElementById('signupPage').style.display = 'none'; clearErrors(); }
+        function showLogin() {
+            document.getElementById('loginPage').style.display = 'block';
+            document.getElementById('signupPage').style.display = 'none';
+            clearErrors();
+        }
 
-        function clearErrors() { document.querySelectorAll('.auth-card .error, .auth-card .success').forEach(el => { el.classList.remove('show'); el.textContent = ''; }); }
+        function clearErrors() {
+            document.querySelectorAll('.auth-card .error, .auth-card .success').forEach(el => {
+                el.classList.remove('show');
+                el.textContent = '';
+            });
+        }
 
-        function showError(id, msg) { const el = document.getElementById(id); el.textContent = msg; el.classList.add('show'); }
+        function showError(id, msg) {
+            const el = document.getElementById(id);
+            el.textContent = msg;
+            el.classList.add('show');
+        }
 
-        function showSuccess(id, msg) { const el = document.getElementById(id); el.textContent = msg; el.classList.add('show'); }
+        function showSuccess(id, msg) {
+            const el = document.getElementById(id);
+            el.textContent = msg;
+            el.classList.add('show');
+        }
 
-        function setButtonLoading(id, loading) { const btn = document.getElementById(id); if (loading) { btn.disabled = true; btn.innerHTML = '<span class="spinner"></span> Loading...'; } else { btn.disabled = false; btn.innerHTML = btn.id === 'loginBtn' ? 'Log In' : 'Create Account'; } }
+        function setButtonLoading(id, loading) {
+            const btn = document.getElementById(id);
+            if (loading) {
+                btn.disabled = true;
+                btn.innerHTML = '<span class="spinner"></span> Loading...';
+            } else {
+                btn.disabled = false;
+                btn.innerHTML = btn.id === 'loginBtn' ? 'Log In' : 'Create Account';
+            }
+        }
 
+        // ================================================================
+        //  AUTH: LOGIN
+        // ================================================================
         async function login() {
             const email = document.getElementById('loginEmail').value.trim();
             const password = document.getElementById('loginPassword').value.trim();
-            if (!email || !password) { showError('loginError', 'Please enter email and password'); return; }
+            if (!email || !password) {
+                showError('loginError', 'Please enter email and password');
+                return;
+            }
             clearErrors();
             setButtonLoading('loginBtn', true);
             try {
-                const res = await fetch('/login', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email, password }) });
+                const res = await fetch('/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, password })
+                });
                 const data = await res.json();
-                if (!res.ok) { showError('loginError', data.error || 'Login failed'); return; }
+                if (!res.ok) {
+                    showError('loginError', data.error || 'Login failed');
+                    return;
+                }
                 if (data.success) {
                     localStorage.setItem('synapse_user', JSON.stringify(data.user));
-                    localStorage.setItem('admin_token', data.token);
                     showSuccess('loginSuccess', 'Login successful!');
                     setTimeout(() => {
                         closeAuth();
@@ -1621,211 +2388,352 @@
                         initDashboard(data.user);
                     }, 500);
                 }
-            } catch (err) { showError('loginError', 'Server error. Please try again.'); } finally { setButtonLoading('loginBtn', false); }
+            } catch (err) {
+                showError('loginError', 'Server error. Please try again.');
+            } finally {
+                setButtonLoading('loginBtn', false);
+            }
         }
 
+        // ================================================================
+        //  AUTH: SIGNUP
+        // ================================================================
         async function signup() {
             const name = document.getElementById('signupName').value.trim();
             const email = document.getElementById('signupEmail').value.trim();
             const password = document.getElementById('signupPassword').value.trim();
             const country = document.getElementById('signupCountry').value;
             const role = document.getElementById('signupRole').value;
-            if (!name || !email || !password || !country) { showError('signupError', 'Please fill all fields'); return; }
-            if (password.length < 6) { showError('signupError', 'Password must be at least 6 characters'); return; }
+            if (!name || !email || !password || !country) {
+                showError('signupError', 'Please fill all fields');
+                return;
+            }
+            if (password.length < 6) {
+                showError('signupError', 'Password must be at least 6 characters');
+                return;
+            }
             clearErrors();
             setButtonLoading('signupBtn', true);
             try {
-                const res = await fetch('/signup', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email, password, name, country, role }) });
+                const res = await fetch('/signup', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, password, name, country, role })
+                });
                 const data = await res.json();
-                if (!res.ok) { showError('signupError', data.error || 'Signup failed'); return; }
+                if (!res.ok) {
+                    showError('signupError', data.error || 'Signup failed');
+                    return;
+                }
                 if (data.success) {
                     showSuccess('signupSuccess', 'Account created! Please log in.');
-                    setTimeout(() => { showLogin(); document.getElementById('loginEmail').value = email; }, 1000);
+                    setTimeout(() => {
+                        showLogin();
+                        document.getElementById('loginEmail').value = email;
+                    }, 1000);
                 }
-            } catch (err) { showError('signupError', 'Server error. Please try again.'); } finally { setButtonLoading('signupBtn', false); }
+            } catch (err) {
+                showError('signupError', 'Server error. Please try again.');
+            } finally {
+                setButtonLoading('signupBtn', false);
+            }
         }
 
         // ================================================================
-        //  DASHBOARD
+        //  DASHBOARD INIT
         // ================================================================
         function initDashboard(user) {
             currentUser = user;
             document.getElementById('userName').textContent = user.name || 'User';
             document.getElementById('userRole').textContent = user.role || 'Learner';
             document.getElementById('userGrade').textContent = user.grade || 'Level: Not set';
+
             checkSubscription();
-            if (user.grade) { selectedGrade = user.grade; showDashboardHome(); } else { showGradeSelection(); }
+
+            if (user.grade) {
+                selectedGrade = user.grade;
+                showDashboardHome();
+            } else {
+                showGradeSelection();
+            }
             renderSidebar();
         }
 
+        // ================================================================
+        //  DASHBOARD VIEWS
+        // ================================================================
         function showDashboardHome() {
             currentView = 'welcome';
             const container = document.getElementById('dynamicContent');
             const levelLabel = (currentUser.grade === 'College') ? 'College / Tertiary' : 'Grade ' + currentUser.grade;
+
             let totalCompleted = 0,
                 totalTopics = 0;
-            for (const subject in progressData) { const data = progressData[subject]; if (data && data.completed && data.total) { totalCompleted += data.completed.length;
-                    totalTopics += data.total; } }
+            for (const subject in progressData) {
+                const data = progressData[subject];
+                if (data && data.completed && data.total) {
+                    totalCompleted += data.completed.length;
+                    totalTopics += data.total;
+                }
+            }
             const overallPercent = totalTopics > 0 ? Math.round((totalCompleted / totalTopics) * 100) : 0;
+
             container.innerHTML = `
-                    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin-top:16px;">
-                        <div class="card" style="background:linear-gradient(135deg,#eef2ff,white);border-color:#6366f1;padding:24px;border-radius:16px;border:2px solid #6366f1;box-shadow:0 4px 16px rgba(99,102,241,0.06);">
-                            <div style="font-size:2rem;">📚</div><div style="font-weight:700;font-size:1.1rem;color:#0b1120;margin-top:4px;">Continue Learning</div>
-                            <div style="font-size:0.9rem;color:#6b7280;">Resume your last lesson</div>
-                            <button onclick="showSubjects()" style="margin-top:10px;padding:8px 20px;background:#6366f1;color:white;border:none;border-radius:8px;cursor:pointer;font-weight:600;">Resume</button>
-                        </div>
-                        <div class="card" style="padding:24px;border-radius:16px;border:1px solid #e5e7eb;background:white;">
-                            <div style="font-size:2rem;">🎯</div><div style="font-weight:700;font-size:1.1rem;color:#0b1120;margin-top:4px;">Today's Goal</div>
-                            <div style="font-size:0.9rem;color:#6b7280;">Complete 1 lesson</div>
-                            <div style="margin-top:8px;height:6px;background:#e5e7eb;border-radius:4px;overflow:hidden;"><div style="width:${overallPercent}%;height:100%;background:linear-gradient(90deg,#6366f1,#8b5cf6);border-radius:4px;"></div></div>
-                        </div>
-                        <div class="card" style="padding:24px;border-radius:16px;border:1px solid #e5e7eb;background:white;">
-                            <div style="font-size:2rem;">📝</div><div style="font-weight:700;font-size:1.1rem;color:#0b1120;margin-top:4px;">Homework</div>
-                            <div style="font-size:0.9rem;color:#6b7280;">2 tasks due soon</div>
-                        </div>
-                        <div class="card" style="padding:24px;border-radius:16px;border:1px solid #e5e7eb;background:white;">
-                            <div style="font-size:2rem;">🏆</div><div style="font-weight:700;font-size:1.1rem;color:#0b1120;margin-top:4px;">Achievements</div>
-                            <div style="font-size:0.9rem;color:#6b7280;">${totalCompleted} topics completed</div>
+                <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin-top:16px;">
+                    <div class="card" style="background:linear-gradient(135deg,#eef2ff,white);border-color:#6366f1;padding:24px;border-radius:16px;border:2px solid #6366f1;box-shadow:0 4px 16px rgba(99,102,241,0.06);">
+                        <div style="font-size:2rem;">📚</div>
+                        <div style="font-weight:700;font-size:1.1rem;color:#0b1120;margin-top:4px;">Continue Learning</div>
+                        <div style="font-size:0.9rem;color:#6b7280;">Resume your last lesson</div>
+                        <button onclick="showSubjects()" style="margin-top:10px;padding:8px 20px;background:#6366f1;color:white;border:none;border-radius:8px;cursor:pointer;font-weight:600;">Resume</button>
+                    </div>
+                    <div class="card" style="padding:24px;border-radius:16px;border:1px solid #e5e7eb;background:white;">
+                        <div style="font-size:2rem;">🎯</div>
+                        <div style="font-weight:700;font-size:1.1rem;color:#0b1120;margin-top:4px;">Today's Goal</div>
+                        <div style="font-size:0.9rem;color:#6b7280;">Complete 1 lesson</div>
+                        <div style="margin-top:8px;height:6px;background:#e5e7eb;border-radius:4px;overflow:hidden;">
+                            <div style="width:${overallPercent}%;height:100%;background:linear-gradient(90deg,#6366f1,#8b5cf6);border-radius:4px;"></div>
                         </div>
                     </div>
-                    <div style="margin-top:20px;text-align:center;padding:20px;background:#f8fafc;border-radius:16px;border:1px solid #e5e7eb;">
-                        <div style="font-size:1.1rem;font-weight:600;color:#0b1120;">Ready to learn?</div>
-                        <div style="color:#6b7280;font-size:0.95rem;">You're in ${levelLabel}. Pick a subject to get started.</div>
-                        <button onclick="showSubjects()" style="margin-top:12px;padding:12px 32px;background:linear-gradient(135deg,#6366f1,#8b5cf6);color:white;border:none;border-radius:12px;cursor:pointer;font-weight:700;font-size:1rem;">Go to Subjects →</button>
+                    <div class="card" style="padding:24px;border-radius:16px;border:1px solid #e5e7eb;background:white;">
+                        <div style="font-size:2rem;">📝</div>
+                        <div style="font-weight:700;font-size:1.1rem;color:#0b1120;margin-top:4px;">Homework</div>
+                        <div style="font-size:0.9rem;color:#6b7280;">2 tasks due soon</div>
                     </div>
-                `;
+                    <div class="card" style="padding:24px;border-radius:16px;border:1px solid #e5e7eb;background:white;">
+                        <div style="font-size:2rem;">🏆</div>
+                        <div style="font-weight:700;font-size:1.1rem;color:#0b1120;margin-top:4px;">Achievements</div>
+                        <div style="font-size:0.9rem;color:#6b7280;">${totalCompleted} topics completed</div>
+                    </div>
+                </div>
+                <div style="margin-top:20px;text-align:center;padding:20px;background:#f8fafc;border-radius:16px;border:1px solid #e5e7eb;">
+                    <div style="font-size:1.1rem;font-weight:600;color:#0b1120;">Ready to learn?</div>
+                    <div style="color:#6b7280;font-size:0.95rem;">You're in ${levelLabel}. Pick a subject to get started.</div>
+                    <button onclick="showSubjects()" style="margin-top:12px;padding:12px 32px;background:linear-gradient(135deg,#6366f1,#8b5cf6);color:white;border:none;border-radius:12px;cursor:pointer;font-weight:700;font-size:1rem;">Go to Subjects →</button>
+                </div>
+            `;
             document.getElementById('welcomeMessage').textContent = 'Welcome back, ' + (currentUser.name || 'Student') + ' 👋';
             document.getElementById('welcomeSub').innerHTML = 'Today\'s goal: Complete your next lesson. <span class="change-grade-link" onclick="showGradeSelection()">Change Level</span>';
         }
 
+        // ================================================================
+        //  GRADE SELECTION
+        // ================================================================
         function showGradeSelection() {
             currentView = 'grades';
             const country = currentUser.country || 'South Africa';
             const data = COUNTRY_DATA[country];
             const grades = (data && data.grades) ? data.grades : ['10', '11', '12', 'College'];
+
             document.getElementById('welcomeMessage').textContent = 'Select Your Level';
             document.getElementById('welcomeSub').innerHTML = 'Choose your grade (10–12) or <strong>College / Tertiary</strong>.';
+
             const container = document.getElementById('dynamicContent');
             let html = `<div class="grade-grid">`;
             grades.forEach(g => {
                 const label = (g === 'College') ? 'College / Tertiary' : 'Grade ' + g;
                 const sub = (g === 'College') ? 'Higher Education' : '';
-                html += `<div class="grade-card" data-grade="${g}" onclick="selectGrade('${g}')">${label}${sub ? `<span class="sub">${sub}</span>` : ''}</div>`;
+                html += `
+                    <div class="grade-card" data-grade="${g}" onclick="selectGrade('${g}')">
+                        ${label}
+                        ${sub ? `<span class="sub">${sub}</span>` : ''}
+                    </div>
+                `;
             });
-            html += `</div><button class="btn-confirm" id="gradeConfirmBtn" onclick="confirmGrade()">Continue to Subjects →</button>`;
+            html += `</div>`;
+            html += `<button class="btn-confirm" id="gradeConfirmBtn" onclick="confirmGrade()">Continue to Subjects →</button>`;
             container.innerHTML = html;
         }
 
         let tempSelectedGrade = '';
 
-        function selectGrade(grade) { tempSelectedGrade = grade;
+        function selectGrade(grade) {
+            tempSelectedGrade = grade;
             document.querySelectorAll('.grade-card').forEach(c => c.classList.remove('selected'));
             document.querySelector(`.grade-card[data-grade="${grade}"]`).classList.add('selected');
-            document.getElementById('gradeConfirmBtn').style.display = 'block'; }
+            document.getElementById('gradeConfirmBtn').style.display = 'block';
+        }
 
         function confirmGrade() {
-            if (!tempSelectedGrade) { alert('Please select your level.'); return; }
+            if (!tempSelectedGrade) {
+                alert('Please select your level.');
+                return;
+            }
             selectedGrade = tempSelectedGrade;
-            fetch('/save-profile', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ userId: currentUser.id, name: currentUser.name, country: currentUser.country, grade: selectedGrade }) });
+            fetch('/save-profile', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    userId: currentUser.id,
+                    name: currentUser.name,
+                    country: currentUser.country,
+                    grade: selectedGrade
+                })
+            });
             currentUser.grade = selectedGrade;
             localStorage.setItem('synapse_user', JSON.stringify(currentUser));
             document.getElementById('userGrade').textContent = selectedGrade;
             showSubjects();
         }
 
+        // ================================================================
+        //  SUBJECTS
+        // ================================================================
         function showSubjects() {
             currentView = 'subjects';
             const country = currentUser.country || 'South Africa';
             const data = COUNTRY_DATA[country];
             const grade = currentUser.grade;
             const isSecondary = ['10', '11', '12'].includes(grade);
-            let subjects = {},
-                levelLabel = '';
-            if (isSecondary) { subjects = data ? data.secondary_subjects : DEFAULT_SUBJECTS;
-                levelLabel = 'Secondary (Grades 10–12)'; } else { subjects = data ? data.college_subjects : { 'College Subjects': ['General Studies'] };
-                levelLabel = 'College / Tertiary'; }
+            let subjects = {};
+            let levelLabel = '';
+
+            if (isSecondary) {
+                subjects = data ? data.secondary_subjects : DEFAULT_SUBJECTS;
+                levelLabel = 'Secondary (Grades 10–12)';
+            } else {
+                subjects = data ? data.college_subjects : { 'College Subjects': ['General Studies'] };
+                levelLabel = 'College / Tertiary';
+            }
+
             initProgress(subjects);
+
             document.getElementById('welcomeMessage').textContent = 'Your Subjects';
             document.getElementById('welcomeSub').innerHTML = levelLabel + ' · ' + country + ' · Select a subject to start learning.';
+
             const container = document.getElementById('dynamicContent');
             let html = `<div class="subject-grid">`;
             Object.keys(subjects).forEach(name => {
                 const prog = getSubjectProgress(name);
-                html += `<div class="subject-card" onclick="openSubject('${name}')"><span class="icon">${SUBJECT_ICONS[name] || '📚'}</span><span class="name">${name}</span><div class="progress-badge">${prog.percent}%</div></div>`;
+                const percent = prog.percent;
+                html += `
+                    <div class="subject-card" onclick="openSubject('${name}')">
+                        <span class="icon">${SUBJECT_ICONS[name] || '📚'}</span>
+                        <span class="name">${name}</span>
+                        <div class="progress-badge">${percent}%</div>
+                    </div>
+                `;
             });
-            html += `</div><button class="back-btn" onclick="showDashboardHome()" style="margin-top:16px;">← Back to Dashboard</button>`;
+            html += `</div>`;
+            html += `<button class="back-btn" onclick="showDashboardHome()" style="margin-top:16px;">← Back to Dashboard</button>`;
             container.innerHTML = html;
+
             renderSidebar();
         }
 
+        // ================================================================
+        //  CLASSROOM
+        // ================================================================
         function openSubject(subject) {
             currentSubject = subject;
             const country = currentUser.country || 'South Africa';
             const data = COUNTRY_DATA[country];
             const grade = currentUser.grade;
             const isSecondary = ['10', '11', '12'].includes(grade);
+
             let topics = [];
-            if (isSecondary) { topics = data ? data.secondary_subjects[subject] : DEFAULT_SUBJECTS[subject] || []; } else { topics = data ? data.college_subjects[subject] : (DEFAULT_SUBJECTS[subject] || []); }
-            if (!progressData[subject]) { progressData[subject] = { completed: [], total: topics.length };
-                saveProgress(); }
+            if (isSecondary) {
+                topics = data ? data.secondary_subjects[subject] : DEFAULT_SUBJECTS[subject] || [];
+            } else {
+                topics = data ? data.college_subjects[subject] : (DEFAULT_SUBJECTS[subject] || []);
+            }
+
+            if (!progressData[subject]) {
+                progressData[subject] = { completed: [], total: topics.length };
+                saveProgress();
+            }
+
             document.getElementById('welcomeMessage').textContent = subject;
             document.getElementById('welcomeSub').textContent = 'Select a topic to start learning.';
+
             const container = document.getElementById('dynamicContent');
             let html = `<div style="margin-bottom:12px;color:#6b7280;font-size:0.9rem;">Showing ${topics.length} topics</div>`;
-            if (topics.length === 0) { html += `<div class="empty-state">No topics available for this subject yet.</div>`; } else {
+            if (topics.length === 0) {
+                html += `<div class="empty-state">No topics available for this subject yet.</div>`;
+            } else {
                 html += `<div class="topic-grid">`;
                 topics.forEach(t => {
                     const completed = isTopicCompleted(subject, t);
                     const cls = completed ? 'topic-card completed' : 'topic-card';
                     const badgeText = completed ? '✅ Completed' : 'Not started';
-                    html += `<div class="${cls}" onclick="openTutor('${subject}', '${t}')"><div class="title">${t}</div><div class="meta">${subject}</div><div class="resources"><span class="tag">Lesson</span><span class="tag">Quiz</span><span class="tag">Worksheet</span></div><div class="status-badge">${badgeText}</div></div>`;
+                    html += `
+                        <div class="${cls}" onclick="openTutor('${subject}', '${t}')">
+                            <div class="title">${t}</div>
+                            <div class="meta">${subject}</div>
+                            <div class="resources"><span class="tag">Lesson</span><span class="tag">Quiz</span><span class="tag">Worksheet</span></div>
+                            <div class="status-badge">${badgeText}</div>
+                        </div>
+                    `;
                 });
                 html += `</div>`;
             }
             html += `<button class="back-btn" onclick="showSubjects()" style="margin-top:16px;">← Back to Subjects</button>`;
             container.innerHTML = html;
+
             renderRightSidebar();
             renderSidebar();
         }
 
+        // ================================================================
+        //  AI TUTOR
+        // ================================================================
         function openTutor(subject, topic) {
             currentView = 'tutor';
             document.getElementById('welcomeMessage').textContent = '💬 AI Tutor';
             document.getElementById('welcomeSub').textContent = subject + ' — ' + topic;
+
             const container = document.getElementById('dynamicContent');
             container.innerHTML = `
-                    <button class="back-btn" onclick="openSubject('${subject}')">← Back to Topics</button>
-                    <div class="tutor-container">
-                        <div class="tutor-header">
-                            <h3>AI Tutor</h3>
-                            <span class="context">${subject} - ${topic}</span>
-                            <button id="completeBtn" onclick="markComplete('${subject}','${topic}')" style="padding:6px 16px;border-radius:8px;border:2px solid #22c55e;background:white;color:#22c55e;font-weight:600;cursor:pointer;transition:all 0.2s;">${isTopicCompleted(subject, topic) ? '✅ Completed' : 'Mark as Complete'}</button>
-                        </div>
-                        <div class="chat-box" id="chatBox"><div class="msg bot">👋 Welcome! Ask me anything — I'll guide you step by step.</div></div>
-                        <div class="chat-input"><input type="text" id="chatInput" placeholder="Type your message..." onkeypress="if(event.key==='Enter') sendChat()" /><button class="btn-send" id="sendBtn" onclick="sendChat()">Send</button></div>
-                        <div class="chat-options"><input type="checkbox" id="speakToggle" /><label for="speakToggle">🔊 AI reads responses aloud</label></div>
+                <button class="back-btn" onclick="openSubject('${subject}')">← Back to Topics</button>
+                <div class="tutor-container">
+                    <div class="tutor-header">
+                        <h3>AI Tutor</h3>
+                        <span class="context">${subject} - ${topic}</span>
+                        <button id="completeBtn" onclick="markComplete('${subject}','${topic}')" style="padding:6px 16px;border-radius:8px;border:2px solid #22c55e;background:white;color:#22c55e;font-weight:600;cursor:pointer;transition:all 0.2s;">
+                            ${isTopicCompleted(subject, topic) ? '✅ Completed' : 'Mark as Complete'}
+                        </button>
                     </div>
-                `;
-            setTimeout(() => { document.getElementById('chatInput').value = 'I\'m learning about "' + topic + '" in ' + subject + '. Can you teach me step by step?';
-                sendChat(); }, 500);
+                    <div class="chat-box" id="chatBox">
+                        <div class="msg bot">👋 Welcome! Ask me anything — I'll guide you step by step.</div>
+                    </div>
+                    <div class="chat-input">
+                        <input type="text" id="chatInput" placeholder="Type your message..." onkeypress="if(event.key==='Enter') sendChat()" />
+                        <button class="btn-send" id="sendBtn" onclick="sendChat()">Send</button>
+                    </div>
+                    <div class="chat-options">
+                        <input type="checkbox" id="speakToggle" />
+                        <label for="speakToggle">🔊 AI reads responses aloud</label>
+                    </div>
+                </div>
+            `;
+
+            setTimeout(() => {
+                document.getElementById('chatInput').value = 'I\'m learning about "' + topic + '" in ' + subject + '. Can you teach me step by step?';
+                sendChat();
+            }, 500);
+
             renderSidebar();
         }
 
         function markComplete(subject, topic) {
-            if (isTopicCompleted(subject, topic)) { alert('This topic is already completed!'); return; }
+            if (isTopicCompleted(subject, topic)) {
+                alert('This topic is already completed!');
+                return;
+            }
             if (markTopicCompleted(subject, topic)) {
                 const btn = document.getElementById('completeBtn');
-                if (btn) { btn.textContent = '✅ Completed';
+                if (btn) {
+                    btn.textContent = '✅ Completed';
                     btn.style.background = '#d1fae5';
                     btn.style.borderColor = '#22c55e';
-                    btn.style.color = '#065f46'; }
+                    btn.style.color = '#065f46';
+                }
                 alert('🎉 Great job! Topic marked as complete.');
                 renderSidebar();
             }
         }
 
         // ================================================================
-        //  CHAT
+        //  CHAT (with Markdown rendering)
         // ================================================================
         async function sendChat() {
             const input = document.getElementById('chatInput');
@@ -1840,28 +2748,58 @@
             try {
                 const context = document.getElementById('welcomeSub').textContent;
                 const fullMsg = context + ': ' + message;
-                const res = await fetch('/chat', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ userId: currentUser.id, message: fullMsg }) });
+                const res = await fetch('/chat', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ userId: currentUser.id, message: fullMsg })
+                });
                 const data = await res.json();
                 if (data.reply) addMessage('bot', data.reply);
                 else addMessage('bot', '❌ ' + (data.error || 'No response'));
-            } catch (err) { addMessage('bot', '❌ Server error. Please try again.'); } finally { input.disabled = false;
+            } catch (err) {
+                addMessage('bot', '❌ Server error. Please try again.');
+            } finally {
+                input.disabled = false;
                 input.focus();
                 btn.disabled = false;
-                btn.innerHTML = 'Send'; }
+                btn.innerHTML = 'Send';
+            }
         }
 
+        // ================================================================
+        //  ADD MESSAGE (with Markdown rendering + voice cleanup)
+        // ================================================================
         function addMessage(role, text) {
             const box = document.getElementById('chatBox');
             const div = document.createElement('div');
             div.className = 'msg ' + (role === 'user' ? 'user' : 'bot');
+
             if (role === 'bot' && typeof marked !== 'undefined') {
-                marked.setOptions({ breaks: true, gfm: true });
+                // Configure marked for safe HTML
+                marked.setOptions({
+                    breaks: true,
+                    gfm: true,
+                    sanitize: false
+                });
                 div.innerHTML = marked.parse(text);
-            } else { div.textContent = text; }
+            } else {
+                div.textContent = text;
+            }
+
             box.appendChild(div);
             box.scrollTop = box.scrollHeight;
+
+            // Voice output (clean Markdown)
             if (role === 'bot' && document.getElementById('speakToggle').checked) {
-                let clean = text.replace(/#{1,6}\s?/g, '').replace(/\*\*/g, '').replace(/\*/g, '').replace(/`/g, '').replace(/[\\*\/_\-~#`|]/g, ' ').replace(/[📚🎯✏️🤔💡✅❌]/g, '').replace(/\s+/g, ' ').trim();
+                let clean = text
+                    .replace(/#{1,6}\s?/g, '')          // headings
+                    .replace(/\*\*/g, '')               // bold
+                    .replace(/\*/g, '')                 // italics
+                    .replace(/`/g, '')                  // code
+                    .replace(/[\\*\/_\-~#`|]/g, ' ')    // other symbols
+                    .replace(/[📚🎯✏️🤔💡✅❌]/g, '')    // emojis
+                    .replace(/\s+/g, ' ')
+                    .trim();
                 if (clean.length > 300) clean = clean.substring(0, 300) + '...';
                 window.speechSynthesis.cancel();
                 const u = new SpeechSynthesisUtterance(clean);
@@ -1875,50 +2813,116 @@
         }
 
         // ================================================================
-        //  SIDEBARS
+        //  SIDEBAR RENDER
         // ================================================================
         function renderSidebar() {
             const country = currentUser.country || 'South Africa';
             const data = COUNTRY_DATA[country];
             const grade = currentUser.grade;
             const isSecondary = ['10', '11', '12'].includes(grade);
+
             let subjects = {};
-            if (isSecondary) { subjects = data ? data.secondary_subjects : DEFAULT_SUBJECTS; } else { subjects = data ? data.college_subjects : { 'College Subjects': ['General Studies'] }; }
+            if (isSecondary) {
+                subjects = data ? data.secondary_subjects : DEFAULT_SUBJECTS;
+            } else {
+                subjects = data ? data.college_subjects : { 'College Subjects': ['General Studies'] };
+            }
+
             initProgress(subjects);
+
             const list = document.getElementById('subjectList');
             list.innerHTML = '';
             Object.keys(subjects).forEach(key => {
                 const prog = getSubjectProgress(key);
+                const percent = prog.percent;
                 const li = document.createElement('li');
                 li.className = key === currentSubject ? 'active' : '';
-                li.innerHTML = `<span class="icon">${SUBJECT_ICONS[key] || '📚'}</span>${key}<span class="progress-dot">${prog.percent}%</span>`;
-                li.onclick = () => { currentSubject = key;
+                li.innerHTML = `
+                    <span class="icon">${SUBJECT_ICONS[key] || '📚'}</span>
+                    ${key}
+                    <span class="progress-dot">${percent}%</span>
+                `;
+                li.onclick = () => {
+                    currentSubject = key;
                     renderSidebar();
-                    openSubject(key); };
+                    openSubject(key);
+                };
                 list.appendChild(li);
             });
+
             let totalCompleted = 0,
                 totalTopics = 0;
-            for (const subject in progressData) { const data = progressData[subject]; if (data && data.completed && data.total) { totalCompleted += data.completed.length;
-                    totalTopics += data.total; } }
+            for (const subject in progressData) {
+                const data = progressData[subject];
+                if (data && data.completed && data.total) {
+                    totalCompleted += data.completed.length;
+                    totalTopics += data.total;
+                }
+            }
             const overallPercent = totalTopics > 0 ? Math.round((totalCompleted / totalTopics) * 100) : 0;
-            document.getElementById('progressContainer').innerHTML = `
-                    <div class="progress-item"><div class="label"><span>Overall Progress</span><span>${overallPercent}%</span></div><div class="bar"><div class="fill" style="width:${overallPercent}%;"></div></div></div>
-                    <div class="progress-item"><div class="label"><span>Topics Completed</span><span>${totalCompleted}/${totalTopics}</span></div><div class="bar"><div class="fill" style="width:${overallPercent}%;"></div></div></div>
-                `;
+            const progressContainer = document.getElementById('progressContainer');
+            progressContainer.innerHTML = `
+                <div class="progress-item">
+                    <div class="label"><span>Overall Progress</span><span>${overallPercent}%</span></div>
+                    <div class="bar"><div class="fill" style="width:${overallPercent}%;"></div></div>
+                </div>
+                <div class="progress-item">
+                    <div class="label"><span>Topics Completed</span><span>${totalCompleted}/${totalTopics}</span></div>
+                    <div class="bar"><div class="fill" style="width:${overallPercent}%;"></div></div>
+                </div>
+            `;
+
             const recentContainer = document.getElementById('recentContainer');
             const subjectKeys = Object.keys(subjects);
             if (subjectKeys.length > 0) {
                 const firstSubject = subjectKeys[0];
                 const firstTopics = subjects[firstSubject] || [];
                 const topic = firstTopics.length > 0 ? firstTopics[0] : 'Getting Started';
-                recentContainer.innerHTML = `<div class="recent-item" onclick="openTutor('${firstSubject}','${topic}')">${topic} <span class="sub">${firstSubject}</span></div><div class="recent-item" onclick="showSubjects()">Browse Subjects <span class="sub">All subjects</span></div>`;
-            } else { recentContainer.innerHTML = `<div style="font-size:0.85rem;color:#6b7280;">No recent activity</div>`; }
+                recentContainer.innerHTML = `
+                    <div class="recent-item" onclick="openTutor('${firstSubject}', '${topic}')">
+                        ${topic} <span class="sub">${firstSubject}</span>
+                    </div>
+                    <div class="recent-item" onclick="showSubjects()">
+                        Browse Subjects <span class="sub">All subjects</span>
+                    </div>
+                `;
+            } else {
+                recentContainer.innerHTML = `<div style="font-size:0.85rem;color:#6b7280;">No recent activity</div>`;
+            }
         }
 
+        // ================================================================
+        //  RIGHT SIDEBAR RENDER
+        // ================================================================
         function renderRightSidebar() {
-            document.getElementById('flashcardContainer').innerHTML = `<div class="flashcard-item"><div class="term">Slope (m)</div><div class="def">The steepness of a line, rise over run.</div></div><div class="flashcard-item"><div class="term">Y-Intercept (b)</div><div class="def">Where the line crosses the y-axis.</div></div><div class="flashcard-item"><div class="term">Slope-Intercept Form</div><div class="def">y = mx + b</div></div>`;
-            document.getElementById('errorContainer').innerHTML = `<div class="error-item"><div class="concept">⚠️ Slope direction</div><div class="hint">Negative slope goes down, positive goes up.</div></div><div class="error-item"><div class="concept">⚠️ Y-Intercept</div><div class="hint">Remember to check where the line crosses the y-axis.</div></div>`;
+            const flashcardContainer = document.getElementById('flashcardContainer');
+            const errorContainer = document.getElementById('errorContainer');
+
+            flashcardContainer.innerHTML = `
+                <div class="flashcard-item">
+                    <div class="term">Slope (m)</div>
+                    <div class="def">The steepness of a line, rise over run.</div>
+                </div>
+                <div class="flashcard-item">
+                    <div class="term">Y-Intercept (b)</div>
+                    <div class="def">Where the line crosses the y-axis.</div>
+                </div>
+                <div class="flashcard-item">
+                    <div class="term">Slope-Intercept Form</div>
+                    <div class="def">y = mx + b</div>
+                </div>
+            `;
+
+            errorContainer.innerHTML = `
+                <div class="error-item">
+                    <div class="concept">⚠️ Slope direction</div>
+                    <div class="hint">Negative slope goes down, positive goes up.</div>
+                </div>
+                <div class="error-item">
+                    <div class="concept">⚠️ Y-Intercept</div>
+                    <div class="hint">Remember to check where the line crosses the y-axis.</div>
+                </div>
+            `;
         }
 
         // ================================================================
@@ -1932,26 +2936,50 @@
                 let statusText = '',
                     statusClass = '',
                     btnDisplay = 'inline-block';
-                if (data.status === 'trial') { statusClass = 'sub-trial';
-                    statusText = `Trial • ${data.daysRemaining}d left`; } else if (data.status === 'active') { statusClass = 'sub-active';
+                if (data.status === 'trial') {
+                    statusClass = 'sub-trial';
+                    statusText = `Trial • ${data.daysRemaining}d left`;
+                } else if (data.status === 'active') {
+                    statusClass = 'sub-active';
                     statusText = 'Premium ✅';
-                    btnDisplay = 'none'; } else { statusClass = 'sub-expired';
-                    statusText = 'Expired'; }
-                badge.innerHTML = `<span class="sub-badge ${statusClass}">${statusText}</span><button id="subscribeBtn" onclick="subscribe()" style="background:linear-gradient(135deg,#6366f1,#8b5cf6);color:white;border:none;padding:6px 16px;border-radius:20px;font-weight:600;font-size:0.8rem;cursor:pointer;font-family:inherit;display:${btnDisplay};">${data.status === 'active' ? 'Renew' : 'Subscribe'}</button>`;
+                    btnDisplay = 'none';
+                } else {
+                    statusClass = 'sub-expired';
+                    statusText = 'Expired';
+                }
+                badge.innerHTML = `
+                    <span class="sub-badge ${statusClass}">${statusText}</span>
+                    <button id="subscribeBtn" onclick="subscribe()" style="
+                        background: linear-gradient(135deg, #6366f1, #8b5cf6);
+                        color: white; border: none; padding: 6px 16px; border-radius: 20px;
+                        font-weight: 600; font-size: 0.8rem; cursor: pointer; font-family: inherit;
+                        display: ${btnDisplay};
+                    ">${data.status === 'active' ? 'Renew' : 'Subscribe'}</button>
+                `;
             } catch (err) { console.error('Subscription check error:', err); }
         }
 
         async function subscribe() {
             if (!currentUser) { alert('Please log in first.'); return; }
             try {
-                const response = await fetch('/create-payment', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ userId: currentUser.id, email: currentUser.email }) });
+                const response = await fetch('/create-payment', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ userId: currentUser.id, email: currentUser.email })
+                });
                 const data = await response.json();
                 if (data.authorization_url) {
                     const price = data.price || 'R??';
-                    if (confirm(`You are about to subscribe for ${price} per month. Continue?`)) { window.location.href = data.authorization_url; }
-                } else { alert('Error creating payment. Please try again.'); }
-            } catch (err) { console.error('Payment error:', err);
-                alert('Payment service unavailable. Please try again later.'); }
+                    if (confirm(`You are about to subscribe for ${price} per month. Continue?`)) {
+                        window.location.href = data.authorization_url;
+                    }
+                } else {
+                    alert('Error creating payment. Please try again.');
+                }
+            } catch (err) {
+                console.error('Payment error:', err);
+                alert('Payment service unavailable. Please try again later.');
+            }
         }
 
         // ================================================================
@@ -1960,7 +2988,6 @@
         function logout() {
             if (confirm('Are you sure you want to logout?')) {
                 localStorage.removeItem('synapse_user');
-                localStorage.removeItem('admin_token');
                 document.getElementById('dashboard').classList.remove('active');
                 document.getElementById('heroSection').style.display = 'block';
                 document.querySelector('.stats-bar').style.display = 'grid';
@@ -1989,12 +3016,31 @@
                     document.getElementById('dashboard').classList.add('active');
                     loadProgress();
                     initDashboard(user);
-                } catch (e) {}
+                } catch (e) { /* invalid stored data, show hero */ }
             }
-            document.addEventListener('keydown', function(e) { if (e.key === 'Enter') { if (document.getElementById('loginPage').style.display !== 'none' && document.getElementById('authOverlay').classList.contains('active')) { login(); } if (document.getElementById('signupPage').style.display !== 'none' && document.getElementById('authOverlay').classList.contains('active')) { signup(); } } });
-            document.addEventListener('keydown', function(e) { if (e.key === 'Escape') closeAuth(); });
-            document.getElementById('authOverlay').addEventListener('click', function(e) { if (e.target === this) closeAuth(); });
+
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter') {
+                    if (document.getElementById('loginPage').style.display !== 'none' &&
+                        document.getElementById('authOverlay').classList.contains('active')) {
+                        login();
+                    }
+                    if (document.getElementById('signupPage').style.display !== 'none' &&
+                        document.getElementById('authOverlay').classList.contains('active')) {
+                        signup();
+                    }
+                }
+            });
+
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape') closeAuth();
+            });
+
+            document.getElementById('authOverlay').addEventListener('click', function(e) {
+                if (e.target === this) closeAuth();
+            });
         });
     </script>
+
 </body>
 </html>
