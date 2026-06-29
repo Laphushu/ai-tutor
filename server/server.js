@@ -12,15 +12,15 @@ const { Resend } = require('resend');
 
 const app = express();
 
-// ================= RESEND EMAIL =================
+// ================= RESEND (Now using your API key) =================
 const resend = new Resend(process.env.RESEND_API_KEY);
+console.log("✅ Resend email service initialized");
 
 // ================= MIDDLEWARE =================
 app.use(cors());
 app.use(express.static(path.join(__dirname, '../client')));
 app.use(express.json());
 
-// ================= ROOT ROUTE =================
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, '../client/index.html'));
 });
@@ -31,7 +31,6 @@ const db = new Pool({
   ssl: { rejectUnauthorized: false }
 });
 
-// ================= INIT TABLES =================
 async function initDB() {
   try {
     await db.query(`
@@ -46,7 +45,6 @@ async function initDB() {
         created_at TIMESTAMP DEFAULT NOW()
       )
     `);
-
     await db.query(`
       CREATE TABLE IF NOT EXISTS messages (
         id SERIAL PRIMARY KEY,
@@ -56,7 +54,6 @@ async function initDB() {
         created_at TIMESTAMP DEFAULT NOW()
       )
     `);
-
     await db.query(`
       CREATE TABLE IF NOT EXISTS subscriptions (
         userId TEXT PRIMARY KEY,
@@ -67,13 +64,11 @@ async function initDB() {
         planType TEXT DEFAULT 'free'
       )
     `);
-
     console.log("✅ Database ready");
   } catch (err) {
     console.error("❌ DB init error:", err.message);
   }
 }
-
 initDB();
 
 // ================= AI =================
@@ -86,20 +81,16 @@ const client = new OpenAI({
 async function ensureTrial(userId) {
   try {
     await db.query(
-      `INSERT INTO subscriptions (userId, status)
-       VALUES ($1, 'trial')
-       ON CONFLICT (userId) DO NOTHING`,
+      `INSERT INTO subscriptions (userId, status) VALUES ($1, 'trial') ON CONFLICT (userId) DO NOTHING`,
       [userId]
     );
-  } catch (err) {
-    console.error("Trial error:", err.message);
-  }
+  } catch (err) { console.error("Trial error:", err.message); }
 }
 
-// ================= SEND EMAIL =================
+// ================= EMAIL =================
 async function sendEmail(to, subject, html) {
   try {
-    const { data, error } = await resend.emails.send({
+    const { error } = await resend.emails.send({
       from: 'Leago <onboarding@resend.dev>',
       to: [to],
       subject: subject,
@@ -114,60 +105,28 @@ async function sendEmail(to, subject, html) {
   }
 }
 
-// ================= AUTH MIDDLEWARE =================
-function authenticateToken(req, res, next) {
-  const authHeader = req.headers['authorization'];
-  const token = authHeader && authHeader.split(' ')[1];
-  if (!token) return res.status(401).json({ error: 'Access denied. No token provided.' });
-  try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    req.user = decoded;
-    next();
-  } catch (err) {
-    return res.status(403).json({ error: 'Invalid or expired token.' });
-  }
-}
-
 // ================= AUTH: SIGNUP =================
 app.post("/signup", async (req, res) => {
   const { email, password, name, country, role } = req.body;
-  if (!email || !password || !name || !country) {
-    return res.status(400).json({ error: "All fields required" });
-  }
-  if (password.length < 6) {
-    return res.status(400).json({ error: "Password must be at least 6 characters" });
-  }
+  if (!email || !password || !name || !country) return res.status(400).json({ error: "All fields required" });
+  if (password.length < 6) return res.status(400).json({ error: "Password must be at least 6 characters" });
   try {
     const existing = await db.query(`SELECT * FROM users WHERE email = $1`, [email]);
-    if (existing.rows.length > 0) {
-      return res.status(400).json({ error: "Email already registered" });
-    }
+    if (existing.rows.length > 0) return res.status(400).json({ error: "Email already registered" });
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
     const userId = 'user_' + email.replace(/[^a-zA-Z0-9]/g, '_');
     await db.query(
-      `INSERT INTO users (userId, email, password, name, country, role)
-       VALUES ($1, $2, $3, $4, $5, $6)`,
+      `INSERT INTO users (userId, email, password, name, country, role) VALUES ($1, $2, $3, $4, $5, $6)`,
       [userId, email, hashedPassword, name, country, role || 'learner']
     );
     await ensureTrial(userId);
-
-    // Send welcome email
     await sendEmail(
       email,
       '🎉 Welcome to Leago!',
-      `
-      <h1>Welcome ${name}!</h1>
-      <p>Your AI tutor is ready to help you learn.</p>
-      <p>You have a <strong>3-day free trial</strong> to explore all subjects.</p>
-      <p><a href="https://synapses-uwh1.onrender.com" style="background:#6366f1;color:white;padding:12px 24px;border-radius:8px;text-decoration:none;">Start Learning Now →</a></p>
-      `
+      `<h1>Welcome ${name}!</h1><p>Your AI tutor is ready.</p><p>You have a <strong>3-day free trial</strong>.</p><a href="https://synapses-uwh1.onrender.com" style="background:#6366f1;color:white;padding:12px 24px;border-radius:8px;text-decoration:none;">Start Learning →</a>`
     );
-
-    res.json({
-      success: true,
-      user: { id: userId, email, name, country, role: role || 'learner' }
-    });
+    res.json({ success: true, user: { id: userId, email, name, country, role: role || 'learner' } });
   } catch (err) {
     console.error("Signup error:", err);
     res.status(500).json({ error: "Server error. Please try again." });
@@ -177,27 +136,18 @@ app.post("/signup", async (req, res) => {
 // ================= AUTH: LOGIN =================
 app.post("/login", async (req, res) => {
   const { email, password } = req.body;
-  if (!email || !password) {
-    return res.status(400).json({ error: "Email and password required" });
-  }
+  if (!email || !password) return res.status(400).json({ error: "Email and password required" });
   try {
     const result = await db.query(`SELECT * FROM users WHERE email = $1`, [email]);
-    if (result.rows.length === 0) {
-      return res.status(401).json({ error: "Invalid email or password" });
-    }
+    if (result.rows.length === 0) return res.status(401).json({ error: "Invalid email or password" });
     const user = result.rows[0];
-
     const passwordMatch = await bcrypt.compare(password, user.password);
-    if (!passwordMatch) {
-      return res.status(401).json({ error: "Invalid email or password" });
-    }
-
+    if (!passwordMatch) return res.status(401).json({ error: "Invalid email or password" });
     const token = jwt.sign(
       { id: user.userid, email: user.email },
       process.env.JWT_SECRET,
       { expiresIn: process.env.JWT_EXPIRE || '7d' }
     );
-
     res.json({
       success: true,
       token,
@@ -220,10 +170,7 @@ app.post("/login", async (req, res) => {
 app.post("/save-profile", async (req, res) => {
   const { userId, name, country, grade } = req.body;
   try {
-    await db.query(
-      `UPDATE users SET name = $1, country = $2, grade = $3 WHERE userId = $4`,
-      [name, country, grade, userId]
-    );
+    await db.query(`UPDATE users SET name = $1, country = $2, grade = $3 WHERE userId = $4`, [name, country, grade, userId]);
     res.json({ success: true });
   } catch (err) {
     res.status(500).json({ error: err.message });
@@ -233,53 +180,36 @@ app.post("/save-profile", async (req, res) => {
 // ================= CHAT =================
 app.post("/chat", async (req, res) => {
   const { userId, message } = req.body;
-  if (!userId || !message) {
-    return res.status(400).json({ reply: "Missing userId or message" });
-  }
+  if (!userId || !message) return res.status(400).json({ reply: "Missing userId or message" });
   try {
     await ensureTrial(userId);
     const userResult = await db.query(`SELECT * FROM users WHERE userId = $1`, [userId]);
     const user = userResult.rows[0];
-    if (!user) {
-      return res.json({ reply: "Please create your profile first." });
-    }
+    if (!user) return res.json({ reply: "Please create your profile first." });
 
     const subResult = await db.query(`SELECT * FROM subscriptions WHERE userId = $1`, [userId]);
     const sub = subResult.rows[0];
-    if (!sub) {
-      return res.json({ reply: "Subscription error." });
-    }
+    if (!sub) return res.json({ reply: "Subscription error." });
 
     const trialDays = 3;
     const start = new Date(sub.startdate || sub.startDate);
     const now = new Date();
     const diffDays = Math.floor((now - start) / (1000 * 60 * 60 * 24));
-
     let isActive = false;
     if (sub.status === 'active' && sub.subscriptionenddate) {
       const endDate = new Date(sub.subscriptionenddate);
-      if (now < endDate) {
-        isActive = true;
-      }
+      if (now < endDate) isActive = true;
     }
-
     if (sub.status === 'trial' && diffDays > trialDays && !isActive) {
-      return res.json({
-        reply: "Your 3-day free trial has ended. Please subscribe to continue learning."
-      });
+      return res.json({ reply: "Your 3-day free trial has ended. Please subscribe." });
     }
-    if (sub.status === 'expired') {
-      return res.json({
-        reply: "Your subscription has expired. Please renew to continue learning."
-      });
-    }
+    if (sub.status === 'expired') return res.json({ reply: "Your subscription has expired. Please renew." });
 
     const messagesResult = await db.query(
       `SELECT role, content FROM messages WHERE userId = $1 ORDER BY id DESC LIMIT 10`,
       [userId]
     );
-
-    const levelDesc = user.grade ? user.grade : 'Not specified';
+    const levelDesc = user.grade || 'Not specified';
     const systemPrompt = `
 You are Leago, a warm, patient, and encouraging AI tutor.
 
@@ -295,12 +225,9 @@ Student: ${user.name}
 Level: ${levelDesc}
 Country: ${user.country}
 `;
-
     const history = [{ role: "system", content: systemPrompt }];
     const reversed = messagesResult.rows.reverse();
-    for (const m of reversed) {
-      history.push({ role: m.role, content: m.content });
-    }
+    for (const m of reversed) history.push({ role: m.role, content: m.content });
     history.push({ role: "user", content: message });
 
     const response = await client.chat.completions.create({
@@ -309,17 +236,10 @@ Country: ${user.country}
       temperature: 0.7,
       max_tokens: 1000
     });
-
     const reply = response.choices[0].message.content;
 
-    await db.query(
-      `INSERT INTO messages (userId, role, content) VALUES ($1, $2, $3)`,
-      [userId, "user", message]
-    );
-    await db.query(
-      `INSERT INTO messages (userId, role, content) VALUES ($1, $2, $3)`,
-      [userId, "assistant", reply]
-    );
+    await db.query(`INSERT INTO messages (userId, role, content) VALUES ($1, $2, $3)`, [userId, "user", message]);
+    await db.query(`INSERT INTO messages (userId, role, content) VALUES ($1, $2, $3)`, [userId, "assistant", reply]);
 
     res.json({ reply });
   } catch (err) {
@@ -336,15 +256,12 @@ app.get("/subscription-status/:userId", async (req, res) => {
       `SELECT status, startDate, subscriptionEndDate, planType FROM subscriptions WHERE userId = $1`,
       [userId]
     );
-    if (result.rows.length === 0) {
-      return res.json({ status: 'trial', daysRemaining: 3, planType: 'free' });
-    }
+    if (result.rows.length === 0) return res.json({ status: 'trial', daysRemaining: 3, planType: 'free' });
     const sub = result.rows[0];
     const now = new Date();
     const start = new Date(sub.startdate);
     const diffDays = Math.floor((now - start) / (1000 * 60 * 60 * 24));
     const daysRemaining = Math.max(0, 3 - diffDays);
-
     let status = sub.status;
     let planType = sub.plantype || 'free';
     if (sub.status === 'active' && sub.subscriptionenddate) {
@@ -368,17 +285,12 @@ app.get("/subscription-status/:userId", async (req, res) => {
 // ================= PAYMENT =================
 app.post("/create-payment", async (req, res) => {
   const { userId, email } = req.body;
-  if (!userId || !email) {
-    return res.status(400).json({ error: "Missing userId or email" });
-  }
+  if (!userId || !email) return res.status(400).json({ error: "Missing userId or email" });
   try {
     const userResult = await db.query(`SELECT name, country, grade FROM users WHERE userId = $1`, [userId]);
     const user = userResult.rows[0];
-    if (!user) {
-      return res.status(404).json({ error: "User not found" });
-    }
-    let amount = 14999;
-    let priceDisplay = 'R149.99';
+    if (!user) return res.status(404).json({ error: "User not found" });
+    let amount = 14999, priceDisplay = 'R149.99';
     const isCollege = (user.grade === 'College' || user.grade === 'Tertiary');
     const isSouthAfrica = (user.country === 'South Africa');
     if (isCollege) {
@@ -404,7 +316,7 @@ app.post("/create-payment", async (req, res) => {
 
 app.get("/payment-callback", async (req, res) => {
   const { reference } = req.query;
-  if (!reference) { return res.status(400).send("Missing reference"); }
+  if (!reference) return res.status(400).send("Missing reference");
   try {
     const response = await Paystack.transaction.verify(reference);
     if (response.data.status === 'success') {
@@ -459,4 +371,5 @@ const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log("✅ Leago AI Tutor running on port " + PORT);
   console.log("💳 Payments enabled");
+  console.log("📧 Emails enabled (Resend)");
 });
