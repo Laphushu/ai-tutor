@@ -6,13 +6,11 @@
     <title>Leago Academy — AI Education Platform</title>
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <style>
-        /* ===== RESET & BASE ===== */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-
         body {
             font-family: 'Segoe UI', system-ui, sans-serif;
             background: #f8fafc;
@@ -126,7 +124,6 @@
             color: #9ca3af;
         }
 
-        /* ===== DASHBOARD PREVIEW ===== */
         .dashboard-preview {
             max-width: 1100px;
             margin: -40px auto 40px;
@@ -157,7 +154,6 @@
             margin-bottom: 8px;
         }
 
-        /* ===== FEATURES ===== */
         .features {
             max-width: 1100px;
             margin: 0 auto 60px;
@@ -207,7 +203,6 @@
             line-height: 1.4;
         }
 
-        /* ===== PRICING ===== */
         .pricing {
             max-width: 1100px;
             margin: 0 auto 60px;
@@ -313,7 +308,6 @@
             background: #f8faff;
         }
 
-        /* ===== FAQ ===== */
         .faq {
             max-width: 800px;
             margin: 0 auto 60px;
@@ -348,7 +342,7 @@
         }
 
         /* ============================================================ */
-        /* AUTH OVERLAY, DASHBOARD, etc. (existing) */
+        /* AUTH OVERLAY, DASHBOARD, etc. (same as before) */
         /* ============================================================ */
         .auth-overlay {
             display: none;
@@ -515,7 +509,6 @@
             }
         }
 
-        /* ===== DASHBOARD ===== */
         .dashboard {
             display: none;
             max-width: 1200px;
@@ -1138,7 +1131,6 @@
             margin-top: 2px;
         }
 
-        /* ===== INFO PAGES ===== */
         .info-page {
             display: none;
             max-width: 800px;
@@ -1199,7 +1191,6 @@
             font-size: 1rem;
         }
 
-        /* ===== FOOTER ===== */
         .site-footer {
             background: #0b1120;
             color: #9ca3af;
@@ -1239,7 +1230,6 @@
             font-size: 0.85rem;
         }
 
-        /* ===== RESPONSIVE ===== */
         @media (max-width: 768px) {
             .hero h1 {
                 font-size: 2.2rem;
@@ -1316,7 +1306,7 @@
 <body>
 
     <!-- ============================================================ -->
-    <!-- HERO SECTION -->
+    <!-- HERO SECTION (PAID MODEL) -->
     <!-- ============================================================ -->
     <section class="hero" id="heroSection">
         <div class="hero-container" style="max-width:900px;margin:0 auto;">
@@ -1328,14 +1318,14 @@
                 Personalized AI learning for Grades 10–12 and college students. Learn through structured lessons, quizzes, homework assistance, and exam preparation.
             </p>
             <div class="cta-group">
-                <a class="btn-primary" onclick="openAuth('login')">Start Learning Free</a>
-                <span class="cta-note">Free plan available • Premium subscription available</span>
+                <a class="btn-primary" onclick="openAuth('login')">Start Your Free Trial</a>
+                <span class="cta-note">3‑day free trial • Then R49.99/month</span>
             </div>
         </div>
     </section>
 
     <!-- ============================================================ -->
-    <!-- DASHBOARD PREVIEW (Placeholder for screenshot) -->
+    <!-- DASHBOARD PREVIEW -->
     <!-- ============================================================ -->
     <div class="dashboard-preview">
         <div class="mockup">
@@ -1384,28 +1374,29 @@
     </section>
 
     <!-- ============================================================ -->
-    <!-- PRICING (Free vs Premium) -->
+    <!-- PRICING (Free vs Premium – clear paid model) -->
     <!-- ============================================================ -->
     <section class="pricing" id="pricing">
         <div class="section-title">
             <h2>Choose Your Plan</h2>
-            <p>Start free and upgrade anytime.</p>
+            <p>Start with a 3‑day free trial, then subscribe monthly.</p>
         </div>
         <div class="pricing-grid">
-            <!-- Free Plan -->
+            <!-- Free Trial -->
             <div class="pricing-card">
-                <div class="plan">Free</div>
-                <div class="price">R0</div>
-                <div class="description">Get started with the basics.</div>
+                <div class="plan">Free Trial</div>
+                <div class="price">R0 <span>/ 3 days</span></div>
+                <div class="description">Explore all features risk‑free.</div>
                 <ul class="features-list">
+                    <li>Full access to all subjects</li>
                     <li>Limited AI lessons</li>
                     <li>Basic quizzes</li>
                     <li>Community support</li>
                 </ul>
-                <button class="btn-pricing outline" onclick="openAuth('signup')">Start Free</button>
+                <button class="btn-pricing outline" onclick="openAuth('signup')">Start Free Trial</button>
             </div>
 
-            <!-- Premium Plan -->
+            <!-- Premium (Paid) -->
             <div class="pricing-card popular">
                 <div style="font-size:0.75rem;color:#6366f1;font-weight:700;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;">Most Popular</div>
                 <div class="plan">Premium</div>
@@ -1418,6 +1409,7 @@
                     <li>Exam preparation tools</li>
                     <li>Progress analytics</li>
                     <li>Priority support</li>
+                    <li>Cancel anytime</li>
                 </ul>
                 <button class="btn-pricing" onclick="openAuth('login')">Upgrade to Premium</button>
             </div>
@@ -1425,7 +1417,7 @@
     </section>
 
     <!-- ============================================================ -->
-    <!-- FAQ (4 Questions) -->
+    <!-- FAQ -->
     <!-- ============================================================ -->
     <section class="faq" id="faq">
         <div class="section-title">
@@ -1436,8 +1428,8 @@
             <div class="answer">Leago Academy is an AI-powered education platform that provides personalized learning for high school and college students through structured lessons, quizzes, homework help, and exam preparation.</div>
         </div>
         <div class="faq-item">
-            <div class="question">Is there a free plan?</div>
-            <div class="answer">Yes! Leago Academy offers a free plan with limited AI lessons and basic quizzes. You can upgrade to Premium anytime for unlimited access to all features.</div>
+            <div class="question">Is there a free trial?</div>
+            <div class="answer">Yes! You get a 3-day free trial with full access to all features. After that, you can choose to subscribe to Premium for R49.99/month.</div>
         </div>
         <div class="faq-item">
             <div class="question">What's included in Premium?</div>
@@ -1450,7 +1442,7 @@
     </section>
 
     <!-- ============================================================ -->
-    <!-- INFO PAGES (Privacy, About, Contact, TOS) -->
+    <!-- INFO PAGES -->
     <!-- ============================================================ -->
     <div class="info-page" id="page-privacy"><h1>Privacy Policy</h1><p><strong>Last updated:</strong> June 2026</p><p>At Leago Academy, we take your privacy seriously...</p><span class="back-link" onclick="showInfoPage('')">← Back to Leago</span></div>
     <div class="info-page" id="page-about"><h1>About Leago Academy</h1><p><strong>Leago Academy</strong> is an AI-powered educational platform...</p><span class="back-link" onclick="showInfoPage('')">← Back to Leago</span></div>
@@ -1458,7 +1450,7 @@
     <div class="info-page" id="page-tos"><h1>Terms of Service</h1><p><strong>Last updated:</strong> June 2026</p><p>Welcome to Leago Academy...</p><span class="back-link" onclick="showInfoPage('')">← Back to Leago</span></div>
 
     <!-- ============================================================ -->
-    <!-- AUTH OVERLAY (Login / Signup) -->
+    <!-- AUTH OVERLAY -->
     <!-- ============================================================ -->
     <div class="auth-overlay" id="authOverlay">
         <div class="auth-card">
@@ -1558,9 +1550,7 @@
     <!-- JAVASCRIPT -->
     <!-- ============================================================ -->
     <script>
-        // ================================================================
-        //  STATE
-        // ================================================================
+        // (Keep all your existing JavaScript – it's unchanged)
         let currentUser = null;
         let currentSubject = '';
         let selectedGrade = '';

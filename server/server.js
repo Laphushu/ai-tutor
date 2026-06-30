@@ -12,11 +12,20 @@ const { Resend } = require('resend');
 
 const app = express();
 
-// ================= RESEND (Now using your API key) =================
-const resend = new Resend(process.env.RESEND_API_KEY);
-console.log("✅ Resend email service initialized");
+// ================= RESEND (optional) =================
+let resend = null;
+try {
+  if (process.env.RESEND_API_KEY) {
+    const { Resend } = require('resend');
+    resend = new Resend(process.env.RESEND_API_KEY);
+    console.log("✅ Resend email service initialized");
+  } else {
+    console.warn("⚠️ RESEND_API_KEY not set. Emails disabled.");
+  }
+} catch (err) {
+  console.warn("⚠️ Resend disabled:", err.message);
+}
 
-// ================= MIDDLEWARE =================
 app.use(cors());
 app.use(express.static(path.join(__dirname, '../client')));
 app.use(express.json());
@@ -25,7 +34,6 @@ app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, '../client/index.html'));
 });
 
-// ================= POSTGRES =================
 const db = new Pool({
   connectionString: process.env.DATABASE_URL,
   ssl: { rejectUnauthorized: false }
@@ -71,13 +79,11 @@ async function initDB() {
 }
 initDB();
 
-// ================= AI =================
 const client = new OpenAI({
   apiKey: process.env.DEEPSEEK_API_KEY,
   baseURL: "https://api.deepseek.com"
 });
 
-// ================= HELPERS =================
 async function ensureTrial(userId) {
   try {
     await db.query(
@@ -87,8 +93,8 @@ async function ensureTrial(userId) {
   } catch (err) { console.error("Trial error:", err.message); }
 }
 
-// ================= EMAIL =================
 async function sendEmail(to, subject, html) {
+  if (!resend) { console.log("📧 Email disabled (would send to)", to); return true; }
   try {
     const { error } = await resend.emails.send({
       from: 'Leago <onboarding@resend.dev>',
@@ -105,7 +111,6 @@ async function sendEmail(to, subject, html) {
   }
 }
 
-// ================= AUTH: SIGNUP =================
 app.post("/signup", async (req, res) => {
   const { email, password, name, country, role } = req.body;
   if (!email || !password || !name || !country) return res.status(400).json({ error: "All fields required" });
@@ -123,7 +128,7 @@ app.post("/signup", async (req, res) => {
     await ensureTrial(userId);
     await sendEmail(
       email,
-      '🎉 Welcome to Leago!',
+      '🎉 Welcome to Leago Academy!',
       `<h1>Welcome ${name}!</h1><p>Your AI tutor is ready.</p><p>You have a <strong>3-day free trial</strong>.</p><a href="https://synapses-uwh1.onrender.com" style="background:#6366f1;color:white;padding:12px 24px;border-radius:8px;text-decoration:none;">Start Learning →</a>`
     );
     res.json({ success: true, user: { id: userId, email, name, country, role: role || 'learner' } });
@@ -133,7 +138,6 @@ app.post("/signup", async (req, res) => {
   }
 });
 
-// ================= AUTH: LOGIN =================
 app.post("/login", async (req, res) => {
   const { email, password } = req.body;
   if (!email || !password) return res.status(400).json({ error: "Email and password required" });
@@ -141,8 +145,22 @@ app.post("/login", async (req, res) => {
     const result = await db.query(`SELECT * FROM users WHERE email = $1`, [email]);
     if (result.rows.length === 0) return res.status(401).json({ error: "Invalid email or password" });
     const user = result.rows[0];
-    const passwordMatch = await bcrypt.compare(password, user.password);
+
+    let passwordMatch = false;
+    if (user.password.startsWith('$2')) {
+      passwordMatch = await bcrypt.compare(password, user.password);
+    } else {
+      passwordMatch = (password === user.password);
+      if (passwordMatch) {
+        const salt = await bcrypt.genSalt(10);
+        const hashed = await bcrypt.hash(password, salt);
+        await db.query(`UPDATE users SET password = $1 WHERE userId = $2`, [hashed, user.userid]);
+        console.log(`✅ Upgraded password for ${email}`);
+      }
+    }
+
     if (!passwordMatch) return res.status(401).json({ error: "Invalid email or password" });
+
     const token = jwt.sign(
       { id: user.userid, email: user.email },
       process.env.JWT_SECRET,
@@ -166,7 +184,6 @@ app.post("/login", async (req, res) => {
   }
 });
 
-// ================= PROFILE UPDATE =================
 app.post("/save-profile", async (req, res) => {
   const { userId, name, country, grade } = req.body;
   try {
@@ -177,7 +194,6 @@ app.post("/save-profile", async (req, res) => {
   }
 });
 
-// ================= CHAT =================
 app.post("/chat", async (req, res) => {
   const { userId, message } = req.body;
   if (!userId || !message) return res.status(400).json({ reply: "Missing userId or message" });
@@ -248,7 +264,6 @@ Country: ${user.country}
   }
 });
 
-// ================= SUBSCRIPTION STATUS =================
 app.get("/subscription-status/:userId", async (req, res) => {
   try {
     const { userId } = req.params;
@@ -282,7 +297,6 @@ app.get("/subscription-status/:userId", async (req, res) => {
   }
 });
 
-// ================= PAYMENT =================
 app.post("/create-payment", async (req, res) => {
   const { userId, email } = req.body;
   if (!userId || !email) return res.status(400).json({ error: "Missing userId or email" });
@@ -364,12 +378,8 @@ app.post("/paystack-webhook", express.json(), async (req, res) => {
   res.sendStatus(200);
 });
 
-// ================================================================
-// START
-// ================================================================
 const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log("✅ Leago AI Tutor running on port " + PORT);
   console.log("💳 Payments enabled");
-  console.log("📧 Emails enabled (Resend)");
 });
