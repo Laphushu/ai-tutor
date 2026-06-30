@@ -1,5 +1,5 @@
 // ============================================================
-// server/server.js – Full Paystack Integration
+// server/server.js – Full Paystack + Auth + Subscription
 // ============================================================
 
 require('dotenv').config();
@@ -27,8 +27,21 @@ app.use(express.static(path.join(__dirname, '../client')));
 const users = {};          // email -> { name, password, ... }
 const subscriptions = {};  // userId -> { status, startDate, endDate }
 
+// ---- DEFAULT TEST USER (always available) ----
+users['samuellaphushu@gmail.com'] = {
+  name: 'Samuel Laphushu',
+  email: 'samuellaphushu@gmail.com',
+  password: 'password123',
+  country: 'South Africa',
+  province: 'Gauteng',
+  curriculum: 'CAPS',
+  grade: '12',
+  subjects: ['Mathematics', 'English', 'Life Sciences'],
+  role: 'learner'
+};
+
 // ============================================================
-//  AUTHENTICATION (mock – replace with real auth later)
+//  AUTHENTICATION
 // ============================================================
 app.post('/login', (req, res) => {
   const { email, password } = req.body;
@@ -36,10 +49,28 @@ app.post('/login', (req, res) => {
   if (!user || user.password !== password) {
     return res.status(401).json({ error: 'Invalid credentials' });
   }
+
+  // Get subscription status
+  const sub = subscriptions[email] || { status: 'trial', endDate: new Date(Date.now() + 3*24*60*60*1000) };
+  const now = new Date();
+  let status = sub.status;
+  let daysRemaining = 0;
+  if (sub.status === 'active' && now < sub.endDate) {
+    status = 'active';
+    daysRemaining = Math.ceil((sub.endDate - now) / (1000*60*60*24));
+  } else if (sub.status === 'trial' && now < sub.endDate) {
+    status = 'trial';
+    daysRemaining = Math.ceil((sub.endDate - now) / (1000*60*60*24));
+  } else {
+    status = 'expired';
+    daysRemaining = 0;
+  }
+
   res.json({
     success: true,
     user: { id: email, ...user, password: undefined },
-    token: 'mock-jwt-token'
+    token: 'mock-jwt-token',
+    subscription: { status, daysRemaining }
   });
 });
 
@@ -73,9 +104,9 @@ app.post('/create-payment', async (req, res) => {
   try {
     const response = await Paystack.transaction.initialize({
       email,
-      amount: 4999, // R49.99 in cents (Paystack uses ZAR cents)
+      amount: 4999, // R49.99 in cents
       currency: 'ZAR',
-      callback_url: process.env.PAYSTACK_CALLBACK_URL || 'https://your-app.onrender.com/success',
+      callback_url: process.env.PAYSTACK_CALLBACK_URL || 'https://synapses-uwh1.onrender.com/success',
       metadata: { userId }
     });
 
@@ -89,17 +120,12 @@ app.post('/create-payment', async (req, res) => {
   }
 });
 
-// —— Webhook to confirm payment (REAL verification) ——
+// —— Webhook to confirm payment ——
 app.post('/paystack-webhook', (req, res) => {
   const event = req.body;
-
-  // ⚠️ In production, verify the webhook signature with Paystack's secret hash.
-  // For now, we trust the payload (but you MUST add signature validation later).
-
   if (event.event === 'charge.success') {
     const userId = event.data.metadata?.userId;
     if (userId) {
-      // Activate subscription for 30 days from now
       subscriptions[userId] = {
         status: 'active',
         startDate: new Date(),
@@ -116,8 +142,8 @@ app.get('/subscription-status/:userId', (req, res) => {
   const userId = req.params.userId;
   const sub = subscriptions[userId];
 
-  // If no subscription, give a 3‑day trial (first time only)
   if (!sub) {
+    // Start a 3‑day trial for new users
     subscriptions[userId] = {
       status: 'trial',
       startDate: new Date(),
@@ -127,7 +153,6 @@ app.get('/subscription-status/:userId', (req, res) => {
 
   const currentSub = subscriptions[userId];
   const now = new Date();
-
   let status = 'expired';
   let daysRemaining = 0;
 
@@ -138,21 +163,14 @@ app.get('/subscription-status/:userId', (req, res) => {
     status = 'trial';
     daysRemaining = Math.ceil((currentSub.endDate - now) / (1000 * 60 * 60 * 24));
   } else {
-    // Expired – reset to trial if the user never paid, else keep expired
-    if (currentSub.status === 'active' && now >= currentSub.endDate) {
-      status = 'expired';
-      daysRemaining = 0;
-    } else if (currentSub.status === 'trial' && now >= currentSub.endDate) {
-      // Trial expired – give them a chance to subscribe
-      status = 'expired';
-      daysRemaining = 0;
-    }
+    status = 'expired';
+    daysRemaining = 0;
   }
 
   res.json({ status, daysRemaining: Math.max(0, daysRemaining) });
 });
 
-// —— (Optional) Redirect after successful payment ——
+// —— Success redirect page ——
 app.get('/success', (req, res) => {
   res.send(`
     <h1>✅ Payment successful!</h1>
@@ -162,7 +180,7 @@ app.get('/success', (req, res) => {
 });
 
 // ============================================================
-//  HEALTH CHECK (for Render)
+//  HEALTH CHECK
 // ============================================================
 app.get('/health', (req, res) => res.send('OK'));
 
