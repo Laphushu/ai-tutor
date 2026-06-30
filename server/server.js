@@ -39,6 +39,7 @@ const db = new Pool({
   ssl: { rejectUnauthorized: false }
 });
 
+// ================= INIT TABLES (with curriculum fields) =================
 async function initDB() {
   try {
     await db.query(`
@@ -48,8 +49,13 @@ async function initDB() {
         password TEXT,
         name TEXT,
         country TEXT,
+        province TEXT,
+        curriculum TEXT,
         grade TEXT,
+        school TEXT,
+        subjects TEXT[],
         role TEXT DEFAULT 'learner',
+        is_admin BOOLEAN DEFAULT false,
         created_at TIMESTAMP DEFAULT NOW()
       )
     `);
@@ -72,7 +78,7 @@ async function initDB() {
         planType TEXT DEFAULT 'free'
       )
     `);
-    console.log("✅ Database ready");
+    console.log("✅ Database ready with curriculum fields");
   } catch (err) {
     console.error("❌ DB init error:", err.message);
   }
@@ -111,22 +117,185 @@ async function sendEmail(to, subject, html) {
   }
 }
 
-// ================= SIGNUP =================
+// ================= CURRICULUM DATA =================
+const CURRICULUM_DATA = {
+  'South Africa': {
+    curricula: ['CAPS', 'IEB', 'Cambridge'],
+    grades: ['10', '11', '12', 'College'],
+    subjects: {
+      'CAPS': {
+        '10': ['Mathematics', 'English', 'Life Sciences', 'Physical Sciences', 'History', 'Geography', 'Accounting', 'Business Studies', 'Economics', 'Life Orientation', 'Technology', 'Visual Arts', 'Dramatic Arts', 'Music'],
+        '11': ['Mathematics', 'English', 'Life Sciences', 'Physical Sciences', 'History', 'Geography', 'Accounting', 'Business Studies', 'Economics', 'Life Orientation', 'Technology', 'Visual Arts', 'Dramatic Arts', 'Music'],
+        '12': ['Mathematics', 'English', 'Life Sciences', 'Physical Sciences', 'History', 'Geography', 'Accounting', 'Business Studies', 'Economics', 'Life Orientation', 'Technology', 'Visual Arts', 'Dramatic Arts', 'Music'],
+        'College': ['Engineering', 'Computer Science', 'Business & Management', 'Health Sciences', 'Law', 'Education', 'Arts & Humanities', 'Accounting', 'Economics', 'Psychology']
+      },
+      'IEB': {
+        '10': ['Mathematics', 'English', 'Life Sciences', 'Physical Sciences', 'History', 'Geography', 'Accounting', 'Business Studies', 'Economics', 'Life Orientation'],
+        '11': ['Mathematics', 'English', 'Life Sciences', 'Physical Sciences', 'History', 'Geography', 'Accounting', 'Business Studies', 'Economics', 'Life Orientation'],
+        '12': ['Mathematics', 'English', 'Life Sciences', 'Physical Sciences', 'History', 'Geography', 'Accounting', 'Business Studies', 'Economics', 'Life Orientation'],
+        'College': ['Engineering', 'Computer Science', 'Business', 'Health Sciences', 'Law', 'Education', 'Arts']
+      },
+      'Cambridge': {
+        '10': ['Mathematics', 'English', 'Biology', 'Chemistry', 'Physics', 'History', 'Geography', 'Accounting', 'Business Studies', 'Economics'],
+        '11': ['Mathematics', 'English', 'Biology', 'Chemistry', 'Physics', 'History', 'Geography', 'Accounting', 'Business Studies', 'Economics'],
+        '12': ['Mathematics', 'English', 'Biology', 'Chemistry', 'Physics', 'History', 'Geography', 'Accounting', 'Business Studies', 'Economics'],
+        'College': ['Engineering', 'Computer Science', 'Business', 'Health Sciences', 'Law', 'Arts']
+      }
+    }
+  },
+  'Kenya': {
+    curricula: ['CBC', '8-4-4'],
+    grades: ['7', '8', '9', '10', '11', '12', 'College'],
+    subjects: {
+      'CBC': {
+        '7': ['English', 'Kiswahili', 'Mathematics', 'Science', 'Social Studies', 'Religious Education', 'Agriculture', 'Home Science', 'Computer Studies', 'Creative Arts', 'Physical Education'],
+        '8': ['English', 'Kiswahili', 'Mathematics', 'Science', 'Social Studies', 'Religious Education', 'Agriculture', 'Home Science', 'Computer Studies', 'Creative Arts', 'Physical Education'],
+        '9': ['English', 'Kiswahili', 'Mathematics', 'Science', 'Social Studies', 'Religious Education', 'Agriculture', 'Home Science', 'Computer Studies', 'Creative Arts', 'Physical Education'],
+        '10': ['English', 'Kiswahili', 'Mathematics', 'Biology', 'Chemistry', 'Physics', 'History', 'Geography', 'Business Studies', 'Religious Education', 'Computer Studies'],
+        '11': ['English', 'Kiswahili', 'Mathematics', 'Biology', 'Chemistry', 'Physics', 'History', 'Geography', 'Business Studies', 'Religious Education', 'Computer Studies'],
+        '12': ['English', 'Kiswahili', 'Mathematics', 'Biology', 'Chemistry', 'Physics', 'History', 'Geography', 'Business Studies', 'Religious Education', 'Computer Studies'],
+        'College': ['Engineering', 'Computer Science', 'Business', 'Health Sciences', 'Law', 'Education', 'Agriculture']
+      },
+      '8-4-4': {
+        '7': ['English', 'Kiswahili', 'Mathematics', 'Science', 'Social Studies', 'Religious Education', 'Agriculture', 'Home Science', 'Computer Studies'],
+        '8': ['English', 'Kiswahili', 'Mathematics', 'Science', 'Social Studies', 'Religious Education', 'Agriculture', 'Home Science', 'Computer Studies'],
+        '9': ['English', 'Kiswahili', 'Mathematics', 'Science', 'Social Studies', 'Religious Education', 'Agriculture', 'Home Science', 'Computer Studies'],
+        '10': ['English', 'Kiswahili', 'Mathematics', 'Biology', 'Chemistry', 'Physics', 'History', 'Geography', 'Religious Education', 'Business Studies'],
+        '11': ['English', 'Kiswahili', 'Mathematics', 'Biology', 'Chemistry', 'Physics', 'History', 'Geography', 'Religious Education', 'Business Studies'],
+        '12': ['English', 'Kiswahili', 'Mathematics', 'Biology', 'Chemistry', 'Physics', 'History', 'Geography', 'Religious Education', 'Business Studies'],
+        'College': ['Engineering', 'Computer Science', 'Business', 'Health Sciences', 'Law', 'Education']
+      }
+    }
+  },
+  'Nigeria': {
+    curricula: ['WAEC', 'NECO'],
+    grades: ['7', '8', '9', '10', '11', '12', 'College'],
+    subjects: {
+      'WAEC': {
+        '7': ['English', 'Mathematics', 'Basic Science', 'Social Studies', 'Religious Studies', 'Yoruba/Hausa/Igbo', 'Agricultural Science', 'Home Economics', 'Creative Arts', 'Physical Education'],
+        '8': ['English', 'Mathematics', 'Basic Science', 'Social Studies', 'Religious Studies', 'Yoruba/Hausa/Igbo', 'Agricultural Science', 'Home Economics', 'Creative Arts', 'Physical Education'],
+        '9': ['English', 'Mathematics', 'Basic Science', 'Social Studies', 'Religious Studies', 'Yoruba/Hausa/Igbo', 'Agricultural Science', 'Home Economics', 'Creative Arts', 'Physical Education'],
+        '10': ['English', 'Mathematics', 'Biology', 'Chemistry', 'Physics', 'History', 'Geography', 'Religious Studies', 'Yoruba/Hausa/Igbo', 'Civic Education', 'Agricultural Science', 'Economics', 'Literature in English'],
+        '11': ['English', 'Mathematics', 'Biology', 'Chemistry', 'Physics', 'History', 'Geography', 'Religious Studies', 'Yoruba/Hausa/Igbo', 'Civic Education', 'Agricultural Science', 'Economics', 'Literature in English'],
+        '12': ['English', 'Mathematics', 'Biology', 'Chemistry', 'Physics', 'History', 'Geography', 'Religious Studies', 'Yoruba/Hausa/Igbo', 'Civic Education', 'Agricultural Science', 'Economics', 'Literature in English'],
+        'College': ['Engineering', 'Computer Science', 'Business', 'Health Sciences', 'Law', 'Education', 'Agriculture', 'Medicine']
+      },
+      'NECO': {
+        '10': ['English', 'Mathematics', 'Biology', 'Chemistry', 'Physics', 'History', 'Geography', 'Religious Studies', 'Civic Education', 'Yoruba/Hausa/Igbo', 'Agricultural Science', 'Economics'],
+        '11': ['English', 'Mathematics', 'Biology', 'Chemistry', 'Physics', 'History', 'Geography', 'Religious Studies', 'Civic Education', 'Yoruba/Hausa/Igbo', 'Agricultural Science', 'Economics'],
+        '12': ['English', 'Mathematics', 'Biology', 'Chemistry', 'Physics', 'History', 'Geography', 'Religious Studies', 'Civic Education', 'Yoruba/Hausa/Igbo', 'Agricultural Science', 'Economics'],
+        'College': ['Engineering', 'Computer Science', 'Business', 'Health Sciences', 'Law', 'Education']
+      }
+    }
+  },
+  'Zimbabwe': {
+    curricula: ['ZIMSEC'],
+    grades: ['10', '11', '12', '13', 'College'],
+    subjects: {
+      'ZIMSEC': {
+        '10': ['English', 'Mathematics', 'Biology', 'Chemistry', 'Physics', 'History', 'Geography', 'Shona/Ndebele', 'Religious Education', 'Agriculture'],
+        '11': ['English', 'Mathematics', 'Biology', 'Chemistry', 'Physics', 'History', 'Geography', 'Shona/Ndebele', 'Religious Education', 'Agriculture'],
+        '12': ['English', 'Mathematics', 'Biology', 'Chemistry', 'Physics', 'History', 'Geography', 'Shona/Ndebele', 'Religious Education', 'Agriculture'],
+        '13': ['English', 'Mathematics', 'Biology', 'Chemistry', 'Physics', 'History', 'Geography', 'Shona/Ndebele', 'Religious Education', 'Agriculture'],
+        'College': ['Engineering', 'Computer Science', 'Business', 'Health Sciences', 'Law', 'Education', 'Agriculture']
+      }
+    }
+  },
+  'Botswana': {
+    curricula: ['BGCSE'],
+    grades: ['10', '11', '12', '13', 'College'],
+    subjects: {
+      'BGCSE': {
+        '10': ['English', 'Setswana', 'Mathematics', 'Biology', 'Chemistry', 'Physics', 'History', 'Geography', 'Religious Education', 'Agriculture'],
+        '11': ['English', 'Setswana', 'Mathematics', 'Biology', 'Chemistry', 'Physics', 'History', 'Geography', 'Religious Education', 'Agriculture'],
+        '12': ['English', 'Setswana', 'Mathematics', 'Biology', 'Chemistry', 'Physics', 'History', 'Geography', 'Religious Education', 'Agriculture'],
+        '13': ['English', 'Setswana', 'Mathematics', 'Biology', 'Chemistry', 'Physics', 'History', 'Geography', 'Religious Education', 'Agriculture'],
+        'College': ['Engineering', 'Computer Science', 'Business', 'Health Sciences', 'Law', 'Education']
+      }
+    }
+  },
+  'Namibia': {
+    curricula: ['NSSCO', 'NSSCAS', 'Cambridge'],
+    grades: ['10', '11', '12', '13', 'College'],
+    subjects: {
+      'NSSCO': {
+        '10': ['English', 'Afrikaans', 'Oshiwambo', 'Mathematics', 'Biology', 'Chemistry', 'Physics', 'History', 'Geography', 'Religious Studies'],
+        '11': ['English', 'Afrikaans', 'Oshiwambo', 'Mathematics', 'Biology', 'Chemistry', 'Physics', 'History', 'Geography', 'Religious Studies'],
+        '12': ['English', 'Afrikaans', 'Oshiwambo', 'Mathematics', 'Biology', 'Chemistry', 'Physics', 'History', 'Geography', 'Religious Studies'],
+        '13': ['English', 'Afrikaans', 'Oshiwambo', 'Mathematics', 'Biology', 'Chemistry', 'Physics', 'History', 'Geography', 'Religious Studies'],
+        'College': ['Engineering', 'Computer Science', 'Business', 'Health Sciences', 'Law', 'Education']
+      },
+      'NSSCAS': {
+        '12': ['English', 'Mathematics', 'Biology', 'Chemistry', 'Physics', 'History', 'Geography', 'Religious Studies', 'Accounting'],
+        '13': ['English', 'Mathematics', 'Biology', 'Chemistry', 'Physics', 'History', 'Geography', 'Religious Studies', 'Accounting'],
+        'College': ['Engineering', 'Computer Science', 'Business', 'Health Sciences', 'Law', 'Education']
+      }
+    }
+  },
+  'Ghana': {
+    curricula: ['WAEC'],
+    grades: ['7', '8', '9', '10', '11', '12', 'College'],
+    subjects: {
+      'WAEC': {
+        '7': ['English', 'Mathematics', 'Science', 'Social Studies', 'Religious & Moral Education', 'Ghanaian Language', 'Creative Arts', 'Physical Education', 'ICT'],
+        '8': ['English', 'Mathematics', 'Science', 'Social Studies', 'Religious & Moral Education', 'Ghanaian Language', 'Creative Arts', 'Physical Education', 'ICT'],
+        '9': ['English', 'Mathematics', 'Science', 'Social Studies', 'Religious & Moral Education', 'Ghanaian Language', 'Creative Arts', 'Physical Education', 'ICT'],
+        '10': ['English', 'Mathematics', 'Biology', 'Chemistry', 'Physics', 'History', 'Geography', 'Religious & Moral Education', 'Ghanaian Language', 'Economics', 'Accounting'],
+        '11': ['English', 'Mathematics', 'Biology', 'Chemistry', 'Physics', 'History', 'Geography', 'Religious & Moral Education', 'Ghanaian Language', 'Economics', 'Accounting'],
+        '12': ['English', 'Mathematics', 'Biology', 'Chemistry', 'Physics', 'History', 'Geography', 'Religious & Moral Education', 'Ghanaian Language', 'Economics', 'Accounting'],
+        'College': ['Engineering', 'Computer Science', 'Business', 'Health Sciences', 'Law', 'Education']
+      }
+    }
+  },
+  'Egypt': {
+    curricula: ['Thanaweya Amma', 'IGCSE', 'American'],
+    grades: ['10', '11', '12', 'College'],
+    subjects: {
+      'Thanaweya Amma': {
+        '10': ['Arabic', 'English', 'Mathematics', 'Biology', 'Chemistry', 'Physics', 'History', 'Geography', 'Philosophy', 'Religious Studies'],
+        '11': ['Arabic', 'English', 'Mathematics', 'Biology', 'Chemistry', 'Physics', 'History', 'Geography', 'Philosophy', 'Religious Studies'],
+        '12': ['Arabic', 'English', 'Mathematics', 'Biology', 'Chemistry', 'Physics', 'History', 'Geography', 'Philosophy', 'Religious Studies'],
+        'College': ['Engineering', 'Computer Science', 'Business', 'Health Sciences', 'Law', 'Education']
+      }
+    }
+  }
+};
+
+// ================= GET CURRICULUM DATA =================
+app.get("/api/curriculum/:country", async (req, res) => {
+  const { country } = req.params;
+  const data = CURRICULUM_DATA[country];
+  if (!data) {
+    return res.status(404).json({ error: "Country not found" });
+  }
+  res.json({
+    curricula: data.curricula,
+    grades: data.grades,
+    subjects: data.subjects
+  });
+});
+
+// ================= AUTH: SIGNUP (with curriculum fields) =================
 app.post("/signup", async (req, res) => {
-  const { email, password, name, country, role } = req.body;
+  const { email, password, name, country, province, curriculum, grade, school, subjects, role } = req.body;
   if (!email || !password || !name || !country) return res.status(400).json({ error: "All fields required" });
   if (password.length < 6) return res.status(400).json({ error: "Password must be at least 6 characters" });
+
   try {
     const existing = await db.query(`SELECT * FROM users WHERE email = $1`, [email]);
     if (existing.rows.length > 0) return res.status(400).json({ error: "Email already registered" });
+
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
     const userId = 'user_' + email.replace(/[^a-zA-Z0-9]/g, '_');
+
     await db.query(
-      `INSERT INTO users (userId, email, password, name, country, role) VALUES ($1, $2, $3, $4, $5, $6)`,
-      [userId, email, hashedPassword, name, country, role || 'learner']
+      `INSERT INTO users (userId, email, password, name, country, province, curriculum, grade, school, subjects, role)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)`,
+      [userId, email, hashedPassword, name, country, province || '', curriculum || '', grade || '', school || '', subjects || [], role || 'learner']
     );
     await ensureTrial(userId);
+
     await sendEmail(
       email,
       '🎉 Welcome to Leago Academy!',
@@ -139,7 +308,7 @@ app.post("/signup", async (req, res) => {
   }
 });
 
-// ================= LOGIN (FIXED) =================
+// ================= AUTH: LOGIN =================
 app.post("/login", async (req, res) => {
   const { email, password } = req.body;
   if (!email || !password) return res.status(400).json({ error: "Email and password required" });
@@ -151,13 +320,10 @@ app.post("/login", async (req, res) => {
     }
     const user = result.rows[0];
 
-    // Check if password is hashed or plain
     let passwordMatch = false;
     if (user.password.startsWith('$2')) {
-      // Bcrypt hash
       passwordMatch = await bcrypt.compare(password, user.password);
     } else {
-      // Plain text (legacy) – compare directly and upgrade
       passwordMatch = (password === user.password);
       if (passwordMatch) {
         const salt = await bcrypt.genSalt(10);
@@ -171,7 +337,6 @@ app.post("/login", async (req, res) => {
       return res.status(401).json({ error: "Invalid email or password" });
     }
 
-    // Generate JWT
     const token = jwt.sign(
       { id: user.userid, email: user.email },
       process.env.JWT_SECRET,
@@ -186,8 +351,12 @@ app.post("/login", async (req, res) => {
         email: user.email,
         name: user.name,
         country: user.country,
-        role: user.role,
-        grade: user.grade
+        province: user.province,
+        curriculum: user.curriculum,
+        grade: user.grade,
+        school: user.school,
+        subjects: user.subjects,
+        role: user.role
       }
     });
   } catch (err) {
@@ -196,21 +365,33 @@ app.post("/login", async (req, res) => {
   }
 });
 
-// ================= PROFILE =================
+// ================= UPDATE USER PROFILE =================
 app.post("/save-profile", async (req, res) => {
-  const { userId, name, country, grade } = req.body;
+  const { userId, name, country, province, curriculum, grade, school, subjects } = req.body;
   try {
-    await db.query(`UPDATE users SET name = $1, country = $2, grade = $3 WHERE userId = $4`, [name, country, grade, userId]);
+    await db.query(
+      `UPDATE users SET 
+        name = $1, 
+        country = $2, 
+        province = $3, 
+        curriculum = $4, 
+        grade = $5, 
+        school = $6, 
+        subjects = $7 
+       WHERE userId = $8`,
+      [name, country, province || '', curriculum || '', grade || '', school || '', subjects || [], userId]
+    );
     res.json({ success: true });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 });
 
-// ================= CHAT =================
+// ================= CHAT (Curriculum-Aware AI Prompt) =================
 app.post("/chat", async (req, res) => {
   const { userId, message } = req.body;
   if (!userId || !message) return res.status(400).json({ reply: "Missing userId or message" });
+
   try {
     await ensureTrial(userId);
     const userResult = await db.query(`SELECT * FROM users WHERE userId = $1`, [userId]);
@@ -239,22 +420,40 @@ app.post("/chat", async (req, res) => {
       `SELECT role, content FROM messages WHERE userId = $1 ORDER BY id DESC LIMIT 10`,
       [userId]
     );
-    const levelDesc = user.grade || 'Not specified';
+
+    // Build curriculum-aware system prompt
+    const curriculumContext = user.curriculum ? `Curriculum: ${user.curriculum}` : '';
+    const gradeContext = user.grade ? `Grade: ${user.grade}` : '';
+    const countryContext = user.country ? `Country: ${user.country}` : '';
+    const provinceContext = user.province ? `Province: ${user.province}` : '';
+    const subjectsContext = user.subjects && user.subjects.length > 0 ? `Subjects: ${user.subjects.join(', ')}` : '';
+
     const systemPrompt = `
-You are Leago, a warm, patient, and encouraging AI tutor.
+You are Leago, a warm, patient, and encouraging AI tutor designed specifically for African students.
 
-CRITICAL RULES:
-1. START WITH QUESTIONS, NOT LECTURES
-2. ONE QUESTION AT A TIME
-3. Explain concepts clearly with examples, define new terms, show 2-3 worked examples.
-4. Check understanding: "Do you understand? Shall I explain again?"
-5. Be encouraging: "That's a good try! Let me explain it another way..."
-6. When the student demonstrates understanding, ask them to explain the concept in their own words.
+STUDENT CONTEXT:
+Country: ${countryContext}
+Province: ${provinceContext}
+Curriculum: ${curriculumContext}
+Grade: ${gradeContext}
+Subjects: ${subjectsContext}
+Student Name: ${user.name}
 
-Student: ${user.name}
-Level: ${levelDesc}
-Country: ${user.country}
+IMPORTANT RULES:
+1. ALWAYS teach according to the student's curriculum (${user.curriculum || 'CAPS'}) and grade level.
+2. START WITH QUESTIONS, NOT LECTURES.
+3. ONE QUESTION AT A TIME.
+4. Explain concepts clearly with examples relevant to the student's country and context.
+5. Define new terms.
+6. Show 2-3 worked examples.
+7. Check understanding: "Do you understand? Shall I explain again?"
+8. Be encouraging: "That's a good try! Let me explain it another way..."
+9. When the student demonstrates understanding, ask them to explain the concept in their own words.
+10. Use examples and references that are familiar to African students (local context, culture, everyday life).
+
+Remember: You are Leago, Africa's AI learning assistant. Make the student feel confident and supported.
 `;
+
     const history = [{ role: "system", content: systemPrompt }];
     const reversed = messagesResult.rows.reverse();
     for (const m of reversed) history.push({ role: m.role, content: m.content });
@@ -316,12 +515,14 @@ app.get("/subscription-status/:userId", async (req, res) => {
 app.post("/create-payment", async (req, res) => {
   const { userId, email } = req.body;
   if (!userId || !email) return res.status(400).json({ error: "Missing userId or email" });
+
   try {
     const userResult = await db.query(`SELECT name, country, grade FROM users WHERE userId = $1`, [userId]);
     const user = userResult.rows[0];
     if (!user) return res.status(404).json({ error: "User not found" });
+
     let amount = 14999, priceDisplay = 'R149.99';
-    const isCollege = (user.grade === 'College' || user.grade === 'Tertiary');
+    const isCollege = (user.grade === 'College' || user.grade === 'Tertiary' || user.grade === 'College');
     const isSouthAfrica = (user.country === 'South Africa');
     if (isCollege) {
       if (isSouthAfrica) { amount = 19999; priceDisplay = 'R199.99'; }
@@ -330,6 +531,7 @@ app.post("/create-payment", async (req, res) => {
       if (isSouthAfrica) { amount = 4999; priceDisplay = 'R49.99'; }
       else { amount = 14999; priceDisplay = 'R149.99'; }
     }
+
     const response = await Paystack.transaction.initialize({
       email: email,
       amount: amount,
@@ -347,6 +549,7 @@ app.post("/create-payment", async (req, res) => {
 app.get("/payment-callback", async (req, res) => {
   const { reference } = req.query;
   if (!reference) return res.status(400).send("Missing reference");
+
   try {
     const response = await Paystack.transaction.verify(reference);
     if (response.data.status === 'success') {
@@ -398,4 +601,5 @@ const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log("✅ Leago AI Tutor running on port " + PORT);
   console.log("💳 Payments enabled");
+  console.log("🌍 Africa Education Engine active");
 });
