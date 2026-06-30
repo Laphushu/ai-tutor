@@ -22,7 +22,7 @@
         /* ===== LANDING PAGE ===== */
         .hero {
             background: linear-gradient(135deg, #0b1120 0%, #1a1a3e 100%);
-            padding: 80px 20px 100px;
+            padding: 80px 20px 80px;
             text-align: center;
             color: white;
             position: relative;
@@ -104,7 +104,7 @@
             z-index: 1;
         }
         .hero .cta-group .btn-primary {
-            padding: 16px 40px;
+            padding: 16px 48px;
             background: linear-gradient(135deg, #6366f1, #8b5cf6);
             color: white;
             border: none;
@@ -121,49 +121,15 @@
             transform: translateY(-3px);
             box-shadow: 0 12px 40px rgba(99, 102, 241, 0.4);
         }
-        .hero .cta-group .btn-secondary {
-            padding: 16px 40px;
-            background: rgba(255, 255, 255, 0.05);
-            color: white;
-            border: 2px solid rgba(255, 255, 255, 0.15);
-            border-radius: 14px;
-            font-size: 1.1rem;
-            font-weight: 700;
-            cursor: pointer;
-            text-decoration: none;
-            display: inline-block;
-            transition: all 0.3s;
-        }
-        .hero .cta-group .btn-secondary:hover {
-            background: rgba(255, 255, 255, 0.1);
-            border-color: rgba(255, 255, 255, 0.3);
-        }
         .hero .cta-group .cta-note {
             font-size: 0.85rem;
             color: #9ca3af;
-            margin-top: 4px;
         }
 
-        .trust-badges {
-            display: flex;
-            justify-content: center;
-            gap: 24px;
-            flex-wrap: wrap;
-            margin-top: 32px;
-            font-size: 0.9rem;
-            color: #9ca3af;
-            position: relative;
-            z-index: 1;
-        }
-        .trust-badges span {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-
+        /* ===== DASHBOARD PREVIEW ===== */
         .dashboard-preview {
             max-width: 1100px;
-            margin: -60px auto 40px;
+            margin: -40px auto 40px;
             padding: 0 20px;
             position: relative;
             z-index: 2;
@@ -172,94 +138,26 @@
             background: white;
             border-radius: 20px;
             padding: 24px 28px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.12);
             border: 1px solid rgba(0, 0, 0, 0.04);
-        }
-        .dashboard-preview .mockup .header {
+            text-align: center;
+            min-height: 180px;
             display: flex;
-            justify-content: space-between;
+            flex-direction: column;
+            justify-content: center;
             align-items: center;
-            margin-bottom: 16px;
-            flex-wrap: wrap;
-            gap: 8px;
         }
-        .dashboard-preview .mockup .header h3 {
-            font-size: 1.1rem;
-            font-weight: 600;
-            color: #0b1120;
-        }
-        .dashboard-preview .mockup .header .user {
+        .dashboard-preview .mockup .placeholder {
             font-size: 0.9rem;
             color: #6b7280;
         }
-        .dashboard-preview .mockup .grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr 1fr;
-            gap: 16px;
-        }
-        .dashboard-preview .mockup .grid .card {
-            background: #f8fafc;
-            border-radius: 12px;
-            padding: 16px;
-            text-align: center;
-            border: 1px solid #e5e7eb;
-        }
-        .dashboard-preview .mockup .grid .card .icon {
-            font-size: 2rem;
-        }
-        .dashboard-preview .mockup .grid .card .label {
-            font-weight: 600;
-            color: #0b1120;
-            margin-top: 4px;
-        }
-        .dashboard-preview .mockup .grid .card .value {
-            font-size: 0.85rem;
-            color: #6b7280;
-        }
-        .dashboard-preview .mockup .grid .card .bar {
-            height: 6px;
-            background: #e5e7eb;
-            border-radius: 4px;
-            margin-top: 8px;
-            overflow: hidden;
-        }
-        .dashboard-preview .mockup .grid .card .bar .fill {
-            height: 100%;
-            background: linear-gradient(90deg, #6366f1, #8b5cf6);
-            border-radius: 4px;
-        }
-        @media (max-width: 640px) {
-            .dashboard-preview .mockup .grid {
-                grid-template-columns: 1fr;
-            }
+        .dashboard-preview .mockup .placeholder .icon {
+            font-size: 3rem;
+            display: block;
+            margin-bottom: 8px;
         }
 
-        .stats-bar {
-            max-width: 1100px;
-            margin: 0 auto 40px;
-            padding: 0 20px;
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 20px;
-        }
-        .stat-card {
-            background: white;
-            padding: 24px 20px;
-            border-radius: 16px;
-            text-align: center;
-            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.06);
-        }
-        .stat-card .number {
-            font-size: 2rem;
-            font-weight: 800;
-            color: #0b1120;
-        }
-        .stat-card .label {
-            font-size: 0.9rem;
-            color: #6b7280;
-            margin-top: 4px;
-        }
-
+        /* ===== FEATURES ===== */
         .features {
             max-width: 1100px;
             margin: 0 auto 60px;
@@ -267,89 +165,49 @@
         }
         .features .section-title {
             text-align: center;
-            margin-bottom: 40px;
+            margin-bottom: 32px;
         }
         .features .section-title h2 {
-            font-size: 2.2rem;
+            font-size: 2rem;
             font-weight: 700;
             color: #0b1120;
-        }
-        .features .section-title p {
-            color: #6b7280;
-            font-size: 1.05rem;
-            margin-top: 8px;
         }
         .features-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-            gap: 24px;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
         }
         .feature-card {
             background: white;
-            padding: 32px 24px;
-            border-radius: 20px;
+            padding: 28px 20px;
+            border-radius: 16px;
             box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
             text-align: center;
-            transition: all 0.3s;
             border: 1px solid rgba(0, 0, 0, 0.04);
+            transition: all 0.3s;
         }
         .feature-card:hover {
-            transform: translateY(-6px);
+            transform: translateY(-4px);
             box-shadow: 0 12px 40px rgba(0, 0, 0, 0.08);
         }
         .feature-card .icon {
-            font-size: 2.8rem;
+            font-size: 2.4rem;
             display: block;
-            margin-bottom: 12px;
+            margin-bottom: 8px;
         }
         .feature-card h3 {
-            font-size: 1.1rem;
+            font-size: 1rem;
             font-weight: 700;
             color: #0b1120;
-            margin-bottom: 6px;
         }
         .feature-card p {
-            font-size: 0.95rem;
+            font-size: 0.9rem;
             color: #6b7280;
-            line-height: 1.5;
+            margin-top: 4px;
+            line-height: 1.4;
         }
 
-        .status-bar {
-            max-width: 1100px;
-            margin: 0 auto 40px;
-            padding: 0 20px;
-            text-align: center;
-        }
-        .status-bar .status {
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-            background: #d1fae5;
-            color: #065f46;
-            padding: 10px 24px;
-            border-radius: 30px;
-            font-weight: 600;
-            font-size: 0.95rem;
-        }
-        .status-bar .status .dot {
-            width: 10px;
-            height: 10px;
-            background: #22c55e;
-            border-radius: 50%;
-            animation: pulse 2s infinite;
-        }
-        @keyframes pulse {
-            0%,
-            100% {
-                opacity: 1;
-                transform: scale(1);
-            }
-            50% {
-                opacity: 0.6;
-                transform: scale(0.9);
-            }
-        }
-
+        /* ===== PRICING ===== */
         .pricing {
             max-width: 1100px;
             margin: 0 auto 60px;
@@ -357,17 +215,16 @@
         }
         .pricing .section-title {
             text-align: center;
-            margin-bottom: 40px;
+            margin-bottom: 32px;
         }
         .pricing .section-title h2 {
-            font-size: 2.2rem;
+            font-size: 2rem;
             font-weight: 700;
             color: #0b1120;
         }
         .pricing .section-title p {
             color: #6b7280;
             font-size: 1.05rem;
-            margin-top: 8px;
         }
         .pricing-grid {
             display: grid;
@@ -376,7 +233,7 @@
         }
         .pricing-card {
             background: white;
-            padding: 40px 28px;
+            padding: 36px 28px;
             border-radius: 20px;
             box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
             text-align: center;
@@ -385,16 +242,10 @@
         }
         .pricing-card:hover {
             border-color: #6366f1;
-            box-shadow: 0 12px 40px rgba(99, 102, 241, 0.08);
         }
         .pricing-card.popular {
             border-color: #6366f1;
             background: linear-gradient(135deg, #ffffff, #f8faff);
-        }
-        .pricing-card .plan-badge {
-            font-size: 0.8rem;
-            font-weight: 700;
-            margin-bottom: 4px;
         }
         .pricing-card .plan {
             font-size: 0.85rem;
@@ -407,7 +258,7 @@
             font-size: 2.8rem;
             font-weight: 800;
             color: #0b1120;
-            margin: 12px 0 4px;
+            margin: 8px 0 4px;
         }
         .pricing-card .price span {
             font-size: 1rem;
@@ -417,15 +268,15 @@
         .pricing-card .description {
             color: #6b7280;
             font-size: 0.95rem;
-            margin-bottom: 20px;
+            margin-bottom: 16px;
         }
         .pricing-card .features-list {
             list-style: none;
             text-align: left;
-            margin: 20px 0 28px;
+            margin: 16px 0 24px;
         }
         .pricing-card .features-list li {
-            padding: 8px 0;
+            padding: 6px 0;
             font-size: 0.95rem;
             color: #1f2937;
             display: flex;
@@ -470,77 +321,34 @@
         }
         .faq .section-title {
             text-align: center;
-            margin-bottom: 32px;
+            margin-bottom: 28px;
         }
         .faq .section-title h2 {
             font-size: 2rem;
             font-weight: 700;
             color: #0b1120;
         }
-        .faq .faq-item {
+        .faq-item {
             background: white;
-            border-radius: 16px;
-            padding: 20px 24px;
-            margin-bottom: 12px;
+            border-radius: 14px;
+            padding: 18px 22px;
+            margin-bottom: 10px;
             border: 1px solid #e5e7eb;
         }
-        .faq .faq-item .question {
+        .faq-item .question {
             font-weight: 600;
             color: #0b1120;
-            font-size: 1.05rem;
+            font-size: 1rem;
         }
-        .faq .faq-item .answer {
+        .faq-item .answer {
             color: #4b5563;
-            margin-top: 6px;
+            margin-top: 4px;
             line-height: 1.5;
             font-size: 0.95rem;
         }
 
-        /* ===== FINAL CTA ===== */
-        .final-cta {
-            max-width: 1100px;
-            margin: 0 auto 60px;
-            padding: 60px 20px;
-            background: linear-gradient(135deg, #0b1120, #1a1a3e);
-            border-radius: 24px;
-            text-align: center;
-            color: white;
-        }
-        .final-cta h2 {
-            font-size: 2.5rem;
-            font-weight: 700;
-            margin-bottom: 12px;
-        }
-        .final-cta p {
-            font-size: 1.1rem;
-            color: #c4b5d4;
-            max-width: 600px;
-            margin: 0 auto 20px;
-            line-height: 1.5;
-        }
-        .final-cta .btn-cta {
-            padding: 16px 48px;
-            background: linear-gradient(135deg, #6366f1, #8b5cf6);
-            border: none;
-            border-radius: 14px;
-            font-size: 1.2rem;
-            font-weight: 700;
-            color: white;
-            cursor: pointer;
-            transition: all 0.3s;
-            box-shadow: 0 8px 30px rgba(99, 102, 241, 0.3);
-            text-decoration: none;
-            display: inline-block;
-        }
-        .final-cta .btn-cta:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 12px 40px rgba(99, 102, 241, 0.4);
-        }
-
         /* ============================================================ */
-        /* AUTH OVERLAY, DASHBOARD, etc. (existing styles) */
-        /* ... keep everything else the same ... */
-        /* (I'll include the full existing CSS for completeness) */
+        /* AUTH OVERLAY, DASHBOARD, etc. (existing) */
         /* ============================================================ */
         .auth-overlay {
             display: none;
@@ -707,270 +515,891 @@
             }
         }
 
-        /* Dashboard styles... (omitted for brevity, keep existing) */
-        /* I'll include the full existing dashboard CSS */
-        .dashboard { display: none; max-width:1200px; margin:0 auto; padding:20px; }
-        .dashboard.active { display: block; }
-        .top-nav { background:white; padding:16px 28px; display:flex; justify-content:space-between; align-items:center; box-shadow:0 2px 12px rgba(0,0,0,0.04); border-radius:16px; margin-bottom:24px; flex-wrap:wrap; gap:12px; }
-        .top-nav .logo { font-size:1.4rem; font-weight:800; color:#0b1120; text-decoration:none; }
-        .top-nav .logo span { background:linear-gradient(135deg,#6366f1,#a855f7); -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; }
-        .top-nav .user-info { display:flex; align-items:center; gap:16px; flex-wrap:wrap; }
-        .top-nav .user-info .name { font-weight:600; color:#0b1120; font-size:0.95rem; }
-        .top-nav .user-info .role { font-size:0.75rem; color:#6b7280; background:#f3f4f6; padding:2px 12px; border-radius:12px; }
-        .top-nav .user-info .grade-badge { font-size:0.75rem; color:#6366f1; background:#eef2ff; padding:2px 12px; border-radius:12px; font-weight:600; cursor:pointer; transition:background 0.2s; }
-        .top-nav .user-info .grade-badge:hover { background:#dbeafe; }
-        .top-nav .user-info .logout-btn { background:none; border:none; color:#9ca3af; font-size:0.85rem; cursor:pointer; padding:6px 14px; border-radius:8px; transition:all 0.2s; font-family:inherit; }
-        .top-nav .user-info .logout-btn:hover { background:#f3f4f6; color:#ef4444; }
-        .sub-badge { font-size:0.7rem; padding:3px 12px; border-radius:12px; font-weight:600; }
-        .sub-trial { background:#fef3c7; color:#92400e; }
-        .sub-active { background:#d1fae5; color:#065f46; }
-        .sub-expired { background:#fee2e2; color:#991b1b; }
-        .dashboard-grid { display:grid; grid-template-columns:240px 1fr 280px; gap:20px; }
-        @media (max-width:1024px){ .dashboard-grid { grid-template-columns:1fr; } }
-        .sidebar-left { background:white; border-radius:16px; padding:24px 18px; box-shadow:0 2px 12px rgba(0,0,0,0.04); height:fit-content; }
-        .sidebar-left .section-title { font-size:0.7rem; text-transform:uppercase; color:#6b7280; font-weight:700; letter-spacing:0.5px; margin:16px 0 8px; }
-        .sidebar-left .section-title:first-child { margin-top:0; }
-        .sidebar-left .subject-list { list-style:none; }
-        .sidebar-left .subject-list li { padding:10px 14px; border-radius:10px; cursor:pointer; transition:all 0.2s; font-size:0.9rem; color:#1f2937; display:flex; align-items:center; gap:10px; margin-bottom:2px; }
-        .sidebar-left .subject-list li:hover { background:#f3f4f6; }
-        .sidebar-left .subject-list li.active { background:#eef2ff; color:#6366f1; font-weight:600; }
-        .sidebar-left .subject-list li .icon { font-size:1.2rem; width:24px; text-align:center; }
-        .sidebar-left .subject-list li .progress-dot { margin-left:auto; font-size:0.7rem; color:#6b7280; }
-        .progress-item { margin:8px 0; }
-        .progress-item .label { display:flex; justify-content:space-between; font-size:0.8rem; color:#4b5563; }
-        .progress-item .bar { height:6px; background:#e5e7eb; border-radius:4px; margin-top:4px; overflow:hidden; }
-        .progress-item .bar .fill { height:100%; border-radius:4px; background:linear-gradient(90deg,#6366f1,#8b5cf6); transition:width 0.6s ease; }
-        .recent-item { padding:10px 12px; border-radius:10px; background:#f8fafc; margin-bottom:6px; cursor:pointer; font-size:0.85rem; color:#1f2937; transition:all 0.2s; }
-        .recent-item:hover { background:#eef2ff; }
-        .recent-item .sub { font-size:0.75rem; color:#6b7280; }
-        .center-panel { background:white; border-radius:16px; padding:28px 32px; box-shadow:0 2px 12px rgba(0,0,0,0.04); min-height:500px; }
-        .center-panel .welcome { font-size:1.6rem; font-weight:700; color:#0b1120; margin-bottom:4px; }
-        .center-panel .welcome-sub { color:#6b7280; font-size:0.95rem; margin-bottom:20px; }
-        .center-panel .welcome-sub .change-grade-link { color:#6366f1; cursor:pointer; font-weight:600; text-decoration:underline; text-underline-offset:2px; }
-        .center-panel .welcome-sub .change-grade-link:hover { color:#4f46e5; }
-        .grade-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(120px,1fr)); gap:12px; margin:16px 0; }
-        .grade-card { padding:24px 12px; border:2px solid #e5e7eb; border-radius:14px; text-align:center; cursor:pointer; transition:all 0.25s; background:white; font-weight:600; font-size:1rem; color:#0b1120; }
-        .grade-card:hover { border-color:#6366f1; transform:translateY(-3px); box-shadow:0 8px 24px rgba(99,102,241,0.10); }
-        .grade-card.selected { border-color:#6366f1; background:#eef2ff; box-shadow:0 0 0 3px rgba(99,102,241,0.15); }
-        .grade-card .sub { font-size:0.7rem; color:#6b7280; font-weight:400; display:block; margin-top:4px; }
-        .btn-confirm { padding:14px 40px; border:none; border-radius:12px; font-size:1rem; font-weight:700; cursor:pointer; background:linear-gradient(135deg,#6366f1,#8b5cf6); color:#fff; transition:transform 0.15s; font-family:inherit; margin-top:16px; display:none; }
-        .btn-confirm:hover { transform:translateY(-2px); }
-        .subject-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(160px,1fr)); gap:16px; }
-        .subject-card { background:white; border:2px solid #e5e7eb; border-radius:16px; padding:28px 16px; text-align:center; cursor:pointer; transition:all 0.25s; box-shadow:0 2px 8px rgba(0,0,0,0.02); }
-        .subject-card:hover { border-color:#6366f1; transform:translateY(-4px); box-shadow:0 12px 32px rgba(99,102,241,0.12); }
-        .subject-card .icon { font-size:2.8rem; display:block; margin-bottom:6px; }
-        .subject-card .name { font-weight:700; font-size:0.95rem; color:#0b1120; }
-        .subject-card .progress-badge { display:inline-block; font-size:0.7rem; color:#6366f1; background:#eef2ff; padding:2px 10px; border-radius:12px; margin-top:6px; }
-        .back-btn { background:none; border:1px solid #e5e7eb; padding:10px 20px; border-radius:12px; cursor:pointer; font-weight:600; color:#4b5563; transition:all 0.2s; font-family:inherit; display:inline-block; margin-bottom:16px; }
-        .back-btn:hover { background:#f3f4f6; }
-        .topic-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(240px,1fr)); gap:16px; }
-        .topic-card { background:white; border:2px solid #e5e7eb; border-radius:14px; padding:20px 18px; transition:all 0.25s; cursor:pointer; position:relative; }
-        .topic-card:hover { border-color:#6366f1; box-shadow:0 8px 24px rgba(99,102,241,0.08); }
-        .topic-card.completed { border-color:#22c55e; background:#f0fdf4; }
-        .topic-card .title { font-weight:700; font-size:1rem; color:#0b1120; }
-        .topic-card .meta { font-size:0.8rem; color:#6b7280; margin-top:4px; }
-        .topic-card .resources { margin-top:10px; display:flex; gap:6px; flex-wrap:wrap; }
-        .topic-card .resources .tag { background:#eef2ff; color:#6366f1; padding:2px 12px; border-radius:12px; font-size:0.7rem; font-weight:600; }
-        .topic-card .status-badge { position:absolute; top:12px; right:12px; font-size:0.7rem; font-weight:600; padding:2px 10px; border-radius:12px; background:#e5e7eb; color:#6b7280; }
-        .topic-card.completed .status-badge { background:#d1fae5; color:#065f46; }
-        .tutor-container { background:white; border-radius:20px; padding:28px; box-shadow:0 4px 20px rgba(0,0,0,0.04); margin-top:12px; }
-        .tutor-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; flex-wrap:wrap; gap:10px; }
-        .tutor-header h3 { font-size:1.2rem; font-weight:700; color:#0b1120; }
-        .tutor-header .context { font-size:0.9rem; color:#6b7280; background:#f3f4f6; padding:4px 16px; border-radius:20px; }
-        .chat-box { background:#f8fafc; border-radius:16px; padding:20px; max-height:400px; overflow-y:auto; border:1px solid #e5e7eb; margin-bottom:16px; }
-        .chat-box .msg { padding:12px 16px; border-radius:14px; max-width:85%; margin-bottom:10px; font-size:0.95rem; line-height:1.6; word-wrap:break-word; }
-        .chat-box .msg.user { background:#6366f1; color:#fff; margin-left:auto; text-align:right; }
-        .chat-box .msg.bot { background:#e5e7eb; color:#0b1120; margin-right:auto; }
-        .chat-box .msg.bot h1,.chat-box .msg.bot h2,.chat-box .msg.bot h3,.chat-box .msg.bot h4,.chat-box .msg.bot h5,.chat-box .msg.bot h6 { margin:8px 0 4px; font-weight:700; color:#0b1120; }
-        .chat-box .msg.bot h1 { font-size:1.6rem; }
-        .chat-box .msg.bot h2 { font-size:1.3rem; }
-        .chat-box .msg.bot h3 { font-size:1.1rem; }
-        .chat-box .msg.bot h4 { font-size:1rem; }
-        .chat-box .msg.bot h5 { font-size:0.95rem; }
-        .chat-box .msg.bot h6 { font-size:0.9rem; }
-        .chat-box .msg.bot ul,.chat-box .msg.bot ol { padding-left:20px; margin:4px 0 8px; }
-        .chat-box .msg.bot li { margin-bottom:2px; }
-        .chat-box .msg.bot p { margin:6px 0; }
-        .chat-box .msg.bot code { background:#e5e7eb; padding:1px 6px; border-radius:4px; font-size:0.9em; }
-        .chat-box .msg.bot pre { background:#e5e7eb; padding:10px; border-radius:8px; overflow-x:auto; }
-        .chat-box .msg.bot strong { font-weight:700; }
-        .chat-box .msg.bot em { font-style:italic; }
-        .chat-input { display:flex; gap:10px; }
-        .chat-input input { flex:1; padding:14px 18px; border:2px solid #e5e7eb; border-radius:14px; font-size:0.95rem; font-family:inherit; transition:border-color 0.25s; }
-        .chat-input input:focus { outline:none; border-color:#6366f1; }
-        .chat-input .btn-send { padding:0 28px; background:linear-gradient(135deg,#6366f1,#8b5cf6); color:#fff; border:none; border-radius:14px; font-weight:700; cursor:pointer; transition:all 0.25s; font-family:inherit; }
-        .chat-input .btn-send:hover { transform:scale(1.02); }
-        .chat-input .btn-send:disabled { opacity:0.6; cursor:not-allowed; }
-        .chat-options { display:flex; align-items:center; gap:14px; margin-top:12px; font-size:0.85rem; color:#6b7280; }
-        .chat-options input[type="checkbox"] { width:18px; height:18px; accent-color:#6366f1; cursor:pointer; }
-        .chat-options label { cursor:pointer; }
-        .empty-state { grid-column:1/-1; text-align:center; padding:40px; color:#6b7280; }
-        .sidebar-right { background:white; border-radius:16px; padding:24px 18px; box-shadow:0 2px 12px rgba(0,0,0,0.04); height:fit-content; }
-        .sidebar-right .section-title { font-size:0.7rem; text-transform:uppercase; color:#6b7280; font-weight:700; letter-spacing:0.5px; margin:16px 0 8px; }
-        .sidebar-right .section-title:first-child { margin-top:0; }
-        .flashcard-item { padding:10px 14px; background:#f8fafc; border-radius:10px; margin-bottom:6px; font-size:0.85rem; cursor:pointer; transition:all 0.2s; }
-        .flashcard-item:hover { background:#eef2ff; }
-        .flashcard-item .term { font-weight:600; color:#0b1120; }
-        .flashcard-item .def { font-size:0.8rem; color:#6b7280; margin-top:2px; }
-        .error-item { padding:10px 14px; background:#fef2f2; border-radius:10px; margin-bottom:6px; font-size:0.85rem; border-left:3px solid #ef4444; }
-        .error-item .concept { font-weight:600; color:#991b1b; }
-        .error-item .hint { font-size:0.8rem; color:#6b7280; margin-top:2px; }
+        /* ===== DASHBOARD ===== */
+        .dashboard {
+            display: none;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .dashboard.active {
+            display: block;
+        }
+        .top-nav {
+            background: white;
+            padding: 16px 28px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
+            border-radius: 16px;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+        .top-nav .logo {
+            font-size: 1.4rem;
+            font-weight: 800;
+            color: #0b1120;
+            text-decoration: none;
+        }
+        .top-nav .logo span {
+            background: linear-gradient(135deg, #6366f1, #a855f7);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .top-nav .user-info {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+        .top-nav .user-info .name {
+            font-weight: 600;
+            color: #0b1120;
+            font-size: 0.95rem;
+        }
+        .top-nav .user-info .role {
+            font-size: 0.75rem;
+            color: #6b7280;
+            background: #f3f4f6;
+            padding: 2px 12px;
+            border-radius: 12px;
+        }
+        .top-nav .user-info .grade-badge {
+            font-size: 0.75rem;
+            color: #6366f1;
+            background: #eef2ff;
+            padding: 2px 12px;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .top-nav .user-info .grade-badge:hover {
+            background: #dbeafe;
+        }
+        .top-nav .user-info .logout-btn {
+            background: none;
+            border: none;
+            color: #9ca3af;
+            font-size: 0.85rem;
+            cursor: pointer;
+            padding: 6px 14px;
+            border-radius: 8px;
+            transition: all 0.2s;
+            font-family: inherit;
+        }
+        .top-nav .user-info .logout-btn:hover {
+            background: #f3f4f6;
+            color: #ef4444;
+        }
+        .sub-badge {
+            font-size: 0.7rem;
+            padding: 3px 12px;
+            border-radius: 12px;
+            font-weight: 600;
+        }
+        .sub-trial {
+            background: #fef3c7;
+            color: #92400e;
+        }
+        .sub-active {
+            background: #d1fae5;
+            color: #065f46;
+        }
+        .sub-expired {
+            background: #fee2e2;
+            color: #991b1b;
+        }
 
-        .info-page { display:none; max-width:800px; margin:40px auto; padding:40px 36px; background:white; border-radius:28px; box-shadow:0 24px 80px rgba(0,0,0,0.08); line-height:1.6; color:#0b1120; }
-        .info-page.active { display:block; }
-        .info-page h1 { font-size:2rem; margin-bottom:8px; }
-        .info-page h2 { font-size:1.3rem; margin-top:28px; margin-bottom:8px; }
-        .info-page a { color:#6366f1; }
-        .info-page .back-link { display:inline-block; margin-top:24px; font-weight:600; color:#6366f1; cursor:pointer; }
-        .info-page .back-link:hover { text-decoration:underline; }
-        .info-page ul { padding-left:24px; }
-        .info-page input,.info-page textarea { width:100%; padding:12px; border:2px solid #e5e7eb; border-radius:8px; font-size:1rem; margin:6px 0 16px; font-family:inherit; }
-        .info-page button { padding:14px 28px; background:#6366f1; color:white; border:none; border-radius:8px; font-weight:700; cursor:pointer; font-size:1rem; }
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 240px 1fr 280px;
+            gap: 20px;
+        }
+        @media (max-width:1024px) {
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        .sidebar-left {
+            background: white;
+            border-radius: 16px;
+            padding: 24px 18px;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
+            height: fit-content;
+        }
+        .sidebar-left .section-title {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            color: #6b7280;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            margin: 16px 0 8px;
+        }
+        .sidebar-left .section-title:first-child {
+            margin-top: 0;
+        }
+        .sidebar-left .subject-list {
+            list-style: none;
+        }
+        .sidebar-left .subject-list li {
+            padding: 10px 14px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 0.9rem;
+            color: #1f2937;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 2px;
+        }
+        .sidebar-left .subject-list li:hover {
+            background: #f3f4f6;
+        }
+        .sidebar-left .subject-list li.active {
+            background: #eef2ff;
+            color: #6366f1;
+            font-weight: 600;
+        }
+        .sidebar-left .subject-list li .icon {
+            font-size: 1.2rem;
+            width: 24px;
+            text-align: center;
+        }
+        .sidebar-left .subject-list li .progress-dot {
+            margin-left: auto;
+            font-size: 0.7rem;
+            color: #6b7280;
+        }
+        .progress-item {
+            margin: 8px 0;
+        }
+        .progress-item .label {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.8rem;
+            color: #4b5563;
+        }
+        .progress-item .bar {
+            height: 6px;
+            background: #e5e7eb;
+            border-radius: 4px;
+            margin-top: 4px;
+            overflow: hidden;
+        }
+        .progress-item .bar .fill {
+            height: 100%;
+            border-radius: 4px;
+            background: linear-gradient(90deg, #6366f1, #8b5cf6);
+            transition: width 0.6s ease;
+        }
+        .recent-item {
+            padding: 10px 12px;
+            border-radius: 10px;
+            background: #f8fafc;
+            margin-bottom: 6px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            color: #1f2937;
+            transition: all 0.2s;
+        }
+        .recent-item:hover {
+            background: #eef2ff;
+        }
+        .recent-item .sub {
+            font-size: 0.75rem;
+            color: #6b7280;
+        }
+        .center-panel {
+            background: white;
+            border-radius: 16px;
+            padding: 28px 32px;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
+            min-height: 500px;
+        }
+        .center-panel .welcome {
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: #0b1120;
+            margin-bottom: 4px;
+        }
+        .center-panel .welcome-sub {
+            color: #6b7280;
+            font-size: 0.95rem;
+            margin-bottom: 20px;
+        }
+        .center-panel .welcome-sub .change-grade-link {
+            color: #6366f1;
+            cursor: pointer;
+            font-weight: 600;
+            text-decoration: underline;
+            text-underline-offset: 2px;
+        }
+        .center-panel .welcome-sub .change-grade-link:hover {
+            color: #4f46e5;
+        }
+        .grade-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            gap: 12px;
+            margin: 16px 0;
+        }
+        .grade-card {
+            padding: 24px 12px;
+            border: 2px solid #e5e7eb;
+            border-radius: 14px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.25s;
+            background: white;
+            font-weight: 600;
+            font-size: 1rem;
+            color: #0b1120;
+        }
+        .grade-card:hover {
+            border-color: #6366f1;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 24px rgba(99, 102, 241, 0.10);
+        }
+        .grade-card.selected {
+            border-color: #6366f1;
+            background: #eef2ff;
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
+        }
+        .grade-card .sub {
+            font-size: 0.7rem;
+            color: #6b7280;
+            font-weight: 400;
+            display: block;
+            margin-top: 4px;
+        }
+        .btn-confirm {
+            padding: 14px 40px;
+            border: none;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            color: #fff;
+            transition: transform 0.15s;
+            font-family: inherit;
+            margin-top: 16px;
+            display: none;
+        }
+        .btn-confirm:hover {
+            transform: translateY(-2px);
+        }
+        .subject-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            gap: 16px;
+        }
+        .subject-card {
+            background: white;
+            border: 2px solid #e5e7eb;
+            border-radius: 16px;
+            padding: 28px 16px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.25s;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
+        }
+        .subject-card:hover {
+            border-color: #6366f1;
+            transform: translateY(-4px);
+            box-shadow: 0 12px 32px rgba(99, 102, 241, 0.12);
+        }
+        .subject-card .icon {
+            font-size: 2.8rem;
+            display: block;
+            margin-bottom: 6px;
+        }
+        .subject-card .name {
+            font-weight: 700;
+            font-size: 0.95rem;
+            color: #0b1120;
+        }
+        .subject-card .progress-badge {
+            display: inline-block;
+            font-size: 0.7rem;
+            color: #6366f1;
+            background: #eef2ff;
+            padding: 2px 10px;
+            border-radius: 12px;
+            margin-top: 6px;
+        }
+        .back-btn {
+            background: none;
+            border: 1px solid #e5e7eb;
+            padding: 10px 20px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: 600;
+            color: #4b5563;
+            transition: all 0.2s;
+            font-family: inherit;
+            display: inline-block;
+            margin-bottom: 16px;
+        }
+        .back-btn:hover {
+            background: #f3f4f6;
+        }
+        .topic-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+            gap: 16px;
+        }
+        .topic-card {
+            background: white;
+            border: 2px solid #e5e7eb;
+            border-radius: 14px;
+            padding: 20px 18px;
+            transition: all 0.25s;
+            cursor: pointer;
+            position: relative;
+        }
+        .topic-card:hover {
+            border-color: #6366f1;
+            box-shadow: 0 8px 24px rgba(99, 102, 241, 0.08);
+        }
+        .topic-card.completed {
+            border-color: #22c55e;
+            background: #f0fdf4;
+        }
+        .topic-card .title {
+            font-weight: 700;
+            font-size: 1rem;
+            color: #0b1120;
+        }
+        .topic-card .meta {
+            font-size: 0.8rem;
+            color: #6b7280;
+            margin-top: 4px;
+        }
+        .topic-card .resources {
+            margin-top: 10px;
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+        .topic-card .resources .tag {
+            background: #eef2ff;
+            color: #6366f1;
+            padding: 2px 12px;
+            border-radius: 12px;
+            font-size: 0.7rem;
+            font-weight: 600;
+        }
+        .topic-card .status-badge {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            padding: 2px 10px;
+            border-radius: 12px;
+            background: #e5e7eb;
+            color: #6b7280;
+        }
+        .topic-card.completed .status-badge {
+            background: #d1fae5;
+            color: #065f46;
+        }
+        .tutor-container {
+            background: white;
+            border-radius: 20px;
+            padding: 28px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+            margin-top: 12px;
+        }
+        .tutor-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .tutor-header h3 {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #0b1120;
+        }
+        .tutor-header .context {
+            font-size: 0.9rem;
+            color: #6b7280;
+            background: #f3f4f6;
+            padding: 4px 16px;
+            border-radius: 20px;
+        }
+        .chat-box {
+            background: #f8fafc;
+            border-radius: 16px;
+            padding: 20px;
+            max-height: 400px;
+            overflow-y: auto;
+            border: 1px solid #e5e7eb;
+            margin-bottom: 16px;
+        }
+        .chat-box .msg {
+            padding: 12px 16px;
+            border-radius: 14px;
+            max-width: 85%;
+            margin-bottom: 10px;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            word-wrap: break-word;
+        }
+        .chat-box .msg.user {
+            background: #6366f1;
+            color: #fff;
+            margin-left: auto;
+            text-align: right;
+        }
+        .chat-box .msg.bot {
+            background: #e5e7eb;
+            color: #0b1120;
+            margin-right: auto;
+        }
+        .chat-box .msg.bot h1,
+        .chat-box .msg.bot h2,
+        .chat-box .msg.bot h3,
+        .chat-box .msg.bot h4,
+        .chat-box .msg.bot h5,
+        .chat-box .msg.bot h6 {
+            margin: 8px 0 4px;
+            font-weight: 700;
+            color: #0b1120;
+        }
+        .chat-box .msg.bot h1 {
+            font-size: 1.6rem;
+        }
+        .chat-box .msg.bot h2 {
+            font-size: 1.3rem;
+        }
+        .chat-box .msg.bot h3 {
+            font-size: 1.1rem;
+        }
+        .chat-box .msg.bot h4 {
+            font-size: 1rem;
+        }
+        .chat-box .msg.bot h5 {
+            font-size: 0.95rem;
+        }
+        .chat-box .msg.bot h6 {
+            font-size: 0.9rem;
+        }
+        .chat-box .msg.bot ul,
+        .chat-box .msg.bot ol {
+            padding-left: 20px;
+            margin: 4px 0 8px;
+        }
+        .chat-box .msg.bot li {
+            margin-bottom: 2px;
+        }
+        .chat-box .msg.bot p {
+            margin: 6px 0;
+        }
+        .chat-box .msg.bot code {
+            background: #e5e7eb;
+            padding: 1px 6px;
+            border-radius: 4px;
+            font-size: 0.9em;
+        }
+        .chat-box .msg.bot pre {
+            background: #e5e7eb;
+            padding: 10px;
+            border-radius: 8px;
+            overflow-x: auto;
+        }
+        .chat-box .msg.bot strong {
+            font-weight: 700;
+        }
+        .chat-box .msg.bot em {
+            font-style: italic;
+        }
+        .chat-input {
+            display: flex;
+            gap: 10px;
+        }
+        .chat-input input {
+            flex: 1;
+            padding: 14px 18px;
+            border: 2px solid #e5e7eb;
+            border-radius: 14px;
+            font-size: 0.95rem;
+            font-family: inherit;
+            transition: border-color 0.25s;
+        }
+        .chat-input input:focus {
+            outline: none;
+            border-color: #6366f1;
+        }
+        .chat-input .btn-send {
+            padding: 0 28px;
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            color: #fff;
+            border: none;
+            border-radius: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.25s;
+            font-family: inherit;
+        }
+        .chat-input .btn-send:hover {
+            transform: scale(1.02);
+        }
+        .chat-input .btn-send:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+        .chat-options {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin-top: 12px;
+            font-size: 0.85rem;
+            color: #6b7280;
+        }
+        .chat-options input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            accent-color: #6366f1;
+            cursor: pointer;
+        }
+        .chat-options label {
+            cursor: pointer;
+        }
+        .empty-state {
+            grid-column: 1/-1;
+            text-align: center;
+            padding: 40px;
+            color: #6b7280;
+        }
+        .sidebar-right {
+            background: white;
+            border-radius: 16px;
+            padding: 24px 18px;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
+            height: fit-content;
+        }
+        .sidebar-right .section-title {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            color: #6b7280;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            margin: 16px 0 8px;
+        }
+        .sidebar-right .section-title:first-child {
+            margin-top: 0;
+        }
+        .flashcard-item {
+            padding: 10px 14px;
+            background: #f8fafc;
+            border-radius: 10px;
+            margin-bottom: 6px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .flashcard-item:hover {
+            background: #eef2ff;
+        }
+        .flashcard-item .term {
+            font-weight: 600;
+            color: #0b1120;
+        }
+        .flashcard-item .def {
+            font-size: 0.8rem;
+            color: #6b7280;
+            margin-top: 2px;
+        }
+        .error-item {
+            padding: 10px 14px;
+            background: #fef2f2;
+            border-radius: 10px;
+            margin-bottom: 6px;
+            font-size: 0.85rem;
+            border-left: 3px solid #ef4444;
+        }
+        .error-item .concept {
+            font-weight: 600;
+            color: #991b1b;
+        }
+        .error-item .hint {
+            font-size: 0.8rem;
+            color: #6b7280;
+            margin-top: 2px;
+        }
 
-        .site-footer { background:#0b1120; color:#9ca3af; padding:40px 20px; margin-top:60px; }
-        .site-footer .inner { max-width:1100px; margin:0 auto; display:grid; grid-template-columns:repeat(auto-fit,minmax(180px,1fr)); gap:32px; }
-        .site-footer .inner h4 { color:white; font-size:1.1rem; margin-bottom:12px; }
-        .site-footer .inner a { display:block; color:#9ca3af; text-decoration:none; font-size:0.9rem; padding:4px 0; transition:color 0.2s; cursor:pointer; }
-        .site-footer .inner a:hover { color:white; }
-        .site-footer .bottom { max-width:1100px; margin:20px auto 0; border-top:1px solid #1a1a3e; padding-top:20px; text-align:center; font-size:0.85rem; }
+        /* ===== INFO PAGES ===== */
+        .info-page {
+            display: none;
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 40px 36px;
+            background: white;
+            border-radius: 28px;
+            box-shadow: 0 24px 80px rgba(0, 0, 0, 0.08);
+            line-height: 1.6;
+            color: #0b1120;
+        }
+        .info-page.active {
+            display: block;
+        }
+        .info-page h1 {
+            font-size: 2rem;
+            margin-bottom: 8px;
+        }
+        .info-page h2 {
+            font-size: 1.3rem;
+            margin-top: 28px;
+            margin-bottom: 8px;
+        }
+        .info-page a {
+            color: #6366f1;
+        }
+        .info-page .back-link {
+            display: inline-block;
+            margin-top: 24px;
+            font-weight: 600;
+            color: #6366f1;
+            cursor: pointer;
+        }
+        .info-page .back-link:hover {
+            text-decoration: underline;
+        }
+        .info-page ul {
+            padding-left: 24px;
+        }
+        .info-page input,
+        .info-page textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            font-size: 1rem;
+            margin: 6px 0 16px;
+            font-family: inherit;
+        }
+        .info-page button {
+            padding: 14px 28px;
+            background: #6366f1;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: 700;
+            cursor: pointer;
+            font-size: 1rem;
+        }
 
-        @media (max-width:768px){ .hero h1{font-size:2.2rem;} .hero .hero-subtitle{font-size:1rem;} .trust-badges{flex-direction:column; align-items:center; gap:8px;} .stats-bar{grid-template-columns:1fr 1fr;} .features-grid{grid-template-columns:1fr 1fr;} .pricing-grid{grid-template-columns:1fr;} .auth-card{padding:28px 20px;} .top-nav{padding:12px 16px; flex-direction:column; align-items:stretch;} .top-nav .logo{text-align:center;} .top-nav .user-info{justify-content:center;} .subject-grid{grid-template-columns:repeat(auto-fill,minmax(130px,1fr));} .grade-grid{grid-template-columns:repeat(auto-fill,minmax(80px,1fr));} .topic-grid{grid-template-columns:1fr;} .center-panel{padding:16px;} .center-panel .welcome{font-size:1.2rem;} .tutor-container{padding:16px;} .chat-input{flex-wrap:wrap;} .chat-input .btn-send{flex:1; padding:14px;} .info-page{padding:24px 20px; margin:20px 16px;} .info-page h1{font-size:1.6rem;} }
-        @media (max-width:480px){ .hero h1{font-size:1.8rem;} .hero .cta-group{flex-direction:column; align-items:center;} .hero .btn-primary,.hero .btn-secondary{width:100%; max-width:280px;} .features-grid{grid-template-columns:1fr;} .stats-bar{grid-template-columns:1fr;} .grade-grid{grid-template-columns:repeat(auto-fill,minmax(60px,1fr));} }
+        /* ===== FOOTER ===== */
+        .site-footer {
+            background: #0b1120;
+            color: #9ca3af;
+            padding: 40px 20px;
+            margin-top: 60px;
+        }
+        .site-footer .inner {
+            max-width: 1100px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 32px;
+        }
+        .site-footer .inner h4 {
+            color: white;
+            font-size: 1.1rem;
+            margin-bottom: 12px;
+        }
+        .site-footer .inner a {
+            display: block;
+            color: #9ca3af;
+            text-decoration: none;
+            font-size: 0.9rem;
+            padding: 4px 0;
+            transition: color 0.2s;
+            cursor: pointer;
+        }
+        .site-footer .inner a:hover {
+            color: white;
+        }
+        .site-footer .bottom {
+            max-width: 1100px;
+            margin: 20px auto 0;
+            border-top: 1px solid #1a1a3e;
+            padding-top: 20px;
+            text-align: center;
+            font-size: 0.85rem;
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.2rem;
+            }
+            .hero .hero-subtitle {
+                font-size: 1rem;
+            }
+            .features-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+            .pricing-grid {
+                grid-template-columns: 1fr;
+            }
+            .auth-card {
+                padding: 28px 20px;
+            }
+            .top-nav {
+                padding: 12px 16px;
+                flex-direction: column;
+                align-items: stretch;
+            }
+            .top-nav .logo {
+                text-align: center;
+            }
+            .top-nav .user-info {
+                justify-content: center;
+            }
+            .subject-grid {
+                grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+            }
+            .grade-grid {
+                grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+            }
+            .topic-grid {
+                grid-template-columns: 1fr;
+            }
+            .center-panel {
+                padding: 16px;
+            }
+            .center-panel .welcome {
+                font-size: 1.2rem;
+            }
+            .tutor-container {
+                padding: 16px;
+            }
+            .chat-input {
+                flex-wrap: wrap;
+            }
+            .chat-input .btn-send {
+                flex: 1;
+                padding: 14px;
+            }
+            .info-page {
+                padding: 24px 20px;
+                margin: 20px 16px;
+            }
+            .info-page h1 {
+                font-size: 1.6rem;
+            }
+        }
+        @media (max-width: 480px) {
+            .hero h1 {
+                font-size: 1.8rem;
+            }
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+            .grade-grid {
+                grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
+            }
+        }
     </style>
 </head>
 <body>
 
     <!-- ============================================================ -->
-    <!-- HERO SECTION (Professional Homepage) -->
+    <!-- HERO SECTION -->
     <!-- ============================================================ -->
     <section class="hero" id="heroSection">
         <div class="hero-container" style="max-width:900px;margin:0 auto;">
             <div class="logo">🧠 <span>Leago</span></div>
             <span class="logo-sub">AI Education Platform</span>
             <div class="badge">✨ AI-Powered Learning Platform</div>
-            <h1>Learn Smarter. Study Better. <span class="highlight">Succeed Faster.</span></h1>
+            <h1>Master Every Subject with <span class="highlight">Your Personal AI Teacher</span></h1>
             <p class="hero-subtitle">
-                Master difficult subjects with step-by-step AI lessons, interactive quizzes, homework assistance, and personalized learning designed for Grades 10–12 and college students.
+                Personalized AI learning for Grades 10–12 and college students. Learn through structured lessons, quizzes, homework assistance, and exam preparation.
             </p>
             <div class="cta-group">
-                <a class="btn-primary" onclick="openAuth('login')">🚀 Start Learning Free</a>
-                <div class="cta-note">Free plan available • Premium features available</div>
-                <a class="btn-secondary" onclick="document.querySelector('.features').scrollIntoView({behavior:'smooth'})">📚 Explore Subjects</a>
-            </div>
-            <div class="trust-badges">
-                <span>🎯 Grades 10–12 &amp; College</span>
-                <span>📚 12+ Subjects</span>
-                <span>🧠 AI Teacher</span>
-                <span>📝 Homework &amp; Quizzes</span>
-                <span>📊 Personalized Learning</span>
+                <a class="btn-primary" onclick="openAuth('login')">Start Learning Free</a>
+                <span class="cta-note">Free plan available • Premium subscription available</span>
             </div>
         </div>
     </section>
 
     <!-- ============================================================ -->
-    <!-- DASHBOARD PREVIEW (Mockup) -->
+    <!-- DASHBOARD PREVIEW (Placeholder for screenshot) -->
     <!-- ============================================================ -->
     <div class="dashboard-preview">
         <div class="mockup">
-            <div class="header">
-                <h3>📊 Your Learning Dashboard</h3>
-                <span class="user">👋 Welcome Samuel</span>
-            </div>
-            <div class="grid">
-                <div class="card">
-                    <div class="icon">📐</div>
-                    <div class="label">Continue Learning</div>
-                    <div class="value">Mathematics • 75%</div>
-                    <div class="bar"><div class="fill" style="width:75%"></div></div>
-                </div>
-                <div class="card">
-                    <div class="icon">🎯</div>
-                    <div class="label">Today's Lesson</div>
-                    <div class="value">Algebra</div>
-                    <div style="margin-top:4px;font-size:0.8rem;color:#22c55e;">In progress</div>
-                </div>
-                <div class="card">
-                    <div class="icon">📝</div>
-                    <div class="label">Homework</div>
-                    <div class="value">2 Due</div>
-                    <div style="margin-top:4px;font-size:0.8rem;color:#6366f1;">View tasks →</div>
-                </div>
-            </div>
-            <div style="margin-top:12px;display:flex;justify-content:flex-end;gap:12px;flex-wrap:wrap;">
-                <span style="font-size:0.8rem;color:#6b7280;">📊 Progress: 82%</span>
-                <span style="font-size:0.8rem;color:#6b7280;">🧠 AI Teacher: Online</span>
+            <div class="placeholder">
+                <span class="icon">📊</span>
+                <strong>Dashboard Preview</strong>
+                <p style="margin-top:4px;font-size:0.85rem;color:#9ca3af;">
+                    A real screenshot of your dashboard will appear here.
+                </p>
+                <p style="font-size:0.8rem;color:#9ca3af;margin-top:2px;">
+                    (Coming soon)
+                </p>
             </div>
         </div>
     </div>
 
     <!-- ============================================================ -->
-    <!-- STATS BAR -->
-    <!-- ============================================================ -->
-    <div class="stats-bar">
-        <div class="stat-card"><div class="number">12+</div><div class="label">Subjects</div></div>
-        <div class="stat-card"><div class="number">100+</div><div class="label">Topics</div></div>
-        <div class="stat-card"><div class="number">24/7</div><div class="label">AI Tutor</div></div>
-        <div class="stat-card"><div class="number">3‑Day</div><div class="label">Free Trial</div></div>
-    </div>
-
-    <!-- ============================================================ -->
-    <!-- FEATURES SECTION -->
+    <!-- WHY CHOOSE LEAGO ACADEMY (4 Features) -->
     <!-- ============================================================ -->
     <section class="features" id="features">
         <div class="section-title">
-            <h2>Everything You Need to Succeed</h2>
-            <p>Leago Academy gives you the tools to master any subject.</p>
+            <h2>Why Choose Leago Academy</h2>
         </div>
         <div class="features-grid">
             <div class="feature-card">
                 <span class="icon">🧠</span>
-                <h3>Learn with an AI Teacher</h3>
-                <p>Receive step‑by‑step explanations that adapt to your learning style and pace.</p>
+                <h3>AI Teacher</h3>
+                <p>Personalized step-by-step explanations that adapt to you.</p>
+            </div>
+            <div class="feature-card">
+                <span class="icon">📚</span>
+                <h3>Structured Lessons</h3>
+                <p>Organized learning paths for Grades 10–12 and College.</p>
             </div>
             <div class="feature-card">
                 <span class="icon">📝</span>
-                <h3>Practice Until You Understand</h3>
-                <p>Interactive exercises, quizzes, and homework designed to build real confidence.</p>
+                <h3>Homework &amp; Quizzes</h3>
+                <p>Practice what you learn with interactive exercises.</p>
             </div>
             <div class="feature-card">
                 <span class="icon">📊</span>
-                <h3>Track Your Progress</h3>
-                <p>Monitor lessons completed, quiz scores, and improvement over time.</p>
-            </div>
-            <div class="feature-card">
-                <span class="icon">🎯</span>
-                <h3>Prepare for Exams</h3>
-                <p>Practice with exam‑style questions and personalized revision plans.</p>
+                <h3>Progress Tracking</h3>
+                <p>Monitor your improvement over time.</p>
             </div>
         </div>
     </section>
 
     <!-- ============================================================ -->
-    <!-- STATUS BAR -->
-    <!-- ============================================================ -->
-    <div class="status-bar">
-        <div class="status"><span class="dot"></span> Fully operational — start learning now</div>
-    </div>
-
-    <!-- ============================================================ -->
-    <!-- PRICING SECTION -->
+    <!-- PRICING (Free vs Premium) -->
     <!-- ============================================================ -->
     <section class="pricing" id="pricing">
         <div class="section-title">
             <h2>Choose Your Plan</h2>
-            <p>Start free and upgrade when you're ready for unlimited learning.</p>
+            <p>Start free and upgrade anytime.</p>
         </div>
         <div class="pricing-grid">
             <!-- Free Plan -->
             <div class="pricing-card">
-                <div class="plan-badge">🟢 Free Plan</div>
                 <div class="plan">Free</div>
-                <div class="price">R0 <span>/ forever</span></div>
-                <div class="description">Perfect for getting started.</div>
+                <div class="price">R0</div>
+                <div class="description">Get started with the basics.</div>
                 <ul class="features-list">
                     <li>Limited AI lessons</li>
                     <li>Basic quizzes</li>
-                    <li>Explore all subjects</li>
                     <li>Community support</li>
                 </ul>
                 <button class="btn-pricing outline" onclick="openAuth('signup')">Start Free</button>
@@ -978,11 +1407,10 @@
 
             <!-- Premium Plan -->
             <div class="pricing-card popular">
-                <div style="font-size:0.75rem;color:#6366f1;font-weight:700;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;">Most Popular</div>
-                <div class="plan-badge">🟣 Premium</div>
+                <div style="font-size:0.75rem;color:#6366f1;font-weight:700;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;">Most Popular</div>
                 <div class="plan">Premium</div>
                 <div class="price">R49.99 <span>/ month</span></div>
-                <div class="description">Unlock the full power of Leago Academy.</div>
+                <div class="description">Unlock everything.</div>
                 <ul class="features-list">
                     <li>Unlimited AI Teacher</li>
                     <li>Unlimited lessons</li>
@@ -991,13 +1419,13 @@
                     <li>Progress analytics</li>
                     <li>Priority support</li>
                 </ul>
-                <button class="btn-pricing" onclick="openAuth('login')">Start Your Trial</button>
+                <button class="btn-pricing" onclick="openAuth('login')">Upgrade to Premium</button>
             </div>
         </div>
     </section>
 
     <!-- ============================================================ -->
-    <!-- FAQ SECTION -->
+    <!-- FAQ (4 Questions) -->
     <!-- ============================================================ -->
     <section class="faq" id="faq">
         <div class="section-title">
@@ -1005,38 +1433,29 @@
         </div>
         <div class="faq-item">
             <div class="question">What is Leago Academy?</div>
-            <div class="answer">Leago Academy is an AI-powered education platform that provides personalized learning for high school and college students. It offers step-by-step lessons, interactive quizzes, homework help, and exam preparation.</div>
+            <div class="answer">Leago Academy is an AI-powered education platform that provides personalized learning for high school and college students through structured lessons, quizzes, homework help, and exam preparation.</div>
         </div>
         <div class="faq-item">
-            <div class="question">Is there a free version?</div>
+            <div class="question">Is there a free plan?</div>
             <div class="answer">Yes! Leago Academy offers a free plan with limited AI lessons and basic quizzes. You can upgrade to Premium anytime for unlimited access to all features.</div>
         </div>
         <div class="faq-item">
-            <div class="question">Which subjects are available?</div>
-            <div class="answer">We currently offer 12+ subjects including Mathematics, English, Life Sciences, Physical Sciences, History, Geography, and many more for both high school and college levels.</div>
+            <div class="question">What's included in Premium?</div>
+            <div class="answer">Premium includes unlimited AI Teacher access, unlimited lessons, homework and assignments, exam preparation tools, progress analytics, and priority support.</div>
         </div>
         <div class="faq-item">
-            <div class="question">How does the AI Teacher work?</div>
-            <div class="answer">Our AI Teacher adapts to your learning style, providing step-by-step explanations, answering questions, and creating personalized practice problems to help you master each topic.</div>
+            <div class="question">Can I cancel anytime?</div>
+            <div class="answer">Yes, you can cancel your Premium subscription at any time from your account settings. No questions asked.</div>
         </div>
-    </section>
-
-    <!-- ============================================================ -->
-    <!-- FINAL CTA -->
-    <!-- ============================================================ -->
-    <section class="final-cta">
-        <h2>Start Your Learning Journey Today</h2>
-        <p>Join thousands of students building confidence through personalized AI learning. Start with our free plan and upgrade anytime for unlimited learning tools.</p>
-        <button class="btn-cta" onclick="openAuth('signup')">🚀 Create Your Free Account</button>
     </section>
 
     <!-- ============================================================ -->
     <!-- INFO PAGES (Privacy, About, Contact, TOS) -->
     <!-- ============================================================ -->
-    <div class="info-page" id="page-privacy"><h1>Privacy Policy</h1><p><strong>Last updated:</strong> June 2026</p><p>At Leago, we take your privacy seriously...</p><span class="back-link" onclick="showInfoPage('')">← Back to Leago</span></div>
-    <div class="info-page" id="page-about"><h1>About Leago</h1><p><strong>Leago</strong> is an AI-powered educational platform...</p><span class="back-link" onclick="showInfoPage('')">← Back to Leago</span></div>
+    <div class="info-page" id="page-privacy"><h1>Privacy Policy</h1><p><strong>Last updated:</strong> June 2026</p><p>At Leago Academy, we take your privacy seriously...</p><span class="back-link" onclick="showInfoPage('')">← Back to Leago</span></div>
+    <div class="info-page" id="page-about"><h1>About Leago Academy</h1><p><strong>Leago Academy</strong> is an AI-powered educational platform...</p><span class="back-link" onclick="showInfoPage('')">← Back to Leago</span></div>
     <div class="info-page" id="page-contact"><h1>Contact Us</h1><p>Have questions? We'd love to hear from you.</p><span class="back-link" onclick="showInfoPage('')">← Back to Leago</span></div>
-    <div class="info-page" id="page-tos"><h1>Terms of Service</h1><p><strong>Last updated:</strong> June 2026</p><p>Welcome to Leago...</p><span class="back-link" onclick="showInfoPage('')">← Back to Leago</span></div>
+    <div class="info-page" id="page-tos"><h1>Terms of Service</h1><p><strong>Last updated:</strong> June 2026</p><p>Welcome to Leago Academy...</p><span class="back-link" onclick="showInfoPage('')">← Back to Leago</span></div>
 
     <!-- ============================================================ -->
     <!-- AUTH OVERLAY (Login / Signup) -->
@@ -1114,14 +1533,13 @@
         <div class="inner">
             <div>
                 <h4>🧠 Leago Academy</h4>
-                <p style="font-size:0.9rem;">Empowering students through AI-powered education.</p>
+                <p style="font-size:0.9rem;">AI-powered education for Grades 10–12 &amp; College.</p>
             </div>
             <div>
                 <h4>Company</h4>
                 <a onclick="showInfoPage('about')">About</a>
-                <a onclick="showInfoPage('contact')">Contact</a>
                 <a href="#pricing" onclick="document.getElementById('pricing').scrollIntoView({behavior:'smooth'})">Pricing</a>
-                <a href="#faq" onclick="document.getElementById('faq').scrollIntoView({behavior:'smooth'})">FAQ</a>
+                <a onclick="showInfoPage('contact')">Contact</a>
             </div>
             <div>
                 <h4>Legal</h4>
@@ -1137,12 +1555,12 @@
     </footer>
 
     <!-- ============================================================ -->
-    <!-- JAVASCRIPT (same as before, keep it) -->
+    <!-- JAVASCRIPT -->
     <!-- ============================================================ -->
     <script>
-        // [All your existing JavaScript code goes here unchanged]
-        // To save space, I'll include the same JS as the previous version.
-        // Actually, since this is the full setup, I'll include it all.
+        // ================================================================
+        //  STATE
+        // ================================================================
         let currentUser = null;
         let currentSubject = '';
         let selectedGrade = '';
@@ -1187,33 +1605,24 @@
             document.querySelectorAll('.info-page').forEach(el => el.classList.remove('active'));
             if (!page) {
                 document.getElementById('heroSection').style.display = 'block';
-                document.querySelector('.stats-bar').style.display = 'grid';
-                document.getElementById('features').style.display = 'block';
-                document.querySelector('.status-bar').style.display = 'block';
-                document.getElementById('pricing').style.display = 'block';
-                document.querySelector('.final-cta').style.display = 'block';
                 document.querySelector('.dashboard-preview').style.display = 'block';
+                document.getElementById('features').style.display = 'block';
+                document.getElementById('pricing').style.display = 'block';
                 document.querySelector('.faq').style.display = 'block';
                 if (currentUser) {
                     document.getElementById('dashboard').classList.add('active');
                     document.getElementById('heroSection').style.display = 'none';
-                    document.querySelector('.stats-bar').style.display = 'none';
-                    document.getElementById('features').style.display = 'none';
-                    document.querySelector('.status-bar').style.display = 'none';
-                    document.getElementById('pricing').style.display = 'none';
-                    document.querySelector('.final-cta').style.display = 'none';
                     document.querySelector('.dashboard-preview').style.display = 'none';
+                    document.getElementById('features').style.display = 'none';
+                    document.getElementById('pricing').style.display = 'none';
                     document.querySelector('.faq').style.display = 'none';
                 }
                 return;
             }
             document.getElementById('heroSection').style.display = 'none';
-            document.querySelector('.stats-bar').style.display = 'none';
-            document.getElementById('features').style.display = 'none';
-            document.querySelector('.status-bar').style.display = 'none';
-            document.getElementById('pricing').style.display = 'none';
-            document.querySelector('.final-cta').style.display = 'none';
             document.querySelector('.dashboard-preview').style.display = 'none';
+            document.getElementById('features').style.display = 'none';
+            document.getElementById('pricing').style.display = 'none';
             document.querySelector('.faq').style.display = 'none';
             document.getElementById('dashboard').classList.remove('active');
             const target = document.getElementById('page-' + page);
@@ -1246,12 +1655,9 @@
                         closeAuth();
                         document.getElementById('dashboard').classList.add('active');
                         document.getElementById('heroSection').style.display = 'none';
-                        document.querySelector('.stats-bar').style.display = 'none';
-                        document.getElementById('features').style.display = 'none';
-                        document.querySelector('.status-bar').style.display = 'none';
-                        document.getElementById('pricing').style.display = 'none';
-                        document.querySelector('.final-cta').style.display = 'none';
                         document.querySelector('.dashboard-preview').style.display = 'none';
+                        document.getElementById('features').style.display = 'none';
+                        document.getElementById('pricing').style.display = 'none';
                         document.querySelector('.faq').style.display = 'none';
                         document.getElementById('siteFooter').style.display = 'block';
                         loadProgress();
@@ -1560,12 +1966,9 @@
                 localStorage.removeItem('synapse_user');
                 document.getElementById('dashboard').classList.remove('active');
                 document.getElementById('heroSection').style.display = 'block';
-                document.querySelector('.stats-bar').style.display = 'grid';
-                document.getElementById('features').style.display = 'block';
-                document.querySelector('.status-bar').style.display = 'block';
-                document.getElementById('pricing').style.display = 'block';
-                document.querySelector('.final-cta').style.display = 'block';
                 document.querySelector('.dashboard-preview').style.display = 'block';
+                document.getElementById('features').style.display = 'block';
+                document.getElementById('pricing').style.display = 'block';
                 document.querySelector('.faq').style.display = 'block';
                 document.getElementById('loginEmail').value = '';
                 document.getElementById('loginPassword').value = '';
@@ -1579,12 +1982,9 @@
                 try {
                     const user = JSON.parse(stored);
                     document.getElementById('heroSection').style.display = 'none';
-                    document.querySelector('.stats-bar').style.display = 'none';
-                    document.getElementById('features').style.display = 'none';
-                    document.querySelector('.status-bar').style.display = 'none';
-                    document.getElementById('pricing').style.display = 'none';
-                    document.querySelector('.final-cta').style.display = 'none';
                     document.querySelector('.dashboard-preview').style.display = 'none';
+                    document.getElementById('features').style.display = 'none';
+                    document.getElementById('pricing').style.display = 'none';
                     document.querySelector('.faq').style.display = 'none';
                     document.getElementById('dashboard').classList.add('active');
                     loadProgress();
