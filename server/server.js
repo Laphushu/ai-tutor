@@ -1,5 +1,5 @@
 // ============================================================
-// server/server.js – Paystack via direct fetch + Hugging Face AI
+// server/server.js – Direct Paystack + Hugging Face AI Tutor
 // ============================================================
 
 require('dotenv').config();
@@ -21,7 +21,7 @@ app.use('/paystack-webhook', express.raw({ type: 'application/json' }));
 app.use(express.static(path.join(__dirname, '../client')));
 
 // ============================================================
-//  IN‑MEMORY DATABASE (replace with real DB in production)
+//  IN‑MEMORY DATABASE
 // ============================================================
 const users = {};
 const subscriptions = {};
@@ -87,24 +87,15 @@ app.post('/save-profile', (req, res) => {
 });
 
 // ============================================================
-//  PAYMENT & SUBSCRIPTION (using direct fetch to Paystack API)
+//  PAYMENT – Direct Paystack API
 // ============================================================
 
 const PAYSTACK_SECRET = process.env.PAYSTACK_SECRET_KEY;
-if (!PAYSTACK_SECRET) {
-  console.warn('⚠️ PAYSTACK_SECRET_KEY not set – payments will fail');
-}
 
-// —— Create a payment session ——
 app.post('/create-payment', async (req, res) => {
   const { userId, email } = req.body;
-  if (!userId || !email) {
-    return res.status(400).json({ error: 'Missing userId or email' });
-  }
-
-  if (!PAYSTACK_SECRET) {
-    return res.status(500).json({ error: 'Paystack is not configured on the server.' });
-  }
+  if (!userId || !email) return res.status(400).json({ error: 'Missing userId or email' });
+  if (!PAYSTACK_SECRET) return res.status(500).json({ error: 'Paystack not configured.' });
 
   try {
     const response = await fetch('https://api.paystack.co/transaction/initialize', {
@@ -115,7 +106,7 @@ app.post('/create-payment', async (req, res) => {
       },
       body: JSON.stringify({
         email,
-        amount: 4999, // R49.99 in cents
+        amount: 4999,
         currency: 'ZAR',
         callback_url: process.env.PAYSTACK_CALLBACK_URL || 'https://synapses-uwh1.onrender.com/success',
         metadata: { userId }
@@ -125,20 +116,18 @@ app.post('/create-payment', async (req, res) => {
     const data = await response.json();
     if (!data.status) {
       console.error('Paystack error:', data.message);
-      return res.status(400).json({ error: data.message || 'Payment initialization failed' });
+      return res.status(400).json({ error: data.message || 'Payment failed' });
     }
-
     res.json({
       authorization_url: data.data.authorization_url,
       reference: data.data.reference
     });
   } catch (error) {
-    console.error('Paystack request error:', error.message);
-    res.status(500).json({ error: 'Payment service unavailable. Please try again.' });
+    console.error('Paystack error:', error.message);
+    res.status(500).json({ error: 'Payment service unavailable.' });
   }
 });
 
-// —— Webhook to confirm payment ——
 app.post('/paystack-webhook', (req, res) => {
   const event = req.body;
   if (event.event === 'charge.success') {
@@ -155,7 +144,6 @@ app.post('/paystack-webhook', (req, res) => {
   res.sendStatus(200);
 });
 
-// —— Check subscription status ——
 app.get('/subscription-status/:userId', (req, res) => {
   const userId = req.params.userId;
   const sub = subscriptions[userId] || { status: 'trial', endDate: new Date(Date.now() + 3*24*60*60*1000) };
@@ -180,8 +168,9 @@ app.get('/success', (req, res) => {
 });
 
 // ============================================================
-//  🤖 AI TUTOR – Hugging Face Integration
+//  🤖 AI TUTOR – Hugging Face
 // ============================================================
+
 const HF_API_TOKEN = process.env.HF_API_TOKEN;
 const HF_MODEL = 'mistralai/Mistral-7B-Instruct-v0.1';
 
@@ -191,10 +180,11 @@ app.post('/chat', async (req, res) => {
     return res.status(400).json({ error: 'Missing userId or message' });
   }
 
+  // If no token, return the mock (but we'll log a warning)
   if (!HF_API_TOKEN) {
-    console.warn('⚠️ HF_API_TOKEN not set – falling back to mock response');
+    console.warn('⚠️ HF_API_TOKEN missing – returning mock response');
     return res.json({
-      reply: `📚 **Step‑by‑step guide for "${topic || subject}":**\n\n1. Understand the basics of ${topic || subject}.\n2. Break it into smaller concepts.\n3. Practice with examples.\n4. Review and test your knowledge.\n\n*(To get a real AI response, set your HF_API_TOKEN environment variable.)*`
+      reply: `📚 **Step‑by‑step guide for "${topic || subject}":**\n\nI'm your AI tutor! To get a real explanation, please set your Hugging Face API token.\n\nFor now, here's a simple breakdown:\n1. Start with the basics of ${topic || subject}.\n2. Explore key concepts.\n3. Practice with examples.\n4. Review and ask questions.`
     });
   }
 
@@ -221,8 +211,7 @@ app.post('/chat', async (req, res) => {
 
     if (!response.ok) {
       const errorText = await response.text();
-      console.error(`Hugging Face API error: ${response.status} - ${errorText}`);
-      // If model is loading, wait and retry?
+      console.error(`HF API error: ${response.status} - ${errorText}`);
       if (response.status === 503) {
         return res.json({ reply: '⏳ The AI model is loading. Please wait a few seconds and try again.' });
       }
@@ -230,11 +219,11 @@ app.post('/chat', async (req, res) => {
     }
 
     const data = await response.json();
-    let reply = data[0]?.generated_text || 'Sorry, I could not generate a response. Please try again.';
+    let reply = data[0]?.generated_text || 'Sorry, I could not generate a response.';
     reply = reply.replace(/^[\s\S]*?(\n|$)/, '').trim();
     res.json({ reply });
   } catch (error) {
-    console.error('AI Tutor error:', error.message);
+    console.error('AI error:', error.message);
     res.status(500).json({ error: 'AI service unavailable. Please try again later.' });
   }
 });
@@ -249,7 +238,7 @@ app.get('/health', (req, res) => res.send('OK'));
 // ============================================================
 app.listen(PORT, () => {
   console.log(`✅ Leago AI Tutor running on port ${PORT}`);
-  console.log(`💳 Payments ${PAYSTACK_SECRET ? 'enabled' : 'disabled (secret missing)'}`);
-  console.log(`🤖 AI Tutor ${HF_API_TOKEN ? 'enabled' : 'disabled (token missing)'}`);
+  console.log(`💳 Payments ${PAYSTACK_SECRET ? 'enabled' : 'disabled'}`);
+  console.log(`🤖 AI Tutor ${HF_API_TOKEN ? 'enabled (Hugging Face)' : 'disabled (token missing)'}`);
   console.log(`🌍 Africa Education Engine active`);
 });
