@@ -1,5 +1,5 @@
 // ============================================================
-// server/server.js – Paystack + Hugging Face AI with fallback
+// server/server.js – DeepSeek AI + Paystack
 // ============================================================
 
 require('dotenv').config();
@@ -10,7 +10,6 @@ const path = require('path');
 const app = express();
 const PORT = process.env.PORT || 10000;
 
-// ===== Middleware =====
 app.use(cors());
 app.use(express.json());
 app.use('/paystack-webhook', express.raw({ type: 'application/json' }));
@@ -80,7 +79,7 @@ app.post('/save-profile', (req, res) => {
 });
 
 // ============================================================
-//  PAYMENT – direct Paystack API
+//  PAYMENT
 // ============================================================
 const PAYSTACK_SECRET = process.env.PAYSTACK_SECRET_KEY;
 
@@ -158,12 +157,10 @@ app.get('/success', (req, res) => {
 });
 
 // ============================================================
-//  🤖 AI TUTOR – with fallback and error logging
+//  🤖 AI TUTOR – using DeepSeek API (you already have the key)
 // ============================================================
 
-const HF_API_TOKEN = process.env.HF_API_TOKEN;
-// Using a smaller, faster model that works well for education
-const HF_MODEL = 'google/flan-t5-base';
+const DEEPSEEK_API_KEY = process.env.DEEPSEEK_API_KEY;
 
 app.post('/chat', async (req, res) => {
   const { userId, message, subject, topic } = req.body;
@@ -171,24 +168,68 @@ app.post('/chat', async (req, res) => {
     return res.status(400).json({ error: 'Missing userId or message' });
   }
 
-  // If no token, return a friendly mock
-  if (!HF_API_TOKEN) {
-    console.warn('⚠️ HF_API_TOKEN missing – returning mock');
+  // If no DeepSeek key, fall back to Hugging Face or mock
+  if (!DEEPSEEK_API_KEY) {
+    console.warn('⚠️ DEEPSEEK_API_KEY missing – trying Hugging Face as fallback');
+    return tryHuggingFace(req, res);
+  }
+
+  try {
+    const prompt = `You are a knowledgeable tutor. Teach the student about "${topic}" in "${subject}" step by step. The student asked: "${message}". Provide a clear, structured explanation with bullet points or numbered steps. Use examples.`;
+
+    const response = await fetch('https://api.deepseek.com/v1/chat/completions', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${DEEPSEEK_API_KEY}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        model: 'deepseek-chat',
+        messages: [
+          { role: 'system', content: 'You are a patient, knowledgeable tutor for African students following CAPS, IEB, and other curricula.' },
+          { role: 'user', content: prompt }
+        ],
+        max_tokens: 800,
+        temperature: 0.7
+      })
+    });
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error(`❌ DeepSeek error (${response.status}):`, errorText);
+      // Fall back to Hugging Face
+      return tryHuggingFace(req, res);
+    }
+
+    const data = await response.json();
+    const reply = data.choices?.[0]?.message?.content || '';
+    if (!reply) {
+      return tryHuggingFace(req, res);
+    }
+    res.json({ reply });
+  } catch (error) {
+    console.error('❌ DeepSeek error:', error.message);
+    // Fall back to Hugging Face
+    return tryHuggingFace(req, res);
+  }
+});
+
+// ---- Hugging Face fallback (just in case) ----
+async function tryHuggingFace(req, res) {
+  const { userId, message, subject, topic } = req.body;
+  const HF_TOKEN = process.env.HF_API_TOKEN;
+  if (!HF_TOKEN) {
     return res.json({
-      reply: `📚 **Step‑by‑step guide for "${topic || subject}":**\n\nI'm your AI tutor! To get a real explanation, please set your Hugging Face API token.\n\nFor now, here's a simple breakdown:\n1. Start with the basics of ${topic || subject}.\n2. Explore key concepts.\n3. Practice with examples.\n4. Review and ask questions.`
+      reply: `📚 **Step‑by‑step guide for "${topic || subject}":**\n\n1. Read the chapter section on ${topic || subject}.\n2. Identify key terms and definitions.\n3. Work through the examples.\n4. Try the practice problems.\n5. Review any areas you find difficult.\n\nIf you have a specific question, feel free to ask!`
     });
   }
 
   try {
-    // Build a clear educational prompt
     const prompt = `Teach about "${topic}" in "${subject}" step by step. Student asked: "${message}". Give a structured, easy-to-understand explanation.`;
-
-    console.log(`🤖 Calling Hugging Face with prompt: ${prompt.substring(0, 100)}...`);
-
-    const response = await fetch(`https://api-inference.huggingface.co/models/${HF_MODEL}`, {
+    const response = await fetch('https://api-inference.huggingface.co/models/google/flan-t5-large', {
       method: 'POST',
       headers: {
-        'Authorization': `Bearer ${HF_API_TOKEN}`,
+        'Authorization': `Bearer ${HF_TOKEN}`,
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
@@ -204,35 +245,26 @@ app.post('/chat', async (req, res) => {
 
     if (!response.ok) {
       const errorText = await response.text();
-      console.error(`❌ HF API error (${response.status}):`, errorText);
-      // If model is loading, return a waiting message
-      if (response.status === 503) {
-        return res.json({
-          reply: '⏳ The AI model is loading. Please wait about 10 seconds and try again.'
-        });
-      }
-      // Otherwise, fall back to a static response
+      console.error(`❌ HF fallback error (${response.status}):`, errorText);
       return res.json({
-        reply: `📖 **Here's a simple explanation of "${topic || subject}":**\n\nI'm currently having trouble connecting to my AI engine. Please try again in a moment.\n\nMeanwhile, remember:\n- Break down the topic into smaller parts.\n- Use examples from your textbook.\n- Practice with exercises.`
+        reply: `📚 **Step‑by‑step approach for "${topic || subject}":**\n\n1. Read the chapter on ${topic || subject}.\n2. Identify key terms.\n3. Work through the examples.\n4. Try the practice problems.\n5. Review any areas you find difficult.\n\nIf you have a specific question, feel free to ask!`
       });
     }
 
     const data = await response.json();
     let reply = data[0]?.generated_text || '';
-    // Clean up the reply – remove any leftover prompt
     reply = reply.replace(/^[\s\S]*?(\n|$)/, '').trim();
     if (!reply) {
-      reply = `📝 I don't have a specific answer right now, but I suggest starting with the basics of "${topic}" and then moving to examples. Let me know what you'd like me to explain!`;
+      reply = `📝 I suggest starting with the basics of "${topic}" and then moving to examples. Let me know what you'd like me to explain!`;
     }
     res.json({ reply });
   } catch (error) {
-    console.error('❌ AI Tutor error:', error.message);
-    // Return a friendly fallback
+    console.error('❌ HF fallback error:', error.message);
     res.json({
-      reply: `📚 **Step‑by‑step approach for "${topic || subject}":**\n\n1. Read the chapter section on ${topic || subject}.\n2. Identify key terms and definitions.\n3. Work through the examples given.\n4. Try the practice problems.\n5. Review any areas you find difficult.\n\nIf you have a specific question, feel free to ask!`
+      reply: `📚 **Step‑by‑step approach for "${topic || subject}":**\n\n1. Read the chapter on ${topic || subject}.\n2. Identify key terms.\n3. Work through the examples.\n4. Try the practice problems.\n5. Review any areas you find difficult.\n\nIf you have a specific question, feel free to ask!`
     });
   }
-});
+}
 
 // ============================================================
 //  HEALTH CHECK
@@ -245,6 +277,6 @@ app.get('/health', (req, res) => res.send('OK'));
 app.listen(PORT, () => {
   console.log(`✅ Leago AI Tutor running on port ${PORT}`);
   console.log(`💳 Payments ${PAYSTACK_SECRET ? 'enabled' : 'disabled'}`);
-  console.log(`🤖 AI Tutor ${HF_API_TOKEN ? 'enabled (Hugging Face)' : 'disabled (token missing)'}`);
+  console.log(`🤖 AI Tutor ${DEEPSEEK_API_KEY ? 'enabled (DeepSeek)' : 'fallback mode'}`);
   console.log(`🌍 Africa Education Engine active`);
 });
