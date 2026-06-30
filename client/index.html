@@ -6,9 +6,11 @@
     <title>Leago Academy — AI Education Platform</title>
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <style>
+        /* ===== RESET & BASE ===== */
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: 'Segoe UI', system-ui, sans-serif; background: #f8fafc; min-height: 100vh; }
 
+        /* ===== LANDING PAGE ===== */
         .hero {
             background: linear-gradient(135deg, #0b1120 0%, #1a1a3e 100%);
             padding: 80px 20px 80px;
@@ -81,7 +83,7 @@
         .faq-item .question { font-weight: 600; color: #0b1120; font-size: 1rem; }
         .faq-item .answer { color: #4b5563; margin-top: 4px; line-height: 1.5; font-size: 0.95rem; }
 
-        /* ===== AUTH OVERLAY (Enhanced) ===== */
+        /* ===== AUTH OVERLAY ===== */
         .auth-overlay {
             display: none;
             position: fixed;
@@ -145,7 +147,18 @@
         /* ===== DASHBOARD ===== */
         .dashboard { display: none; max-width: 1200px; margin: 0 auto; padding: 20px; }
         .dashboard.active { display: block; }
-        .top-nav { background: white; padding: 16px 28px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 12px rgba(0,0,0,0.04); border-radius: 16px; margin-bottom: 24px; flex-wrap: wrap; gap: 12px; }
+        .top-nav {
+            background: white;
+            padding: 16px 28px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
+            border-radius: 16px;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
         .top-nav .logo { font-size: 1.4rem; font-weight: 800; color: #0b1120; text-decoration: none; }
         .top-nav .logo span { background: linear-gradient(135deg, #6366f1, #a855f7); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
         .top-nav .user-info { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
@@ -612,6 +625,53 @@
         function isTopicCompleted(subject, topic) { if (!progressData[subject]) return false; if (!progressData[subject].completed) return false; return progressData[subject].completed.includes(topic); }
 
         // ================================================================
+        //  DEFAULT TOPICS FOR EACH SUBJECT (FALLBACK)
+        // ================================================================
+        const DEFAULT_TOPICS = {
+            'Mathematics': ['Introduction to Algebra', 'Solving Linear Equations', 'Quadratic Functions', 'Trigonometry Basics', 'Calculus Fundamentals'],
+            'English': ['Grammar & Sentence Structure', 'Reading Comprehension', 'Creative Writing', 'Literature Analysis', 'Vocabulary Building'],
+            'Life Sciences': ['Cell Biology', 'Genetics & Evolution', 'Human Anatomy', 'Ecology', 'Biotechnology'],
+            'Physical Sciences': ['Mechanics', 'Thermodynamics', 'Electricity', 'Chemical Bonding', 'Nuclear Physics'],
+            'History': ['Ancient Civilizations', 'Industrial Revolution', 'World War I', 'World War II', 'Apartheid & Democracy'],
+            'Geography': ['Map Skills', 'Climate & Weather', 'Plate Tectonics', 'Population Studies', 'Environmental Management'],
+            'Accounting': ['Double-Entry System', 'Trial Balance', 'Financial Statements', 'Budgeting', 'Taxation'],
+            'Business Studies': ['Entrepreneurship', 'Marketing', 'Human Resources', 'Finance', 'Business Environment'],
+            'Economics': ['Supply & Demand', 'Market Structures', 'Macroeconomics', 'International Trade', 'South African Economy'],
+            'Engineering': ['Mechanical Basics', 'Electrical Circuits', 'Civil Structures', 'Thermodynamics', 'Materials Science'],
+            'Computer Science': ['Programming Fundamentals', 'Data Structures', 'Web Development', 'Artificial Intelligence', 'Cybersecurity'],
+            'Business & Management': ['Management Principles', 'Organizational Behavior', 'Marketing Strategy', 'Financial Management', 'Strategic Planning'],
+            'Health Sciences': ['Anatomy & Physiology', 'Pharmacology', 'Nursing Care', 'Public Health', 'Medical Ethics'],
+            'Law': ['Criminal Law', 'Contract Law', 'Constitutional Law', 'Tort Law', 'Legal Research'],
+            'Education': ['Educational Psychology', 'Curriculum Design', 'Classroom Management', 'Assessment & Evaluation', 'Pedagogy'],
+            'Arts & Humanities': ['Art History', 'Music Theory', 'Philosophy', 'Creative Writing', 'Film Studies']
+        };
+
+        // ================================================================
+        //  ICONS
+        // ================================================================
+        const SUBJECT_ICONS = {
+            'Mathematics': '📐',
+            'English': '📖',
+            'Life Sciences': '🧬',
+            'Physical Sciences': '⚛️',
+            'History': '🏛️',
+            'Geography': '🌍',
+            'Accounting': '💰',
+            'Business Studies': '📊',
+            'Economics': '📈',
+            'Engineering': '⚙️',
+            'Computer Science': '💻',
+            'Business & Management': '📊',
+            'Health Sciences': '🏥',
+            'Law': '⚖️',
+            'Education': '📚',
+            'Arts & Humanities': '🎨',
+            'Biology': '🧬',
+            'Chemistry': '🧪',
+            'Physics': '⚡'
+        };
+
+        // ================================================================
         //  CURRICULUM LOADING FUNCTIONS
         // ================================================================
         function loadCurriculumData() {
@@ -822,8 +882,32 @@
             const gradeDisplay = user.grade === 'College' ? 'College' : (user.grade ? 'Grade ' + user.grade : 'Level: Not set');
             document.getElementById('userGrade').textContent = gradeDisplay;
             checkSubscription();
-            if (user.grade) { selectedGrade = user.grade; showDashboardHome(); } else { showGradeSelection(); }
-            renderSidebar();
+
+            // If user has no subjects (old account or bug), show a message to update profile
+            if (!user.subjects || user.subjects.length === 0) {
+                // Fallback: use default subjects from signup? We'll show a message.
+                // But we can also redirect to grade selection to re-select subjects.
+                // For now, show a message.
+                document.getElementById('welcomeMessage').textContent = 'Welcome, ' + user.name + ' 👋';
+                document.getElementById('welcomeSub').innerHTML = 'You don\'t have any subjects selected. <span class="change-grade-link" onclick="showGradeSelection()">Update Profile</span>';
+                // Show an empty state
+                const container = document.getElementById('dynamicContent');
+                container.innerHTML = `
+                    <div style="text-align:center;padding:40px;">
+                        <div style="font-size:3rem;">📚</div>
+                        <h3 style="margin:16px 0 8px;color:#0b1120;">No Subjects Yet</h3>
+                        <p style="color:#6b7280;max-width:400px;margin:0 auto 20px;">
+                            You haven't selected any subjects. Please update your profile to start learning.
+                        </p>
+                        <button onclick="showGradeSelection()" style="padding:12px 32px;background:#6366f1;color:white;border:none;border-radius:12px;cursor:pointer;font-weight:600;">Update Profile</button>
+                    </div>
+                `;
+                renderSidebar(); // still render empty sidebar
+                return;
+            }
+
+            // Show subjects
+            showDashboardHome();
         }
 
         function showDashboardHome() {
@@ -894,15 +978,26 @@
         }
 
         // ================================================================
-        //  SUBJECTS & CLASSROOM (simplified, kept from previous version)
+        //  SUBJECTS & CLASSROOM
         // ================================================================
         function showSubjects() {
             currentView = 'subjects';
-            const country = currentUser.country || 'South Africa';
-            // Use user's subjects if available, otherwise fallback
-            const subjects = currentUser.subjects && currentUser.subjects.length > 0 
-                ? currentUser.subjects.reduce((acc, sub) => { acc[sub] = ['Getting Started']; return acc; }, {})
-                : { 'Mathematics': ['Algebra', 'Geometry', 'Trigonometry', 'Calculus', 'Statistics'], 'English': ['Reading', 'Writing', 'Grammar', 'Literature'] };
+            // Get subjects from user or fallback
+            let subjects = {};
+            if (currentUser.subjects && currentUser.subjects.length > 0) {
+                // Use user's subjects
+                currentUser.subjects.forEach(sub => {
+                    const topics = DEFAULT_TOPICS[sub] || ['Introduction', 'Basics', 'Intermediate', 'Advanced', 'Expert'];
+                    subjects[sub] = topics;
+                });
+            } else {
+                // Fallback: use default subjects
+                subjects = {
+                    'Mathematics': DEFAULT_TOPICS['Mathematics'],
+                    'English': DEFAULT_TOPICS['English']
+                };
+            }
+
             initProgress(subjects);
             document.getElementById('welcomeMessage').textContent = 'Your Subjects';
             document.getElementById('welcomeSub').innerHTML = (currentUser.curriculum || '') + ' · ' + (currentUser.grade || '') + ' · Select a subject to start learning.';
@@ -919,7 +1014,7 @@
 
         function openSubject(subject) {
             currentSubject = subject;
-            const topics = ['Introduction', 'Basics', 'Practice', 'Advanced'];
+            const topics = DEFAULT_TOPICS[subject] || ['Introduction', 'Basics', 'Intermediate', 'Advanced', 'Expert'];
             if (!progressData[subject]) { progressData[subject] = { completed: [], total: topics.length }; saveProgress(); }
             document.getElementById('welcomeMessage').textContent = subject;
             document.getElementById('welcomeSub').textContent = 'Select a topic to start learning.';
@@ -1023,9 +1118,18 @@
         //  SIDEBARS
         // ================================================================
         function renderSidebar() {
-            const subjects = currentUser.subjects && currentUser.subjects.length > 0 
-                ? currentUser.subjects.reduce((acc, sub) => { acc[sub] = ['Getting Started']; return acc; }, {})
-                : { 'Mathematics': ['Algebra', 'Geometry', 'Trigonometry', 'Calculus', 'Statistics'], 'English': ['Reading', 'Writing', 'Grammar', 'Literature'] };
+            let subjects = {};
+            if (currentUser.subjects && currentUser.subjects.length > 0) {
+                currentUser.subjects.forEach(sub => {
+                    const topics = DEFAULT_TOPICS[sub] || ['Introduction', 'Basics', 'Intermediate', 'Advanced', 'Expert'];
+                    subjects[sub] = topics;
+                });
+            } else {
+                subjects = {
+                    'Mathematics': DEFAULT_TOPICS['Mathematics'],
+                    'English': DEFAULT_TOPICS['English']
+                };
+            }
             initProgress(subjects);
             const list = document.getElementById('subjectList');
             list.innerHTML = '';
