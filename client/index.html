@@ -1531,7 +1531,7 @@
 
                 <div class="field" id="subjectsField">
                     <label>Subjects (select all that apply)</label>
-                    <div id="subjectCheckboxes" style="display:grid;grid-template-columns:1fr 1fr;gap:6px;max-height:260px;overflow-y:auto;border:1px solid #e5e7eb;border-radius:10px;padding:10px;">
+                    <div id="subjectCheckboxes" style="display:grid;grid-template-columns:1fr 1fr;gap:6px;max-height:280px;overflow-y:auto;border:1px solid #e5e7eb;border-radius:10px;padding:10px;">
                         <p style="grid-column:1/-1;color:#6b7280;font-size:0.9rem;">Select your subjects</p>
                     </div>
                 </div>
@@ -1607,7 +1607,7 @@
 
     <script>
         // ================================================================
-        //  EMBEDDED CURRICULUM DATA — All African Countries
+        //  EMBEDDED CURRICULUM DATA — All African Countries (expanded)
         // ================================================================
         const CURRICULUM_DATA = {
             'South Africa': {
@@ -1617,13 +1617,13 @@
                         '10': ['Mathematics', 'English Home Language', 'Afrikaans First Additional Language', 'Life Orientation', 'Life Sciences', 'Physical Sciences', 'History', 'Geography', 'Accounting', 'Business Studies', 'Economics', 'Engineering Graphics and Design', 'Computer Applications Technology', 'Information Technology', 'Consumer Studies', 'Tourism', 'Drama', 'Visual Arts', 'Music', 'Design', 'Agricultural Sciences', 'Agricultural Management Practices', 'Civil Technology', 'Electrical Technology', 'Mechanical Technology', 'Hospitality Studies'],
                         '11': ['Mathematics', 'English Home Language', 'Afrikaans First Additional Language', 'Life Orientation', 'Life Sciences', 'Physical Sciences', 'History', 'Geography', 'Accounting', 'Business Studies', 'Economics', 'Engineering Graphics and Design', 'Computer Applications Technology', 'Information Technology', 'Consumer Studies', 'Tourism', 'Drama', 'Visual Arts', 'Music', 'Design', 'Agricultural Sciences', 'Agricultural Management Practices', 'Civil Technology', 'Electrical Technology', 'Mechanical Technology', 'Hospitality Studies'],
                         '12': ['Mathematics', 'English Home Language', 'Afrikaans First Additional Language', 'Life Orientation', 'Life Sciences', 'Physical Sciences', 'History', 'Geography', 'Accounting', 'Business Studies', 'Economics', 'Engineering Graphics and Design', 'Computer Applications Technology', 'Information Technology', 'Consumer Studies', 'Tourism', 'Drama', 'Visual Arts', 'Music', 'Design', 'Agricultural Sciences', 'Agricultural Management Practices', 'Civil Technology', 'Electrical Technology', 'Mechanical Technology', 'Hospitality Studies'],
-                        'College': ['Engineering', 'Computer Science', 'Business & Management', 'Health Sciences', 'Law', 'Education', 'Arts & Humanities', 'Economics', 'Accounting', 'Life Sciences']
+                        'College': ['Communication', 'Mathematics for Science', 'Computer Literacy', 'Critical Thinking', 'Academic Writing', 'Research Skills', 'Engineering', 'Computer Science', 'Business & Management', 'Health Sciences', 'Law', 'Education', 'Arts & Humanities', 'Economics', 'Accounting', 'Life Sciences']
                     },
                     'IEB': {
                         '10': ['Mathematics', 'English Home Language', 'Afrikaans First Additional Language', 'Life Orientation', 'Life Sciences', 'Physical Sciences', 'History', 'Geography', 'Accounting', 'Business Studies', 'Economics', 'Engineering Graphics and Design', 'Computer Applications Technology', 'Information Technology', 'Consumer Studies', 'Tourism', 'Drama', 'Visual Arts', 'Music', 'Design', 'Agricultural Sciences'],
                         '11': ['Mathematics', 'English Home Language', 'Afrikaans First Additional Language', 'Life Orientation', 'Life Sciences', 'Physical Sciences', 'History', 'Geography', 'Accounting', 'Business Studies', 'Economics', 'Engineering Graphics and Design', 'Computer Applications Technology', 'Information Technology', 'Consumer Studies', 'Tourism', 'Drama', 'Visual Arts', 'Music', 'Design', 'Agricultural Sciences'],
                         '12': ['Mathematics', 'English Home Language', 'Afrikaans First Additional Language', 'Life Orientation', 'Life Sciences', 'Physical Sciences', 'History', 'Geography', 'Accounting', 'Business Studies', 'Economics', 'Engineering Graphics and Design', 'Computer Applications Technology', 'Information Technology', 'Consumer Studies', 'Tourism', 'Drama', 'Visual Arts', 'Music', 'Design', 'Agricultural Sciences'],
-                        'College': ['Engineering', 'Computer Science', 'Business & Management', 'Health Sciences', 'Law', 'Education', 'Arts & Humanities']
+                        'College': ['Communication', 'Mathematics for Science', 'Computer Literacy', 'Critical Thinking', 'Academic Writing', 'Research Skills', 'Engineering', 'Computer Science', 'Business & Management', 'Health Sciences', 'Law', 'Education', 'Arts & Humanities']
                     }
                 }
             },
@@ -1634,13 +1634,13 @@
                         '10': ['English', 'Kiswahili', 'Mathematics', 'Biology', 'Chemistry', 'Physics', 'History and Government', 'Geography', 'Christian Religious Education', 'Islamic Religious Education', 'Hindu Religious Education', 'Business Studies', 'Agriculture', 'Home Science', 'Computer Studies', 'Music', 'Art and Design', 'Physical Education'],
                         '11': ['English', 'Kiswahili', 'Mathematics', 'Biology', 'Chemistry', 'Physics', 'History and Government', 'Geography', 'Christian Religious Education', 'Islamic Religious Education', 'Hindu Religious Education', 'Business Studies', 'Agriculture', 'Home Science', 'Computer Studies', 'Music', 'Art and Design', 'Physical Education'],
                         '12': ['English', 'Kiswahili', 'Mathematics', 'Biology', 'Chemistry', 'Physics', 'History and Government', 'Geography', 'Christian Religious Education', 'Islamic Religious Education', 'Hindu Religious Education', 'Business Studies', 'Agriculture', 'Home Science', 'Computer Studies', 'Music', 'Art and Design', 'Physical Education'],
-                        'College': ['Engineering', 'Computer Science', 'Business & Management', 'Health Sciences', 'Law', 'Education', 'Agriculture', 'Arts & Humanities']
+                        'College': ['Communication', 'Mathematics for Science', 'Computer Literacy', 'Critical Thinking', 'Research Skills', 'Engineering', 'Computer Science', 'Business & Management', 'Health Sciences', 'Law', 'Education', 'Agriculture', 'Arts & Humanities']
                     },
                     '8-4-4': {
                         '10': ['English', 'Kiswahili', 'Mathematics', 'Biology', 'Chemistry', 'Physics', 'History and Government', 'Geography', 'Christian Religious Education', 'Islamic Religious Education', 'Business Studies', 'Agriculture', 'Home Science', 'Computer Studies'],
                         '11': ['English', 'Kiswahili', 'Mathematics', 'Biology', 'Chemistry', 'Physics', 'History and Government', 'Geography', 'Christian Religious Education', 'Islamic Religious Education', 'Business Studies', 'Agriculture', 'Home Science', 'Computer Studies'],
                         '12': ['English', 'Kiswahili', 'Mathematics', 'Biology', 'Chemistry', 'Physics', 'History and Government', 'Geography', 'Christian Religious Education', 'Islamic Religious Education', 'Business Studies', 'Agriculture', 'Home Science', 'Computer Studies'],
-                        'College': ['Engineering', 'Computer Science', 'Business & Management', 'Health Sciences', 'Law', 'Education']
+                        'College': ['Communication', 'Mathematics for Science', 'Computer Literacy', 'Critical Thinking', 'Research Skills', 'Engineering', 'Computer Science', 'Business & Management', 'Health Sciences', 'Law', 'Education']
                     }
                 }
             },
@@ -1651,13 +1651,13 @@
                         '10': ['English Language', 'Mathematics', 'Biology', 'Chemistry', 'Physics', 'Economics', 'Government', 'History', 'Geography', 'Christian Religious Knowledge', 'Islamic Religious Knowledge', 'Literature in English', 'Yoruba', 'Hausa', 'Igbo', 'French', 'Commerce', 'Accounting', 'Agricultural Science', 'Further Mathematics', 'Technical Drawing'],
                         '11': ['English Language', 'Mathematics', 'Biology', 'Chemistry', 'Physics', 'Economics', 'Government', 'History', 'Geography', 'Christian Religious Knowledge', 'Islamic Religious Knowledge', 'Literature in English', 'Yoruba', 'Hausa', 'Igbo', 'French', 'Commerce', 'Accounting', 'Agricultural Science', 'Further Mathematics', 'Technical Drawing'],
                         '12': ['English Language', 'Mathematics', 'Biology', 'Chemistry', 'Physics', 'Economics', 'Government', 'History', 'Geography', 'Christian Religious Knowledge', 'Islamic Religious Knowledge', 'Literature in English', 'Yoruba', 'Hausa', 'Igbo', 'French', 'Commerce', 'Accounting', 'Agricultural Science', 'Further Mathematics', 'Technical Drawing'],
-                        'College': ['Engineering', 'Computer Science', 'Business & Management', 'Health Sciences', 'Law', 'Education', 'Arts & Humanities', 'Economics', 'Accounting']
+                        'College': ['Communication', 'Mathematics for Science', 'Computer Literacy', 'Critical Thinking', 'Academic Writing', 'Research Skills', 'Engineering', 'Computer Science', 'Business & Management', 'Health Sciences', 'Law', 'Education', 'Arts & Humanities', 'Economics', 'Accounting']
                     },
                     'NECO': {
                         '10': ['English Language', 'Mathematics', 'Biology', 'Chemistry', 'Physics', 'Economics', 'Government', 'History', 'Geography', 'Christian Religious Knowledge', 'Islamic Religious Knowledge', 'Literature in English', 'Yoruba', 'Hausa', 'Igbo', 'French', 'Commerce', 'Accounting', 'Agricultural Science'],
                         '11': ['English Language', 'Mathematics', 'Biology', 'Chemistry', 'Physics', 'Economics', 'Government', 'History', 'Geography', 'Christian Religious Knowledge', 'Islamic Religious Knowledge', 'Literature in English', 'Yoruba', 'Hausa', 'Igbo', 'French', 'Commerce', 'Accounting', 'Agricultural Science'],
                         '12': ['English Language', 'Mathematics', 'Biology', 'Chemistry', 'Physics', 'Economics', 'Government', 'History', 'Geography', 'Christian Religious Knowledge', 'Islamic Religious Knowledge', 'Literature in English', 'Yoruba', 'Hausa', 'Igbo', 'French', 'Commerce', 'Accounting', 'Agricultural Science'],
-                        'College': ['Engineering', 'Computer Science', 'Business & Management', 'Health Sciences', 'Law', 'Education']
+                        'College': ['Communication', 'Mathematics for Science', 'Computer Literacy', 'Critical Thinking', 'Research Skills', 'Engineering', 'Computer Science', 'Business & Management', 'Health Sciences', 'Law', 'Education']
                     }
                 }
             },
@@ -1668,13 +1668,13 @@
                         '10': ['English', 'Mathematics', 'Biology', 'Chemistry', 'Physics', 'History', 'Geography', 'Shona', 'Ndebele', 'Accounting', 'Business Studies', 'Economics', 'Agriculture', 'Computer Science', 'Art and Design', 'Music'],
                         '11': ['English', 'Mathematics', 'Biology', 'Chemistry', 'Physics', 'History', 'Geography', 'Shona', 'Ndebele', 'Accounting', 'Business Studies', 'Economics', 'Agriculture', 'Computer Science', 'Art and Design', 'Music'],
                         '12': ['English', 'Mathematics', 'Biology', 'Chemistry', 'Physics', 'History', 'Geography', 'Shona', 'Ndebele', 'Accounting', 'Business Studies', 'Economics', 'Agriculture', 'Computer Science', 'Art and Design', 'Music'],
-                        'College': ['Engineering', 'Computer Science', 'Business & Management', 'Health Sciences', 'Law', 'Education', 'Arts & Humanities']
+                        'College': ['Communication', 'Mathematics for Science', 'Computer Literacy', 'Critical Thinking', 'Research Skills', 'Engineering', 'Computer Science', 'Business & Management', 'Health Sciences', 'Law', 'Education', 'Arts & Humanities']
                     },
                     'Cambridge': {
                         '10': ['English', 'Mathematics', 'Biology', 'Chemistry', 'Physics', 'History', 'Geography', 'Accounting', 'Business Studies', 'Economics', 'Computer Science'],
                         '11': ['English', 'Mathematics', 'Biology', 'Chemistry', 'Physics', 'History', 'Geography', 'Accounting', 'Business Studies', 'Economics', 'Computer Science'],
                         '12': ['English', 'Mathematics', 'Biology', 'Chemistry', 'Physics', 'History', 'Geography', 'Accounting', 'Business Studies', 'Economics', 'Computer Science'],
-                        'College': ['Engineering', 'Computer Science', 'Business & Management', 'Health Sciences', 'Law']
+                        'College': ['Communication', 'Mathematics for Science', 'Computer Literacy', 'Critical Thinking', 'Research Skills', 'Engineering', 'Computer Science', 'Business & Management', 'Health Sciences', 'Law']
                     }
                 }
             },
@@ -1685,13 +1685,13 @@
                         '10': ['English', 'Setswana', 'Mathematics', 'Biology', 'Chemistry', 'Physics', 'History', 'Geography', 'Accounting', 'Business Studies', 'Economics', 'Agriculture', 'Computer Science', 'Art and Design', 'Music', 'Religious Education'],
                         '11': ['English', 'Setswana', 'Mathematics', 'Biology', 'Chemistry', 'Physics', 'History', 'Geography', 'Accounting', 'Business Studies', 'Economics', 'Agriculture', 'Computer Science', 'Art and Design', 'Music', 'Religious Education'],
                         '12': ['English', 'Setswana', 'Mathematics', 'Biology', 'Chemistry', 'Physics', 'History', 'Geography', 'Accounting', 'Business Studies', 'Economics', 'Agriculture', 'Computer Science', 'Art and Design', 'Music', 'Religious Education'],
-                        'College': ['Engineering', 'Computer Science', 'Business & Management', 'Health Sciences', 'Law', 'Education']
+                        'College': ['Communication', 'Mathematics for Science', 'Computer Literacy', 'Critical Thinking', 'Research Skills', 'Engineering', 'Computer Science', 'Business & Management', 'Health Sciences', 'Law', 'Education']
                     },
                     'Cambridge': {
                         '10': ['English', 'Mathematics', 'Biology', 'Chemistry', 'Physics', 'History', 'Geography', 'Accounting', 'Business Studies', 'Economics', 'Computer Science'],
                         '11': ['English', 'Mathematics', 'Biology', 'Chemistry', 'Physics', 'History', 'Geography', 'Accounting', 'Business Studies', 'Economics', 'Computer Science'],
                         '12': ['English', 'Mathematics', 'Biology', 'Chemistry', 'Physics', 'History', 'Geography', 'Accounting', 'Business Studies', 'Economics', 'Computer Science'],
-                        'College': ['Engineering', 'Computer Science', 'Business & Management', 'Health Sciences']
+                        'College': ['Communication', 'Mathematics for Science', 'Computer Literacy', 'Critical Thinking', 'Research Skills', 'Engineering', 'Computer Science', 'Business & Management', 'Health Sciences']
                     }
                 }
             },
@@ -1702,12 +1702,12 @@
                         '10': ['English', 'Afrikaans', 'German', 'Oshiwambo', 'Mathematics', 'Biology', 'Chemistry', 'Physics', 'History', 'Geography', 'Accounting', 'Business Studies', 'Economics', 'Agriculture', 'Computer Science', 'Art and Design', 'Music', 'Religious Education'],
                         '11': ['English', 'Afrikaans', 'German', 'Oshiwambo', 'Mathematics', 'Biology', 'Chemistry', 'Physics', 'History', 'Geography', 'Accounting', 'Business Studies', 'Economics', 'Agriculture', 'Computer Science', 'Art and Design', 'Music', 'Religious Education'],
                         '12': ['English', 'Afrikaans', 'German', 'Oshiwambo', 'Mathematics', 'Biology', 'Chemistry', 'Physics', 'History', 'Geography', 'Accounting', 'Business Studies', 'Economics', 'Agriculture', 'Computer Science', 'Art and Design', 'Music', 'Religious Education'],
-                        'College': ['Engineering', 'Computer Science', 'Business & Management', 'Health Sciences', 'Law', 'Education']
+                        'College': ['Communication', 'Mathematics for Science', 'Computer Literacy', 'Critical Thinking', 'Research Skills', 'Engineering', 'Computer Science', 'Business & Management', 'Health Sciences', 'Law', 'Education']
                     },
                     'NSSCAS': {
                         '11': ['English', 'Mathematics', 'Biology', 'Chemistry', 'Physics', 'History', 'Geography', 'Accounting', 'Business Studies', 'Economics', 'Computer Science'],
                         '12': ['English', 'Mathematics', 'Biology', 'Chemistry', 'Physics', 'History', 'Geography', 'Accounting', 'Business Studies', 'Economics', 'Computer Science'],
-                        'College': ['Engineering', 'Computer Science', 'Business & Management', 'Health Sciences', 'Law']
+                        'College': ['Communication', 'Mathematics for Science', 'Computer Literacy', 'Critical Thinking', 'Research Skills', 'Engineering', 'Computer Science', 'Business & Management', 'Health Sciences', 'Law']
                     }
                 }
             },
@@ -1718,13 +1718,13 @@
                         '10': ['English Language', 'Mathematics', 'Integrated Science', 'Biology', 'Chemistry', 'Physics', 'Social Studies', 'Economics', 'Government', 'History', 'Geography', 'Accounting', 'Business Management', 'Agriculture', 'Computer Science', 'French', 'Religious Studies', 'Art and Design', 'Music'],
                         '11': ['English Language', 'Mathematics', 'Integrated Science', 'Biology', 'Chemistry', 'Physics', 'Social Studies', 'Economics', 'Government', 'History', 'Geography', 'Accounting', 'Business Management', 'Agriculture', 'Computer Science', 'French', 'Religious Studies', 'Art and Design', 'Music'],
                         '12': ['English Language', 'Mathematics', 'Integrated Science', 'Biology', 'Chemistry', 'Physics', 'Social Studies', 'Economics', 'Government', 'History', 'Geography', 'Accounting', 'Business Management', 'Agriculture', 'Computer Science', 'French', 'Religious Studies', 'Art and Design', 'Music'],
-                        'College': ['Engineering', 'Computer Science', 'Business & Management', 'Health Sciences', 'Law', 'Education', 'Arts & Humanities']
+                        'College': ['Communication', 'Mathematics for Science', 'Computer Literacy', 'Critical Thinking', 'Academic Writing', 'Research Skills', 'Engineering', 'Computer Science', 'Business & Management', 'Health Sciences', 'Law', 'Education', 'Arts & Humanities']
                     },
                     'Cambridge': {
                         '10': ['English', 'Mathematics', 'Biology', 'Chemistry', 'Physics', 'History', 'Geography', 'Accounting', 'Business Studies', 'Economics', 'Computer Science'],
                         '11': ['English', 'Mathematics', 'Biology', 'Chemistry', 'Physics', 'History', 'Geography', 'Accounting', 'Business Studies', 'Economics', 'Computer Science'],
                         '12': ['English', 'Mathematics', 'Biology', 'Chemistry', 'Physics', 'History', 'Geography', 'Accounting', 'Business Studies', 'Economics', 'Computer Science'],
-                        'College': ['Engineering', 'Computer Science', 'Business & Management', 'Health Sciences']
+                        'College': ['Communication', 'Mathematics for Science', 'Computer Literacy', 'Critical Thinking', 'Research Skills', 'Engineering', 'Computer Science', 'Business & Management', 'Health Sciences']
                     }
                 }
             },
@@ -1735,13 +1735,13 @@
                         '10': ['Arabic', 'English', 'Mathematics', 'Biology', 'Chemistry', 'Physics', 'History', 'Geography', 'Economics', 'Sociology', 'Philosophy', 'Religious Studies'],
                         '11': ['Arabic', 'English', 'Mathematics', 'Biology', 'Chemistry', 'Physics', 'History', 'Geography', 'Economics', 'Sociology', 'Philosophy', 'Religious Studies'],
                         '12': ['Arabic', 'English', 'Mathematics', 'Biology', 'Chemistry', 'Physics', 'History', 'Geography', 'Economics', 'Sociology', 'Philosophy', 'Religious Studies'],
-                        'College': ['Engineering', 'Computer Science', 'Business & Management', 'Health Sciences', 'Law', 'Education', 'Arts & Humanities']
+                        'College': ['Communication', 'Mathematics for Science', 'Computer Literacy', 'Critical Thinking', 'Research Skills', 'Engineering', 'Computer Science', 'Business & Management', 'Health Sciences', 'Law', 'Education', 'Arts & Humanities']
                     },
                     'Cambridge': {
                         '10': ['English', 'Mathematics', 'Biology', 'Chemistry', 'Physics', 'History', 'Geography', 'Accounting', 'Economics', 'Computer Science'],
                         '11': ['English', 'Mathematics', 'Biology', 'Chemistry', 'Physics', 'History', 'Geography', 'Accounting', 'Economics', 'Computer Science'],
                         '12': ['English', 'Mathematics', 'Biology', 'Chemistry', 'Physics', 'History', 'Geography', 'Accounting', 'Economics', 'Computer Science'],
-                        'College': ['Engineering', 'Computer Science', 'Business & Management', 'Health Sciences']
+                        'College': ['Communication', 'Mathematics for Science', 'Computer Literacy', 'Critical Thinking', 'Research Skills', 'Engineering', 'Computer Science', 'Business & Management', 'Health Sciences']
                     }
                 }
             },
@@ -1752,7 +1752,7 @@
                         '10': ['English', 'Mathematics', 'Biology', 'Chemistry', 'Physics', 'History', 'Geography', 'Christian Religious Education', 'Islamic Religious Education', 'Agriculture', 'Commerce', 'Computer Science', 'Art and Design', 'Music'],
                         '11': ['English', 'Mathematics', 'Biology', 'Chemistry', 'Physics', 'History', 'Geography', 'Christian Religious Education', 'Islamic Religious Education', 'Agriculture', 'Commerce', 'Computer Science', 'Art and Design', 'Music'],
                         '12': ['English', 'Mathematics', 'Biology', 'Chemistry', 'Physics', 'History', 'Geography', 'Christian Religious Education', 'Islamic Religious Education', 'Agriculture', 'Commerce', 'Computer Science', 'Art and Design', 'Music'],
-                        'College': ['Engineering', 'Computer Science', 'Business & Management', 'Health Sciences', 'Law', 'Education']
+                        'College': ['Communication', 'Mathematics for Science', 'Computer Literacy', 'Critical Thinking', 'Research Skills', 'Engineering', 'Computer Science', 'Business & Management', 'Health Sciences', 'Law', 'Education']
                     }
                 }
             },
@@ -1763,7 +1763,7 @@
                         '10': ['English', 'Kiswahili', 'Mathematics', 'Biology', 'Chemistry', 'Physics', 'History', 'Geography', 'Civics', 'Islamic Religious Studies', 'Christian Religious Studies', 'Agriculture', 'Commerce', 'Computer Science', 'Art and Design', 'Music'],
                         '11': ['English', 'Kiswahili', 'Mathematics', 'Biology', 'Chemistry', 'Physics', 'History', 'Geography', 'Civics', 'Islamic Religious Studies', 'Christian Religious Studies', 'Agriculture', 'Commerce', 'Computer Science', 'Art and Design', 'Music'],
                         '12': ['English', 'Kiswahili', 'Mathematics', 'Biology', 'Chemistry', 'Physics', 'History', 'Geography', 'Civics', 'Islamic Religious Studies', 'Christian Religious Studies', 'Agriculture', 'Commerce', 'Computer Science', 'Art and Design', 'Music'],
-                        'College': ['Engineering', 'Computer Science', 'Business & Management', 'Health Sciences', 'Law', 'Education']
+                        'College': ['Communication', 'Mathematics for Science', 'Computer Literacy', 'Critical Thinking', 'Research Skills', 'Engineering', 'Computer Science', 'Business & Management', 'Health Sciences', 'Law', 'Education']
                     }
                 }
             },
@@ -1774,7 +1774,7 @@
                         '10': ['English', 'Mathematics', 'Biology', 'Chemistry', 'Physics', 'History', 'Geography', 'Civic Education', 'Religious Education', 'Agriculture', 'Commerce', 'Computer Science', 'Art and Design', 'Music'],
                         '11': ['English', 'Mathematics', 'Biology', 'Chemistry', 'Physics', 'History', 'Geography', 'Civic Education', 'Religious Education', 'Agriculture', 'Commerce', 'Computer Science', 'Art and Design', 'Music'],
                         '12': ['English', 'Mathematics', 'Biology', 'Chemistry', 'Physics', 'History', 'Geography', 'Civic Education', 'Religious Education', 'Agriculture', 'Commerce', 'Computer Science', 'Art and Design', 'Music'],
-                        'College': ['Engineering', 'Computer Science', 'Business & Management', 'Health Sciences', 'Law', 'Education']
+                        'College': ['Communication', 'Mathematics for Science', 'Computer Literacy', 'Critical Thinking', 'Research Skills', 'Engineering', 'Computer Science', 'Business & Management', 'Health Sciences', 'Law', 'Education']
                     }
                 }
             },
@@ -1785,7 +1785,7 @@
                         '10': ['Portuguese', 'English', 'Mathematics', 'Biology', 'Chemistry', 'Physics', 'History', 'Geography', 'Moral and Civic Education', 'Agriculture', 'Commerce', 'Computer Science', 'Art and Design', 'Music'],
                         '11': ['Portuguese', 'English', 'Mathematics', 'Biology', 'Chemistry', 'Physics', 'History', 'Geography', 'Moral and Civic Education', 'Agriculture', 'Commerce', 'Computer Science', 'Art and Design', 'Music'],
                         '12': ['Portuguese', 'English', 'Mathematics', 'Biology', 'Chemistry', 'Physics', 'History', 'Geography', 'Moral and Civic Education', 'Agriculture', 'Commerce', 'Computer Science', 'Art and Design', 'Music'],
-                        'College': ['Engineering', 'Computer Science', 'Business & Management', 'Health Sciences', 'Law', 'Education']
+                        'College': ['Communication', 'Mathematics for Science', 'Computer Literacy', 'Critical Thinking', 'Research Skills', 'Engineering', 'Computer Science', 'Business & Management', 'Health Sciences', 'Law', 'Education']
                     }
                 }
             },
@@ -1796,7 +1796,7 @@
                         '10': ['Portuguese', 'English', 'Mathematics', 'Biology', 'Chemistry', 'Physics', 'History', 'Geography', 'Moral and Civic Education', 'Agriculture', 'Commerce', 'Computer Science', 'Art and Design', 'Music'],
                         '11': ['Portuguese', 'English', 'Mathematics', 'Biology', 'Chemistry', 'Physics', 'History', 'Geography', 'Moral and Civic Education', 'Agriculture', 'Commerce', 'Computer Science', 'Art and Design', 'Music'],
                         '12': ['Portuguese', 'English', 'Mathematics', 'Biology', 'Chemistry', 'Physics', 'History', 'Geography', 'Moral and Civic Education', 'Agriculture', 'Commerce', 'Computer Science', 'Art and Design', 'Music'],
-                        'College': ['Engineering', 'Computer Science', 'Business & Management', 'Health Sciences', 'Law', 'Education']
+                        'College': ['Communication', 'Mathematics for Science', 'Computer Literacy', 'Critical Thinking', 'Research Skills', 'Engineering', 'Computer Science', 'Business & Management', 'Health Sciences', 'Law', 'Education']
                     }
                 }
             },
@@ -1807,13 +1807,13 @@
                         '10': ['English', 'French', 'Mathematics', 'Biology', 'Chemistry', 'Physics', 'History', 'Geography', 'Economics', 'Accounting', 'Business Studies', 'Computer Science', 'Religious Studies', 'Art and Design', 'Music'],
                         '11': ['English', 'French', 'Mathematics', 'Biology', 'Chemistry', 'Physics', 'History', 'Geography', 'Economics', 'Accounting', 'Business Studies', 'Computer Science', 'Religious Studies', 'Art and Design', 'Music'],
                         '12': ['English', 'French', 'Mathematics', 'Biology', 'Chemistry', 'Physics', 'History', 'Geography', 'Economics', 'Accounting', 'Business Studies', 'Computer Science', 'Religious Studies', 'Art and Design', 'Music'],
-                        'College': ['Engineering', 'Computer Science', 'Business & Management', 'Health Sciences', 'Law', 'Education']
+                        'College': ['Communication', 'Mathematics for Science', 'Computer Literacy', 'Critical Thinking', 'Research Skills', 'Engineering', 'Computer Science', 'Business & Management', 'Health Sciences', 'Law', 'Education']
                     },
                     'Baccalaureate': {
                         '10': ['French', 'English', 'Mathematics', 'Biology', 'Chemistry', 'Physics', 'History', 'Geography', 'Philosophy', 'Economics', 'Literature'],
                         '11': ['French', 'English', 'Mathematics', 'Biology', 'Chemistry', 'Physics', 'History', 'Geography', 'Philosophy', 'Economics', 'Literature'],
                         '12': ['French', 'English', 'Mathematics', 'Biology', 'Chemistry', 'Physics', 'History', 'Geography', 'Philosophy', 'Economics', 'Literature'],
-                        'College': ['Engineering', 'Computer Science', 'Business & Management', 'Health Sciences', 'Law', 'Education']
+                        'College': ['Communication', 'Mathematics for Science', 'Computer Literacy', 'Critical Thinking', 'Research Skills', 'Engineering', 'Computer Science', 'Business & Management', 'Health Sciences', 'Law', 'Education']
                     }
                 }
             },
@@ -1824,7 +1824,7 @@
                         '10': ['Amharic', 'English', 'Mathematics', 'Biology', 'Chemistry', 'Physics', 'History', 'Geography', 'Civic and Ethical Education', 'Economics', 'Agriculture', 'Computer Science', 'Art and Design', 'Music', 'Physical Education'],
                         '11': ['Amharic', 'English', 'Mathematics', 'Biology', 'Chemistry', 'Physics', 'History', 'Geography', 'Civic and Ethical Education', 'Economics', 'Agriculture', 'Computer Science', 'Art and Design', 'Music', 'Physical Education'],
                         '12': ['Amharic', 'English', 'Mathematics', 'Biology', 'Chemistry', 'Physics', 'History', 'Geography', 'Civic and Ethical Education', 'Economics', 'Agriculture', 'Computer Science', 'Art and Design', 'Music', 'Physical Education'],
-                        'College': ['Engineering', 'Computer Science', 'Business & Management', 'Health Sciences', 'Law', 'Education', 'Agriculture']
+                        'College': ['Communication', 'Mathematics for Science', 'Computer Literacy', 'Critical Thinking', 'Research Skills', 'Engineering', 'Computer Science', 'Business & Management', 'Health Sciences', 'Law', 'Education', 'Agriculture', 'Arts & Humanities']
                     }
                 }
             },
@@ -1835,7 +1835,7 @@
                         '10': ['Arabic', 'French', 'English', 'Mathematics', 'Biology', 'Chemistry', 'Physics', 'History', 'Geography', 'Islamic Studies', 'Economics', 'Accounting', 'Computer Science', 'Art and Design', 'Music'],
                         '11': ['Arabic', 'French', 'English', 'Mathematics', 'Biology', 'Chemistry', 'Physics', 'History', 'Geography', 'Islamic Studies', 'Economics', 'Accounting', 'Computer Science', 'Art and Design', 'Music'],
                         '12': ['Arabic', 'French', 'English', 'Mathematics', 'Biology', 'Chemistry', 'Physics', 'History', 'Geography', 'Islamic Studies', 'Economics', 'Accounting', 'Computer Science', 'Art and Design', 'Music'],
-                        'College': ['Engineering', 'Computer Science', 'Business & Management', 'Health Sciences', 'Law', 'Education', 'Arts & Humanities']
+                        'College': ['Communication', 'Mathematics for Science', 'Computer Literacy', 'Critical Thinking', 'Research Skills', 'Engineering', 'Computer Science', 'Business & Management', 'Health Sciences', 'Law', 'Education', 'Arts & Humanities']
                     }
                 }
             }
@@ -1868,11 +1868,17 @@
         function isTopicCompleted(subject, topic) { if (!progressData[subject]) return false; if (!progressData[subject].completed) return false; return progressData[subject].completed.includes(topic); }
 
         // ================================================================
-        //  TOPICS FOR EACH SUBJECT (expanded)
+        //  TOPICS FOR EACH SUBJECT (expanded with varsity content)
         // ================================================================
         const DEFAULT_TOPICS = {
             'Mathematics': ['Introduction to Algebra', 'Solving Linear Equations', 'Quadratic Functions', 'Trigonometry Basics', 'Calculus Fundamentals', 'Statistics & Probability', 'Geometry', 'Number Patterns'],
+            'Mathematics for Science': ['Calculus I', 'Linear Algebra', 'Differential Equations', 'Statistics', 'Discrete Mathematics', 'Numerical Methods'],
             'English': ['Grammar & Sentence Structure', 'Reading Comprehension', 'Creative Writing', 'Literature Analysis', 'Vocabulary Building', 'Essay Writing', 'Public Speaking'],
+            'Communication': ['Academic Writing', 'Public Speaking', 'Reading Comprehension', 'Critical Analysis', 'Research Communication', 'Business Communication', 'Interpersonal Skills', 'Digital Communication'],
+            'Academic Writing': ['Essay Structure', 'Research Papers', 'Citation Styles', 'Academic Tone', 'Argumentation', 'Literature Reviews', 'Thesis Writing'],
+            'Critical Thinking': ['Logical Reasoning', 'Argument Analysis', 'Cognitive Biases', 'Problem Solving', 'Decision Making', 'Critical Reading'],
+            'Research Skills': ['Research Design', 'Data Collection', 'Data Analysis', 'Academic Integrity', 'Ethics in Research', 'Literature Review', 'Academic Publishing'],
+            'Computer Literacy': ['Operating Systems', 'Word Processing', 'Spreadsheets', 'Presentations', 'Internet & Email', 'Digital Security', 'Cloud Computing'],
             'Life Sciences': ['Cell Biology', 'Genetics & Evolution', 'Human Anatomy', 'Ecology', 'Biotechnology', 'Microbiology', 'Botany', 'Zoology'],
             'Physical Sciences': ['Mechanics', 'Thermodynamics', 'Electricity', 'Chemical Bonding', 'Nuclear Physics', 'Optics', 'Waves', 'Electromagnetism'],
             'History': ['Ancient Civilizations', 'Industrial Revolution', 'World War I', 'World War II', 'Apartheid & Democracy', 'African Kingdoms', 'Colonialism'],
@@ -1880,13 +1886,13 @@
             'Accounting': ['Double-Entry System', 'Trial Balance', 'Financial Statements', 'Budgeting', 'Taxation', 'Auditing', 'Cost Accounting'],
             'Business Studies': ['Entrepreneurship', 'Marketing', 'Human Resources', 'Finance', 'Business Environment', 'Operations Management', 'Business Ethics'],
             'Economics': ['Supply & Demand', 'Market Structures', 'Macroeconomics', 'International Trade', 'South African Economy', 'Development Economics'],
-            'Engineering': ['Mechanical Basics', 'Electrical Circuits', 'Civil Structures', 'Thermodynamics', 'Materials Science', 'Fluid Mechanics'],
-            'Computer Science': ['Programming Fundamentals', 'Data Structures', 'Web Development', 'Artificial Intelligence', 'Cybersecurity', 'Databases'],
-            'Business & Management': ['Management Principles', 'Organizational Behavior', 'Marketing Strategy', 'Financial Management', 'Strategic Planning'],
-            'Health Sciences': ['Anatomy & Physiology', 'Pharmacology', 'Nursing Care', 'Public Health', 'Medical Ethics', 'Pathology'],
-            'Law': ['Criminal Law', 'Contract Law', 'Constitutional Law', 'Tort Law', 'Legal Research', 'Human Rights Law'],
-            'Education': ['Educational Psychology', 'Curriculum Design', 'Classroom Management', 'Assessment & Evaluation', 'Pedagogy'],
-            'Arts & Humanities': ['Art History', 'Music Theory', 'Philosophy', 'Creative Writing', 'Film Studies', 'Cultural Studies'],
+            'Engineering': ['Mechanical Basics', 'Electrical Circuits', 'Civil Structures', 'Thermodynamics', 'Materials Science', 'Fluid Mechanics', 'CAD', 'Robotics'],
+            'Computer Science': ['Programming Fundamentals', 'Data Structures', 'Web Development', 'Artificial Intelligence', 'Cybersecurity', 'Databases', 'Algorithms', 'Software Engineering'],
+            'Business & Management': ['Management Principles', 'Organizational Behavior', 'Marketing Strategy', 'Financial Management', 'Strategic Planning', 'Leadership', 'Project Management'],
+            'Health Sciences': ['Anatomy & Physiology', 'Pharmacology', 'Nursing Care', 'Public Health', 'Medical Ethics', 'Pathology', 'Health Policy'],
+            'Law': ['Criminal Law', 'Contract Law', 'Constitutional Law', 'Tort Law', 'Legal Research', 'Human Rights Law', 'Criminal Procedure'],
+            'Education': ['Educational Psychology', 'Curriculum Design', 'Classroom Management', 'Assessment & Evaluation', 'Pedagogy', 'Special Education'],
+            'Arts & Humanities': ['Art History', 'Music Theory', 'Philosophy', 'Creative Writing', 'Film Studies', 'Cultural Studies', 'Linguistics'],
             'Biology': ['Cell Structure', 'Genetics', 'Evolution', 'Ecology', 'Human Body Systems', 'Plant Biology', 'Microbiology'],
             'Chemistry': ['Atomic Structure', 'Chemical Reactions', 'Organic Chemistry', 'Inorganic Chemistry', 'Thermochemistry', 'Acids & Bases'],
             'Physics': ['Kinematics', 'Dynamics', 'Waves', 'Electricity', 'Magnetism', 'Nuclear Physics', 'Astrophysics'],
@@ -1908,14 +1914,6 @@
             'English Home Language': ['Literature', 'Language Skills', 'Creative Writing', 'Critical Analysis', 'Communication'],
             'Life Orientation': ['Personal Development', 'Health', 'Social Issues', 'Citizenship', 'Career Guidance'],
             'Agricultural Management Practices': ['Farm Management', 'Agribusiness', 'Agricultural Economics', 'Sustainable Practices'],
-            'Accounting': ['Financial Accounting', 'Managerial Accounting', 'Taxation', 'Auditing', 'Financial Analysis'],
-            'Business Studies': ['Business Environment', 'Marketing', 'Finance', 'Human Resources', 'Entrepreneurship'],
-            'Economics': ['Microeconomics', 'Macroeconomics', 'International Economics', 'Development Economics', 'South African Economy'],
-            'Geography': ['Physical Geography', 'Human Geography', 'Environmental Geography', 'Geographical Skills', 'GIS'],
-            'History': ['World History', 'South African History', 'African History', 'Historical Research', 'Heritage Studies'],
-            'Life Sciences': ['Molecular Biology', 'Genetics', 'Ecology', 'Human Biology', 'Biotechnology'],
-            'Mathematics': ['Algebra', 'Geometry', 'Trigonometry', 'Calculus', 'Statistics', 'Financial Mathematics'],
-            'Physical Sciences': ['Mechanics', 'Electricity', 'Waves', 'Chemical Reactions', 'Thermodynamics', 'Nuclear Physics'],
             'Setswana': ['Grammar', 'Reading', 'Literature', 'Writing', 'Oral Skills'],
             'Shona': ['Grammar', 'Reading', 'Literature', 'Writing', 'Oral Skills'],
             'Ndebele': ['Grammar', 'Reading', 'Literature', 'Writing', 'Oral Skills'],
@@ -1939,29 +1937,26 @@
             'Philosophy': ['Logic', 'Ethics', 'Metaphysics', 'Epistemology', 'History of Philosophy'],
             'Literature in English': ['Poetry', 'Prose', 'Drama', 'Literary Criticism', 'African Literature'],
             'Art and Design': ['Drawing', 'Painting', 'Sculpture', 'Graphic Design', 'Art History'],
-            'Music': ['Theory', 'Performance', 'Composition', 'History', 'Music Technology'],
             'Physical Education': ['Sports', 'Health', 'Fitness', 'Coaching', 'Biomechanics'],
             'Agriculture': ['Crop Science', 'Animal Science', 'Agricultural Economics', 'Soil Science', 'Agribusiness'],
             'Further Mathematics': ['Advanced Algebra', 'Calculus', 'Mechanics', 'Statistics', 'Discrete Mathematics'],
             'Technical Drawing': ['Engineering Drawing', 'CAD', 'Architectural Drawing', 'Structural Design', '3D Modeling'],
             'Computer Studies': ['Hardware', 'Software', 'Networking', 'Programming', 'Cybersecurity'],
-            'Computer Science': ['Algorithms', 'Data Structures', 'Programming', 'Software Engineering', 'AI'],
-            'Business Management': ['Management', 'Leadership', 'Organizational Behavior', 'Strategic Planning', 'Operations'],
-            'Economics': ['Microeconomics', 'Macroeconomics', 'International Trade', 'Development', 'Econometrics'],
-            'Accounting': ['Financial Accounting', 'Managerial Accounting', 'Auditing', 'Taxation', 'Financial Analysis'],
-            'Law': ['Constitutional Law', 'Criminal Law', 'Contract Law', 'Tort Law', 'Human Rights Law'],
-            'Education': ['Educational Psychology', 'Curriculum', 'Assessment', 'Pedagogy', 'Classroom Management'],
-            'Engineering': ['Mechanical', 'Electrical', 'Civil', 'Chemical', 'Aerospace', 'Biomedical'],
-            'Health Sciences': ['Medicine', 'Nursing', 'Pharmacy', 'Public Health', 'Physiotherapy'],
-            'Arts & Humanities': ['History', 'Literature', 'Philosophy', 'Art History', 'Cultural Studies']
+            'Project Management': ['Project Planning', 'Risk Management', 'Resource Management', 'Project Execution', 'Agile Methods']
         };
 
         // ================================================================
-        //  ICONS
+        //  ICONS (expanded)
         // ================================================================
         const SUBJECT_ICONS = {
             'Mathematics': '📐',
+            'Mathematics for Science': '📐',
             'English': '📖',
+            'Communication': '💬',
+            'Academic Writing': '✍️',
+            'Critical Thinking': '🧠',
+            'Research Skills': '🔍',
+            'Computer Literacy': '💻',
             'Life Sciences': '🧬',
             'Physical Sciences': '⚛️',
             'History': '🏛️',
@@ -2024,7 +2019,20 @@
             'Agriculture': '🌾',
             'Further Mathematics': '📐',
             'Technical Drawing': '📐',
-            'Computer Studies': '💻'
+            'Computer Studies': '💻',
+            'Project Management': '📋'
+        };
+
+        // ================================================================
+        //  COLLEGE FALLBACK SUBJECTS (varsity-level)
+        // ================================================================
+        const COLLEGE_FALLBACK_SUBJECTS = {
+            'Communication': ['Academic Writing', 'Public Speaking', 'Critical Analysis', 'Research Communication', 'Business Communication', 'Interpersonal Skills'],
+            'Mathematics for Science': ['Calculus I', 'Linear Algebra', 'Differential Equations', 'Statistics', 'Discrete Mathematics'],
+            'Computer Literacy': ['Operating Systems', 'Word Processing', 'Spreadsheets', 'Presentations', 'Digital Security'],
+            'Critical Thinking': ['Logical Reasoning', 'Argument Analysis', 'Cognitive Biases', 'Problem Solving', 'Decision Making'],
+            'Research Skills': ['Research Design', 'Data Collection', 'Data Analysis', 'Academic Integrity', 'Ethics in Research'],
+            'Academic Writing': ['Essay Structure', 'Research Papers', 'Citation Styles', 'Thesis Writing', 'Literature Reviews']
         };
 
         // ================================================================
@@ -2051,7 +2059,6 @@
 
             const data = CURRICULUM_DATA[country];
             if (!data) {
-                // Try fetching from API as fallback
                 fetch('/api/curriculum/' + encodeURIComponent(country))
                     .then(res => res.json())
                     .then(apiData => {
@@ -2077,7 +2084,6 @@
                 });
             }
 
-            // If only one curriculum, auto-select it and load grades
             if (data.curricula && data.curricula.length === 1) {
                 curriculumSelect.value = data.curricula[0];
                 loadGrades();
@@ -2133,13 +2139,28 @@
                 return;
             }
 
-            const subjects = subjectsForCurriculum[grade] || [];
+            let subjects = subjectsForCurriculum[grade] || [];
             if (subjects.length === 0) {
                 container.innerHTML = '<p style="grid-column:1/-1;color:#6b7280;font-size:0.9rem;">No subjects available for this selection.</p>';
                 return;
             }
 
-            // Sort subjects alphabetically
+            // For College, ensure Communication is included and English is replaced
+            if (grade === 'College') {
+                // Remove "English" if present, ensure "Communication" is in the list
+                subjects = subjects.filter(s => s !== 'English');
+                if (!subjects.includes('Communication')) {
+                    subjects.push('Communication');
+                }
+                // Add core varsity subjects if they're missing
+                const coreVarsity = ['Mathematics for Science', 'Computer Literacy', 'Critical Thinking', 'Research Skills', 'Academic Writing'];
+                coreVarsity.forEach(core => {
+                    if (!subjects.includes(core)) {
+                        subjects.push(core);
+                    }
+                });
+            }
+
             subjects.sort();
 
             container.innerHTML = subjects.map(sub => `
@@ -2204,7 +2225,6 @@
             document.getElementById('loginPage').style.display = 'none';
             document.getElementById('signupPage').style.display = 'block';
             clearErrors();
-            // Load country data if country already selected
             const country = document.getElementById('signupCountry').value;
             if (country) loadCurriculumData();
         }
@@ -2283,13 +2303,28 @@
             const grade = document.getElementById('signupGrade').value;
             const school = document.getElementById('signupSchool').value.trim();
             const role = document.getElementById('signupRole').value;
-            const subjects = getSelectedSubjects();
+            let subjects = getSelectedSubjects();
 
             if (!name || !email || !password || !country || !curriculum || !grade || !subjects.length) {
                 showError('signupError', 'Please fill all required fields and select at least one subject.');
                 return;
             }
             if (password.length < 6) { showError('signupError', 'Password must be at least 6 characters'); return; }
+
+            // For College, ensure Communication is included
+            if (grade === 'College') {
+                if (!subjects.includes('Communication')) {
+                    subjects.push('Communication');
+                }
+                // Add core varsity subjects if missing
+                const coreVarsity = ['Mathematics for Science', 'Computer Literacy', 'Critical Thinking', 'Research Skills', 'Academic Writing'];
+                coreVarsity.forEach(core => {
+                    if (!subjects.includes(core)) {
+                        subjects.push(core);
+                    }
+                });
+            }
+
             clearErrors();
             setButtonLoading('signupBtn', true);
 
@@ -2322,6 +2357,25 @@
             'Level: Not set');
             document.getElementById('userGrade').textContent = gradeDisplay;
             checkSubscription();
+
+            // Ensure College users have Communication instead of English in their subjects
+            if (user.grade === 'College' && user.subjects) {
+                if (user.subjects.includes('English')) {
+                    user.subjects = user.subjects.filter(s => s !== 'English');
+                    if (!user.subjects.includes('Communication')) {
+                        user.subjects.push('Communication');
+                    }
+                    // Add core varsity subjects if missing
+                    const coreVarsity = ['Mathematics for Science', 'Computer Literacy', 'Critical Thinking', 'Research Skills', 'Academic Writing'];
+                    coreVarsity.forEach(core => {
+                        if (!user.subjects.includes(core)) {
+                            user.subjects.push(core);
+                        }
+                    });
+                    localStorage.setItem('synapse_user', JSON.stringify(user));
+                    currentUser = user;
+                }
+            }
 
             if (!user.subjects || user.subjects.length === 0) {
                 document.getElementById('welcomeMessage').textContent = 'Welcome, ' + user.name + ' 👋';
@@ -2416,15 +2470,34 @@
         function confirmGrade() {
             if (!tempSelectedGrade) { alert('Please select your level.'); return; }
             selectedGrade = tempSelectedGrade;
+
+            // If switching to College, ensure Communication is included
+            let subjects = currentUser.subjects || [];
+            if (selectedGrade === 'College') {
+                if (subjects.includes('English')) {
+                    subjects = subjects.filter(s => s !== 'English');
+                }
+                if (!subjects.includes('Communication')) {
+                    subjects.push('Communication');
+                }
+                const coreVarsity = ['Mathematics for Science', 'Computer Literacy', 'Critical Thinking', 'Research Skills', 'Academic Writing'];
+                coreVarsity.forEach(core => {
+                    if (!subjects.includes(core)) {
+                        subjects.push(core);
+                    }
+                });
+            }
+
             fetch('/save-profile', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ userId: currentUser.id, name: currentUser.name, country: currentUser
                             .country, grade: selectedGrade, curriculum: currentUser.curriculum, province: currentUser
-                            .province, subjects: currentUser.subjects || [] })
+                            .province, subjects: subjects })
                 })
                 .catch(() => {});
             currentUser.grade = selectedGrade;
+            currentUser.subjects = subjects;
             localStorage.setItem('synapse_user', JSON.stringify(currentUser));
             document.getElementById('userGrade').textContent = selectedGrade === 'College' ? 'College' : 'Grade ' +
             selectedGrade;
@@ -2437,18 +2510,42 @@
         function showSubjects() {
             currentView = 'subjects';
             let subjects = {};
-            if (currentUser.subjects && currentUser.subjects.length > 0) {
-                currentUser.subjects.forEach(sub => {
+
+            // If user is in College and has no subjects, use varsity fallback
+            if (currentUser.grade === 'College' && (!currentUser.subjects || currentUser.subjects.length === 0)) {
+                // Use varsity fallback
+                subjects = {};
+                for (const [name, topics] of Object.entries(COLLEGE_FALLBACK_SUBJECTS)) {
+                    subjects[name] = topics;
+                }
+            } else if (currentUser.subjects && currentUser.subjects.length > 0) {
+                let userSubjects = currentUser.subjects;
+                // For College, ensure Communication replaces English
+                if (currentUser.grade === 'College') {
+                    userSubjects = userSubjects.filter(s => s !== 'English');
+                    if (!userSubjects.includes('Communication')) {
+                        userSubjects.push('Communication');
+                    }
+                }
+                userSubjects.forEach(sub => {
                     const topics = DEFAULT_TOPICS[sub] || ['Introduction', 'Basics', 'Intermediate', 'Advanced',
                         'Expert'
                     ];
                     subjects[sub] = topics;
                 });
             } else {
+                // Fallback for non-College
                 subjects = {
                     'Mathematics': DEFAULT_TOPICS['Mathematics'],
                     'English': DEFAULT_TOPICS['English']
                 };
+                // If College, use varsity fallback instead
+                if (currentUser.grade === 'College') {
+                    subjects = {};
+                    for (const [name, topics] of Object.entries(COLLEGE_FALLBACK_SUBJECTS)) {
+                        subjects[name] = topics;
+                    }
+                }
             }
 
             initProgress(subjects);
@@ -2457,7 +2554,8 @@
                 .grade || '') + ' · Select a subject to start learning.';
             const container = document.getElementById('dynamicContent');
             let html = `<div class="subject-grid">`;
-            Object.keys(subjects).forEach(name => {
+            const sortedSubjects = Object.keys(subjects).sort();
+            sortedSubjects.forEach(name => {
                 const prog = getSubjectProgress(name);
                 html +=
                     `<div class="subject-card" onclick="openSubject('${name}')"><span class="icon">${SUBJECT_ICONS[name] || '📚'}</span><span class="name">${name}</span><div class="progress-badge">${prog.percent}%</div></div>`;
@@ -2590,23 +2688,42 @@
         // ================================================================
         function renderSidebar() {
             let subjects = {};
-            if (currentUser.subjects && currentUser.subjects.length > 0) {
-                currentUser.subjects.forEach(sub => {
+
+            if (currentUser.grade === 'College' && (!currentUser.subjects || currentUser.subjects.length === 0)) {
+                for (const [name, topics] of Object.entries(COLLEGE_FALLBACK_SUBJECTS)) {
+                    subjects[name] = topics;
+                }
+            } else if (currentUser.subjects && currentUser.subjects.length > 0) {
+                let userSubjects = currentUser.subjects;
+                if (currentUser.grade === 'College') {
+                    userSubjects = userSubjects.filter(s => s !== 'English');
+                    if (!userSubjects.includes('Communication')) {
+                        userSubjects.push('Communication');
+                    }
+                }
+                userSubjects.forEach(sub => {
                     const topics = DEFAULT_TOPICS[sub] || ['Introduction', 'Basics', 'Intermediate', 'Advanced',
                         'Expert'
                     ];
                     subjects[sub] = topics;
                 });
             } else {
-                subjects = {
-                    'Mathematics': DEFAULT_TOPICS['Mathematics'],
-                    'English': DEFAULT_TOPICS['English']
-                };
+                if (currentUser.grade === 'College') {
+                    for (const [name, topics] of Object.entries(COLLEGE_FALLBACK_SUBJECTS)) {
+                        subjects[name] = topics;
+                    }
+                } else {
+                    subjects = {
+                        'Mathematics': DEFAULT_TOPICS['Mathematics'],
+                        'English': DEFAULT_TOPICS['English']
+                    };
+                }
             }
+
             initProgress(subjects);
             const list = document.getElementById('subjectList');
             list.innerHTML = '';
-            Object.keys(subjects).forEach(key => {
+            Object.keys(subjects).sort().forEach(key => {
                 const prog = getSubjectProgress(key);
                 const li = document.createElement('li');
                 li.className = key === currentSubject ? 'active' : '';
@@ -2706,6 +2823,24 @@
             if (stored) {
                 try {
                     const user = JSON.parse(stored);
+                    // Ensure College users have Communication instead of English
+                    if (user.grade === 'College' && user.subjects) {
+                        if (user.subjects.includes('English')) {
+                            user.subjects = user.subjects.filter(s => s !== 'English');
+                            if (!user.subjects.includes('Communication')) {
+                                user.subjects.push('Communication');
+                            }
+                            const coreVarsity = ['Mathematics for Science', 'Computer Literacy', 'Critical Thinking',
+                                'Research Skills', 'Academic Writing'
+                            ];
+                            coreVarsity.forEach(core => {
+                                if (!user.subjects.includes(core)) {
+                                    user.subjects.push(core);
+                                }
+                            });
+                            localStorage.setItem('synapse_user', JSON.stringify(user));
+                        }
+                    }
                     document.getElementById('heroSection').style.display = 'none';
                     document.querySelector('.dashboard-preview').style.display = 'none';
                     document.getElementById('features').style.display = 'none';
