@@ -1697,7 +1697,6 @@
                     }
                 }
             },
-            // Other countries are kept but with expanded high school and college lists
             'Kenya': {
                 curricula: ['CBC', '8-4-4'],
                 subjects: {
@@ -1715,34 +1714,1206 @@
                     }
                 }
             },
-            // Similar expansions applied to all other countries (Nigeria, Zimbabwe, etc.) for brevity,
-            // but they are included with comprehensive lists in the actual code.
-            // We keep the structure but for the sake of response length we'll include only the full South Africa data.
-            // In the final code, we will include all countries with expanded lists.
-            // For now, we'll include a placeholder for other countries but the full code will have them.
+            'Nigeria': {
+                curricula: ['WAEC', 'NECO'],
+                subjects: {
+                    'WAEC': {
+                        '10': ['English Language', 'Mathematics', 'Biology', 'Chemistry', 'Physics', 'Economics', 'Government', 'History', 'Geography', 'Christian Religious Knowledge', 'Islamic Religious Knowledge', 'Literature in English', 'Yoruba', 'Hausa', 'Igbo', 'French', 'Commerce', 'Accounting', 'Agricultural Science', 'Further Mathematics', 'Technical Drawing'],
+                        '11': ['English Language', 'Mathematics', 'Biology', 'Chemistry', 'Physics', 'Economics', 'Government', 'History', 'Geography', 'Christian Religious Knowledge', 'Islamic Religious Knowledge', 'Literature in English', 'Yoruba', 'Hausa', 'Igbo', 'French', 'Commerce', 'Accounting', 'Agricultural Science', 'Further Mathematics', 'Technical Drawing'],
+                        '12': ['English Language', 'Mathematics', 'Biology', 'Chemistry', 'Physics', 'Economics', 'Government', 'History', 'Geography', 'Christian Religious Knowledge', 'Islamic Religious Knowledge', 'Literature in English', 'Yoruba', 'Hausa', 'Igbo', 'French', 'Commerce', 'Accounting', 'Agricultural Science', 'Further Mathematics', 'Technical Drawing'],
+                        'College': ['Communication', 'Academic Writing', 'Critical Thinking', 'Research Skills', 'Computer Literacy', 'Mathematics for Science', 'Statistics', 'Physics', 'Chemistry', 'Biology', 'Accounting (Intro)', 'Economics (Intro)', 'Business Management', 'Marketing', 'Finance', 'Human Resources', 'Commercial Law', 'Criminal Law', 'Contract Law', 'Constitutional Law', 'Legal Research', 'Criminology', 'Psychology', 'Sociology', 'Social Work', 'Education (Foundation Phase)', 'Educational Psychology', 'Civil Engineering', 'Mechanical Engineering', 'Electrical Engineering', 'Chemical Engineering', 'Programming Fundamentals', 'Database Systems', 'Networking', 'Web Development', 'Anatomy', 'Physiology', 'Pharmacology', 'Public Health', 'Nursing', 'Physiotherapy', 'English Literature', 'History (University)', 'Philosophy', 'Political Science', 'Information Systems', 'Entrepreneurship', 'Project Management']
+                    },
+                    'NECO': {
+                        '10': ['English Language', 'Mathematics', 'Biology', 'Chemistry', 'Physics', 'Economics', 'Government', 'History', 'Geography', 'Christian Religious Knowledge', 'Islamic Religious Knowledge', 'Literature in English', 'Yoruba', 'Hausa', 'Igbo', 'French', 'Commerce', 'Accounting', 'Agricultural Science'],
+                        '11': ['English Language', 'Mathematics', 'Biology', 'Chemistry', 'Physics', 'Economics', 'Government', 'History', 'Geography', 'Christian Religious Knowledge', 'Islamic Religious Knowledge', 'Literature in English', 'Yoruba', 'Hausa', 'Igbo', 'French', 'Commerce', 'Accounting', 'Agricultural Science'],
+                        '12': ['English Language', 'Mathematics', 'Biology', 'Chemistry', 'Physics', 'Economics', 'Government', 'History', 'Geography', 'Christian Religious Knowledge', 'Islamic Religious Knowledge', 'Literature in English', 'Yoruba', 'Hausa', 'Igbo', 'French', 'Commerce', 'Accounting', 'Agricultural Science'],
+                        'College': ['Communication', 'Academic Writing', 'Critical Thinking', 'Research Skills', 'Computer Literacy', 'Mathematics for Science', 'Statistics', 'Physics', 'Chemistry', 'Biology', 'Accounting (Intro)', 'Economics (Intro)', 'Business Management', 'Marketing', 'Finance', 'Human Resources', 'Commercial Law', 'Criminal Law', 'Contract Law', 'Constitutional Law', 'Legal Research', 'Criminology', 'Psychology', 'Sociology', 'Social Work', 'Education (Foundation Phase)', 'Educational Psychology', 'Civil Engineering', 'Mechanical Engineering', 'Electrical Engineering', 'Chemical Engineering', 'Programming Fundamentals', 'Database Systems', 'Networking', 'Web Development', 'Anatomy', 'Physiology', 'Pharmacology', 'Public Health', 'Nursing', 'Physiotherapy', 'English Literature', 'History (University)', 'Philosophy', 'Political Science', 'Information Systems', 'Entrepreneurship', 'Project Management']
+                    }
+                }
+            },
+            'Zimbabwe': {
+                curricula: ['ZIMSEC', 'Cambridge'],
+                subjects: {
+                    'ZIMSEC': {
+                        '10': ['English', 'Mathematics', 'Biology', 'Chemistry', 'Physics', 'History', 'Geography', 'Shona', 'Ndebele', 'Accounting', 'Business Studies', 'Economics', 'Agriculture', 'Computer Science', 'Art and Design', 'Music'],
+                        '11': ['English', 'Mathematics', 'Biology', 'Chemistry', 'Physics', 'History', 'Geography', 'Shona', 'Ndebele', 'Accounting', 'Business Studies', 'Economics', 'Agriculture', 'Computer Science', 'Art and Design', 'Music'],
+                        '12': ['English', 'Mathematics', 'Biology', 'Chemistry', 'Physics', 'History', 'Geography', 'Shona', 'Ndebele', 'Accounting', 'Business Studies', 'Economics', 'Agriculture', 'Computer Science', 'Art and Design', 'Music'],
+                        'College': ['Communication', 'Academic Writing', 'Critical Thinking', 'Research Skills', 'Computer Literacy', 'Mathematics for Science', 'Statistics', 'Physics', 'Chemistry', 'Biology', 'Accounting (Intro)', 'Economics (Intro)', 'Business Management', 'Marketing', 'Finance', 'Human Resources', 'Commercial Law', 'Criminal Law', 'Contract Law', 'Constitutional Law', 'Legal Research', 'Criminology', 'Psychology', 'Sociology', 'Social Work', 'Education (Foundation Phase)', 'Educational Psychology', 'Civil Engineering', 'Mechanical Engineering', 'Electrical Engineering', 'Chemical Engineering', 'Programming Fundamentals', 'Database Systems', 'Networking', 'Web Development', 'Anatomy', 'Physiology', 'Pharmacology', 'Public Health', 'Nursing', 'Physiotherapy', 'English Literature', 'History (University)', 'Philosophy', 'Political Science', 'Information Systems', 'Entrepreneurship', 'Project Management']
+                    },
+                    'Cambridge': {
+                        '10': ['English', 'Mathematics', 'Biology', 'Chemistry', 'Physics', 'History', 'Geography', 'Accounting', 'Business Studies', 'Economics', 'Computer Science'],
+                        '11': ['English', 'Mathematics', 'Biology', 'Chemistry', 'Physics', 'History', 'Geography', 'Accounting', 'Business Studies', 'Economics', 'Computer Science'],
+                        '12': ['English', 'Mathematics', 'Biology', 'Chemistry', 'Physics', 'History', 'Geography', 'Accounting', 'Business Studies', 'Economics', 'Computer Science'],
+                        'College': ['Communication', 'Academic Writing', 'Critical Thinking', 'Research Skills', 'Computer Literacy', 'Mathematics for Science', 'Statistics', 'Physics', 'Chemistry', 'Biology', 'Accounting (Intro)', 'Economics (Intro)', 'Business Management', 'Marketing', 'Finance', 'Human Resources', 'Commercial Law', 'Criminal Law', 'Contract Law', 'Constitutional Law', 'Legal Research', 'Criminology', 'Psychology', 'Sociology', 'Social Work', 'Education (Foundation Phase)', 'Educational Psychology', 'Civil Engineering', 'Mechanical Engineering', 'Electrical Engineering', 'Chemical Engineering', 'Programming Fundamentals', 'Database Systems', 'Networking', 'Web Development', 'Anatomy', 'Physiology', 'Pharmacology', 'Public Health', 'Nursing', 'Physiotherapy', 'English Literature', 'History (University)', 'Philosophy', 'Political Science', 'Information Systems', 'Entrepreneurship', 'Project Management']
+                    }
+                }
+            },
+            'Botswana': {
+                curricula: ['BEC', 'Cambridge'],
+                subjects: {
+                    'BEC': {
+                        '10': ['English', 'Setswana', 'Mathematics', 'Biology', 'Chemistry', 'Physics', 'History', 'Geography', 'Accounting', 'Business Studies', 'Economics', 'Agriculture', 'Computer Science', 'Art and Design', 'Music', 'Religious Education'],
+                        '11': ['English', 'Setswana', 'Mathematics', 'Biology', 'Chemistry', 'Physics', 'History', 'Geography', 'Accounting', 'Business Studies', 'Economics', 'Agriculture', 'Computer Science', 'Art and Design', 'Music', 'Religious Education'],
+                        '12': ['English', 'Setswana', 'Mathematics', 'Biology', 'Chemistry', 'Physics', 'History', 'Geography', 'Accounting', 'Business Studies', 'Economics', 'Agriculture', 'Computer Science', 'Art and Design', 'Music', 'Religious Education'],
+                        'College': ['Communication', 'Academic Writing', 'Critical Thinking', 'Research Skills', 'Computer Literacy', 'Mathematics for Science', 'Statistics', 'Physics', 'Chemistry', 'Biology', 'Accounting (Intro)', 'Economics (Intro)', 'Business Management', 'Marketing', 'Finance', 'Human Resources', 'Commercial Law', 'Criminal Law', 'Contract Law', 'Constitutional Law', 'Legal Research', 'Criminology', 'Psychology', 'Sociology', 'Social Work', 'Education (Foundation Phase)', 'Educational Psychology', 'Civil Engineering', 'Mechanical Engineering', 'Electrical Engineering', 'Chemical Engineering', 'Programming Fundamentals', 'Database Systems', 'Networking', 'Web Development', 'Anatomy', 'Physiology', 'Pharmacology', 'Public Health', 'Nursing', 'Physiotherapy', 'English Literature', 'History (University)', 'Philosophy', 'Political Science', 'Information Systems', 'Entrepreneurship', 'Project Management']
+                    },
+                    'Cambridge': {
+                        '10': ['English', 'Mathematics', 'Biology', 'Chemistry', 'Physics', 'History', 'Geography', 'Accounting', 'Business Studies', 'Economics', 'Computer Science'],
+                        '11': ['English', 'Mathematics', 'Biology', 'Chemistry', 'Physics', 'History', 'Geography', 'Accounting', 'Business Studies', 'Economics', 'Computer Science'],
+                        '12': ['English', 'Mathematics', 'Biology', 'Chemistry', 'Physics', 'History', 'Geography', 'Accounting', 'Business Studies', 'Economics', 'Computer Science'],
+                        'College': ['Communication', 'Academic Writing', 'Critical Thinking', 'Research Skills', 'Computer Literacy', 'Mathematics for Science', 'Statistics', 'Physics', 'Chemistry', 'Biology', 'Accounting (Intro)', 'Economics (Intro)', 'Business Management', 'Marketing', 'Finance', 'Human Resources', 'Commercial Law', 'Criminal Law', 'Contract Law', 'Constitutional Law', 'Legal Research', 'Criminology', 'Psychology', 'Sociology', 'Social Work', 'Education (Foundation Phase)', 'Educational Psychology', 'Civil Engineering', 'Mechanical Engineering', 'Electrical Engineering', 'Chemical Engineering', 'Programming Fundamentals', 'Database Systems', 'Networking', 'Web Development', 'Anatomy', 'Physiology', 'Pharmacology', 'Public Health', 'Nursing', 'Physiotherapy', 'English Literature', 'History (University)', 'Philosophy', 'Political Science', 'Information Systems', 'Entrepreneurship', 'Project Management']
+                    }
+                }
+            },
+            'Namibia': {
+                curricula: ['NSSCO', 'NSSCAS'],
+                subjects: {
+                    'NSSCO': {
+                        '10': ['English', 'Afrikaans', 'German', 'Oshiwambo', 'Mathematics', 'Biology', 'Chemistry', 'Physics', 'History', 'Geography', 'Accounting', 'Business Studies', 'Economics', 'Agriculture', 'Computer Science', 'Art and Design', 'Music', 'Religious Education'],
+                        '11': ['English', 'Afrikaans', 'German', 'Oshiwambo', 'Mathematics', 'Biology', 'Chemistry', 'Physics', 'History', 'Geography', 'Accounting', 'Business Studies', 'Economics', 'Agriculture', 'Computer Science', 'Art and Design', 'Music', 'Religious Education'],
+                        '12': ['English', 'Afrikaans', 'German', 'Oshiwambo', 'Mathematics', 'Biology', 'Chemistry', 'Physics', 'History', 'Geography', 'Accounting', 'Business Studies', 'Economics', 'Agriculture', 'Computer Science', 'Art and Design', 'Music', 'Religious Education'],
+                        'College': ['Communication', 'Academic Writing', 'Critical Thinking', 'Research Skills', 'Computer Literacy', 'Mathematics for Science', 'Statistics', 'Physics', 'Chemistry', 'Biology', 'Accounting (Intro)', 'Economics (Intro)', 'Business Management', 'Marketing', 'Finance', 'Human Resources', 'Commercial Law', 'Criminal Law', 'Contract Law', 'Constitutional Law', 'Legal Research', 'Criminology', 'Psychology', 'Sociology', 'Social Work', 'Education (Foundation Phase)', 'Educational Psychology', 'Civil Engineering', 'Mechanical Engineering', 'Electrical Engineering', 'Chemical Engineering', 'Programming Fundamentals', 'Database Systems', 'Networking', 'Web Development', 'Anatomy', 'Physiology', 'Pharmacology', 'Public Health', 'Nursing', 'Physiotherapy', 'English Literature', 'History (University)', 'Philosophy', 'Political Science', 'Information Systems', 'Entrepreneurship', 'Project Management']
+                    },
+                    'NSSCAS': {
+                        '11': ['English', 'Mathematics', 'Biology', 'Chemistry', 'Physics', 'History', 'Geography', 'Accounting', 'Business Studies', 'Economics', 'Computer Science'],
+                        '12': ['English', 'Mathematics', 'Biology', 'Chemistry', 'Physics', 'History', 'Geography', 'Accounting', 'Business Studies', 'Economics', 'Computer Science'],
+                        'College': ['Communication', 'Academic Writing', 'Critical Thinking', 'Research Skills', 'Computer Literacy', 'Mathematics for Science', 'Statistics', 'Physics', 'Chemistry', 'Biology', 'Accounting (Intro)', 'Economics (Intro)', 'Business Management', 'Marketing', 'Finance', 'Human Resources', 'Commercial Law', 'Criminal Law', 'Contract Law', 'Constitutional Law', 'Legal Research', 'Criminology', 'Psychology', 'Sociology', 'Social Work', 'Education (Foundation Phase)', 'Educational Psychology', 'Civil Engineering', 'Mechanical Engineering', 'Electrical Engineering', 'Chemical Engineering', 'Programming Fundamentals', 'Database Systems', 'Networking', 'Web Development', 'Anatomy', 'Physiology', 'Pharmacology', 'Public Health', 'Nursing', 'Physiotherapy', 'English Literature', 'History (University)', 'Philosophy', 'Political Science', 'Information Systems', 'Entrepreneurship', 'Project Management']
+                    }
+                }
+            },
+            'Ghana': {
+                curricula: ['WASSCE', 'Cambridge'],
+                subjects: {
+                    'WASSCE': {
+                        '10': ['English Language', 'Mathematics', 'Integrated Science', 'Biology', 'Chemistry', 'Physics', 'Social Studies', 'Economics', 'Government', 'History', 'Geography', 'Accounting', 'Business Management', 'Agriculture', 'Computer Science', 'French', 'Religious Studies', 'Art and Design', 'Music'],
+                        '11': ['English Language', 'Mathematics', 'Integrated Science', 'Biology', 'Chemistry', 'Physics', 'Social Studies', 'Economics', 'Government', 'History', 'Geography', 'Accounting', 'Business Management', 'Agriculture', 'Computer Science', 'French', 'Religious Studies', 'Art and Design', 'Music'],
+                        '12': ['English Language', 'Mathematics', 'Integrated Science', 'Biology', 'Chemistry', 'Physics', 'Social Studies', 'Economics', 'Government', 'History', 'Geography', 'Accounting', 'Business Management', 'Agriculture', 'Computer Science', 'French', 'Religious Studies', 'Art and Design', 'Music'],
+                        'College': ['Communication', 'Academic Writing', 'Critical Thinking', 'Research Skills', 'Computer Literacy', 'Mathematics for Science', 'Statistics', 'Physics', 'Chemistry', 'Biology', 'Accounting (Intro)', 'Economics (Intro)', 'Business Management', 'Marketing', 'Finance', 'Human Resources', 'Commercial Law', 'Criminal Law', 'Contract Law', 'Constitutional Law', 'Legal Research', 'Criminology', 'Psychology', 'Sociology', 'Social Work', 'Education (Foundation Phase)', 'Educational Psychology', 'Civil Engineering', 'Mechanical Engineering', 'Electrical Engineering', 'Chemical Engineering', 'Programming Fundamentals', 'Database Systems', 'Networking', 'Web Development', 'Anatomy', 'Physiology', 'Pharmacology', 'Public Health', 'Nursing', 'Physiotherapy', 'English Literature', 'History (University)', 'Philosophy', 'Political Science', 'Information Systems', 'Entrepreneurship', 'Project Management']
+                    },
+                    'Cambridge': {
+                        '10': ['English', 'Mathematics', 'Biology', 'Chemistry', 'Physics', 'History', 'Geography', 'Accounting', 'Business Studies', 'Economics', 'Computer Science'],
+                        '11': ['English', 'Mathematics', 'Biology', 'Chemistry', 'Physics', 'History', 'Geography', 'Accounting', 'Business Studies', 'Economics', 'Computer Science'],
+                        '12': ['English', 'Mathematics', 'Biology', 'Chemistry', 'Physics', 'History', 'Geography', 'Accounting', 'Business Studies', 'Economics', 'Computer Science'],
+                        'College': ['Communication', 'Academic Writing', 'Critical Thinking', 'Research Skills', 'Computer Literacy', 'Mathematics for Science', 'Statistics', 'Physics', 'Chemistry', 'Biology', 'Accounting (Intro)', 'Economics (Intro)', 'Business Management', 'Marketing', 'Finance', 'Human Resources', 'Commercial Law', 'Criminal Law', 'Contract Law', 'Constitutional Law', 'Legal Research', 'Criminology', 'Psychology', 'Sociology', 'Social Work', 'Education (Foundation Phase)', 'Educational Psychology', 'Civil Engineering', 'Mechanical Engineering', 'Electrical Engineering', 'Chemical Engineering', 'Programming Fundamentals', 'Database Systems', 'Networking', 'Web Development', 'Anatomy', 'Physiology', 'Pharmacology', 'Public Health', 'Nursing', 'Physiotherapy', 'English Literature', 'History (University)', 'Philosophy', 'Political Science', 'Information Systems', 'Entrepreneurship', 'Project Management']
+                    }
+                }
+            },
+            'Egypt': {
+                curricula: ['Thanaweya Amma', 'Cambridge'],
+                subjects: {
+                    'Thanaweya Amma': {
+                        '10': ['Arabic', 'English', 'Mathematics', 'Biology', 'Chemistry', 'Physics', 'History', 'Geography', 'Economics', 'Sociology', 'Philosophy', 'Religious Studies'],
+                        '11': ['Arabic', 'English', 'Mathematics', 'Biology', 'Chemistry', 'Physics', 'History', 'Geography', 'Economics', 'Sociology', 'Philosophy', 'Religious Studies'],
+                        '12': ['Arabic', 'English', 'Mathematics', 'Biology', 'Chemistry', 'Physics', 'History', 'Geography', 'Economics', 'Sociology', 'Philosophy', 'Religious Studies'],
+                        'College': ['Communication', 'Academic Writing', 'Critical Thinking', 'Research Skills', 'Computer Literacy', 'Mathematics for Science', 'Statistics', 'Physics', 'Chemistry', 'Biology', 'Accounting (Intro)', 'Economics (Intro)', 'Business Management', 'Marketing', 'Finance', 'Human Resources', 'Commercial Law', 'Criminal Law', 'Contract Law', 'Constitutional Law', 'Legal Research', 'Criminology', 'Psychology', 'Sociology', 'Social Work', 'Education (Foundation Phase)', 'Educational Psychology', 'Civil Engineering', 'Mechanical Engineering', 'Electrical Engineering', 'Chemical Engineering', 'Programming Fundamentals', 'Database Systems', 'Networking', 'Web Development', 'Anatomy', 'Physiology', 'Pharmacology', 'Public Health', 'Nursing', 'Physiotherapy', 'English Literature', 'History (University)', 'Philosophy', 'Political Science', 'Information Systems', 'Entrepreneurship', 'Project Management']
+                    },
+                    'Cambridge': {
+                        '10': ['English', 'Mathematics', 'Biology', 'Chemistry', 'Physics', 'History', 'Geography', 'Accounting', 'Economics', 'Computer Science'],
+                        '11': ['English', 'Mathematics', 'Biology', 'Chemistry', 'Physics', 'History', 'Geography', 'Accounting', 'Economics', 'Computer Science'],
+                        '12': ['English', 'Mathematics', 'Biology', 'Chemistry', 'Physics', 'History', 'Geography', 'Accounting', 'Economics', 'Computer Science'],
+                        'College': ['Communication', 'Academic Writing', 'Critical Thinking', 'Research Skills', 'Computer Literacy', 'Mathematics for Science', 'Statistics', 'Physics', 'Chemistry', 'Biology', 'Accounting (Intro)', 'Economics (Intro)', 'Business Management', 'Marketing', 'Finance', 'Human Resources', 'Commercial Law', 'Criminal Law', 'Contract Law', 'Constitutional Law', 'Legal Research', 'Criminology', 'Psychology', 'Sociology', 'Social Work', 'Education (Foundation Phase)', 'Educational Psychology', 'Civil Engineering', 'Mechanical Engineering', 'Electrical Engineering', 'Chemical Engineering', 'Programming Fundamentals', 'Database Systems', 'Networking', 'Web Development', 'Anatomy', 'Physiology', 'Pharmacology', 'Public Health', 'Nursing', 'Physiotherapy', 'English Literature', 'History (University)', 'Philosophy', 'Political Science', 'Information Systems', 'Entrepreneurship', 'Project Management']
+                    }
+                }
+            },
+            'Uganda': {
+                curricula: ['UNEB'],
+                subjects: {
+                    'UNEB': {
+                        '10': ['English', 'Mathematics', 'Biology', 'Chemistry', 'Physics', 'History', 'Geography', 'Christian Religious Education', 'Islamic Religious Education', 'Agriculture', 'Commerce', 'Computer Science', 'Art and Design', 'Music'],
+                        '11': ['English', 'Mathematics', 'Biology', 'Chemistry', 'Physics', 'History', 'Geography', 'Christian Religious Education', 'Islamic Religious Education', 'Agriculture', 'Commerce', 'Computer Science', 'Art and Design', 'Music'],
+                        '12': ['English', 'Mathematics', 'Biology', 'Chemistry', 'Physics', 'History', 'Geography', 'Christian Religious Education', 'Islamic Religious Education', 'Agriculture', 'Commerce', 'Computer Science', 'Art and Design', 'Music'],
+                        'College': ['Communication', 'Academic Writing', 'Critical Thinking', 'Research Skills', 'Computer Literacy', 'Mathematics for Science', 'Statistics', 'Physics', 'Chemistry', 'Biology', 'Accounting (Intro)', 'Economics (Intro)', 'Business Management', 'Marketing', 'Finance', 'Human Resources', 'Commercial Law', 'Criminal Law', 'Contract Law', 'Constitutional Law', 'Legal Research', 'Criminology', 'Psychology', 'Sociology', 'Social Work', 'Education (Foundation Phase)', 'Educational Psychology', 'Civil Engineering', 'Mechanical Engineering', 'Electrical Engineering', 'Chemical Engineering', 'Programming Fundamentals', 'Database Systems', 'Networking', 'Web Development', 'Anatomy', 'Physiology', 'Pharmacology', 'Public Health', 'Nursing', 'Physiotherapy', 'English Literature', 'History (University)', 'Philosophy', 'Political Science', 'Information Systems', 'Entrepreneurship', 'Project Management']
+                    }
+                }
+            },
+            'Tanzania': {
+                curricula: ['NECTA'],
+                subjects: {
+                    'NECTA': {
+                        '10': ['English', 'Kiswahili', 'Mathematics', 'Biology', 'Chemistry', 'Physics', 'History', 'Geography', 'Civics', 'Islamic Religious Studies', 'Christian Religious Studies', 'Agriculture', 'Commerce', 'Computer Science', 'Art and Design', 'Music'],
+                        '11': ['English', 'Kiswahili', 'Mathematics', 'Biology', 'Chemistry', 'Physics', 'History', 'Geography', 'Civics', 'Islamic Religious Studies', 'Christian Religious Studies', 'Agriculture', 'Commerce', 'Computer Science', 'Art and Design', 'Music'],
+                        '12': ['English', 'Kiswahili', 'Mathematics', 'Biology', 'Chemistry', 'Physics', 'History', 'Geography', 'Civics', 'Islamic Religious Studies', 'Christian Religious Studies', 'Agriculture', 'Commerce', 'Computer Science', 'Art and Design', 'Music'],
+                        'College': ['Communication', 'Academic Writing', 'Critical Thinking', 'Research Skills', 'Computer Literacy', 'Mathematics for Science', 'Statistics', 'Physics', 'Chemistry', 'Biology', 'Accounting (Intro)', 'Economics (Intro)', 'Business Management', 'Marketing', 'Finance', 'Human Resources', 'Commercial Law', 'Criminal Law', 'Contract Law', 'Constitutional Law', 'Legal Research', 'Criminology', 'Psychology', 'Sociology', 'Social Work', 'Education (Foundation Phase)', 'Educational Psychology', 'Civil Engineering', 'Mechanical Engineering', 'Electrical Engineering', 'Chemical Engineering', 'Programming Fundamentals', 'Database Systems', 'Networking', 'Web Development', 'Anatomy', 'Physiology', 'Pharmacology', 'Public Health', 'Nursing', 'Physiotherapy', 'English Literature', 'History (University)', 'Philosophy', 'Political Science', 'Information Systems', 'Entrepreneurship', 'Project Management']
+                    }
+                }
+            },
+            'Zambia': {
+                curricula: ['ECZ'],
+                subjects: {
+                    'ECZ': {
+                        '10': ['English', 'Mathematics', 'Biology', 'Chemistry', 'Physics', 'History', 'Geography', 'Civic Education', 'Religious Education', 'Agriculture', 'Commerce', 'Computer Science', 'Art and Design', 'Music'],
+                        '11': ['English', 'Mathematics', 'Biology', 'Chemistry', 'Physics', 'History', 'Geography', 'Civic Education', 'Religious Education', 'Agriculture', 'Commerce', 'Computer Science', 'Art and Design', 'Music'],
+                        '12': ['English', 'Mathematics', 'Biology', 'Chemistry', 'Physics', 'History', 'Geography', 'Civic Education', 'Religious Education', 'Agriculture', 'Commerce', 'Computer Science', 'Art and Design', 'Music'],
+                        'College': ['Communication', 'Academic Writing', 'Critical Thinking', 'Research Skills', 'Computer Literacy', 'Mathematics for Science', 'Statistics', 'Physics', 'Chemistry', 'Biology', 'Accounting (Intro)', 'Economics (Intro)', 'Business Management', 'Marketing', 'Finance', 'Human Resources', 'Commercial Law', 'Criminal Law', 'Contract Law', 'Constitutional Law', 'Legal Research', 'Criminology', 'Psychology', 'Sociology', 'Social Work', 'Education (Foundation Phase)', 'Educational Psychology', 'Civil Engineering', 'Mechanical Engineering', 'Electrical Engineering', 'Chemical Engineering', 'Programming Fundamentals', 'Database Systems', 'Networking', 'Web Development', 'Anatomy', 'Physiology', 'Pharmacology', 'Public Health', 'Nursing', 'Physiotherapy', 'English Literature', 'History (University)', 'Philosophy', 'Political Science', 'Information Systems', 'Entrepreneurship', 'Project Management']
+                    }
+                }
+            },
+            'Mozambique': {
+                curricula: ['MINEDH'],
+                subjects: {
+                    'MINEDH': {
+                        '10': ['Portuguese', 'English', 'Mathematics', 'Biology', 'Chemistry', 'Physics', 'History', 'Geography', 'Moral and Civic Education', 'Agriculture', 'Commerce', 'Computer Science', 'Art and Design', 'Music'],
+                        '11': ['Portuguese', 'English', 'Mathematics', 'Biology', 'Chemistry', 'Physics', 'History', 'Geography', 'Moral and Civic Education', 'Agriculture', 'Commerce', 'Computer Science', 'Art and Design', 'Music'],
+                        '12': ['Portuguese', 'English', 'Mathematics', 'Biology', 'Chemistry', 'Physics', 'History', 'Geography', 'Moral and Civic Education', 'Agriculture', 'Commerce', 'Computer Science', 'Art and Design', 'Music'],
+                        'College': ['Communication', 'Academic Writing', 'Critical Thinking', 'Research Skills', 'Computer Literacy', 'Mathematics for Science', 'Statistics', 'Physics', 'Chemistry', 'Biology', 'Accounting (Intro)', 'Economics (Intro)', 'Business Management', 'Marketing', 'Finance', 'Human Resources', 'Commercial Law', 'Criminal Law', 'Contract Law', 'Constitutional Law', 'Legal Research', 'Criminology', 'Psychology', 'Sociology', 'Social Work', 'Education (Foundation Phase)', 'Educational Psychology', 'Civil Engineering', 'Mechanical Engineering', 'Electrical Engineering', 'Chemical Engineering', 'Programming Fundamentals', 'Database Systems', 'Networking', 'Web Development', 'Anatomy', 'Physiology', 'Pharmacology', 'Public Health', 'Nursing', 'Physiotherapy', 'English Literature', 'History (University)', 'Philosophy', 'Political Science', 'Information Systems', 'Entrepreneurship', 'Project Management']
+                    }
+                }
+            },
+            'Angola': {
+                curricula: ['MINED'],
+                subjects: {
+                    'MINED': {
+                        '10': ['Portuguese', 'English', 'Mathematics', 'Biology', 'Chemistry', 'Physics', 'History', 'Geography', 'Moral and Civic Education', 'Agriculture', 'Commerce', 'Computer Science', 'Art and Design', 'Music'],
+                        '11': ['Portuguese', 'English', 'Mathematics', 'Biology', 'Chemistry', 'Physics', 'History', 'Geography', 'Moral and Civic Education', 'Agriculture', 'Commerce', 'Computer Science', 'Art and Design', 'Music'],
+                        '12': ['Portuguese', 'English', 'Mathematics', 'Biology', 'Chemistry', 'Physics', 'History', 'Geography', 'Moral and Civic Education', 'Agriculture', 'Commerce', 'Computer Science', 'Art and Design', 'Music'],
+                        'College': ['Communication', 'Academic Writing', 'Critical Thinking', 'Research Skills', 'Computer Literacy', 'Mathematics for Science', 'Statistics', 'Physics', 'Chemistry', 'Biology', 'Accounting (Intro)', 'Economics (Intro)', 'Business Management', 'Marketing', 'Finance', 'Human Resources', 'Commercial Law', 'Criminal Law', 'Contract Law', 'Constitutional Law', 'Legal Research', 'Criminology', 'Psychology', 'Sociology', 'Social Work', 'Education (Foundation Phase)', 'Educational Psychology', 'Civil Engineering', 'Mechanical Engineering', 'Electrical Engineering', 'Chemical Engineering', 'Programming Fundamentals', 'Database Systems', 'Networking', 'Web Development', 'Anatomy', 'Physiology', 'Pharmacology', 'Public Health', 'Nursing', 'Physiotherapy', 'English Literature', 'History (University)', 'Philosophy', 'Political Science', 'Information Systems', 'Entrepreneurship', 'Project Management']
+                    }
+                }
+            },
+            'Cameroon': {
+                curricula: ['GCE', 'Baccalaureate'],
+                subjects: {
+                    'GCE': {
+                        '10': ['English', 'French', 'Mathematics', 'Biology', 'Chemistry', 'Physics', 'History', 'Geography', 'Economics', 'Accounting', 'Business Studies', 'Computer Science', 'Religious Studies', 'Art and Design', 'Music'],
+                        '11': ['English', 'French', 'Mathematics', 'Biology', 'Chemistry', 'Physics', 'History', 'Geography', 'Economics', 'Accounting', 'Business Studies', 'Computer Science', 'Religious Studies', 'Art and Design', 'Music'],
+                        '12': ['English', 'French', 'Mathematics', 'Biology', 'Chemistry', 'Physics', 'History', 'Geography', 'Economics', 'Accounting', 'Business Studies', 'Computer Science', 'Religious Studies', 'Art and Design', 'Music'],
+                        'College': ['Communication', 'Academic Writing', 'Critical Thinking', 'Research Skills', 'Computer Literacy', 'Mathematics for Science', 'Statistics', 'Physics', 'Chemistry', 'Biology', 'Accounting (Intro)', 'Economics (Intro)', 'Business Management', 'Marketing', 'Finance', 'Human Resources', 'Commercial Law', 'Criminal Law', 'Contract Law', 'Constitutional Law', 'Legal Research', 'Criminology', 'Psychology', 'Sociology', 'Social Work', 'Education (Foundation Phase)', 'Educational Psychology', 'Civil Engineering', 'Mechanical Engineering', 'Electrical Engineering', 'Chemical Engineering', 'Programming Fundamentals', 'Database Systems', 'Networking', 'Web Development', 'Anatomy', 'Physiology', 'Pharmacology', 'Public Health', 'Nursing', 'Physiotherapy', 'English Literature', 'History (University)', 'Philosophy', 'Political Science', 'Information Systems', 'Entrepreneurship', 'Project Management']
+                    },
+                    'Baccalaureate': {
+                        '10': ['French', 'English', 'Mathematics', 'Biology', 'Chemistry', 'Physics', 'History', 'Geography', 'Philosophy', 'Economics', 'Literature'],
+                        '11': ['French', 'English', 'Mathematics', 'Biology', 'Chemistry', 'Physics', 'History', 'Geography', 'Philosophy', 'Economics', 'Literature'],
+                        '12': ['French', 'English', 'Mathematics', 'Biology', 'Chemistry', 'Physics', 'History', 'Geography', 'Philosophy', 'Economics', 'Literature'],
+                        'College': ['Communication', 'Academic Writing', 'Critical Thinking', 'Research Skills', 'Computer Literacy', 'Mathematics for Science', 'Statistics', 'Physics', 'Chemistry', 'Biology', 'Accounting (Intro)', 'Economics (Intro)', 'Business Management', 'Marketing', 'Finance', 'Human Resources', 'Commercial Law', 'Criminal Law', 'Contract Law', 'Constitutional Law', 'Legal Research', 'Criminology', 'Psychology', 'Sociology', 'Social Work', 'Education (Foundation Phase)', 'Educational Psychology', 'Civil Engineering', 'Mechanical Engineering', 'Electrical Engineering', 'Chemical Engineering', 'Programming Fundamentals', 'Database Systems', 'Networking', 'Web Development', 'Anatomy', 'Physiology', 'Pharmacology', 'Public Health', 'Nursing', 'Physiotherapy', 'English Literature', 'History (University)', 'Philosophy', 'Political Science', 'Information Systems', 'Entrepreneurship', 'Project Management']
+                    }
+                }
+            },
+            'Ethiopia': {
+                curricula: ['Ministry of Education'],
+                subjects: {
+                    'Ministry of Education': {
+                        '10': ['Amharic', 'English', 'Mathematics', 'Biology', 'Chemistry', 'Physics', 'History', 'Geography', 'Civic and Ethical Education', 'Economics', 'Agriculture', 'Computer Science', 'Art and Design', 'Music', 'Physical Education'],
+                        '11': ['Amharic', 'English', 'Mathematics', 'Biology', 'Chemistry', 'Physics', 'History', 'Geography', 'Civic and Ethical Education', 'Economics', 'Agriculture', 'Computer Science', 'Art and Design', 'Music', 'Physical Education'],
+                        '12': ['Amharic', 'English', 'Mathematics', 'Biology', 'Chemistry', 'Physics', 'History', 'Geography', 'Civic and Ethical Education', 'Economics', 'Agriculture', 'Computer Science', 'Art and Design', 'Music', 'Physical Education'],
+                        'College': ['Communication', 'Academic Writing', 'Critical Thinking', 'Research Skills', 'Computer Literacy', 'Mathematics for Science', 'Statistics', 'Physics', 'Chemistry', 'Biology', 'Accounting (Intro)', 'Economics (Intro)', 'Business Management', 'Marketing', 'Finance', 'Human Resources', 'Commercial Law', 'Criminal Law', 'Contract Law', 'Constitutional Law', 'Legal Research', 'Criminology', 'Psychology', 'Sociology', 'Social Work', 'Education (Foundation Phase)', 'Educational Psychology', 'Civil Engineering', 'Mechanical Engineering', 'Electrical Engineering', 'Chemical Engineering', 'Programming Fundamentals', 'Database Systems', 'Networking', 'Web Development', 'Anatomy', 'Physiology', 'Pharmacology', 'Public Health', 'Nursing', 'Physiotherapy', 'English Literature', 'History (University)', 'Philosophy', 'Political Science', 'Information Systems', 'Entrepreneurship', 'Project Management']
+                    }
+                }
+            },
+            'Morocco': {
+                curricula: ['Ministère de l\'Éducation'],
+                subjects: {
+                    'Ministère de l\'Éducation': {
+                        '10': ['Arabic', 'French', 'English', 'Mathematics', 'Biology', 'Chemistry', 'Physics', 'History', 'Geography', 'Islamic Studies', 'Economics', 'Accounting', 'Computer Science', 'Art and Design', 'Music'],
+                        '11': ['Arabic', 'French', 'English', 'Mathematics', 'Biology', 'Chemistry', 'Physics', 'History', 'Geography', 'Islamic Studies', 'Economics', 'Accounting', 'Computer Science', 'Art and Design', 'Music'],
+                        '12': ['Arabic', 'French', 'English', 'Mathematics', 'Biology', 'Chemistry', 'Physics', 'History', 'Geography', 'Islamic Studies', 'Economics', 'Accounting', 'Computer Science', 'Art and Design', 'Music'],
+                        'College': ['Communication', 'Academic Writing', 'Critical Thinking', 'Research Skills', 'Computer Literacy', 'Mathematics for Science', 'Statistics', 'Physics', 'Chemistry', 'Biology', 'Accounting (Intro)', 'Economics (Intro)', 'Business Management', 'Marketing', 'Finance', 'Human Resources', 'Commercial Law', 'Criminal Law', 'Contract Law', 'Constitutional Law', 'Legal Research', 'Criminology', 'Psychology', 'Sociology', 'Social Work', 'Education (Foundation Phase)', 'Educational Psychology', 'Civil Engineering', 'Mechanical Engineering', 'Electrical Engineering', 'Chemical Engineering', 'Programming Fundamentals', 'Database Systems', 'Networking', 'Web Development', 'Anatomy', 'Physiology', 'Pharmacology', 'Public Health', 'Nursing', 'Physiotherapy', 'English Literature', 'History (University)', 'Philosophy', 'Political Science', 'Information Systems', 'Entrepreneurship', 'Project Management']
+                    }
+                }
+            }
         };
 
-        // For the other countries, we'll add them in the final code. Since the user focuses on South Africa,
-        // we'll ensure South Africa is complete. The full code will have all countries.
-
-        // We'll add all countries with comprehensive lists similar to above.
-        // For brevity in this response, I'll show only the South Africa data but in the final code I will include all.
-
-        // The rest of the JavaScript remains the same as before, with the improved subject handling.
+        // ================================================================
+        //  STATE
+        // ================================================================
+        let currentUser = null;
+        let currentSubject = '';
+        let selectedGrade = '';
+        let currentView = 'welcome';
+        let progressData = {};
 
         // ================================================================
-        //  STATE, PROGRESS, TOPICS, ICONS, etc. (same as before but with expanded topics)
+        //  PROGRESS TRACKING (localStorage)
         // ================================================================
+        function getProgressKey() { if (!currentUser) return null; return 'leago_progress_' + currentUser.id; }
 
-        // I'll now present the rest of the JavaScript code which is identical to the previous version,
-        // but with the updated CURRICULUM_DATA.
+        function loadProgress() { const key = getProgressKey(); if (!key) return; const stored = localStorage.getItem(key); if (stored) { try { progressData = JSON.parse(stored); } catch (e) { progressData = {}; } } else { progressData = {}; } }
 
-        // Due to length constraints, I'll include the full script in the actual output.
-        // The final answer will contain the complete working HTML.
+        function saveProgress() { const key = getProgressKey(); if (!key) return; localStorage.setItem(key, JSON.stringify(progressData)); }
 
-        // For the sake of completeness, I'll provide the final HTML with all the data included.
+        function initProgress(subjects) { let changed = false; for (const [subject, topics] of Object.entries(subjects)) { if (!progressData[subject]) { progressData[subject] = { completed: [], total: topics.length }; changed = true; } else { if (progressData[subject].total !== topics.length) { progressData[subject].total = topics.length; changed = true; } } } if (changed) saveProgress(); }
 
-        // (I'll now write the final HTML)
+        function getSubjectProgress(subject) { if (!progressData[subject]) return { completed: 0, total: 0, percent: 0 }; const data = progressData[subject]; const completed = data.completed ? data.completed.length : 0; const total = data.total || 0; const percent = total > 0 ? Math.round((completed / total) * 100) : 0; return { completed, total, percent }; }
+
+        function markTopicCompleted(subject, topic) { if (!progressData[subject]) { progressData[subject] = { completed: [], total: 0 }; } if (!progressData[subject].completed) { progressData[subject].completed = []; } if (!progressData[subject].completed.includes(topic)) { progressData[subject].completed.push(topic); saveProgress(); return true; } return false; }
+
+        function isTopicCompleted(subject, topic) { if (!progressData[subject]) return false; if (!progressData[subject].completed) return false; return progressData[subject].completed.includes(topic); }
+
+        // ================================================================
+        //  TOPICS FOR EACH SUBJECT (expanded with varsity content)
+        // ================================================================
+        const DEFAULT_TOPICS = {
+            'Mathematics': ['Introduction to Algebra', 'Solving Linear Equations', 'Quadratic Functions', 'Trigonometry Basics', 'Calculus Fundamentals', 'Statistics & Probability', 'Geometry', 'Number Patterns'],
+            'Mathematical Literacy': ['Basic Numeracy', 'Financial Maths', 'Measurement', 'Data Handling', 'Probability'],
+            'English Home Language': ['Grammar', 'Reading Comprehension', 'Literature Analysis', 'Creative Writing', 'Essay Writing'],
+            'English First Additional Language': ['Grammar', 'Reading', 'Writing', 'Oral Communication', 'Vocabulary'],
+            'Afrikaans Home Language': ['Grammar', 'Reading', 'Literature', 'Writing', 'Oral Skills'],
+            'Afrikaans First Additional Language': ['Grammar', 'Reading', 'Literature', 'Writing', 'Oral Skills'],
+            'isiZulu Home Language': ['Grammar', 'Reading', 'Literature', 'Writing', 'Oral Skills'],
+            'isiXhosa Home Language': ['Grammar', 'Reading', 'Literature', 'Writing', 'Oral Skills'],
+            'Life Orientation': ['Personal Development', 'Health', 'Social Issues', 'Citizenship', 'Career Guidance'],
+            'Life Sciences': ['Cell Biology', 'Genetics & Evolution', 'Human Anatomy', 'Ecology', 'Biotechnology'],
+            'Physical Sciences': ['Mechanics', 'Thermodynamics', 'Electricity', 'Chemical Bonding', 'Nuclear Physics'],
+            'History': ['Ancient Civilizations', 'Industrial Revolution', 'World War I', 'World War II', 'Apartheid & Democracy'],
+            'Geography': ['Map Skills', 'Climate & Weather', 'Plate Tectonics', 'Population Studies', 'Environmental Management'],
+            'Accounting': ['Double-Entry System', 'Trial Balance', 'Financial Statements', 'Budgeting', 'Taxation'],
+            'Business Studies': ['Entrepreneurship', 'Marketing', 'Human Resources', 'Finance', 'Business Environment'],
+            'Economics': ['Supply & Demand', 'Market Structures', 'Macroeconomics', 'International Trade', 'South African Economy'],
+            'Civil Technology': ['Construction', 'Structural Analysis', 'Materials Science', 'Site Management', 'Building Design'],
+            'Electrical Technology': ['Circuits', 'Electronics', 'Power Systems', 'Control Systems', 'Renewable Energy'],
+            'Mechanical Technology': ['Mechanics', 'Thermodynamics', 'Manufacturing', 'Automotive Technology', 'Robotics'],
+            'Engineering Graphics and Design': ['Technical Drawing', 'CAD', '3D Modeling', 'Architectural Drawing', 'Structural Design'],
+            'Computer Applications Technology': ['Word Processing', 'Spreadsheets', 'Databases', 'Presentations', 'Internet Basics'],
+            'Information Technology': ['Hardware', 'Networking', 'Cybersecurity', 'Web Development', 'Database Management'],
+            'Consumer Studies': ['Nutrition', 'Fashion', 'Interior Design', 'Consumer Rights', 'Financial Literacy'],
+            'Tourism': ['Tourism Concepts', 'Tourism Marketing', 'Ecotourism', 'Travel Operations', 'Cultural Tourism'],
+            'Hospitality Studies': ['Food Preparation', 'Catering', 'Hotel Management', 'Event Planning', 'Customer Service'],
+            'Agricultural Sciences': ['Soil Science', 'Crop Production', 'Animal Husbandry', 'Agricultural Economics', 'Sustainable Agriculture'],
+            'Agricultural Management Practices': ['Farm Management', 'Agribusiness', 'Agricultural Economics', 'Sustainable Practices'],
+            'Dance Studies': ['Dance History', 'Technique', 'Choreography', 'Performance', 'Cultural Dance'],
+            'Dramatic Arts': ['Acting Techniques', 'Theatre History', 'Playwriting', 'Stagecraft', 'Performance Studies'],
+            'Visual Arts': ['Drawing & Painting', 'Sculpture', 'Photography', 'Art History', 'Digital Art'],
+            'Music': ['Music Theory', 'Instrumental Studies', 'Vocal Studies', 'Music History', 'Composition'],
+            'Design': ['Graphic Design', 'Product Design', 'Fashion Design', 'Architecture', 'Digital Design'],
+            'Religion Studies': ['Major Religions', 'Scriptures', 'Ethics', 'Comparative Religion', 'Philosophy'],
+            'Maritime Economics': ['Shipping', 'Port Management', 'Maritime Law', 'International Trade', 'Logistics'],
+            // College subjects
+            'Communication': ['Academic Writing', 'Public Speaking', 'Reading Comprehension', 'Critical Analysis', 'Research Communication', 'Business Communication', 'Interpersonal Skills', 'Digital Communication'],
+            'Academic Writing': ['Essay Structure', 'Research Papers', 'Citation Styles', 'Academic Tone', 'Argumentation', 'Literature Reviews', 'Thesis Writing'],
+            'Critical Thinking': ['Logical Reasoning', 'Argument Analysis', 'Cognitive Biases', 'Problem Solving', 'Decision Making', 'Critical Reading'],
+            'Research Skills': ['Research Design', 'Data Collection', 'Data Analysis', 'Academic Integrity', 'Ethics in Research', 'Literature Review', 'Academic Publishing'],
+            'Computer Literacy': ['Operating Systems', 'Word Processing', 'Spreadsheets', 'Presentations', 'Internet & Email', 'Digital Security', 'Cloud Computing'],
+            'Mathematics for Science': ['Calculus I', 'Linear Algebra', 'Differential Equations', 'Statistics', 'Discrete Mathematics', 'Numerical Methods'],
+            'Statistics': ['Descriptive Stats', 'Probability', 'Inferential Stats', 'Regression', 'Hypothesis Testing'],
+            'Physics': ['Mechanics', 'Waves', 'Electricity', 'Magnetism', 'Thermodynamics', 'Optics'],
+            'Chemistry': ['Atomic Structure', 'Chemical Reactions', 'Organic Chemistry', 'Inorganic Chemistry', 'Thermochemistry', 'Acids & Bases'],
+            'Biology': ['Cell Structure', 'Genetics', 'Evolution', 'Ecology', 'Human Body Systems', 'Plant Biology'],
+            'Accounting (Intro)': ['Financial Accounting', 'Management Accounting', 'Balance Sheet', 'Income Statement', 'Cash Flow'],
+            'Economics (Intro)': ['Microeconomics', 'Macroeconomics', 'Supply & Demand', 'Market Structures', 'GDP', 'Inflation'],
+            'Business Management': ['Management Principles', 'Organizational Behavior', 'Leadership', 'Strategic Planning', 'Operations Management'],
+            'Marketing': ['Marketing Mix', 'Consumer Behavior', 'Digital Marketing', 'Brand Management', 'Market Research'],
+            'Finance': ['Corporate Finance', 'Investment', 'Risk Management', 'Financial Markets', 'Valuation'],
+            'Human Resources': ['HR Planning', 'Recruitment', 'Training', 'Performance Management', 'Employment Law'],
+            'Commercial Law': ['Contract Law', 'Company Law', 'Consumer Protection', 'Intellectual Property', 'Competition Law'],
+            'Criminal Law': ['Elements of Crime', 'Offences', 'Defences', 'Criminal Procedure', 'Sentencing'],
+            'Contract Law': ['Formation', 'Terms', 'Vitiating Factors', 'Discharge', 'Remedies'],
+            'Constitutional Law': ['Constitutional Principles', 'Bill of Rights', 'Separation of Powers', 'Judicial Review', 'Federalism'],
+            'Legal Research': ['Legal Sources', 'Research Methods', 'Case Law', 'Statutory Interpretation', 'Legal Writing'],
+            'Criminology': ['Theories of Crime', 'Criminal Justice System', 'Victimology', 'Crime Prevention', 'Forensics'],
+            'Psychology': ['Cognitive Psychology', 'Developmental Psychology', 'Social Psychology', 'Abnormal Psychology', 'Research Methods'],
+            'Sociology': ['Social Structures', 'Social Inequality', 'Culture', 'Social Change', 'Research Methods'],
+            'Social Work': ['Social Welfare', 'Case Management', 'Counseling', 'Community Development', 'Social Policy'],
+            'Education (Foundation Phase)': ['Child Development', 'Teaching Methods', 'Curriculum', 'Assessment', 'Classroom Management'],
+            'Education (Intermediate Phase)': ['Teaching Methods', 'Curriculum', 'Assessment', 'Special Needs Education', 'Educational Technology'],
+            'Educational Psychology': ['Learning Theories', 'Motivation', 'Cognitive Development', 'Assessment', 'Special Education'],
+            'Civil Engineering': ['Structural Analysis', 'Geotechnics', 'Transportation', 'Water Resources', 'Construction Management'],
+            'Mechanical Engineering': ['Thermodynamics', 'Fluid Mechanics', 'Materials Science', 'Manufacturing', 'Mechanical Design'],
+            'Electrical Engineering': ['Circuits', 'Power Systems', 'Control Systems', 'Electronics', 'Renewable Energy'],
+            'Chemical Engineering': ['Thermodynamics', 'Reaction Engineering', 'Process Design', 'Separation Processes', 'Biochemical Engineering'],
+            'Programming Fundamentals': ['Variables', 'Control Structures', 'Functions', 'Data Types', 'Algorithms'],
+            'Database Systems': ['Relational Databases', 'SQL', 'Normalization', 'Transactions', 'Database Design'],
+            'Networking': ['OSI Model', 'TCP/IP', 'Network Security', 'Routing', 'Switching'],
+            'Web Development': ['HTML', 'CSS', 'JavaScript', 'Backend', 'Database Integration'],
+            'Anatomy': ['Gross Anatomy', 'Histology', 'Neuroanatomy', 'Cardiovascular System', 'Respiratory System'],
+            'Physiology': ['Cell Physiology', 'Cardiovascular Physiology', 'Respiratory Physiology', 'Renal Physiology', 'Endocrine Physiology'],
+            'Pharmacology': ['Drug Action', 'Pharmacokinetics', 'Pharmacodynamics', 'Drug Classes', 'Therapeutics'],
+            'Public Health': ['Epidemiology', 'Health Policy', 'Environmental Health', 'Global Health', 'Health Promotion'],
+            'Nursing': ['Fundamentals of Nursing', 'Medical-Surgical Nursing', 'Maternity Nursing', 'Pediatric Nursing', 'Mental Health Nursing'],
+            'Physiotherapy': ['Musculoskeletal Physiotherapy', 'Neurological Physiotherapy', 'Cardiorespiratory Physiotherapy', 'Sports Physiotherapy', 'Rehabilitation'],
+            'English Literature': ['Poetry', 'Prose', 'Drama', 'Literary Criticism', 'African Literature'],
+            'History (University)': ['World History', 'African History', 'Historical Methods', 'Imperialism', 'Post-Colonial Studies'],
+            'Philosophy': ['Logic', 'Ethics', 'Metaphysics', 'Epistemology', 'History of Philosophy'],
+            'Political Science': ['Political Theory', 'Comparative Politics', 'International Relations', 'Public Policy', 'Political Economy'],
+            'Information Systems': ['Systems Analysis', 'Information Management', 'Enterprise Systems', 'Business Intelligence', 'IT Strategy'],
+            'Entrepreneurship': ['Business Planning', 'Innovation', 'Venture Capital', 'Small Business Management', 'Startup Strategy'],
+            'Project Management': ['Project Planning', 'Risk Management', 'Resource Management', 'Project Execution', 'Agile Methods'],
+            'Supply Chain Management': ['Logistics', 'Procurement', 'Inventory Management', 'Operations', 'Supply Chain Strategy'],
+            // Add more topics for other subjects as needed
+        };
+
+        // ================================================================
+        //  ICONS (expanded)
+        // ================================================================
+        const SUBJECT_ICONS = {
+            'Mathematics': '📐',
+            'Mathematical Literacy': '📊',
+            'English Home Language': '📖',
+            'English First Additional Language': '📖',
+            'Afrikaans Home Language': '🇿🇦',
+            'Afrikaans First Additional Language': '🇿🇦',
+            'isiZulu Home Language': '🇿🇦',
+            'isiXhosa Home Language': '🇿🇦',
+            'Life Orientation': '🧘',
+            'Life Sciences': '🧬',
+            'Physical Sciences': '⚛️',
+            'History': '🏛️',
+            'Geography': '🌍',
+            'Accounting': '💰',
+            'Business Studies': '📊',
+            'Economics': '📈',
+            'Civil Technology': '🏗️',
+            'Electrical Technology': '⚡',
+            'Mechanical Technology': '🔧',
+            'Engineering Graphics and Design': '📐',
+            'Computer Applications Technology': '💻',
+            'Information Technology': '🖥️',
+            'Consumer Studies': '🛍️',
+            'Tourism': '✈️',
+            'Hospitality Studies': '🍽️',
+            'Agricultural Sciences': '🌾',
+            'Agricultural Management Practices': '🌾',
+            'Dance Studies': '💃',
+            'Dramatic Arts': '🎭',
+            'Visual Arts': '🎨',
+            'Music': '🎵',
+            'Design': '✏️',
+            'Religion Studies': '⛪',
+            'Maritime Economics': '🚢',
+            // College
+            'Communication': '💬',
+            'Academic Writing': '✍️',
+            'Critical Thinking': '🧠',
+            'Research Skills': '🔍',
+            'Computer Literacy': '💻',
+            'Mathematics for Science': '📐',
+            'Statistics': '📊',
+            'Physics': '⚡',
+            'Chemistry': '🧪',
+            'Biology': '🧬',
+            'Accounting (Intro)': '💰',
+            'Economics (Intro)': '📈',
+            'Business Management': '📊',
+            'Marketing': '📢',
+            'Finance': '💹',
+            'Human Resources': '👥',
+            'Commercial Law': '⚖️',
+            'Criminal Law': '⚖️',
+            'Contract Law': '📜',
+            'Constitutional Law': '🏛️',
+            'Legal Research': '🔍',
+            'Criminology': '🔎',
+            'Psychology': '🧠',
+            'Sociology': '👥',
+            'Social Work': '🤝',
+            'Education (Foundation Phase)': '👶',
+            'Education (Intermediate Phase)': '🧑‍🏫',
+            'Educational Psychology': '🧠',
+            'Civil Engineering': '🏗️',
+            'Mechanical Engineering': '⚙️',
+            'Electrical Engineering': '⚡',
+            'Chemical Engineering': '🧪',
+            'Programming Fundamentals': '💻',
+            'Database Systems': '🗄️',
+            'Networking': '🌐',
+            'Web Development': '🌍',
+            'Anatomy': '🦴',
+            'Physiology': '🧬',
+            'Pharmacology': '💊',
+            'Public Health': '🏥',
+            'Nursing': '👩‍⚕️',
+            'Physiotherapy': '💪',
+            'English Literature': '📚',
+            'History (University)': '🏛️',
+            'Philosophy': '💭',
+            'Political Science': '🏛️',
+            'Information Systems': '💻',
+            'Entrepreneurship': '🚀',
+            'Project Management': '📋',
+            'Supply Chain Management': '📦'
+        };
+
+        // ================================================================
+        //  COLLEGE FALLBACK SUBJECTS (varsity-level)
+        // ================================================================
+        const COLLEGE_FALLBACK_SUBJECTS = {
+            'Communication': ['Academic Writing', 'Public Speaking', 'Critical Analysis', 'Research Communication', 'Business Communication', 'Interpersonal Skills'],
+            'Mathematics for Science': ['Calculus I', 'Linear Algebra', 'Differential Equations', 'Statistics', 'Discrete Mathematics'],
+            'Computer Literacy': ['Operating Systems', 'Word Processing', 'Spreadsheets', 'Presentations', 'Digital Security'],
+            'Critical Thinking': ['Logical Reasoning', 'Argument Analysis', 'Cognitive Biases', 'Problem Solving', 'Decision Making'],
+            'Research Skills': ['Research Design', 'Data Collection', 'Data Analysis', 'Academic Integrity', 'Ethics in Research'],
+            'Academic Writing': ['Essay Structure', 'Research Papers', 'Citation Styles', 'Thesis Writing', 'Literature Reviews']
+        };
+
+        // ================================================================
+        //  CURRICULUM LOADING FUNCTIONS (using embedded data)
+        // ================================================================
+        function loadCurriculumData() {
+            const country = document.getElementById('signupCountry').value;
+            const curriculumSelect = document.getElementById('signupCurriculum');
+            const gradeSelect = document.getElementById('signupGrade');
+            const subjectContainer = document.getElementById('subjectCheckboxes');
+
+            curriculumSelect.innerHTML = '<option value="">Select curriculum</option>';
+            gradeSelect.innerHTML = '<option value="">Select grade</option>';
+            subjectContainer.innerHTML = '<p style="grid-column:1/-1;color:#6b7280;font-size:0.9rem;">Select your subjects</p>';
+
+            const provinceField = document.getElementById('provinceField');
+            if (country === 'South Africa') {
+                provinceField.style.display = 'block';
+            } else {
+                provinceField.style.display = 'none';
+            }
+
+            if (!country) return;
+
+            const data = CURRICULUM_DATA[country];
+            if (!data) {
+                // Fallback: if no data, try to fetch (but we have data now)
+                subjectContainer.innerHTML = '<p style="grid-column:1/-1;color:#6b7280;font-size:0.9rem;">No curriculum data for this country.</p>';
+                return;
+            }
+
+            if (data.curricula && data.curricula.length) {
+                data.curricula.forEach(cur => {
+                    const opt = document.createElement('option');
+                    opt.value = cur;
+                    opt.textContent = cur;
+                    curriculumSelect.appendChild(opt);
+                });
+            }
+
+            // Auto-select first curriculum if only one
+            if (data.curricula && data.curricula.length === 1) {
+                curriculumSelect.value = data.curricula[0];
+                loadGrades();
+            }
+        }
+
+        function loadGrades() {
+            const country = document.getElementById('signupCountry').value;
+            const curriculum = document.getElementById('signupCurriculum').value;
+            const gradeSelect = document.getElementById('signupGrade');
+            gradeSelect.innerHTML = '<option value="">Select grade</option>';
+
+            if (!country || !curriculum) return;
+
+            const data = CURRICULUM_DATA[country];
+            if (!data) return;
+
+            const subjectsForCurriculum = data.subjects && data.subjects[curriculum];
+            if (!subjectsForCurriculum) return;
+
+            const grades = Object.keys(subjectsForCurriculum);
+            grades.forEach(g => {
+                const opt = document.createElement('option');
+                opt.value = g;
+                const label = g === 'College' ? 'College / Tertiary' : 'Grade ' + g;
+                opt.textContent = label;
+                gradeSelect.appendChild(opt);
+            });
+        }
+
+        function loadSubjects() {
+            const country = document.getElementById('signupCountry').value;
+            const curriculum = document.getElementById('signupCurriculum').value;
+            const grade = document.getElementById('signupGrade').value;
+            const container = document.getElementById('subjectCheckboxes');
+
+            container.innerHTML = '<p style="grid-column:1/-1;color:#6b7280;font-size:0.9rem;">Loading subjects...</p>';
+
+            if (!country || !curriculum || !grade) {
+                container.innerHTML = '<p style="grid-column:1/-1;color:#6b7280;font-size:0.9rem;">Select your subjects</p>';
+                return;
+            }
+
+            const data = CURRICULUM_DATA[country];
+            if (!data) {
+                container.innerHTML = '<p style="grid-column:1/-1;color:#6b7280;font-size:0.9rem;">No curriculum data available.</p>';
+                return;
+            }
+
+            const subjectsForCurriculum = data.subjects && data.subjects[curriculum];
+            if (!subjectsForCurriculum) {
+                container.innerHTML = '<p style="grid-column:1/-1;color:#6b7280;font-size:0.9rem;">No subjects for this curriculum.</p>';
+                return;
+            }
+
+            let subjects = subjectsForCurriculum[grade] || [];
+            if (subjects.length === 0) {
+                container.innerHTML = '<p style="grid-column:1/-1;color:#6b7280;font-size:0.9rem;">No subjects available for this selection.</p>';
+                return;
+            }
+
+            // For College, ensure Communication is included and English is replaced
+            if (grade === 'College') {
+                subjects = subjects.filter(s => s !== 'English');
+                if (!subjects.includes('Communication')) {
+                    subjects.push('Communication');
+                }
+                // Add core varsity subjects if they're missing
+                const coreVarsity = ['Mathematics for Science', 'Computer Literacy', 'Critical Thinking', 'Research Skills', 'Academic Writing'];
+                coreVarsity.forEach(core => {
+                    if (!subjects.includes(core)) {
+                        subjects.push(core);
+                    }
+                });
+            }
+
+            subjects.sort();
+
+            container.innerHTML = subjects.map(sub => `
+                        <label style="display:flex;align-items:center;gap:6px;font-size:0.9rem;cursor:pointer;padding:2px 4px;border-radius:4px;transition:background 0.15s;" onmouseenter="this.style.background='#f3f4f6'" onmouseleave="this.style.background=''">
+                            <input type="checkbox" value="${sub.replace(/"/g, '&quot;')}" class="subject-checkbox" />
+                            ${sub}
+                        </label>
+                    `).join('');
+        }
+
+        function getSelectedSubjects() {
+            const checkboxes = document.querySelectorAll('.subject-checkbox:checked');
+            return Array.from(checkboxes).map(cb => cb.value);
+        }
+
+        // ================================================================
+        //  NAVIGATION
+        // ================================================================
+        function showInfoPage(page) {
+            document.querySelectorAll('.info-page').forEach(el => el.classList.remove('active'));
+            if (!page) {
+                document.getElementById('heroSection').style.display = 'block';
+                document.querySelector('.dashboard-preview').style.display = 'block';
+                document.getElementById('features').style.display = 'block';
+                document.getElementById('pricing').style.display = 'block';
+                document.querySelector('.faq').style.display = 'block';
+                if (currentUser) {
+                    document.getElementById('dashboard').classList.add('active');
+                    document.getElementById('heroSection').style.display = 'none';
+                    document.querySelector('.dashboard-preview').style.display = 'none';
+                    document.getElementById('features').style.display = 'none';
+                    document.getElementById('pricing').style.display = 'none';
+                    document.querySelector('.faq').style.display = 'none';
+                }
+                return;
+            }
+            document.getElementById('heroSection').style.display = 'none';
+            document.querySelector('.dashboard-preview').style.display = 'none';
+            document.getElementById('features').style.display = 'none';
+            document.getElementById('pricing').style.display = 'none';
+            document.querySelector('.faq').style.display = 'none';
+            document.getElementById('dashboard').classList.remove('active');
+            const target = document.getElementById('page-' + page);
+            if (target) target.classList.add('active');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function openAuth(page) {
+            document.getElementById('authOverlay').classList.add('active');
+            if (page === 'signup') showSignup();
+            else showLogin();
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeAuth() {
+            document.getElementById('authOverlay').classList.remove('active');
+            document.body.style.overflow = '';
+            clearErrors();
+        }
+
+        function showSignup() {
+            document.getElementById('loginPage').style.display = 'none';
+            document.getElementById('signupPage').style.display = 'block';
+            clearErrors();
+            // Load initial data if country selected
+            const country = document.getElementById('signupCountry').value;
+            if (country) loadCurriculumData();
+        }
+
+        function showLogin() {
+            document.getElementById('loginPage').style.display = 'block';
+            document.getElementById('signupPage').style.display = 'none';
+            clearErrors();
+        }
+
+        function clearErrors() {
+            document.querySelectorAll('.auth-card .error, .auth-card .success').forEach(el => { el.classList.remove('show');
+                el.textContent = ''; });
+        }
+
+        function showError(id, msg) { const el = document.getElementById(id);
+            el.textContent = msg;
+            el.classList.add('show'); }
+
+        function showSuccess(id, msg) { const el = document.getElementById(id);
+            el.textContent = msg;
+            el.classList.add('show'); }
+
+        function setButtonLoading(id, loading) {
+            const btn = document.getElementById(id);
+            if (loading) { btn.disabled = true;
+                btn.innerHTML = '<span class="spinner"></span> Loading...'; } else { btn.disabled = false;
+                btn.innerHTML = btn.id === 'loginBtn' ? 'Log In' : 'Create Account'; }
+        }
+
+        // ================================================================
+        //  MOCK AUTH — localStorage only (no backend)
+        // ================================================================
+        function getUsers() {
+            const users = localStorage.getItem('leago_users');
+            return users ? JSON.parse(users) : {};
+        }
+
+        function saveUsers(users) {
+            localStorage.setItem('leago_users', JSON.stringify(users));
+        }
+
+        function login() {
+            const email = document.getElementById('loginEmail').value.trim();
+            const password = document.getElementById('loginPassword').value.trim();
+            if (!email || !password) { showError('loginError', 'Please enter email and password'); return; }
+            clearErrors();
+            setButtonLoading('loginBtn', true);
+
+            setTimeout(() => {
+                const users = getUsers();
+                const user = users[email];
+                if (!user || user.password !== password) {
+                    showError('loginError', 'Invalid email or password');
+                    setButtonLoading('loginBtn', false);
+                    return;
+                }
+                // Successful login
+                currentUser = { id: email, ...user };
+                localStorage.setItem('synapse_user', JSON.stringify(currentUser));
+                showSuccess('loginSuccess', 'Login successful!');
+                setTimeout(() => {
+                    closeAuth();
+                    document.getElementById('dashboard').classList.add('active');
+                    document.getElementById('heroSection').style.display = 'none';
+                    document.querySelector('.dashboard-preview').style.display = 'none';
+                    document.getElementById('features').style.display = 'none';
+                    document.getElementById('pricing').style.display = 'none';
+                    document.querySelector('.faq').style.display = 'none';
+                    document.getElementById('siteFooter').style.display = 'block';
+                    loadProgress();
+                    initDashboard(currentUser);
+                    setButtonLoading('loginBtn', false);
+                }, 500);
+            }, 300);
+        }
+
+        function signup() {
+            const name = document.getElementById('signupName').value.trim();
+            const email = document.getElementById('signupEmail').value.trim();
+            const password = document.getElementById('signupPassword').value.trim();
+            const country = document.getElementById('signupCountry').value;
+            const province = document.getElementById('signupProvince').value;
+            const curriculum = document.getElementById('signupCurriculum').value;
+            const grade = document.getElementById('signupGrade').value;
+            const school = document.getElementById('signupSchool').value.trim();
+            const role = document.getElementById('signupRole').value;
+            let subjects = getSelectedSubjects();
+
+            if (!name || !email || !password || !country || !curriculum || !grade || !subjects.length) {
+                showError('signupError', 'Please fill all required fields and select at least one subject.');
+                return;
+            }
+            if (password.length < 6) { showError('signupError', 'Password must be at least 6 characters'); return; }
+
+            // For College, ensure Communication is included
+            if (grade === 'College') {
+                if (!subjects.includes('Communication')) {
+                    subjects.push('Communication');
+                }
+                const coreVarsity = ['Mathematics for Science', 'Computer Literacy', 'Critical Thinking', 'Research Skills', 'Academic Writing'];
+                coreVarsity.forEach(core => {
+                    if (!subjects.includes(core)) {
+                        subjects.push(core);
+                    }
+                });
+            }
+
+            clearErrors();
+            setButtonLoading('signupBtn', true);
+
+            setTimeout(() => {
+                const users = getUsers();
+                if (users[email]) {
+                    showError('signupError', 'Email already registered. Please log in.');
+                    setButtonLoading('signupBtn', false);
+                    return;
+                }
+                // Save user
+                users[email] = { name, email, password, country, province, curriculum, grade, school, subjects, role };
+                saveUsers(users);
+                showSuccess('signupSuccess', 'Account created! Please log in.');
+                setTimeout(() => {
+                    showLogin();
+                    document.getElementById('loginEmail').value = email;
+                    setButtonLoading('signupBtn', false);
+                }, 800);
+            }, 300);
+        }
+
+        // ================================================================
+        //  DASHBOARD
+        // ================================================================
+        function initDashboard(user) {
+            currentUser = user;
+            document.getElementById('userName').textContent = user.name || 'User';
+            document.getElementById('userRole').textContent = user.role || 'Learner';
+            const gradeDisplay = user.grade === 'College' ? 'College' : (user.grade ? 'Grade ' + user.grade :
+            'Level: Not set');
+            document.getElementById('userGrade').textContent = gradeDisplay;
+            // Subscription badge (mock)
+            document.getElementById('subscriptionBadge').innerHTML = '<span class="sub-badge sub-trial">Trial • 3d left</span>';
+
+            // Ensure College users have Communication instead of English in their subjects
+            if (user.grade === 'College' && user.subjects) {
+                if (user.subjects.includes('English')) {
+                    user.subjects = user.subjects.filter(s => s !== 'English');
+                    if (!user.subjects.includes('Communication')) {
+                        user.subjects.push('Communication');
+                    }
+                    const coreVarsity = ['Mathematics for Science', 'Computer Literacy', 'Critical Thinking', 'Research Skills', 'Academic Writing'];
+                    coreVarsity.forEach(core => {
+                        if (!user.subjects.includes(core)) {
+                            user.subjects.push(core);
+                        }
+                    });
+                    localStorage.setItem('synapse_user', JSON.stringify(user));
+                    currentUser = user;
+                }
+            }
+
+            if (!user.subjects || user.subjects.length === 0) {
+                document.getElementById('welcomeMessage').textContent = 'Welcome, ' + user.name + ' 👋';
+                document.getElementById('welcomeSub').innerHTML =
+                    'You don\'t have any subjects selected. <span class="change-grade-link" onclick="showGradeSelection()">Update Profile</span>';
+                const container = document.getElementById('dynamicContent');
+                container.innerHTML = `
+                            <div style="text-align:center;padding:40px;">
+                                <div style="font-size:3rem;">📚</div>
+                                <h3 style="margin:16px 0 8px;color:#0b1120;">No Subjects Yet</h3>
+                                <p style="color:#6b7280;max-width:400px;margin:0 auto 20px;">
+                                    You haven't selected any subjects. Please update your profile to start learning.
+                                </p>
+                                <button onclick="showGradeSelection()" style="padding:12px 32px;background:#6366f1;color:white;border:none;border-radius:12px;cursor:pointer;font-weight:600;">Update Profile</button>
+                            </div>
+                        `;
+                renderSidebar();
+                return;
+            }
+
+            showDashboardHome();
+        }
+
+        function showDashboardHome() {
+            currentView = 'welcome';
+            const container = document.getElementById('dynamicContent');
+            const levelLabel = (currentUser.grade === 'College') ? 'College / Tertiary' : 'Grade ' + currentUser.grade;
+            let totalCompleted = 0,
+                totalTopics = 0;
+            for (const subject in progressData) { const data = progressData[subject]; if (data && data.completed && data
+                    .total) { totalCompleted += data.completed.length;
+                    totalTopics += data.total; } }
+            const overallPercent = totalTopics > 0 ? Math.round((totalCompleted / totalTopics) * 100) : 0;
+            container.innerHTML = `
+                        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin-top:16px;">
+                            <div style="background:linear-gradient(135deg,#eef2ff,white);border-color:#6366f1;padding:24px;border-radius:16px;border:2px solid #6366f1;box-shadow:0 4px 16px rgba(99,102,241,0.06);">
+                                <div style="font-size:2rem;">📚</div><div style="font-weight:700;font-size:1.1rem;color:#0b1120;margin-top:4px;">Continue Learning</div>
+                                <div style="font-size:0.9rem;color:#6b7280;">Resume your last lesson</div>
+                                <button onclick="showSubjects()" style="margin-top:10px;padding:8px 20px;background:#6366f1;color:white;border:none;border-radius:8px;cursor:pointer;font-weight:600;">Resume</button>
+                            </div>
+                            <div style="padding:24px;border-radius:16px;border:1px solid #e5e7eb;background:white;">
+                                <div style="font-size:2rem;">🎯</div><div style="font-weight:700;font-size:1.1rem;color:#0b1120;margin-top:4px;">Today's Goal</div>
+                                <div style="font-size:0.9rem;color:#6b7280;">Complete 1 lesson</div>
+                                <div style="margin-top:8px;height:6px;background:#e5e7eb;border-radius:4px;overflow:hidden;"><div style="width:${overallPercent}%;height:100%;background:linear-gradient(90deg,#6366f1,#8b5cf6);border-radius:4px;"></div></div>
+                            </div>
+                            <div style="padding:24px;border-radius:16px;border:1px solid #e5e7eb;background:white;">
+                                <div style="font-size:2rem;">📝</div><div style="font-weight:700;font-size:1.1rem;color:#0b1120;margin-top:4px;">Homework</div>
+                                <div style="font-size:0.9rem;color:#6b7280;">2 tasks due soon</div>
+                            </div>
+                            <div style="padding:24px;border-radius:16px;border:1px solid #e5e7eb;background:white;">
+                                <div style="font-size:2rem;">🏆</div><div style="font-weight:700;font-size:1.1rem;color:#0b1120;margin-top:4px;">Achievements</div>
+                                <div style="font-size:0.9rem;color:#6b7280;">${totalCompleted} topics completed</div>
+                            </div>
+                        </div>
+                        <div style="margin-top:20px;text-align:center;padding:20px;background:#f8fafc;border-radius:16px;border:1px solid #e5e7eb;">
+                            <div style="font-size:1.1rem;font-weight:600;color:#0b1120;">Ready to learn?</div>
+                            <div style="color:#6b7280;font-size:0.95rem;">You're in ${levelLabel}. Pick a subject to get started.</div>
+                            <button onclick="showSubjects()" style="margin-top:12px;padding:12px 32px;background:linear-gradient(135deg,#6366f1,#8b5cf6);color:white;border:none;border-radius:12px;cursor:pointer;font-weight:700;font-size:1rem;">Go to Subjects →</button>
+                        </div>
+                    `;
+            document.getElementById('welcomeMessage').textContent = 'Welcome back, ' + (currentUser.name || 'Student') +
+                ' 👋';
+            document.getElementById('welcomeSub').innerHTML =
+                'Today\'s goal: Complete your next lesson. <span class="change-grade-link" onclick="showGradeSelection()">Change Level</span>';
+        }
+
+        function showGradeSelection() {
+            currentView = 'grades';
+            const country = currentUser.country || 'South Africa';
+            const grades = ['10', '11', '12', 'College'];
+            document.getElementById('welcomeMessage').textContent = 'Select Your Level';
+            document.getElementById('welcomeSub').innerHTML = 'Choose your grade (10–12) or <strong>College / Tertiary</strong>.';
+            const container = document.getElementById('dynamicContent');
+            let html = `<div class="grade-grid">`;
+            grades.forEach(g => {
+                const label = (g === 'College') ? 'College / Tertiary' : 'Grade ' + g;
+                const sub = (g === 'College') ? 'Higher Education' : '';
+                html +=
+                    `<div class="grade-card" data-grade="${g}" onclick="selectGrade('${g}')">${label}${sub ? `<span class="sub">${sub}</span>` : ''}</div>`;
+            });
+            html += `</div><button class="btn-confirm" id="gradeConfirmBtn" onclick="confirmGrade()">Continue to Subjects →</button>`;
+            container.innerHTML = html;
+        }
+
+        let tempSelectedGrade = '';
+
+        function selectGrade(grade) { tempSelectedGrade = grade;
+            document.querySelectorAll('.grade-card').forEach(c => c.classList.remove('selected'));
+            document.querySelector(`.grade-card[data-grade="${grade}"]`).classList.add('selected');
+            document.getElementById('gradeConfirmBtn').style.display = 'block'; }
+
+        function confirmGrade() {
+            if (!tempSelectedGrade) { alert('Please select your level.'); return; }
+            selectedGrade = tempSelectedGrade;
+
+            let subjects = currentUser.subjects || [];
+            if (selectedGrade === 'College') {
+                subjects = subjects.filter(s => s !== 'English');
+                if (!subjects.includes('Communication')) {
+                    subjects.push('Communication');
+                }
+                const coreVarsity = ['Mathematics for Science', 'Computer Literacy', 'Critical Thinking', 'Research Skills', 'Academic Writing'];
+                coreVarsity.forEach(core => {
+                    if (!subjects.includes(core)) {
+                        subjects.push(core);
+                    }
+                });
+            }
+
+            // Update user in localStorage
+            currentUser.grade = selectedGrade;
+            currentUser.subjects = subjects;
+            localStorage.setItem('synapse_user', JSON.stringify(currentUser));
+            // Also update in users database
+            const users = getUsers();
+            if (users[currentUser.id]) {
+                users[currentUser.id].grade = selectedGrade;
+                users[currentUser.id].subjects = subjects;
+                saveUsers(users);
+            }
+            document.getElementById('userGrade').textContent = selectedGrade === 'College' ? 'College' : 'Grade ' +
+            selectedGrade;
+            showSubjects();
+        }
+
+        // ================================================================
+        //  SUBJECTS & CLASSROOM
+        // ================================================================
+        function showSubjects() {
+            currentView = 'subjects';
+            let subjects = {};
+
+            if (currentUser.grade === 'College' && (!currentUser.subjects || currentUser.subjects.length === 0)) {
+                for (const [name, topics] of Object.entries(COLLEGE_FALLBACK_SUBJECTS)) {
+                    subjects[name] = topics;
+                }
+            } else if (currentUser.subjects && currentUser.subjects.length > 0) {
+                let userSubjects = currentUser.subjects;
+                if (currentUser.grade === 'College') {
+                    userSubjects = userSubjects.filter(s => s !== 'English');
+                    if (!userSubjects.includes('Communication')) {
+                        userSubjects.push('Communication');
+                    }
+                }
+                userSubjects.forEach(sub => {
+                    const topics = DEFAULT_TOPICS[sub] || ['Introduction', 'Basics', 'Intermediate', 'Advanced',
+                        'Expert'
+                    ];
+                    subjects[sub] = topics;
+                });
+            } else {
+                if (currentUser.grade === 'College') {
+                    for (const [name, topics] of Object.entries(COLLEGE_FALLBACK_SUBJECTS)) {
+                        subjects[name] = topics;
+                    }
+                } else {
+                    subjects = {
+                        'Mathematics': DEFAULT_TOPICS['Mathematics'],
+                        'English': DEFAULT_TOPICS['English']
+                    };
+                }
+            }
+
+            initProgress(subjects);
+            document.getElementById('welcomeMessage').textContent = 'Your Subjects';
+            document.getElementById('welcomeSub').innerHTML = (currentUser.curriculum || '') + ' · ' + (currentUser
+                .grade || '') + ' · Select a subject to start learning.';
+            const container = document.getElementById('dynamicContent');
+            let html = `<div class="subject-grid">`;
+            const sortedSubjects = Object.keys(subjects).sort();
+            sortedSubjects.forEach(name => {
+                const prog = getSubjectProgress(name);
+                html +=
+                    `<div class="subject-card" onclick="openSubject('${name}')"><span class="icon">${SUBJECT_ICONS[name] || '📚'}</span><span class="name">${name}</span><div class="progress-badge">${prog.percent}%</div></div>`;
+            });
+            html += `</div><button class="back-btn" onclick="showDashboardHome()" style="margin-top:16px;">← Back to Dashboard</button>`;
+            container.innerHTML = html;
+            renderSidebar();
+        }
+
+        function openSubject(subject) {
+            currentSubject = subject;
+            const topics = DEFAULT_TOPICS[subject] || ['Introduction', 'Basics', 'Intermediate', 'Advanced', 'Expert'];
+            if (!progressData[subject]) { progressData[subject] = { completed: [], total: topics.length };
+                saveProgress(); }
+            document.getElementById('welcomeMessage').textContent = subject;
+            document.getElementById('welcomeSub').textContent = 'Select a topic to start learning.';
+            const container = document.getElementById('dynamicContent');
+            let html =
+                `<div style="margin-bottom:12px;color:#6b7280;font-size:0.9rem;">Showing ${topics.length} topics</div><div class="topic-grid">`;
+            topics.forEach(t => {
+                const completed = isTopicCompleted(subject, t);
+                const cls = completed ? 'topic-card completed' : 'topic-card';
+                const badgeText = completed ? '✅ Completed' : 'Not started';
+                html +=
+                    `<div class="${cls}" onclick="openTutor('${subject}', '${t}')"><div class="title">${t}</div><div class="meta">${subject}</div><div class="resources"><span class="tag">Lesson</span><span class="tag">Quiz</span><span class="tag">Worksheet</span></div><div class="status-badge">${badgeText}</div></div>`;
+            });
+            html += `</div><button class="back-btn" onclick="showSubjects()" style="margin-top:16px;">← Back to Subjects</button>`;
+            container.innerHTML = html;
+            renderRightSidebar();
+            renderSidebar();
+        }
+
+        // ================================================================
+        //  AI TUTOR (mock — no actual AI, but works as a demo)
+        // ================================================================
+        function openTutor(subject, topic) {
+            currentView = 'tutor';
+            document.getElementById('welcomeMessage').textContent = '💬 AI Tutor';
+            document.getElementById('welcomeSub').textContent = subject + ' — ' + topic;
+            const container = document.getElementById('dynamicContent');
+            container.innerHTML = `
+                        <button class="back-btn" onclick="openSubject('${subject}')">← Back to Topics</button>
+                        <div class="tutor-container">
+                            <div class="tutor-header">
+                                <h3>AI Tutor</h3>
+                                <span class="context">${subject} - ${topic}</span>
+                                <button id="completeBtn" onclick="markComplete('${subject}','${topic}')" style="padding:6px 16px;border-radius:8px;border:2px solid #22c55e;background:white;color:#22c55e;font-weight:600;cursor:pointer;transition:all 0.2s;">${isTopicCompleted(subject, topic) ? '✅ Completed' : 'Mark as Complete'}</button>
+                            </div>
+                            <div class="chat-box" id="chatBox"><div class="msg bot">👋 Welcome! Ask me anything — I'll guide you step by step.</div></div>
+                            <div class="chat-input"><input type="text" id="chatInput" placeholder="Type your message..." onkeypress="if(event.key==='Enter') sendChat()" /><button class="btn-send" id="sendBtn" onclick="sendChat()">Send</button></div>
+                            <div class="chat-options"><input type="checkbox" id="speakToggle" /><label for="speakToggle">🔊 AI reads responses aloud</label></div>
+                        </div>
+                    `;
+            setTimeout(() => {
+                document.getElementById('chatInput').value = 'I\'m learning about "' + topic + '" in ' + subject +
+                    '. Can you teach me step by step?';
+                sendChat();
+            }, 500);
+            renderSidebar();
+        }
+
+        function markComplete(subject, topic) {
+            if (isTopicCompleted(subject, topic)) { alert('This topic is already completed!'); return; }
+            if (markTopicCompleted(subject, topic)) {
+                const btn = document.getElementById('completeBtn');
+                if (btn) { btn.textContent = '✅ Completed';
+                    btn.style.background = '#d1fae5';
+                    btn.style.borderColor = '#22c55e';
+                    btn.style.color = '#065f46'; }
+                alert('🎉 Great job! Topic marked as complete.');
+                renderSidebar();
+            }
+        }
+
+        // ================================================================
+        //  CHAT (mock)
+        // ================================================================
+        async function sendChat() {
+            const input = document.getElementById('chatInput');
+            const message = input.value.trim();
+            if (!message) return;
+            addMessage('user', message);
+            input.value = '';
+            input.disabled = true;
+            const btn = document.getElementById('sendBtn');
+            btn.disabled = true;
+            btn.innerHTML = '<span class="spinner"></span>';
+            // Simulate AI response
+            setTimeout(() => {
+                const reply = `Here's a step-by-step explanation of "${currentSubject} - ${message}" — I'll break it down for you.`;
+                addMessage('bot', reply);
+                input.disabled = false;
+                input.focus();
+                btn.disabled = false;
+                btn.innerHTML = 'Send';
+            }, 800);
+        }
+
+        function addMessage(role, text) {
+            const box = document.getElementById('chatBox');
+            const div = document.createElement('div');
+            div.className = 'msg ' + (role === 'user' ? 'user' : 'bot');
+            if (role === 'bot' && typeof marked !== 'undefined') {
+                marked.setOptions({ breaks: true, gfm: true });
+                div.innerHTML = marked.parse(text);
+            } else { div.textContent = text; }
+            box.appendChild(div);
+            box.scrollTop = box.scrollHeight;
+            if (role === 'bot' && document.getElementById('speakToggle').checked) {
+                let clean = text.replace(/#{1,6}\s?/g, '').replace(/\*\*/g, '').replace(/\*/g, '').replace(/`/g, '')
+                    .replace(/[\\*\/_\-~#`|]/g, ' ').replace(/[📚🎯✏️🤔💡✅❌]/g, '').replace(/\s+/g, ' ').trim();
+                if (clean.length > 300) clean = clean.substring(0, 300) + '...';
+                window.speechSynthesis.cancel();
+                const u = new SpeechSynthesisUtterance(clean);
+                u.lang = 'en-US';
+                u.rate = 0.9;
+                const voices = window.speechSynthesis.getVoices();
+                const preferred = voices.find(v => v.lang.includes('en') && (v.name.includes('Google') || v.name
+                .includes('Natural')));
+                if (preferred) u.voice = preferred;
+                window.speechSynthesis.speak(u);
+            }
+        }
+
+        // ================================================================
+        //  SIDEBARS
+        // ================================================================
+        function renderSidebar() {
+            let subjects = {};
+
+            if (currentUser.grade === 'College' && (!currentUser.subjects || currentUser.subjects.length === 0)) {
+                for (const [name, topics] of Object.entries(COLLEGE_FALLBACK_SUBJECTS)) {
+                    subjects[name] = topics;
+                }
+            } else if (currentUser.subjects && currentUser.subjects.length > 0) {
+                let userSubjects = currentUser.subjects;
+                if (currentUser.grade === 'College') {
+                    userSubjects = userSubjects.filter(s => s !== 'English');
+                    if (!userSubjects.includes('Communication')) {
+                        userSubjects.push('Communication');
+                    }
+                }
+                userSubjects.forEach(sub => {
+                    const topics = DEFAULT_TOPICS[sub] || ['Introduction', 'Basics', 'Intermediate', 'Advanced',
+                        'Expert'
+                    ];
+                    subjects[sub] = topics;
+                });
+            } else {
+                if (currentUser.grade === 'College') {
+                    for (const [name, topics] of Object.entries(COLLEGE_FALLBACK_SUBJECTS)) {
+                        subjects[name] = topics;
+                    }
+                } else {
+                    subjects = {
+                        'Mathematics': DEFAULT_TOPICS['Mathematics'],
+                        'English': DEFAULT_TOPICS['English']
+                    };
+                }
+            }
+
+            initProgress(subjects);
+            const list = document.getElementById('subjectList');
+            list.innerHTML = '';
+            Object.keys(subjects).sort().forEach(key => {
+                const prog = getSubjectProgress(key);
+                const li = document.createElement('li');
+                li.className = key === currentSubject ? 'active' : '';
+                li.innerHTML =
+                    `<span class="icon">${SUBJECT_ICONS[key] || '📚'}</span>${key}<span class="progress-dot">${prog.percent}%</span>`;
+                li.onclick = () => { currentSubject = key;
+                    renderSidebar();
+                    openSubject(key); };
+                list.appendChild(li);
+            });
+            let totalCompleted = 0,
+                totalTopics = 0;
+            for (const subject in progressData) { const data = progressData[subject]; if (data && data.completed && data
+                    .total) { totalCompleted += data.completed.length;
+                    totalTopics += data.total; } }
+            const overallPercent = totalTopics > 0 ? Math.round((totalCompleted / totalTopics) * 100) : 0;
+            document.getElementById('progressContainer').innerHTML = `
+                        <div class="progress-item"><div class="label"><span>Overall Progress</span><span>${overallPercent}%</span></div><div class="bar"><div class="fill" style="width:${overallPercent}%;"></div></div></div>
+                        <div class="progress-item"><div class="label"><span>Topics Completed</span><span>${totalCompleted}/${totalTopics}</span></div><div class="bar"><div class="fill" style="width:${overallPercent}%;"></div></div></div>
+                    `;
+            const recentContainer = document.getElementById('recentContainer');
+            const subjectKeys = Object.keys(subjects);
+            if (subjectKeys.length > 0) {
+                const firstSubject = subjectKeys[0];
+                const firstTopics = subjects[firstSubject] || [];
+                const topic = firstTopics.length > 0 ? firstTopics[0] : 'Getting Started';
+                recentContainer.innerHTML =
+                    `<div class="recent-item" onclick="openTutor('${firstSubject}','${topic}')">${topic} <span class="sub">${firstSubject}</span></div><div class="recent-item" onclick="showSubjects()">Browse Subjects <span class="sub">All subjects</span></div>`;
+            } else { recentContainer.innerHTML =
+                `<div style="font-size:0.85rem;color:#6b7280;">No recent activity</div>`; }
+        }
+
+        function renderRightSidebar() {
+            document.getElementById('flashcardContainer').innerHTML =
+                `<div class="flashcard-item"><div class="term">Slope (m)</div><div class="def">The steepness of a line, rise over run.</div></div><div class="flashcard-item"><div class="term">Y-Intercept (b)</div><div class="def">Where the line crosses the y-axis.</div></div><div class="flashcard-item"><div class="term">Slope-Intercept Form</div><div class="def">y = mx + b</div></div>`;
+            document.getElementById('errorContainer').innerHTML =
+                `<div class="error-item"><div class="concept">⚠️ Slope direction</div><div class="hint">Negative slope goes down, positive goes up.</div></div><div class="error-item"><div class="concept">⚠️ Y-Intercept</div><div class="hint">Remember to check where the line crosses the y-axis.</div></div>`;
+        }
+
+        // ================================================================
+        //  LOGOUT
+        // ================================================================
+        function logout() {
+            if (confirm('Are you sure you want to logout?')) {
+                localStorage.removeItem('synapse_user');
+                document.getElementById('dashboard').classList.remove('active');
+                document.getElementById('heroSection').style.display = 'block';
+                document.querySelector('.dashboard-preview').style.display = 'block';
+                document.getElementById('features').style.display = 'block';
+                document.getElementById('pricing').style.display = 'block';
+                document.querySelector('.faq').style.display = 'block';
+                document.getElementById('loginEmail').value = '';
+                document.getElementById('loginPassword').value = '';
+                clearErrors();
+                currentUser = null;
+            }
+        }
+
+        // ================================================================
+        //  INIT
+        // ================================================================
+        document.addEventListener('DOMContentLoaded', function() {
+            const stored = localStorage.getItem('synapse_user');
+            if (stored) {
+                try {
+                    const user = JSON.parse(stored);
+                    // Ensure College users have Communication instead of English
+                    if (user.grade === 'College' && user.subjects) {
+                        if (user.subjects.includes('English')) {
+                            user.subjects = user.subjects.filter(s => s !== 'English');
+                            if (!user.subjects.includes('Communication')) {
+                                user.subjects.push('Communication');
+                            }
+                            const coreVarsity = ['Mathematics for Science', 'Computer Literacy', 'Critical Thinking',
+                                'Research Skills', 'Academic Writing'
+                            ];
+                            coreVarsity.forEach(core => {
+                                if (!user.subjects.includes(core)) {
+                                    user.subjects.push(core);
+                                }
+                            });
+                            localStorage.setItem('synapse_user', JSON.stringify(user));
+                        }
+                    }
+                    document.getElementById('heroSection').style.display = 'none';
+                    document.querySelector('.dashboard-preview').style.display = 'none';
+                    document.getElementById('features').style.display = 'none';
+                    document.getElementById('pricing').style.display = 'none';
+                    document.querySelector('.faq').style.display = 'none';
+                    document.getElementById('dashboard').classList.add('active');
+                    loadProgress();
+                    initDashboard(user);
+                } catch (e) {}
+            }
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter') {
+                    if (document.getElementById('loginPage').style.display !== 'none' && document.getElementById(
+                            'authOverlay').classList.contains('active')) { login(); }
+                    if (document.getElementById('signupPage').style.display !== 'none' && document.getElementById(
+                            'authOverlay').classList.contains('active')) { signup(); }
+                }
+            });
+            document.addEventListener('keydown', function(e) { if (e.key === 'Escape') closeAuth(); });
+            document.getElementById('authOverlay').addEventListener('click', function(e) { if (e.target === this)
+                closeAuth(); });
+        });
     </script>
 </body>
 </html>
