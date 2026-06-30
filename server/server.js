@@ -111,6 +111,7 @@ async function sendEmail(to, subject, html) {
   }
 }
 
+// ================= SIGNUP =================
 app.post("/signup", async (req, res) => {
   const { email, password, name, country, role } = req.body;
   if (!email || !password || !name || !country) return res.status(400).json({ error: "All fields required" });
@@ -138,34 +139,45 @@ app.post("/signup", async (req, res) => {
   }
 });
 
+// ================= LOGIN (FIXED) =================
 app.post("/login", async (req, res) => {
   const { email, password } = req.body;
   if (!email || !password) return res.status(400).json({ error: "Email and password required" });
+
   try {
     const result = await db.query(`SELECT * FROM users WHERE email = $1`, [email]);
-    if (result.rows.length === 0) return res.status(401).json({ error: "Invalid email or password" });
+    if (result.rows.length === 0) {
+      return res.status(401).json({ error: "Invalid email or password" });
+    }
     const user = result.rows[0];
 
+    // Check if password is hashed or plain
     let passwordMatch = false;
     if (user.password.startsWith('$2')) {
+      // Bcrypt hash
       passwordMatch = await bcrypt.compare(password, user.password);
     } else {
+      // Plain text (legacy) – compare directly and upgrade
       passwordMatch = (password === user.password);
       if (passwordMatch) {
         const salt = await bcrypt.genSalt(10);
         const hashed = await bcrypt.hash(password, salt);
         await db.query(`UPDATE users SET password = $1 WHERE userId = $2`, [hashed, user.userid]);
-        console.log(`✅ Upgraded password for ${email}`);
+        console.log(`✅ Password upgraded for ${email}`);
       }
     }
 
-    if (!passwordMatch) return res.status(401).json({ error: "Invalid email or password" });
+    if (!passwordMatch) {
+      return res.status(401).json({ error: "Invalid email or password" });
+    }
 
+    // Generate JWT
     const token = jwt.sign(
       { id: user.userid, email: user.email },
       process.env.JWT_SECRET,
       { expiresIn: process.env.JWT_EXPIRE || '7d' }
     );
+
     res.json({
       success: true,
       token,
@@ -180,10 +192,11 @@ app.post("/login", async (req, res) => {
     });
   } catch (err) {
     console.error("Login error:", err);
-    res.status(500).json({ error: "Server error" });
+    res.status(500).json({ error: "Server error. Please try again." });
   }
 });
 
+// ================= PROFILE =================
 app.post("/save-profile", async (req, res) => {
   const { userId, name, country, grade } = req.body;
   try {
@@ -194,6 +207,7 @@ app.post("/save-profile", async (req, res) => {
   }
 });
 
+// ================= CHAT =================
 app.post("/chat", async (req, res) => {
   const { userId, message } = req.body;
   if (!userId || !message) return res.status(400).json({ reply: "Missing userId or message" });
@@ -264,6 +278,7 @@ Country: ${user.country}
   }
 });
 
+// ================= SUBSCRIPTION STATUS =================
 app.get("/subscription-status/:userId", async (req, res) => {
   try {
     const { userId } = req.params;
@@ -297,6 +312,7 @@ app.get("/subscription-status/:userId", async (req, res) => {
   }
 });
 
+// ================= PAYMENT =================
 app.post("/create-payment", async (req, res) => {
   const { userId, email } = req.body;
   if (!userId || !email) return res.status(400).json({ error: "Missing userId or email" });
