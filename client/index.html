@@ -97,19 +97,21 @@
         }
         .hero .cta-group {
             display: flex;
-            flex-direction: column;
+            flex-direction: row;
+            flex-wrap: wrap;
+            justify-content: center;
             align-items: center;
-            gap: 8px;
+            gap: 12px;
             position: relative;
             z-index: 1;
         }
         .hero .cta-group .btn-primary {
-            padding: 16px 48px;
+            padding: 14px 32px;
             background: linear-gradient(135deg, #6366f1, #8b5cf6);
             color: white;
             border: none;
             border-radius: 14px;
-            font-size: 1.1rem;
+            font-size: 1rem;
             font-weight: 700;
             cursor: pointer;
             text-decoration: none;
@@ -121,9 +123,27 @@
             transform: translateY(-3px);
             box-shadow: 0 12px 40px rgba(99, 102, 241, 0.4);
         }
+        .hero .cta-group .btn-secondary {
+            padding: 14px 32px;
+            background: transparent;
+            color: white;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-radius: 14px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.3s;
+        }
+        .hero .cta-group .btn-secondary:hover {
+            border-color: white;
+            background: rgba(255,255,255,0.05);
+        }
         .hero .cta-group .cta-note {
             font-size: 0.85rem;
             color: #9ca3af;
+            width: 100%;
         }
 
         .dashboard-preview {
@@ -842,7 +862,311 @@
             font-weight: 600;
         }
 
-        /* ===== OTHER ===== */
+        /* ===== TOPICS ===== */
+        .topic-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+            gap: 16px;
+            margin-top: 12px;
+        }
+        .topic-card {
+            background: white;
+            border: 2px solid #e5e7eb;
+            border-radius: 14px;
+            padding: 20px 18px;
+            transition: all 0.25s;
+            cursor: pointer;
+            position: relative;
+        }
+        .topic-card:hover {
+            border-color: #6366f1;
+            box-shadow: 0 8px 24px rgba(99, 102, 241, 0.08);
+        }
+        .topic-card .title {
+            font-weight: 700;
+            font-size: 1rem;
+            color: #0b1120;
+        }
+        .topic-card .meta {
+            font-size: 0.8rem;
+            color: #6b7280;
+            margin-top: 4px;
+        }
+        .topic-card .resources {
+            margin-top: 10px;
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+        .topic-card .resources .tag {
+            background: #eef2ff;
+            color: #6366f1;
+            padding: 2px 12px;
+            border-radius: 12px;
+            font-size: 0.7rem;
+            font-weight: 600;
+        }
+        .topic-card .status-badge {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            padding: 2px 10px;
+            border-radius: 12px;
+            background: #e5e7eb;
+            color: #6b7280;
+        }
+        .topic-card.completed {
+            border-color: #22c55e;
+            background: #f0fdf4;
+        }
+        .topic-card.completed .status-badge {
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        .back-btn {
+            background: none;
+            border: 1px solid #e5e7eb;
+            padding: 10px 20px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: 600;
+            color: #4b5563;
+            transition: all 0.2s;
+            font-family: inherit;
+            display: inline-block;
+            margin-bottom: 16px;
+        }
+        .back-btn:hover {
+            background: #f3f4f6;
+        }
+
+        .tutor-container {
+            background: white;
+            border-radius: 20px;
+            padding: 28px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+            margin-top: 12px;
+        }
+        .tutor-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .tutor-header h3 {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #0b1120;
+        }
+        .tutor-header .context {
+            font-size: 0.9rem;
+            color: #6b7280;
+            background: #f3f4f6;
+            padding: 4px 16px;
+            border-radius: 20px;
+        }
+        .chat-box {
+            background: #f8fafc;
+            border-radius: 16px;
+            padding: 20px;
+            max-height: 400px;
+            overflow-y: auto;
+            border: 1px solid #e5e7eb;
+            margin-bottom: 16px;
+        }
+        .chat-box .msg {
+            padding: 12px 16px;
+            border-radius: 14px;
+            max-width: 85%;
+            margin-bottom: 10px;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            word-wrap: break-word;
+        }
+        .chat-box .msg.user {
+            background: #6366f1;
+            color: #fff;
+            margin-left: auto;
+            text-align: right;
+        }
+        .chat-box .msg.bot {
+            background: #e5e7eb;
+            color: #0b1120;
+            margin-right: auto;
+        }
+        .chat-box .msg.bot h1,
+        .chat-box .msg.bot h2,
+        .chat-box .msg.bot h3,
+        .chat-box .msg.bot h4,
+        .chat-box .msg.bot h5,
+        .chat-box .msg.bot h6 {
+            margin: 8px 0 4px;
+            font-weight: 700;
+            color: #0b1120;
+        }
+        .chat-box .msg.bot h1 {
+            font-size: 1.6rem;
+        }
+        .chat-box .msg.bot h2 {
+            font-size: 1.3rem;
+        }
+        .chat-box .msg.bot h3 {
+            font-size: 1.1rem;
+        }
+        .chat-box .msg.bot h4 {
+            font-size: 1rem;
+        }
+        .chat-box .msg.bot h5 {
+            font-size: 0.95rem;
+        }
+        .chat-box .msg.bot h6 {
+            font-size: 0.9rem;
+        }
+        .chat-box .msg.bot ul,
+        .chat-box .msg.bot ol {
+            padding-left: 20px;
+            margin: 4px 0 8px;
+        }
+        .chat-box .msg.bot li {
+            margin-bottom: 2px;
+        }
+        .chat-box .msg.bot p {
+            margin: 6px 0;
+        }
+        .chat-box .msg.bot code {
+            background: #e5e7eb;
+            padding: 1px 6px;
+            border-radius: 4px;
+            font-size: 0.9em;
+        }
+        .chat-box .msg.bot pre {
+            background: #e5e7eb;
+            padding: 10px;
+            border-radius: 8px;
+            overflow-x: auto;
+        }
+        .chat-box .msg.bot strong {
+            font-weight: 700;
+        }
+        .chat-box .msg.bot em {
+            font-style: italic;
+        }
+        .chat-input {
+            display: flex;
+            gap: 10px;
+        }
+        .chat-input input {
+            flex: 1;
+            padding: 14px 18px;
+            border: 2px solid #e5e7eb;
+            border-radius: 14px;
+            font-size: 0.95rem;
+            font-family: inherit;
+            transition: border-color 0.25s;
+        }
+        .chat-input input:focus {
+            outline: none;
+            border-color: #6366f1;
+        }
+        .chat-input .btn-send {
+            padding: 0 28px;
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            color: #fff;
+            border: none;
+            border-radius: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.25s;
+            font-family: inherit;
+        }
+        .chat-input .btn-send:hover {
+            transform: scale(1.02);
+        }
+        .chat-input .btn-send:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+        .chat-options {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin-top: 12px;
+            font-size: 0.85rem;
+            color: #6b7280;
+        }
+        .chat-options input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            accent-color: #6366f1;
+            cursor: pointer;
+        }
+        .chat-options label {
+            cursor: pointer;
+        }
+
+        .sidebar-right {
+            background: white;
+            border-radius: 16px;
+            padding: 24px 18px;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
+            height: fit-content;
+        }
+        .sidebar-right .section-title {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            color: #6b7280;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            margin: 16px 0 8px;
+        }
+        .sidebar-right .section-title:first-child {
+            margin-top: 0;
+        }
+        .flashcard-item {
+            padding: 10px 14px;
+            background: #f8fafc;
+            border-radius: 10px;
+            margin-bottom: 6px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .flashcard-item:hover {
+            background: #eef2ff;
+        }
+        .flashcard-item .term {
+            font-weight: 600;
+            color: #0b1120;
+        }
+        .flashcard-item .def {
+            font-size: 0.8rem;
+            color: #6b7280;
+            margin-top: 2px;
+        }
+        .error-item {
+            padding: 10px 14px;
+            background: #fef2f2;
+            border-radius: 10px;
+            margin-bottom: 6px;
+            font-size: 0.85rem;
+            border-left: 3px solid #ef4444;
+        }
+        .error-item .concept {
+            font-weight: 600;
+            color: #991b1b;
+        }
+        .error-item .hint {
+            font-size: 0.8rem;
+            color: #6b7280;
+            margin-top: 2px;
+        }
+
+        /* ===== INFO PAGES ===== */
         .info-page {
             display: none;
             max-width: 800px;
@@ -922,7 +1246,6 @@
             font-size: 0.85rem;
         }
 
-        /* ===== RESPONSIVE ===== */
         @media (max-width:768px) {
             .hero h1 {
                 font-size: 2.2rem;
@@ -950,12 +1273,6 @@
             }
             .top-nav .user-info {
                 justify-content: center;
-            }
-            .subject-grid {
-                grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
-            }
-            .grade-grid {
-                grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
             }
             .topic-grid {
                 grid-template-columns: 1fr;
@@ -994,9 +1311,6 @@
             .features-grid {
                 grid-template-columns: 1fr;
             }
-            .grade-grid {
-                grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
-            }
             .subject-grid-check {
                 grid-template-columns: 1fr;
             }
@@ -1017,6 +1331,7 @@
             </p>
             <div class="cta-group">
                 <a class="btn-primary" onclick="openAuth('signup')">Start Free</a>
+                <a class="btn-secondary" onclick="openAuth('login')">Log In</a>
                 <span class="cta-note">No credit card required · Premium from R49.99/month</span>
             </div>
         </div>
@@ -1168,8 +1483,8 @@
 
                 <!-- Step 1: Personal Info -->
                 <div class="signup-step" data-step="1">
-                    <div class="field"><label>First Name</label><input type="text" id="signupFirstName" placeholder="Samuel" /></div>
-                    <div class="field"><label>Last Name</label><input type="text" id="signupLastName" placeholder="Laphushu" /></div>
+                    <div class="field"><label>First Name</label><input type="text" id="signupFirstName" placeholder="First name" /></div>
+                    <div class="field"><label>Last Name</label><input type="text" id="signupLastName" placeholder="Last name" /></div>
                     <div class="field"><label>Email</label><input type="email" id="signupEmail" placeholder="you@example.com" /></div>
                     <div class="field"><label>Password</label><input type="password" id="signupPassword" placeholder="Min 6 characters" /></div>
                     <button class="btn" onclick="nextStep(2)">Next →</button>
@@ -1297,7 +1612,7 @@
 
     <script>
         // ================================================================
-        //  GLOBALS
+        //  GLOBALS & DEFAULT TOPICS
         // ================================================================
         let currentUser = null;
         let currentSubject = '';
@@ -1305,6 +1620,36 @@
         let progressData = {};
         let subscriptionStatus = 'trial';
         let daysRemaining = 3;
+
+        // ================================================================
+        //  DEFAULT TOPICS FOR EACH SUBJECT
+        // ================================================================
+        const DEFAULT_TOPICS = {
+            'Mathematics': ['Introduction to Algebra', 'Solving Linear Equations', 'Quadratic Functions', 'Trigonometry Basics', 'Calculus Fundamentals', 'Statistics & Probability', 'Geometry', 'Number Patterns'],
+            'English Home Language': ['Grammar & Sentence Structure', 'Reading Comprehension', 'Creative Writing', 'Literature Analysis', 'Vocabulary Building', 'Essay Writing', 'Public Speaking'],
+            'Life Sciences': ['Cell Biology', 'Genetics & Evolution', 'Human Anatomy', 'Ecology', 'Biotechnology', 'Microbiology', 'Botany', 'Zoology'],
+            'Physical Sciences': ['Mechanics', 'Thermodynamics', 'Electricity', 'Chemical Bonding', 'Nuclear Physics', 'Optics', 'Waves', 'Electromagnetism'],
+            'History': ['Ancient Civilizations', 'Industrial Revolution', 'World War I', 'World War II', 'Apartheid & Democracy', 'African Kingdoms', 'Colonialism'],
+            'Geography': ['Map Skills', 'Climate & Weather', 'Plate Tectonics', 'Population Studies', 'Environmental Management', 'Urban Geography', 'Economic Geography'],
+            'Accounting': ['Double-Entry System', 'Trial Balance', 'Financial Statements', 'Budgeting', 'Taxation', 'Auditing', 'Cost Accounting'],
+            'Business Studies': ['Entrepreneurship', 'Marketing', 'Human Resources', 'Finance', 'Business Environment', 'Operations Management', 'Business Ethics'],
+            'Economics': ['Supply & Demand', 'Market Structures', 'Macroeconomics', 'International Trade', 'South African Economy', 'Development Economics'],
+            'Engineering Graphics and Design': ['Technical Drawing', 'CAD', '3D Modeling', 'Architectural Drawing', 'Structural Design'],
+            'Computer Applications Technology': ['Word Processing', 'Spreadsheets', 'Databases', 'Presentations', 'Internet Basics'],
+            'Information Technology': ['Hardware', 'Networking', 'Cybersecurity', 'Web Development', 'Database Management'],
+            'Consumer Studies': ['Nutrition', 'Fashion', 'Interior Design', 'Consumer Rights', 'Financial Literacy'],
+            'Tourism': ['Tourism Concepts', 'Tourism Marketing', 'Ecotourism', 'Travel Operations', 'Cultural Tourism'],
+            'Hospitality Studies': ['Food Preparation', 'Catering', 'Hotel Management', 'Event Planning', 'Customer Service'],
+            'Agricultural Sciences': ['Soil Science', 'Crop Production', 'Animal Husbandry', 'Agricultural Economics', 'Sustainable Agriculture'],
+            'Visual Arts': ['Drawing & Painting', 'Sculpture', 'Photography', 'Art History', 'Digital Art'],
+            'Music': ['Music Theory', 'Instrumental Studies', 'Vocal Studies', 'Music History', 'Composition'],
+            'Drama': ['Acting Techniques', 'Theatre History', 'Playwriting', 'Stagecraft', 'Performance Studies'],
+            'Design': ['Graphic Design', 'Product Design', 'Fashion Design', 'Architecture', 'Digital Design'],
+            'Afrikaans First Additional Language': ['Grammar', 'Reading Comprehension', 'Literature', 'Writing Skills', 'Oral Communication'],
+            'Civil Technology': ['Construction', 'Structural Analysis', 'Materials Science', 'Site Management', 'Building Design'],
+            'Electrical Technology': ['Circuits', 'Electronics', 'Power Systems', 'Control Systems', 'Renewable Energy'],
+            'Mechanical Technology': ['Mechanics', 'Thermodynamics', 'Manufacturing', 'Automotive Technology', 'Robotics']
+        };
 
         // ================================================================
         //  SIGNUP STEPPER
@@ -1316,7 +1661,6 @@
             document.querySelectorAll('.signup-step').forEach(el => el.style.display = 'none');
             const target = document.querySelector(`.signup-step[data-step="${step}"]`);
             if (target) target.style.display = 'block';
-            // Update stepper
             document.querySelectorAll('.step-circle').forEach(el => {
                 const s = parseInt(el.dataset.step);
                 el.classList.remove('active', 'done');
@@ -1327,7 +1671,6 @@
         }
 
         function nextStep(step) {
-            // Validate current step before moving
             if (step === 2) {
                 const fname = document.getElementById('signupFirstName').value.trim();
                 const lname = document.getElementById('signupLastName').value.trim();
@@ -1387,9 +1730,7 @@
                     opt.textContent = c.name;
                     sel.appendChild(opt);
                 });
-            } catch (e) {
-                console.error('Error loading countries:', e);
-            }
+            } catch (e) { console.error('Error loading countries:', e); }
         }
 
         async function loadProvinces() {
@@ -1406,9 +1747,7 @@
                     opt.textContent = p;
                     sel.appendChild(opt);
                 });
-            } catch (e) {
-                console.error('Error loading provinces:', e);
-            }
+            } catch (e) { console.error('Error loading provinces:', e); }
         }
 
         async function loadEducationLevels() {
@@ -1423,9 +1762,7 @@
                     opt.textContent = l.name;
                     sel.appendChild(opt);
                 });
-            } catch (e) {
-                console.error('Error loading education levels:', e);
-            }
+            } catch (e) { console.error('Error loading education levels:', e); }
         }
 
         async function loadGrades() {
@@ -1442,9 +1779,7 @@
                     opt.textContent = g.display || g.name;
                     sel.appendChild(opt);
                 });
-            } catch (e) {
-                console.error('Error loading grades:', e);
-            }
+            } catch (e) { console.error('Error loading grades:', e); }
         }
 
         async function loadCurricula() {
@@ -1461,9 +1796,7 @@
                     opt.textContent = c.name;
                     sel.appendChild(opt);
                 });
-            } catch (e) {
-                console.error('Error loading curricula:', e);
-            }
+            } catch (e) { console.error('Error loading curricula:', e); }
         }
 
         async function loadSubjects() {
@@ -1564,7 +1897,6 @@
                         document.getElementById('pricing').style.display = 'none';
                         document.querySelector('.faq').style.display = 'none';
                         document.getElementById('siteFooter').style.display = 'block';
-                        loadProgress();
                         initDashboard(currentUser);
                         setButtonLoading('loginBtn', false);
                     }, 500);
@@ -1586,7 +1918,7 @@
             document.getElementById('userGrade').textContent = gradeDisplay;
             checkSubscription();
 
-            // Build profile card
+            // Profile card
             const profileHtml = `
                         <div class="profile-card">
                             <div class="row"><span class="label">Country</span><span class="value">${user.countryName || 'Not set'}</span></div>
@@ -1634,10 +1966,9 @@
         }
 
         // ================================================================
-        //  SUBJECTS (simplified for demo – same logic as before)
+        //  SUBJECTS & TOPICS
         // ================================================================
         function showSubjects() {
-            // Use the same subject display as before – but we can use user.subjects
             const subjects = currentUser.subjects || [];
             if (!subjects.length) {
                 document.getElementById('dynamicContent').innerHTML = `
@@ -1654,7 +1985,8 @@
             }
             let html = `<div class="subject-grid">`;
             subjects.forEach(name => {
-                html += `<div class="subject-card" onclick="openSubject('${name}')"><span class="icon">📚</span><span class="name">${name}</span><div class="progress-badge">0%</div></div>`;
+                const icon = getSubjectIcon(name);
+                html += `<div class="subject-card" onclick="openSubject('${name}')"><span class="icon">${icon}</span><span class="name">${name}</span><div class="progress-badge">0%</div></div>`;
             });
             html += `</div><button class="back-btn" onclick="initDashboard(currentUser)" style="margin-top:16px;">← Back to Dashboard</button>`;
             document.getElementById('dynamicContent').innerHTML = html;
@@ -1662,24 +1994,68 @@
             document.getElementById('welcomeSub').textContent = 'Select a subject to start learning.';
         }
 
-        function openSubject(subject) {
-            currentSubject = subject;
-            // For demo, just show a placeholder
-            document.getElementById('dynamicContent').innerHTML = `
-                        <button class="back-btn" onclick="showSubjects()">← Back to Subjects</button>
-                        <div style="padding:20px;text-align:center;">
-                            <h2>${subject}</h2>
-                            <p style="color:#6b7280;">Topics and lessons will appear here.</p>
-                            <button onclick="openTutor('${subject}','Basics')" style="margin-top:12px;padding:10px 24px;background:#6366f1;color:white;border:none;border-radius:8px;cursor:pointer;">Start Lesson</button>
-                        </div>
-                    `;
-            document.getElementById('welcomeMessage').textContent = subject;
-            document.getElementById('welcomeSub').textContent = 'Select a topic.';
+        function getSubjectIcon(name) {
+            const icons = {
+                'Mathematics': '📐',
+                'English Home Language': '📖',
+                'Life Sciences': '🧬',
+                'Physical Sciences': '⚛️',
+                'History': '🏛️',
+                'Geography': '🌍',
+                'Accounting': '💰',
+                'Business Studies': '📊',
+                'Economics': '📈',
+                'Engineering Graphics and Design': '📐',
+                'Computer Applications Technology': '💻',
+                'Information Technology': '🖥️',
+                'Consumer Studies': '🛍️',
+                'Tourism': '✈️',
+                'Hospitality Studies': '🍽️',
+                'Agricultural Sciences': '🌾',
+                'Visual Arts': '🎨',
+                'Music': '🎵',
+                'Drama': '🎭',
+                'Design': '✏️',
+                'Afrikaans First Additional Language': '🇿🇦',
+                'Civil Technology': '🏗️',
+                'Electrical Technology': '⚡',
+                'Mechanical Technology': '🔧'
+            };
+            return icons[name] || '📚';
         }
 
+        function openSubject(subject) {
+            currentSubject = subject;
+            const topics = DEFAULT_TOPICS[subject] || ['Introduction', 'Basics', 'Intermediate', 'Advanced', 'Expert'];
+            document.getElementById('welcomeMessage').textContent = subject;
+            document.getElementById('welcomeSub').textContent = 'Select a topic to start learning.';
+
+            let html = `<button class="back-btn" onclick="showSubjects()">← Back to Subjects</button>`;
+            html += `<div style="margin-bottom:12px;color:#6b7280;font-size:0.9rem;">Showing ${topics.length} topics</div>`;
+            html += `<div class="topic-grid">`;
+            topics.forEach(t => {
+                // We'll treat all topics as "Not started" for simplicity
+                const badgeText = 'Not started';
+                html += `<div class="topic-card" onclick="openTutor('${subject}', '${t}')">
+                            <div class="title">${t}</div>
+                            <div class="meta">${subject}</div>
+                            <div class="resources"><span class="tag">Lesson</span><span class="tag">Quiz</span><span class="tag">Worksheet</span></div>
+                            <div class="status-badge">${badgeText}</div>
+                        </div>`;
+            });
+            html += `</div>`;
+            document.getElementById('dynamicContent').innerHTML = html;
+        }
+
+        // ================================================================
+        //  AI TUTOR (chat)
+        // ================================================================
         function openTutor(subject, topic) {
-            document.getElementById('dynamicContent').innerHTML = `
-                        <button class="back-btn" onclick="openSubject('${subject}')">← Back</button>
+            document.getElementById('welcomeMessage').textContent = '💬 AI Tutor';
+            document.getElementById('welcomeSub').textContent = subject + ' — ' + topic;
+            const container = document.getElementById('dynamicContent');
+            container.innerHTML = `
+                        <button class="back-btn" onclick="openSubject('${subject}')">← Back to Topics</button>
                         <div class="tutor-container">
                             <div class="tutor-header">
                                 <h3>AI Tutor</h3>
@@ -1698,7 +2074,7 @@
         }
 
         // ================================================================
-        //  CHAT (same as before)
+        //  CHAT (sends subject/topic to server)
         // ================================================================
         async function sendChat() {
             const input = document.getElementById('chatInput');
@@ -1767,7 +2143,7 @@
         }
 
         // ================================================================
-        //  SIDEBARS (simplified)
+        //  SIDEBARS
         // ================================================================
         function renderSidebar() {
             const subjects = currentUser.subjects || [];
@@ -1847,7 +2223,6 @@
             goToStep(1);
             loadCountries();
             loadEducationLevels();
-            // Load curricula when country changes
             document.getElementById('signupCountry').addEventListener('change', loadCurricula);
             document.getElementById('signupLevel').addEventListener('change', loadGrades);
             document.getElementById('signupGrade').addEventListener('change', loadSubjects);
@@ -1881,7 +2256,7 @@
         }
 
         // ================================================================
-        //  SUBSCRIPTION & PAYMENT (simplified)
+        //  SUBSCRIPTION & PAYMENT
         // ================================================================
         async function checkSubscription() {
             if (!currentUser) return;
@@ -1951,10 +2326,10 @@
         }
 
         // ================================================================
-        //  PROGRESS (mock)
+        //  PROFILE UPDATE (dummy)
         // ================================================================
-        function loadProgress() {
-            // For demo, we don't store progress persistently
+        function showGradeSelection() {
+            alert('Profile update will be available soon. For now, you can update your subjects by signing up again.');
         }
 
         // ================================================================
@@ -1971,7 +2346,6 @@
                     document.getElementById('pricing').style.display = 'none';
                     document.querySelector('.faq').style.display = 'none';
                     document.getElementById('dashboard').classList.add('active');
-                    loadProgress();
                     currentUser = user;
                     checkSubscription().then(() => {
                         initDashboard(user);
