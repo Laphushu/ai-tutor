@@ -1317,8 +1317,8 @@
                 Personalized AI learning for African students. Follow your official curriculum — CAPS, IEB, CBC, WAEC, ZIMSEC, and more.
             </p>
             <div class="cta-group">
-                <a class="btn-primary" onclick="openAuth('login')">Start Your Free Trial</a>
-                <span class="cta-note">3‑day free trial • Then R49.99/month</span>
+                <a class="btn-primary" onclick="openAuth('signup')">Start Free</a>
+                <span class="cta-note">No credit card required · Premium from R49.99/month</span>
             </div>
         </div>
     </section>
@@ -1367,37 +1367,47 @@
     <!-- ===== PRICING ===== -->
     <section class="pricing" id="pricing">
         <div class="section-title">
-            <h2>Choose Your Plan</h2>
-            <p>Start with a 3‑day free trial, then subscribe monthly.</p>
+            <h2>Simple, Transparent Pricing</h2>
+            <p>Choose the plan that works best for your learning journey.</p>
         </div>
         <div class="pricing-grid">
+            <!-- Free Plan -->
             <div class="pricing-card">
-                <div class="plan">Free Trial</div>
-                <div class="price">R0 <span>/ 3 days</span></div>
-                <div class="description">Explore all features risk‑free.</div>
+                <div class="plan">Free Plan</div>
+                <div class="price">R0</div>
+                <div class="description">Perfect for exploring Leago Academy.</div>
                 <ul class="features-list">
-                    <li>Full access to all subjects</li>
                     <li>Limited AI lessons</li>
+                    <li>Limited AI questions</li>
                     <li>Basic quizzes</li>
+                    <li>Access to all available subjects</li>
+                    <li>Personalized learning dashboard</li>
                     <li>Community support</li>
                 </ul>
-                <button class="btn-pricing outline" onclick="openAuth('signup')">Start Free Trial</button>
+                <button class="btn-pricing outline" onclick="openAuth('signup')">Start Free</button>
+                <p style="font-size:0.8rem;color:#6b7280;margin-top:8px;">No credit card required.</p>
             </div>
+
+            <!-- Premium Plan -->
             <div class="pricing-card popular">
                 <div style="font-size:0.75rem;color:#6366f1;font-weight:700;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;">Most Popular</div>
                 <div class="plan">Premium</div>
                 <div class="price">R49.99 <span>/ month</span></div>
-                <div class="description">Unlock everything.</div>
+                <div class="description">Designed for students who want unlimited learning.</div>
                 <ul class="features-list">
+                    <li>Everything in Free, plus:</li>
                     <li>Unlimited AI Teacher</li>
-                    <li>Unlimited lessons</li>
-                    <li>Homework &amp; assignments</li>
+                    <li>Unlimited AI lessons</li>
+                    <li>Unlimited AI questions</li>
+                    <li>Homework assistance</li>
                     <li>Exam preparation tools</li>
                     <li>Progress analytics</li>
+                    <li>Personalized study recommendations</li>
                     <li>Priority support</li>
-                    <li>Cancel anytime</li>
+                    <li>Access to future Premium features</li>
                 </ul>
                 <button class="btn-pricing" onclick="openAuth('login')">Upgrade to Premium</button>
+                <p style="font-size:0.8rem;color:#6b7280;margin-top:8px;">Cancel anytime. Payments secured by Paystack.</p>
             </div>
         </div>
     </section>
@@ -1408,28 +1418,129 @@
             <h2>Frequently Asked Questions</h2>
         </div>
         <div class="faq-item">
-            <div class="question">What is Leago Academy?</div>
-            <div class="answer">Leago Academy is an AI-powered education platform that provides personalised learning for African students, aligned with official curricula like CAPS, IEB, CBC, WAEC, ZIMSEC, and more.</div>
+            <div class="question">Can I use Leago Academy for free?</div>
+            <div class="answer">Yes. Our Free Plan allows you to explore the platform with selected features at no cost.</div>
         </div>
         <div class="faq-item">
-            <div class="question">Is there a free trial?</div>
-            <div class="answer">Yes! You get a 3-day free trial with full access. After that, you can subscribe to Premium for R49.99/month.</div>
+            <div class="question">Can I cancel Premium?</div>
+            <div class="answer">Yes. You may cancel your subscription at any time. Your Premium access will remain active until the end of your current billing period.</div>
         </div>
         <div class="faq-item">
-            <div class="question">What's included in Premium?</div>
-            <div class="answer">Unlimited AI Teacher, unlimited lessons, homework, exam preparation, progress analytics, and priority support.</div>
+            <div class="question">Which payment methods are accepted?</div>
+            <div class="answer">Payments are securely processed through Paystack using the payment methods available in your region.</div>
         </div>
         <div class="faq-item">
-            <div class="question">Can I cancel anytime?</div>
-            <div class="answer">Yes, cancel anytime from your account settings.</div>
+            <div class="question">Will the price change?</div>
+            <div class="answer">If pricing changes in the future, existing subscribers will be notified in advance.</div>
         </div>
     </section>
 
     <!-- ===== INFO PAGES ===== -->
-    <div class="info-page" id="page-privacy"><h1>Privacy Policy</h1><p><strong>Last updated:</strong> June 2026</p><p>At Leago Academy, we take your privacy seriously...</p><span class="back-link" onclick="showInfoPage('')">← Back to Leago</span></div>
+    <div class="info-page" id="page-privacy"><h1>Privacy Policy</h1><p><strong>Last updated:</strong> 1 July 2026</p><p>At Leago Academy, we take your privacy seriously...</p><span class="back-link" onclick="showInfoPage('')">← Back to Leago</span></div>
+
+    <div class="info-page" id="page-tos">
+        <h1>Terms of Service</h1>
+        <p><strong>Last Updated:</strong> 1 July 2026</p>
+
+        <h2>Welcome to Leago Academy</h2>
+        <p>Welcome to Leago Academy ("Leago Academy", "we", "our", or "us"). By accessing or using our website and services, you agree to these Terms of Service. If you do not agree with these terms, please do not use our platform.</p>
+
+        <h2>1. Our Service</h2>
+        <p>Leago Academy is an AI-powered education platform that provides personalized learning experiences, including:</p>
+        <ul>
+            <li>AI-assisted lessons</li>
+            <li>Homework support</li>
+            <li>Interactive quizzes</li>
+            <li>Exam preparation</li>
+            <li>Progress tracking</li>
+            <li>Personalized study recommendations</li>
+        </ul>
+        <p>Our mission is to make quality education more accessible for students across South Africa and, over time, throughout Africa.</p>
+
+        <h2>2. Eligibility</h2>
+        <p>To use Leago Academy you must:</p>
+        <ul>
+            <li>Be at least 13 years old, or have permission from a parent or legal guardian.</li>
+            <li>Provide accurate registration information.</li>
+            <li>Keep your account credentials secure.</li>
+        </ul>
+        <p>You are responsible for all activity that occurs under your account.</p>
+
+        <h2>3. Accounts</h2>
+        <p>When creating an account you agree to:</p>
+        <ul>
+            <li>Use your real information.</li>
+            <li>Keep your password confidential.</li>
+            <li>Notify us immediately if you believe your account has been accessed without your permission.</li>
+        </ul>
+        <p>Leago Academy reserves the right to suspend or terminate accounts that violate these Terms.</p>
+
+        <h2>4. Free Plan</h2>
+        <p>Our Free Plan is designed to help students explore the platform before upgrading.</p>
+        <p>The Free Plan may include limitations such as:</p>
+        <ul>
+            <li>Limited AI lessons</li>
+            <li>Limited AI questions</li>
+            <li>Basic quizzes</li>
+            <li>Access to selected educational features</li>
+        </ul>
+        <p>We reserve the right to modify Free Plan limits as we improve the platform.</p>
+
+        <h2>5. Premium Subscription</h2>
+        <p>Premium provides access to advanced learning features, including:</p>
+        <ul>
+            <li>Unlimited AI Teacher</li>
+            <li>Unlimited AI lessons</li>
+            <li>Homework assistance</li>
+            <li>Exam preparation tools</li>
+            <li>Progress analytics</li>
+            <li>Priority support</li>
+            <li>Future Premium learning features</li>
+        </ul>
+        <p>Premium subscriptions are billed monthly.</p>
+        <p>You may cancel your subscription at any time. Cancellation prevents future renewals, and Premium access remains available until the end of your current billing period.</p>
+
+        <h2>6. Payments</h2>
+        <p>Payments are processed securely through Paystack.</p>
+        <p>Leago Academy does not store your debit or credit card information.</p>
+        <p>By subscribing, you authorize recurring monthly payments until your subscription is cancelled.</p>
+
+        <h2>7. Acceptable Use</h2>
+        <p>Users must not:</p>
+        <ul>
+            <li>Attempt to hack or interfere with the platform.</li>
+            <li>Share harmful or illegal content.</li>
+            <li>Copy, redistribute, or sell Leago Academy content without permission.</li>
+            <li>Use automated systems to abuse the AI service.</li>
+            <li>Misrepresent their identity.</li>
+        </ul>
+        <p>Violation of these rules may result in account suspension or termination.</p>
+
+        <h2>8. Intellectual Property</h2>
+        <p>All software, branding, logos, website content, AI workflows, and original educational materials are the intellectual property of Leago Academy unless otherwise stated.</p>
+        <p>You may not copy or distribute our content without written permission.</p>
+
+        <h2>9. Service Availability</h2>
+        <p>We strive to keep Leago Academy available 24/7. However, maintenance, updates, or technical issues may occasionally interrupt access.</p>
+        <p>We are continually improving the platform and may introduce new features or modify existing ones.</p>
+
+        <h2>10. Limitation of Liability</h2>
+        <p>While we aim to provide accurate educational content, Leago Academy does not guarantee examination results or academic outcomes.</p>
+        <p>Students remain responsible for their own learning and academic performance.</p>
+
+        <h2>11. Changes to These Terms</h2>
+        <p>We may update these Terms from time to time. Continued use of Leago Academy after updates means you accept the revised Terms.</p>
+
+        <h2>12. Contact</h2>
+        <p>Questions about these Terms?</p>
+        <p>📧 support@leagoacademy.co.za</p>
+        <p>🌐 https://www.leagoacademy.co.za</p>
+
+        <span class="back-link" onclick="showInfoPage('')">← Back to Leago</span>
+    </div>
+
     <div class="info-page" id="page-about"><h1>About Leago Academy</h1><p><strong>Leago Academy</strong> is an AI-powered educational platform...</p><span class="back-link" onclick="showInfoPage('')">← Back to Leago</span></div>
     <div class="info-page" id="page-contact"><h1>Contact Us</h1><p>Have questions? We'd love to hear from you.</p><span class="back-link" onclick="showInfoPage('')">← Back to Leago</span></div>
-    <div class="info-page" id="page-tos"><h1>Terms of Service</h1><p><strong>Last updated:</strong> June 2026</p><p>Welcome to Leago Academy...</p><span class="back-link" onclick="showInfoPage('')">← Back to Leago</span></div>
 
     <!-- ===== AUTH OVERLAY ===== -->
     <div class="auth-overlay" id="authOverlay">
@@ -1582,7 +1693,7 @@
             <div><h4>🧠 Leago Academy</h4><p style="font-size:0.9rem;">AI-powered education for African students.</p></div>
             <div><h4>Company</h4><a onclick="showInfoPage('about')">About</a><a href="#pricing" onclick="document.getElementById('pricing').scrollIntoView({behavior:'smooth'})">Pricing</a><a onclick="showInfoPage('contact')">Contact</a></div>
             <div><h4>Legal</h4><a onclick="showInfoPage('privacy')">Privacy Policy</a><a onclick="showInfoPage('tos')">Terms of Service</a></div>
-            <div><h4>Contact</h4><a href="mailto:support@leagoacademy.com">support@leagoacademy.com</a></div>
+            <div><h4>Contact</h4><a href="mailto:support@leagoacademy.co.za">support@leagoacademy.co.za</a></div>
         </div>
         <div class="bottom">&copy; 2026 Leago Academy. All rights reserved.</div>
     </footer>
@@ -2152,8 +2263,8 @@
 
             const isPremium = subscriptionStatus === 'active';
             const subIcon = isPremium ? '⭐' : '🆓';
-            const subLabel = isPremium ? 'Premium' : 'Free Trial';
-            const subDetail = isPremium ? 'Your subscription is active' : `${daysRemaining} days remaining`;
+            const subLabel = isPremium ? 'Premium' : 'Free Plan';
+            const subDetail = isPremium ? 'Your subscription is active' : `${daysRemaining} days remaining in trial`;
             const upgradeBtn = isPremium ? '' : `<button onclick="subscribe()" style="margin-top:10px;padding:8px 20px;background:#6366f1;color:white;border:none;border-radius:8px;cursor:pointer;font-weight:600;">Upgrade to Premium</button>`;
 
             container.innerHTML = `
@@ -2357,7 +2468,7 @@
         }
 
         // ================================================================
-        //  CHAT – UPDATED TO SEND SUBJECT AND TOPIC TO SERVER
+        //  CHAT – sends subject and topic to server
         // ================================================================
         async function sendChat() {
             const input = document.getElementById('chatInput');
@@ -2371,8 +2482,7 @@
             btn.disabled = true;
             btn.innerHTML = '<span class="spinner"></span>';
 
-            // Extract subject and topic from the UI
-            const context = document.getElementById('welcomeSub').textContent; // e.g. "Life Sciences — Cell Biology"
+            const context = document.getElementById('welcomeSub').textContent;
             const parts = context.split(' — ');
             const subject = parts[0] || 'General';
             const topic = parts[1] || '';
