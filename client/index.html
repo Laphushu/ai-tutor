@@ -7,7 +7,6 @@
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js">
     </script>
     <style>
-        /* ===== RESET & BASE ===== */
         * {
             margin: 0;
             padding: 0;
@@ -18,8 +17,6 @@
             background: #f8fafc;
             min-height: 100vh;
         }
-
-        /* ===== LANDING PAGE ===== */
         .hero {
             background: linear-gradient(135deg, #0b1120 0%, #1a1a3e 100%);
             padding: 80px 20px 80px;
@@ -127,7 +124,7 @@
             padding: 14px 32px;
             background: transparent;
             color: white;
-            border: 2px solid rgba(255,255,255,0.3);
+            border: 2px solid rgba(255, 255, 255, 0.3);
             border-radius: 14px;
             font-size: 1rem;
             font-weight: 700;
@@ -138,14 +135,13 @@
         }
         .hero .cta-group .btn-secondary:hover {
             border-color: white;
-            background: rgba(255,255,255,0.05);
+            background: rgba(255, 255, 255, 0.05);
         }
         .hero .cta-group .cta-note {
             font-size: 0.85rem;
             color: #9ca3af;
             width: 100%;
         }
-
         .dashboard-preview {
             max-width: 1100px;
             margin: -40px auto 40px;
@@ -175,7 +171,6 @@
             display: block;
             margin-bottom: 8px;
         }
-
         .features {
             max-width: 1100px;
             margin: 0 auto 60px;
@@ -224,7 +219,6 @@
             margin-top: 4px;
             line-height: 1.4;
         }
-
         .pricing {
             max-width: 1100px;
             margin: 0 auto 60px;
@@ -329,7 +323,6 @@
         .pricing-card .btn-pricing.outline:hover {
             background: #f8faff;
         }
-
         .faq {
             max-width: 800px;
             margin: 0 auto 60px;
@@ -362,8 +355,6 @@
             line-height: 1.5;
             font-size: 0.95rem;
         }
-
-        /* ===== AUTH OVERLAY ===== */
         .auth-overlay {
             display: none;
             position: fixed;
@@ -528,8 +519,6 @@
                 transform: rotate(360deg);
             }
         }
-
-        /* ===== STEPPER ===== */
         .stepper {
             display: flex;
             justify-content: space-between;
@@ -568,8 +557,6 @@
             background: #22c55e;
             color: white;
         }
-
-        /* ===== SUBJECT CHECKBOXES ===== */
         .subject-grid-check {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
@@ -598,8 +585,6 @@
             height: 16px;
             accent-color: #6366f1;
         }
-
-        /* ===== DASHBOARD ===== */
         .dashboard {
             display: none;
             max-width: 1200px;
@@ -697,7 +682,6 @@
             background: #fee2e2;
             color: #991b1b;
         }
-
         .dashboard-grid {
             display: grid;
             grid-template-columns: 240px 1fr 280px;
@@ -861,8 +845,6 @@
             font-size: 0.8rem;
             font-weight: 600;
         }
-
-        /* ===== TOPICS ===== */
         .topic-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
@@ -917,15 +899,10 @@
             background: #e5e7eb;
             color: #6b7280;
         }
-        .topic-card.completed {
-            border-color: #22c55e;
-            background: #f0fdf4;
-        }
         .topic-card.completed .status-badge {
             background: #d1fae5;
             color: #065f46;
         }
-
         .back-btn {
             background: none;
             border: 1px solid #e5e7eb;
@@ -942,7 +919,6 @@
         .back-btn:hover {
             background: #f3f4f6;
         }
-
         .tutor-container {
             background: white;
             border-radius: 20px;
@@ -1108,7 +1084,6 @@
         .chat-options label {
             cursor: pointer;
         }
-
         .sidebar-right {
             background: white;
             border-radius: 16px;
@@ -1165,8 +1140,6 @@
             color: #6b7280;
             margin-top: 2px;
         }
-
-        /* ===== INFO PAGES ===== */
         .info-page {
             display: none;
             max-width: 800px;
@@ -1206,7 +1179,6 @@
         .info-page ul {
             padding-left: 24px;
         }
-
         .site-footer {
             background: #0b1120;
             color: #9ca3af;
@@ -1245,7 +1217,6 @@
             text-align: center;
             font-size: 0.85rem;
         }
-
         @media (max-width:768px) {
             .hero h1 {
                 font-size: 2.2rem;
@@ -1318,7 +1289,6 @@
     </style>
 </head>
 <body>
-
     <!-- ===== LANDING PAGE ===== -->
     <section class="hero" id="heroSection">
         <div class="hero-container" style="max-width:900px;margin:0 auto;">
@@ -1612,18 +1582,13 @@
 
     <script>
         // ================================================================
-        //  GLOBALS & DEFAULT TOPICS
+        //  GLOBALS & TOPICS
         // ================================================================
         let currentUser = null;
         let currentSubject = '';
-        let currentView = 'welcome';
-        let progressData = {};
         let subscriptionStatus = 'trial';
         let daysRemaining = 3;
 
-        // ================================================================
-        //  DEFAULT TOPICS FOR EACH SUBJECT
-        // ================================================================
         const DEFAULT_TOPICS = {
             'Mathematics': ['Introduction to Algebra', 'Solving Linear Equations', 'Quadratic Functions', 'Trigonometry Basics', 'Calculus Fundamentals', 'Statistics & Probability', 'Geometry', 'Number Patterns'],
             'English Home Language': ['Grammar & Sentence Structure', 'Reading Comprehension', 'Creative Writing', 'Literature Analysis', 'Vocabulary Building', 'Essay Writing', 'Public Speaking'],
@@ -1865,12 +1830,15 @@
         }
 
         // ================================================================
-        //  AUTH – Login
+        //  AUTH – Login (FIXED loading state)
         // ================================================================
         async function login() {
             const email = document.getElementById('loginEmail').value.trim();
             const password = document.getElementById('loginPassword').value.trim();
-            if (!email || !password) { showError('loginError', 'Please enter email and password'); return; }
+            if (!email || !password) {
+                showError('loginError', 'Please enter email and password');
+                return;
+            }
             clearErrors();
             setButtonLoading('loginBtn', true);
 
@@ -1880,8 +1848,24 @@
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ email, password })
                 });
+
+                // Check if response is JSON
+                const contentType = res.headers.get('content-type');
+                if (!contentType || !contentType.includes('application/json')) {
+                    const text = await res.text();
+                    console.error('Non-JSON response:', text);
+                    showError('loginError', 'Server error. Please try again.');
+                    setButtonLoading('loginBtn', false);
+                    return;
+                }
+
                 const data = await res.json();
-                if (!res.ok) { showError('loginError', data.error || 'Invalid credentials'); return; }
+                if (!res.ok) {
+                    showError('loginError', data.error || 'Invalid credentials');
+                    setButtonLoading('loginBtn', false);
+                    return;
+                }
+
                 if (data.success) {
                     currentUser = { id: data.user.id, ...data.user };
                     subscriptionStatus = data.user.subscription?.status || 'trial';
@@ -1900,9 +1884,13 @@
                         initDashboard(currentUser);
                         setButtonLoading('loginBtn', false);
                     }, 500);
+                } else {
+                    showError('loginError', 'Login failed. Please try again.');
+                    setButtonLoading('loginBtn', false);
                 }
             } catch (err) {
-                showError('loginError', 'Server error. Please try again.');
+                console.error('Login error:', err);
+                showError('loginError', 'Network error. Please check your connection.');
                 setButtonLoading('loginBtn', false);
             }
         }
@@ -2034,13 +2022,11 @@
             html += `<div style="margin-bottom:12px;color:#6b7280;font-size:0.9rem;">Showing ${topics.length} topics</div>`;
             html += `<div class="topic-grid">`;
             topics.forEach(t => {
-                // We'll treat all topics as "Not started" for simplicity
-                const badgeText = 'Not started';
                 html += `<div class="topic-card" onclick="openTutor('${subject}', '${t}')">
                             <div class="title">${t}</div>
                             <div class="meta">${subject}</div>
                             <div class="resources"><span class="tag">Lesson</span><span class="tag">Quiz</span><span class="tag">Worksheet</span></div>
-                            <div class="status-badge">${badgeText}</div>
+                            <div class="status-badge">Not started</div>
                         </div>`;
             });
             html += `</div>`;
@@ -2048,7 +2034,7 @@
         }
 
         // ================================================================
-        //  AI TUTOR (chat)
+        //  AI TUTOR
         // ================================================================
         function openTutor(subject, topic) {
             document.getElementById('welcomeMessage').textContent = '💬 AI Tutor';
@@ -2074,7 +2060,7 @@
         }
 
         // ================================================================
-        //  CHAT (sends subject/topic to server)
+        //  CHAT
         // ================================================================
         async function sendChat() {
             const input = document.getElementById('chatInput');
@@ -2326,7 +2312,7 @@
         }
 
         // ================================================================
-        //  PROFILE UPDATE (dummy)
+        //  PROFILE UPDATE (placeholder)
         // ================================================================
         function showGradeSelection() {
             alert('Profile update will be available soon. For now, you can update your subjects by signing up again.');
