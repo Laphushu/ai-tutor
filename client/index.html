@@ -365,7 +365,7 @@
             background: white;
             border-radius: 28px;
             padding: 40px 36px;
-            max-width: 560px;
+            max-width: 680px;
             width: 100%;
             box-shadow: 0 24px 80px rgba(0, 0, 0, 0.2);
             position: relative;
@@ -507,6 +507,76 @@
             to {
                 transform: rotate(360deg);
             }
+        }
+
+        /* ===== STEPPER ===== */
+        .stepper {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 24px;
+            position: relative;
+        }
+        .stepper::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 10%;
+            right: 10%;
+            height: 2px;
+            background: #e5e7eb;
+            z-index: 0;
+        }
+        .step-circle {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: #e5e7eb;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            color: #6b7280;
+            position: relative;
+            z-index: 1;
+            transition: all 0.3s;
+        }
+        .step-circle.active {
+            background: #6366f1;
+            color: white;
+        }
+        .step-circle.done {
+            background: #22c55e;
+            color: white;
+        }
+
+        /* ===== SUBJECT CHECKBOXES ===== */
+        .subject-grid-check {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 8px;
+            max-height: 300px;
+            overflow-y: auto;
+            border: 1px solid #e5e7eb;
+            border-radius: 10px;
+            padding: 12px;
+        }
+        .subject-grid-check label {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            padding: 4px 6px;
+            border-radius: 4px;
+            transition: background 0.15s;
+        }
+        .subject-grid-check label:hover {
+            background: #f3f4f6;
+        }
+        .subject-grid-check input[type="checkbox"] {
+            width: 16px;
+            height: 16px;
+            accent-color: #6366f1;
         }
 
         /* ===== DASHBOARD ===== */
@@ -736,402 +806,43 @@
         .center-panel .welcome-sub .change-grade-link:hover {
             color: #4f46e5;
         }
-        .grade-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-            gap: 12px;
-            margin: 16px 0;
-        }
-        .grade-card {
-            padding: 24px 12px;
-            border: 2px solid #e5e7eb;
-            border-radius: 14px;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.25s;
-            background: white;
-            font-weight: 600;
-            font-size: 1rem;
-            color: #0b1120;
-        }
-        .grade-card:hover {
-            border-color: #6366f1;
-            transform: translateY(-3px);
-            box-shadow: 0 8px 24px rgba(99, 102, 241, 0.10);
-        }
-        .grade-card.selected {
-            border-color: #6366f1;
-            background: #eef2ff;
-            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
-        }
-        .grade-card .sub {
-            font-size: 0.7rem;
-            color: #6b7280;
-            font-weight: 400;
-            display: block;
-            margin-top: 4px;
-        }
-        .btn-confirm {
-            padding: 14px 40px;
-            border: none;
+        .profile-card {
+            background: #f8fafc;
             border-radius: 12px;
-            font-size: 1rem;
-            font-weight: 700;
-            cursor: pointer;
-            background: linear-gradient(135deg, #6366f1, #8b5cf6);
-            color: #fff;
-            transition: transform 0.15s;
-            font-family: inherit;
-            margin-top: 16px;
-            display: none;
-        }
-        .btn-confirm:hover {
-            transform: translateY(-2px);
-        }
-        .subject-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-            gap: 16px;
-        }
-        .subject-card {
-            background: white;
-            border: 2px solid #e5e7eb;
-            border-radius: 16px;
-            padding: 28px 16px;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.25s;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
-        }
-        .subject-card:hover {
-            border-color: #6366f1;
-            transform: translateY(-4px);
-            box-shadow: 0 12px 32px rgba(99, 102, 241, 0.12);
-        }
-        .subject-card .icon {
-            font-size: 2.8rem;
-            display: block;
-            margin-bottom: 6px;
-        }
-        .subject-card .name {
-            font-weight: 700;
-            font-size: 0.95rem;
-            color: #0b1120;
-        }
-        .subject-card .progress-badge {
-            display: inline-block;
-            font-size: 0.7rem;
-            color: #6366f1;
-            background: #eef2ff;
-            padding: 2px 10px;
-            border-radius: 12px;
-            margin-top: 6px;
-        }
-        .back-btn {
-            background: none;
+            padding: 16px 20px;
+            margin-bottom: 20px;
             border: 1px solid #e5e7eb;
-            padding: 10px 20px;
-            border-radius: 12px;
-            cursor: pointer;
+        }
+        .profile-card .row {
+            display: flex;
+            justify-content: space-between;
+            padding: 4px 0;
+            font-size: 0.9rem;
+        }
+        .profile-card .row .label {
+            color: #6b7280;
+            font-weight: 500;
+        }
+        .profile-card .row .value {
             font-weight: 600;
-            color: #4b5563;
-            transition: all 0.2s;
-            font-family: inherit;
-            display: inline-block;
-            margin-bottom: 16px;
-        }
-        .back-btn:hover {
-            background: #f3f4f6;
-        }
-        .topic-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-            gap: 16px;
-        }
-        .topic-card {
-            background: white;
-            border: 2px solid #e5e7eb;
-            border-radius: 14px;
-            padding: 20px 18px;
-            transition: all 0.25s;
-            cursor: pointer;
-            position: relative;
-        }
-        .topic-card:hover {
-            border-color: #6366f1;
-            box-shadow: 0 8px 24px rgba(99, 102, 241, 0.08);
-        }
-        .topic-card.completed {
-            border-color: #22c55e;
-            background: #f0fdf4;
-        }
-        .topic-card .title {
-            font-weight: 700;
-            font-size: 1rem;
             color: #0b1120;
         }
-        .topic-card .meta {
-            font-size: 0.8rem;
-            color: #6b7280;
+        .subject-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
             margin-top: 4px;
         }
-        .topic-card .resources {
-            margin-top: 10px;
-            display: flex;
-            gap: 6px;
-            flex-wrap: wrap;
-        }
-        .topic-card .resources .tag {
+        .subject-tag {
             background: #eef2ff;
             color: #6366f1;
             padding: 2px 12px;
             border-radius: 12px;
-            font-size: 0.7rem;
-            font-weight: 600;
-        }
-        .topic-card .status-badge {
-            position: absolute;
-            top: 12px;
-            right: 12px;
-            font-size: 0.7rem;
-            font-weight: 600;
-            padding: 2px 10px;
-            border-radius: 12px;
-            background: #e5e7eb;
-            color: #6b7280;
-        }
-        .topic-card.completed .status-badge {
-            background: #d1fae5;
-            color: #065f46;
-        }
-        .tutor-container {
-            background: white;
-            border-radius: 20px;
-            padding: 28px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
-            margin-top: 12px;
-        }
-        .tutor-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 16px;
-            flex-wrap: wrap;
-            gap: 10px;
-        }
-        .tutor-header h3 {
-            font-size: 1.2rem;
-            font-weight: 700;
-            color: #0b1120;
-        }
-        .tutor-header .context {
-            font-size: 0.9rem;
-            color: #6b7280;
-            background: #f3f4f6;
-            padding: 4px 16px;
-            border-radius: 20px;
-        }
-        .chat-box {
-            background: #f8fafc;
-            border-radius: 16px;
-            padding: 20px;
-            max-height: 400px;
-            overflow-y: auto;
-            border: 1px solid #e5e7eb;
-            margin-bottom: 16px;
-        }
-        .chat-box .msg {
-            padding: 12px 16px;
-            border-radius: 14px;
-            max-width: 85%;
-            margin-bottom: 10px;
-            font-size: 0.95rem;
-            line-height: 1.6;
-            word-wrap: break-word;
-        }
-        .chat-box .msg.user {
-            background: #6366f1;
-            color: #fff;
-            margin-left: auto;
-            text-align: right;
-        }
-        .chat-box .msg.bot {
-            background: #e5e7eb;
-            color: #0b1120;
-            margin-right: auto;
-        }
-        .chat-box .msg.bot h1,
-        .chat-box .msg.bot h2,
-        .chat-box .msg.bot h3,
-        .chat-box .msg.bot h4,
-        .chat-box .msg.bot h5,
-        .chat-box .msg.bot h6 {
-            margin: 8px 0 4px;
-            font-weight: 700;
-            color: #0b1120;
-        }
-        .chat-box .msg.bot h1 {
-            font-size: 1.6rem;
-        }
-        .chat-box .msg.bot h2 {
-            font-size: 1.3rem;
-        }
-        .chat-box .msg.bot h3 {
-            font-size: 1.1rem;
-        }
-        .chat-box .msg.bot h4 {
-            font-size: 1rem;
-        }
-        .chat-box .msg.bot h5 {
-            font-size: 0.95rem;
-        }
-        .chat-box .msg.bot h6 {
-            font-size: 0.9rem;
-        }
-        .chat-box .msg.bot ul,
-        .chat-box .msg.bot ol {
-            padding-left: 20px;
-            margin: 4px 0 8px;
-        }
-        .chat-box .msg.bot li {
-            margin-bottom: 2px;
-        }
-        .chat-box .msg.bot p {
-            margin: 6px 0;
-        }
-        .chat-box .msg.bot code {
-            background: #e5e7eb;
-            padding: 1px 6px;
-            border-radius: 4px;
-            font-size: 0.9em;
-        }
-        .chat-box .msg.bot pre {
-            background: #e5e7eb;
-            padding: 10px;
-            border-radius: 8px;
-            overflow-x: auto;
-        }
-        .chat-box .msg.bot strong {
-            font-weight: 700;
-        }
-        .chat-box .msg.bot em {
-            font-style: italic;
-        }
-        .chat-input {
-            display: flex;
-            gap: 10px;
-        }
-        .chat-input input {
-            flex: 1;
-            padding: 14px 18px;
-            border: 2px solid #e5e7eb;
-            border-radius: 14px;
-            font-size: 0.95rem;
-            font-family: inherit;
-            transition: border-color 0.25s;
-        }
-        .chat-input input:focus {
-            outline: none;
-            border-color: #6366f1;
-        }
-        .chat-input .btn-send {
-            padding: 0 28px;
-            background: linear-gradient(135deg, #6366f1, #8b5cf6);
-            color: #fff;
-            border: none;
-            border-radius: 14px;
-            font-weight: 700;
-            cursor: pointer;
-            transition: all 0.25s;
-            font-family: inherit;
-        }
-        .chat-input .btn-send:hover {
-            transform: scale(1.02);
-        }
-        .chat-input .btn-send:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-        }
-        .chat-options {
-            display: flex;
-            align-items: center;
-            gap: 14px;
-            margin-top: 12px;
-            font-size: 0.85rem;
-            color: #6b7280;
-        }
-        .chat-options input[type="checkbox"] {
-            width: 18px;
-            height: 18px;
-            accent-color: #6366f1;
-            cursor: pointer;
-        }
-        .chat-options label {
-            cursor: pointer;
-        }
-        .empty-state {
-            grid-column: 1/-1;
-            text-align: center;
-            padding: 40px;
-            color: #6b7280;
-        }
-        .sidebar-right {
-            background: white;
-            border-radius: 16px;
-            padding: 24px 18px;
-            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
-            height: fit-content;
-        }
-        .sidebar-right .section-title {
-            font-size: 0.7rem;
-            text-transform: uppercase;
-            color: #6b7280;
-            font-weight: 700;
-            letter-spacing: 0.5px;
-            margin: 16px 0 8px;
-        }
-        .sidebar-right .section-title:first-child {
-            margin-top: 0;
-        }
-        .flashcard-item {
-            padding: 10px 14px;
-            background: #f8fafc;
-            border-radius: 10px;
-            margin-bottom: 6px;
-            font-size: 0.85rem;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-        .flashcard-item:hover {
-            background: #eef2ff;
-        }
-        .flashcard-item .term {
-            font-weight: 600;
-            color: #0b1120;
-        }
-        .flashcard-item .def {
             font-size: 0.8rem;
-            color: #6b7280;
-            margin-top: 2px;
-        }
-        .error-item {
-            padding: 10px 14px;
-            background: #fef2f2;
-            border-radius: 10px;
-            margin-bottom: 6px;
-            font-size: 0.85rem;
-            border-left: 3px solid #ef4444;
-        }
-        .error-item .concept {
             font-weight: 600;
-            color: #991b1b;
-        }
-        .error-item .hint {
-            font-size: 0.8rem;
-            color: #6b7280;
-            margin-top: 2px;
         }
 
+        /* ===== OTHER ===== */
         .info-page {
             display: none;
             max-width: 800px;
@@ -1170,26 +881,6 @@
         }
         .info-page ul {
             padding-left: 24px;
-        }
-        .info-page input,
-        .info-page textarea {
-            width: 100%;
-            padding: 12px;
-            border: 2px solid #e5e7eb;
-            border-radius: 8px;
-            font-size: 1rem;
-            margin: 6px 0 16px;
-            font-family: inherit;
-        }
-        .info-page button {
-            padding: 14px 28px;
-            background: #6366f1;
-            color: white;
-            border: none;
-            border-radius: 8px;
-            font-weight: 700;
-            cursor: pointer;
-            font-size: 1rem;
         }
 
         .site-footer {
@@ -1231,6 +922,7 @@
             font-size: 0.85rem;
         }
 
+        /* ===== RESPONSIVE ===== */
         @media (max-width:768px) {
             .hero h1 {
                 font-size: 2.2rem;
@@ -1246,6 +938,7 @@
             }
             .auth-card {
                 padding: 28px 20px;
+                max-width: 100%;
             }
             .top-nav {
                 padding: 12px 16px;
@@ -1290,6 +983,9 @@
             .info-page h1 {
                 font-size: 1.6rem;
             }
+            .subject-grid-check {
+                grid-template-columns: 1fr 1fr;
+            }
         }
         @media (max-width:480px) {
             .hero h1 {
@@ -1300,6 +996,9 @@
             }
             .grade-grid {
                 grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
+            }
+            .subject-grid-check {
+                grid-template-columns: 1fr;
             }
         }
     </style>
@@ -1330,7 +1029,6 @@
                 <span class="icon">📊</span>
                 <strong>Dashboard Preview</strong>
                 <p style="margin-top:4px;font-size:0.85rem;color:#9ca3af;">Your personalised learning dashboard</p>
-                <p style="font-size:0.8rem;color:#9ca3af;margin-top:2px;">(Coming soon)</p>
             </div>
         </div>
     </div>
@@ -1367,44 +1065,40 @@
     <!-- ===== PRICING ===== -->
     <section class="pricing" id="pricing">
         <div class="section-title">
-            <h2>Simple, Transparent Pricing</h2>
-            <p>Choose the plan that works best for your learning journey.</p>
+            <h2>Choose Your Learning Plan</h2>
+            <p>Whether you're exploring or preparing for exams, there's a plan designed for you.</p>
         </div>
         <div class="pricing-grid">
-            <!-- Free Plan -->
             <div class="pricing-card">
                 <div class="plan">Free Plan</div>
-                <div class="price">R0</div>
-                <div class="description">Perfect for exploring Leago Academy.</div>
+                <div class="price">R0 <span>/ month</span></div>
+                <div class="description">Perfect for students getting started.</div>
                 <ul class="features-list">
-                    <li>Limited AI lessons</li>
-                    <li>Limited AI questions</li>
-                    <li>Basic quizzes</li>
+                    <li>Limited AI learning sessions</li>
+                    <li>Limited daily questions</li>
+                    <li>Interactive quizzes</li>
                     <li>Access to all available subjects</li>
-                    <li>Personalized learning dashboard</li>
-                    <li>Community support</li>
+                    <li>Personal learning dashboard</li>
+                    <li>Progress tracking</li>
                 </ul>
                 <button class="btn-pricing outline" onclick="openAuth('signup')">Start Free</button>
-                <p style="font-size:0.8rem;color:#6b7280;margin-top:8px;">No credit card required.</p>
+                <p style="font-size:0.8rem;color:#6b7280;margin-top:8px;">No payment details required.</p>
             </div>
-
-            <!-- Premium Plan -->
             <div class="pricing-card popular">
                 <div style="font-size:0.75rem;color:#6366f1;font-weight:700;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;">Most Popular</div>
                 <div class="plan">Premium</div>
                 <div class="price">R49.99 <span>/ month</span></div>
-                <div class="description">Designed for students who want unlimited learning.</div>
+                <div class="description">Unlock the complete Leago Academy experience.</div>
                 <ul class="features-list">
                     <li>Everything in Free, plus:</li>
                     <li>Unlimited AI Teacher</li>
-                    <li>Unlimited AI lessons</li>
-                    <li>Unlimited AI questions</li>
+                    <li>Unlimited learning sessions</li>
                     <li>Homework assistance</li>
-                    <li>Exam preparation tools</li>
-                    <li>Progress analytics</li>
-                    <li>Personalized study recommendations</li>
+                    <li>Exam preparation</li>
+                    <li>Personalized study plans</li>
+                    <li>Detailed learning analytics</li>
                     <li>Priority support</li>
-                    <li>Access to future Premium features</li>
+                    <li>Early access to new features</li>
                 </ul>
                 <button class="btn-pricing" onclick="openAuth('login')">Upgrade to Premium</button>
                 <p style="font-size:0.8rem;color:#6b7280;margin-top:8px;">Cancel anytime. Payments secured by Paystack.</p>
@@ -1436,111 +1130,10 @@
     </section>
 
     <!-- ===== INFO PAGES ===== -->
-    <div class="info-page" id="page-privacy"><h1>Privacy Policy</h1><p><strong>Last updated:</strong> 1 July 2026</p><p>At Leago Academy, we take your privacy seriously...</p><span class="back-link" onclick="showInfoPage('')">← Back to Leago</span></div>
-
-    <div class="info-page" id="page-tos">
-        <h1>Terms of Service</h1>
-        <p><strong>Last Updated:</strong> 1 July 2026</p>
-
-        <h2>Welcome to Leago Academy</h2>
-        <p>Welcome to Leago Academy ("Leago Academy", "we", "our", or "us"). By accessing or using our website and services, you agree to these Terms of Service. If you do not agree with these terms, please do not use our platform.</p>
-
-        <h2>1. Our Service</h2>
-        <p>Leago Academy is an AI-powered education platform that provides personalized learning experiences, including:</p>
-        <ul>
-            <li>AI-assisted lessons</li>
-            <li>Homework support</li>
-            <li>Interactive quizzes</li>
-            <li>Exam preparation</li>
-            <li>Progress tracking</li>
-            <li>Personalized study recommendations</li>
-        </ul>
-        <p>Our mission is to make quality education more accessible for students across South Africa and, over time, throughout Africa.</p>
-
-        <h2>2. Eligibility</h2>
-        <p>To use Leago Academy you must:</p>
-        <ul>
-            <li>Be at least 13 years old, or have permission from a parent or legal guardian.</li>
-            <li>Provide accurate registration information.</li>
-            <li>Keep your account credentials secure.</li>
-        </ul>
-        <p>You are responsible for all activity that occurs under your account.</p>
-
-        <h2>3. Accounts</h2>
-        <p>When creating an account you agree to:</p>
-        <ul>
-            <li>Use your real information.</li>
-            <li>Keep your password confidential.</li>
-            <li>Notify us immediately if you believe your account has been accessed without your permission.</li>
-        </ul>
-        <p>Leago Academy reserves the right to suspend or terminate accounts that violate these Terms.</p>
-
-        <h2>4. Free Plan</h2>
-        <p>Our Free Plan is designed to help students explore the platform before upgrading.</p>
-        <p>The Free Plan may include limitations such as:</p>
-        <ul>
-            <li>Limited AI lessons</li>
-            <li>Limited AI questions</li>
-            <li>Basic quizzes</li>
-            <li>Access to selected educational features</li>
-        </ul>
-        <p>We reserve the right to modify Free Plan limits as we improve the platform.</p>
-
-        <h2>5. Premium Subscription</h2>
-        <p>Premium provides access to advanced learning features, including:</p>
-        <ul>
-            <li>Unlimited AI Teacher</li>
-            <li>Unlimited AI lessons</li>
-            <li>Homework assistance</li>
-            <li>Exam preparation tools</li>
-            <li>Progress analytics</li>
-            <li>Priority support</li>
-            <li>Future Premium learning features</li>
-        </ul>
-        <p>Premium subscriptions are billed monthly.</p>
-        <p>You may cancel your subscription at any time. Cancellation prevents future renewals, and Premium access remains available until the end of your current billing period.</p>
-
-        <h2>6. Payments</h2>
-        <p>Payments are processed securely through Paystack.</p>
-        <p>Leago Academy does not store your debit or credit card information.</p>
-        <p>By subscribing, you authorize recurring monthly payments until your subscription is cancelled.</p>
-
-        <h2>7. Acceptable Use</h2>
-        <p>Users must not:</p>
-        <ul>
-            <li>Attempt to hack or interfere with the platform.</li>
-            <li>Share harmful or illegal content.</li>
-            <li>Copy, redistribute, or sell Leago Academy content without permission.</li>
-            <li>Use automated systems to abuse the AI service.</li>
-            <li>Misrepresent their identity.</li>
-        </ul>
-        <p>Violation of these rules may result in account suspension or termination.</p>
-
-        <h2>8. Intellectual Property</h2>
-        <p>All software, branding, logos, website content, AI workflows, and original educational materials are the intellectual property of Leago Academy unless otherwise stated.</p>
-        <p>You may not copy or distribute our content without written permission.</p>
-
-        <h2>9. Service Availability</h2>
-        <p>We strive to keep Leago Academy available 24/7. However, maintenance, updates, or technical issues may occasionally interrupt access.</p>
-        <p>We are continually improving the platform and may introduce new features or modify existing ones.</p>
-
-        <h2>10. Limitation of Liability</h2>
-        <p>While we aim to provide accurate educational content, Leago Academy does not guarantee examination results or academic outcomes.</p>
-        <p>Students remain responsible for their own learning and academic performance.</p>
-
-        <h2>11. Changes to These Terms</h2>
-        <p>We may update these Terms from time to time. Continued use of Leago Academy after updates means you accept the revised Terms.</p>
-
-        <h2>12. Contact</h2>
-        <p>Questions about these Terms?</p>
-        <p>📧 support@leagoacademy.co.za</p>
-        <p>🌐 https://www.leagoacademy.co.za</p>
-
-        <span class="back-link" onclick="showInfoPage('')">← Back to Leago</span>
-    </div>
-
-    <div class="info-page" id="page-about"><h1>About Leago Academy</h1><p><strong>Leago Academy</strong> is an AI-powered educational platform...</p><span class="back-link" onclick="showInfoPage('')">← Back to Leago</span></div>
-    <div class="info-page" id="page-contact"><h1>Contact Us</h1><p>Have questions? We'd love to hear from you.</p><span class="back-link" onclick="showInfoPage('')">← Back to Leago</span></div>
+    <div class="info-page" id="page-about"><h1>About Leago Academy</h1><p>Empowering Africa Through Intelligent Learning...</p><span class="back-link" onclick="showInfoPage('')">← Back to Leago</span></div>
+    <div class="info-page" id="page-privacy"><h1>Privacy Policy</h1><p>Effective Date: 1 July 2026...</p><span class="back-link" onclick="showInfoPage('')">← Back to Leago</span></div>
+    <div class="info-page" id="page-tos"><h1>Terms of Service</h1><p>Last Updated: 1 July 2026...</p><span class="back-link" onclick="showInfoPage('')">← Back to Leago</span></div>
+    <div class="info-page" id="page-contact"><h1>Contact Leago Academy</h1><p>We are here to help...</p><span class="back-link" onclick="showInfoPage('')">← Back to Leago</span></div>
 
     <!-- ===== AUTH OVERLAY ===== -->
     <div class="auth-overlay" id="authOverlay">
@@ -1552,99 +1145,103 @@
             <div id="loginPage">
                 <h3>Welcome back</h3>
                 <p class="sub">Log in to continue learning.</p>
-                <div class="field"><label>Email</label><input type="email" id="loginEmail" placeholder="you@example.com" value="samuellaphushu@gmail.com" /></div>
-                <div class="field"><label>Password</label><input type="password" id="loginPassword" placeholder="Enter password" value="password123" /></div>
+                <div class="field"><label>Email</label><input type="email" id="loginEmail" placeholder="you@example.com" /></div>
+                <div class="field"><label>Password</label><input type="password" id="loginPassword" placeholder="Enter password" /></div>
                 <div class="error" id="loginError"></div><div class="success" id="loginSuccess"></div>
                 <button class="btn" id="loginBtn" onclick="login()">Log In</button>
                 <div class="auth-link">Don't have an account? <a onclick="showSignup()">Sign up</a></div>
             </div>
 
-            <!-- SIGNUP -->
+            <!-- SIGNUP (multi-step) -->
             <div id="signupPage" style="display:none;">
-                <h3>Create account</h3>
-                <p class="sub">Join Leago Academy and start learning.</p>
+                <h3>Create your education profile</h3>
+                <p class="sub">We'll personalize your learning experience.</p>
 
-                <div class="field"><label>Full name</label><input type="text" id="signupName" placeholder="John Doe" /></div>
-                <div class="field"><label>Email</label><input type="email" id="signupEmail" placeholder="you@example.com" /></div>
-                <div class="field"><label>Password</label><input type="password" id="signupPassword" placeholder="Min 6 characters" /></div>
-
-                <div class="field">
-                    <label>Country</label>
-                    <select id="signupCountry" onchange="loadCurriculumData()">
-                        <option value="">Select country</option>
-                        <option value="South Africa">🇿🇦 South Africa</option>
-                        <option value="Kenya">🇰🇪 Kenya</option>
-                        <option value="Nigeria">🇳🇬 Nigeria</option>
-                        <option value="Zimbabwe">🇿🇼 Zimbabwe</option>
-                        <option value="Botswana">🇧🇼 Botswana</option>
-                        <option value="Namibia">🇳🇦 Namibia</option>
-                        <option value="Ghana">🇬🇭 Ghana</option>
-                        <option value="Egypt">🇪🇬 Egypt</option>
-                        <option value="Uganda">🇺🇬 Uganda</option>
-                        <option value="Tanzania">🇹🇿 Tanzania</option>
-                        <option value="Zambia">🇿🇲 Zambia</option>
-                        <option value="Mozambique">🇲🇿 Mozambique</option>
-                        <option value="Angola">🇦🇴 Angola</option>
-                        <option value="Cameroon">🇨🇲 Cameroon</option>
-                        <option value="Ethiopia">🇪🇹 Ethiopia</option>
-                        <option value="Morocco">🇲🇦 Morocco</option>
-                    </select>
+                <!-- Stepper -->
+                <div class="stepper" id="stepper">
+                    <div class="step-circle active" data-step="1">1</div>
+                    <div class="step-circle" data-step="2">2</div>
+                    <div class="step-circle" data-step="3">3</div>
+                    <div class="step-circle" data-step="4">4</div>
+                    <div class="step-circle" data-step="5">5</div>
                 </div>
 
-                <div class="field" id="provinceField" style="display:none;">
-                    <label>Province / State</label>
-                    <select id="signupProvince">
-                        <option value="">Select province</option>
-                        <option value="Eastern Cape">Eastern Cape</option>
-                        <option value="Free State">Free State</option>
-                        <option value="Gauteng">Gauteng</option>
-                        <option value="KwaZulu-Natal">KwaZulu-Natal</option>
-                        <option value="Limpopo">Limpopo</option>
-                        <option value="Mpumalanga">Mpumalanga</option>
-                        <option value="Northern Cape">Northern Cape</option>
-                        <option value="North West">North West</option>
-                        <option value="Western Cape">Western Cape</option>
-                    </select>
+                <!-- Step 1: Personal Info -->
+                <div class="signup-step" data-step="1">
+                    <div class="field"><label>First Name</label><input type="text" id="signupFirstName" placeholder="Samuel" /></div>
+                    <div class="field"><label>Last Name</label><input type="text" id="signupLastName" placeholder="Laphushu" /></div>
+                    <div class="field"><label>Email</label><input type="email" id="signupEmail" placeholder="you@example.com" /></div>
+                    <div class="field"><label>Password</label><input type="password" id="signupPassword" placeholder="Min 6 characters" /></div>
+                    <button class="btn" onclick="nextStep(2)">Next →</button>
                 </div>
 
-                <div class="field" id="curriculumField">
-                    <label>Curriculum</label>
-                    <select id="signupCurriculum" onchange="loadGrades()">
-                        <option value="">Select curriculum</option>
-                    </select>
-                </div>
-
-                <div class="field" id="gradeField">
-                    <label>Grade / Year</label>
-                    <select id="signupGrade" onchange="loadSubjects()">
-                        <option value="">Select grade</option>
-                    </select>
-                </div>
-
-                <div class="field">
-                    <label>School / Institution (optional)</label>
-                    <input type="text" id="signupSchool" placeholder="Your school name" />
-                </div>
-
-                <div class="field" id="subjectsField">
-                    <label>Subjects (select all that apply)</label>
-                    <div id="subjectCheckboxes" style="display:grid;grid-template-columns:1fr 1fr;gap:6px;max-height:280px;overflow-y:auto;border:1px solid #e5e7eb;border-radius:10px;padding:10px;">
-                        <p style="grid-column:1/-1;color:#6b7280;font-size:0.9rem;">Select your subjects</p>
+                <!-- Step 2: Country & Province -->
+                <div class="signup-step" data-step="2" style="display:none;">
+                    <div class="field">
+                        <label>Country</label>
+                        <select id="signupCountry" onchange="loadProvinces()">
+                            <option value="">Select country</option>
+                        </select>
+                    </div>
+                    <div class="field" id="provinceField">
+                        <label>Province / State / Region</label>
+                        <select id="signupProvince">
+                            <option value="">Select province</option>
+                        </select>
+                    </div>
+                    <div style="display:flex;gap:12px;margin-top:16px;">
+                        <button class="btn" onclick="prevStep(1)" style="background:#e5e7eb;color:#0b1120;">← Back</button>
+                        <button class="btn" onclick="nextStep(3)">Next →</button>
                     </div>
                 </div>
 
-                <div class="field">
-                    <label>Role</label>
-                    <select id="signupRole">
-                        <option value="learner">Learner</option>
-                        <option value="teacher">Teacher</option>
-                    </select>
+                <!-- Step 3: Education Level & Grade -->
+                <div class="signup-step" data-step="3" style="display:none;">
+                    <div class="field">
+                        <label>Education Level</label>
+                        <select id="signupLevel" onchange="loadGrades()">
+                            <option value="">Select level</option>
+                        </select>
+                    </div>
+                    <div class="field">
+                        <label>Grade / Year</label>
+                        <select id="signupGrade">
+                            <option value="">Select grade</option>
+                        </select>
+                    </div>
+                    <div style="display:flex;gap:12px;margin-top:16px;">
+                        <button class="btn" onclick="prevStep(2)" style="background:#e5e7eb;color:#0b1120;">← Back</button>
+                        <button class="btn" onclick="nextStep(4)">Next →</button>
+                    </div>
                 </div>
 
-                <div class="error" id="signupError"></div>
-                <div class="success" id="signupSuccess"></div>
-                <button class="btn" id="signupBtn" onclick="signup()">Create Account</button>
-                <div class="auth-link">Already have an account? <a onclick="showLogin()">Log in</a></div>
+                <!-- Step 4: Curriculum -->
+                <div class="signup-step" data-step="4" style="display:none;">
+                    <div class="field">
+                        <label>Curriculum</label>
+                        <select id="signupCurriculum" onchange="loadSubjects()">
+                            <option value="">Select curriculum</option>
+                        </select>
+                    </div>
+                    <div style="display:flex;gap:12px;margin-top:16px;">
+                        <button class="btn" onclick="prevStep(3)" style="background:#e5e7eb;color:#0b1120;">← Back</button>
+                        <button class="btn" onclick="nextStep(5)">Next →</button>
+                    </div>
+                </div>
+
+                <!-- Step 5: Subjects -->
+                <div class="signup-step" data-step="5" style="display:none;">
+                    <p style="margin-bottom:8px;font-weight:600;">Select the subjects you study:</p>
+                    <div id="subjectCheckboxes" class="subject-grid-check">
+                        <p style="grid-column:1/-1;color:#6b7280;font-size:0.9rem;">Select your subjects</p>
+                    </div>
+                    <div class="error" id="signupError"></div>
+                    <div class="success" id="signupSuccess"></div>
+                    <div style="display:flex;gap:12px;margin-top:16px;">
+                        <button class="btn" onclick="prevStep(4)" style="background:#e5e7eb;color:#0b1120;">← Back</button>
+                        <button class="btn" id="signupBtn" onclick="signup()">Create Account</button>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -1674,7 +1271,7 @@
 
             <main class="center-panel" id="centerPanel">
                 <div class="welcome" id="welcomeMessage">Welcome back, Student 👋</div>
-                <div class="welcome-sub" id="welcomeSub">Today's goal: Complete your next lesson. <span class="change-grade-link" onclick="showGradeSelection()">Change Level</span></div>
+                <div class="welcome-sub" id="welcomeSub">Today's goal: Complete your next lesson.</div>
                 <div id="dynamicContent"></div>
             </main>
 
@@ -1690,342 +1287,516 @@
     <!-- ===== FOOTER ===== -->
     <footer class="site-footer" id="siteFooter">
         <div class="inner">
-            <div><h4>🧠 Leago Academy</h4><p style="font-size:0.9rem;">AI-powered education for African students.</p></div>
-            <div><h4>Company</h4><a onclick="showInfoPage('about')">About</a><a href="#pricing" onclick="document.getElementById('pricing').scrollIntoView({behavior:'smooth'})">Pricing</a><a onclick="showInfoPage('contact')">Contact</a></div>
+            <div><h4>🧠 Leago Academy</h4><p style="font-size:0.9rem; opacity:0.8;">Empowering African Students Through AI-Powered Education.</p></div>
+            <div><h4>Company</h4><a onclick="showInfoPage('about')">About Us</a><a href="#pricing" onclick="document.getElementById('pricing').scrollIntoView({behavior:'smooth'})">Pricing</a><a onclick="showInfoPage('contact')">Contact</a></div>
             <div><h4>Legal</h4><a onclick="showInfoPage('privacy')">Privacy Policy</a><a onclick="showInfoPage('tos')">Terms of Service</a></div>
-            <div><h4>Contact</h4><a href="mailto:support@leagoacademy.co.za">support@leagoacademy.co.za</a></div>
+            <div><h4>Support</h4><a href="mailto:support@leagoacademy.co.za">support@leagoacademy.co.za</a><a href="https://www.leagoacademy.co.za">www.leagoacademy.co.za</a></div>
         </div>
-        <div class="bottom">&copy; 2026 Leago Academy. All rights reserved.</div>
+        <div class="bottom">© 2026 Leago Academy. All rights reserved.</div>
     </footer>
 
     <script>
         // ================================================================
-        //  CURRICULUM DATA (abridged for space – full data in previous versions)
-        // ================================================================
-        const CURRICULUM_DATA = {
-            'South Africa': {
-                curricula: ['CAPS', 'IEB'],
-                subjects: {
-                    'CAPS': {
-                        '10': ['Mathematics', 'English', 'Life Sciences', 'Physical Sciences', 'History', 'Geography', 'Accounting', 'Business Studies', 'Economics', 'Engineering Graphics and Design', 'Computer Applications Technology', 'Information Technology', 'Consumer Studies', 'Tourism', 'Hospitality Studies', 'Agricultural Sciences', 'Visual Arts', 'Music', 'Drama', 'Design'],
-                        '11': ['Mathematics', 'English', 'Life Sciences', 'Physical Sciences', 'History', 'Geography', 'Accounting', 'Business Studies', 'Economics', 'Engineering Graphics and Design', 'Computer Applications Technology', 'Information Technology', 'Consumer Studies', 'Tourism', 'Hospitality Studies', 'Agricultural Sciences', 'Visual Arts', 'Music', 'Drama', 'Design'],
-                        '12': ['Mathematics', 'English', 'Life Sciences', 'Physical Sciences', 'History', 'Geography', 'Accounting', 'Business Studies', 'Economics', 'Engineering Graphics and Design', 'Computer Applications Technology', 'Information Technology', 'Consumer Studies', 'Tourism', 'Hospitality Studies', 'Agricultural Sciences', 'Visual Arts', 'Music', 'Drama', 'Design'],
-                        'College': ['Communication', 'Academic Writing', 'Critical Thinking', 'Research Skills', 'Computer Literacy', 'Mathematics for Science', 'Physics', 'Chemistry', 'Biology', 'Accounting', 'Economics', 'Business Management', 'Marketing', 'Finance', 'Human Resources', 'Commercial Law', 'Criminal Law', 'Contract Law', 'Constitutional Law', 'Legal Research', 'Psychology', 'Sociology', 'Social Work', 'Education', 'Civil Engineering', 'Mechanical Engineering', 'Electrical Engineering', 'Chemical Engineering', 'Programming Fundamentals', 'Database Systems', 'Networking', 'Web Development', 'Anatomy', 'Physiology', 'Pharmacology', 'Public Health', 'Nursing', 'Physiotherapy', 'English Literature', 'History', 'Philosophy', 'Political Science', 'Information Systems', 'Entrepreneurship', 'Project Management']
-                    },
-                    'IEB': {
-                        '10': ['Mathematics', 'English', 'Life Sciences', 'Physical Sciences', 'History', 'Geography', 'Accounting', 'Business Studies', 'Economics', 'Engineering Graphics and Design', 'Computer Applications Technology', 'Information Technology', 'Consumer Studies', 'Tourism', 'Drama', 'Visual Arts', 'Music', 'Design', 'Agricultural Sciences'],
-                        '11': ['Mathematics', 'English', 'Life Sciences', 'Physical Sciences', 'History', 'Geography', 'Accounting', 'Business Studies', 'Economics', 'Engineering Graphics and Design', 'Computer Applications Technology', 'Information Technology', 'Consumer Studies', 'Tourism', 'Drama', 'Visual Arts', 'Music', 'Design', 'Agricultural Sciences'],
-                        '12': ['Mathematics', 'English', 'Life Sciences', 'Physical Sciences', 'History', 'Geography', 'Accounting', 'Business Studies', 'Economics', 'Engineering Graphics and Design', 'Computer Applications Technology', 'Information Technology', 'Consumer Studies', 'Tourism', 'Drama', 'Visual Arts', 'Music', 'Design', 'Agricultural Sciences'],
-                        'College': ['Communication', 'Academic Writing', 'Critical Thinking', 'Research Skills', 'Computer Literacy', 'Mathematics for Science', 'Physics', 'Chemistry', 'Biology', 'Accounting', 'Economics', 'Business Management', 'Marketing', 'Finance', 'Human Resources', 'Commercial Law', 'Criminal Law', 'Contract Law', 'Constitutional Law', 'Legal Research', 'Psychology', 'Sociology', 'Social Work', 'Education', 'Civil Engineering', 'Mechanical Engineering', 'Electrical Engineering', 'Chemical Engineering', 'Programming Fundamentals', 'Database Systems', 'Networking', 'Web Development', 'Anatomy', 'Physiology', 'Pharmacology', 'Public Health', 'Nursing', 'Physiotherapy', 'English Literature', 'History', 'Philosophy', 'Political Science', 'Information Systems', 'Entrepreneurship', 'Project Management']
-                    }
-                }
-            }
-        };
-
-        // ================================================================
-        //  STATE
+        //  GLOBALS
         // ================================================================
         let currentUser = null;
         let currentSubject = '';
-        let selectedGrade = '';
         let currentView = 'welcome';
         let progressData = {};
         let subscriptionStatus = 'trial';
         let daysRemaining = 3;
 
         // ================================================================
-        //  PROGRESS TRACKING
+        //  SIGNUP STEPPER
         // ================================================================
-        function getProgressKey() { if (!currentUser) return null; return 'leago_progress_' + currentUser.id; }
+        let currentStep = 1;
+        let signupData = {};
 
-        function loadProgress() { const key = getProgressKey(); if (!key) return; const stored = localStorage.getItem(key); if (stored) { try { progressData = JSON.parse(stored); } catch (e) { progressData = {}; } } else { progressData = {}; } }
-
-        function saveProgress() { const key = getProgressKey(); if (!key) return; localStorage.setItem(key, JSON.stringify(progressData)); }
-
-        function initProgress(subjects) { let changed = false; for (const [subject, topics] of Object.entries(subjects)) { if (!progressData[subject]) { progressData[subject] = { completed: [], total: topics.length }; changed = true; } else { if (progressData[subject].total !== topics.length) { progressData[subject].total = topics.length; changed = true; } } } if (changed) saveProgress(); }
-
-        function getSubjectProgress(subject) { if (!progressData[subject]) return { completed: 0, total: 0, percent: 0 }; const data = progressData[subject]; const completed = data.completed ? data.completed.length : 0; const total = data.total || 0; const percent = total > 0 ? Math.round((completed / total) * 100) : 0; return { completed, total, percent }; }
-
-        function markTopicCompleted(subject, topic) { if (!progressData[subject]) { progressData[subject] = { completed: [], total: 0 }; } if (!progressData[subject].completed) { progressData[subject].completed = []; } if (!progressData[subject].completed.includes(topic)) { progressData[subject].completed.push(topic); saveProgress(); return true; } return false; }
-
-        function isTopicCompleted(subject, topic) { if (!progressData[subject]) return false; if (!progressData[subject].completed) return false; return progressData[subject].completed.includes(topic); }
-
-        // ================================================================
-        //  TOPICS
-        // ================================================================
-        const DEFAULT_TOPICS = {
-            'Mathematics': ['Algebra', 'Trigonometry', 'Calculus', 'Statistics'],
-            'English': ['Grammar', 'Literature', 'Writing', 'Comprehension'],
-            'Communication': ['Academic Writing', 'Public Speaking', 'Critical Analysis', 'Research Communication'],
-            'Life Sciences': ['Cell Biology', 'Genetics', 'Ecology', 'Human Anatomy'],
-            'Physical Sciences': ['Mechanics', 'Thermodynamics', 'Electricity', 'Chemical Bonding'],
-            'History': ['Ancient Civilizations', 'Industrial Revolution', 'World Wars', 'Apartheid'],
-            'Geography': ['Map Skills', 'Climate', 'Plate Tectonics', 'Population'],
-            'Accounting': ['Double Entry', 'Financial Statements', 'Budgeting', 'Taxation'],
-            'Business Studies': ['Entrepreneurship', 'Marketing', 'HR', 'Finance'],
-            'Economics': ['Supply & Demand', 'Market Structures', 'Macroeconomics', 'International Trade'],
-            'Engineering Graphics and Design': ['Technical Drawing', 'CAD', '3D Modeling', 'Architectural Drawing'],
-            'Computer Applications Technology': ['Word Processing', 'Spreadsheets', 'Databases', 'Presentations'],
-            'Information Technology': ['Hardware', 'Networking', 'Cybersecurity', 'Web Development'],
-            'Consumer Studies': ['Nutrition', 'Fashion', 'Interior Design', 'Consumer Rights'],
-            'Tourism': ['Tourism Concepts', 'Marketing', 'Ecotourism', 'Travel Operations'],
-            'Hospitality Studies': ['Food Preparation', 'Catering', 'Hotel Management', 'Event Planning'],
-            'Agricultural Sciences': ['Soil Science', 'Crop Production', 'Animal Husbandry', 'Agricultural Economics'],
-            'Visual Arts': ['Drawing', 'Painting', 'Sculpture', 'Art History'],
-            'Music': ['Theory', 'Performance', 'Composition', 'Music History'],
-            'Drama': ['Acting', 'Theatre History', 'Playwriting', 'Stagecraft'],
-            'Design': ['Graphic Design', 'Product Design', 'Fashion Design', 'Architecture'],
-            'Academic Writing': ['Essay Structure', 'Research Papers', 'Citation Styles', 'Thesis Writing'],
-            'Critical Thinking': ['Logical Reasoning', 'Argument Analysis', 'Cognitive Biases', 'Problem Solving'],
-            'Research Skills': ['Research Design', 'Data Collection', 'Data Analysis', 'Academic Integrity'],
-            'Computer Literacy': ['Operating Systems', 'Word Processing', 'Spreadsheets', 'Digital Security'],
-            'Mathematics for Science': ['Calculus I', 'Linear Algebra', 'Differential Equations', 'Statistics'],
-            'Physics': ['Mechanics', 'Waves', 'Electricity', 'Magnetism'],
-            'Chemistry': ['Atomic Structure', 'Chemical Reactions', 'Organic Chemistry', 'Thermochemistry'],
-            'Biology': ['Cell Structure', 'Genetics', 'Evolution', 'Ecology'],
-            'Business Management': ['Management Principles', 'Organizational Behavior', 'Leadership', 'Strategic Planning'],
-            'Marketing': ['Marketing Mix', 'Consumer Behavior', 'Digital Marketing', 'Brand Management'],
-            'Finance': ['Corporate Finance', 'Investment', 'Risk Management', 'Financial Markets'],
-            'Human Resources': ['HR Planning', 'Recruitment', 'Training', 'Performance Management'],
-            'Commercial Law': ['Contract Law', 'Company Law', 'Consumer Protection', 'Intellectual Property'],
-            'Criminal Law': ['Elements of Crime', 'Offences', 'Defences', 'Criminal Procedure'],
-            'Contract Law': ['Formation', 'Terms', 'Vitiating Factors', 'Discharge'],
-            'Constitutional Law': ['Constitutional Principles', 'Bill of Rights', 'Separation of Powers', 'Judicial Review'],
-            'Legal Research': ['Legal Sources', 'Research Methods', 'Case Law', 'Statutory Interpretation'],
-            'Psychology': ['Cognitive Psychology', 'Developmental Psychology', 'Social Psychology', 'Abnormal Psychology'],
-            'Sociology': ['Social Structures', 'Social Inequality', 'Culture', 'Social Change'],
-            'Social Work': ['Social Welfare', 'Case Management', 'Counseling', 'Community Development'],
-            'Education': ['Child Development', 'Teaching Methods', 'Curriculum', 'Assessment'],
-            'Civil Engineering': ['Structural Analysis', 'Geotechnics', 'Transportation', 'Water Resources'],
-            'Mechanical Engineering': ['Thermodynamics', 'Fluid Mechanics', 'Materials Science', 'Manufacturing'],
-            'Electrical Engineering': ['Circuits', 'Power Systems', 'Control Systems', 'Electronics'],
-            'Chemical Engineering': ['Thermodynamics', 'Reaction Engineering', 'Process Design', 'Separation Processes'],
-            'Programming Fundamentals': ['Variables', 'Control Structures', 'Functions', 'Algorithms'],
-            'Database Systems': ['Relational Databases', 'SQL', 'Normalization', 'Transactions'],
-            'Networking': ['OSI Model', 'TCP/IP', 'Network Security', 'Routing'],
-            'Web Development': ['HTML', 'CSS', 'JavaScript', 'Backend'],
-            'Anatomy': ['Gross Anatomy', 'Histology', 'Neuroanatomy', 'Cardiovascular System'],
-            'Physiology': ['Cell Physiology', 'Cardiovascular Physiology', 'Respiratory Physiology', 'Renal Physiology'],
-            'Pharmacology': ['Drug Action', 'Pharmacokinetics', 'Pharmacodynamics', 'Drug Classes'],
-            'Public Health': ['Epidemiology', 'Health Policy', 'Environmental Health', 'Global Health'],
-            'Nursing': ['Fundamentals of Nursing', 'Medical-Surgical Nursing', 'Maternity Nursing', 'Pediatric Nursing'],
-            'Physiotherapy': ['Musculoskeletal Physiotherapy', 'Neurological Physiotherapy', 'Cardiorespiratory Physiotherapy', 'Sports Physiotherapy'],
-            'English Literature': ['Poetry', 'Prose', 'Drama', 'Literary Criticism'],
-            'Philosophy': ['Logic', 'Ethics', 'Metaphysics', 'Epistemology'],
-            'Political Science': ['Political Theory', 'Comparative Politics', 'International Relations', 'Public Policy'],
-            'Information Systems': ['Systems Analysis', 'Information Management', 'Enterprise Systems', 'Business Intelligence'],
-            'Entrepreneurship': ['Business Planning', 'Innovation', 'Venture Capital', 'Small Business Management'],
-            'Project Management': ['Project Planning', 'Risk Management', 'Resource Management', 'Agile Methods']
-        };
-
-        // ================================================================
-        //  ICONS
-        // ================================================================
-        const SUBJECT_ICONS = {
-            'Mathematics': '📐',
-            'English': '📖',
-            'Communication': '💬',
-            'Life Sciences': '🧬',
-            'Physical Sciences': '⚛️',
-            'History': '🏛️',
-            'Geography': '🌍',
-            'Accounting': '💰',
-            'Business Studies': '📊',
-            'Economics': '📈',
-            'Engineering Graphics and Design': '📐',
-            'Computer Applications Technology': '💻',
-            'Information Technology': '🖥️',
-            'Consumer Studies': '🛍️',
-            'Tourism': '✈️',
-            'Hospitality Studies': '🍽️',
-            'Agricultural Sciences': '🌾',
-            'Visual Arts': '🎨',
-            'Music': '🎵',
-            'Drama': '🎭',
-            'Design': '✏️',
-            'Academic Writing': '✍️',
-            'Critical Thinking': '🧠',
-            'Research Skills': '🔍',
-            'Computer Literacy': '💻',
-            'Mathematics for Science': '📐',
-            'Physics': '⚡',
-            'Chemistry': '🧪',
-            'Biology': '🧬',
-            'Business Management': '📊',
-            'Marketing': '📢',
-            'Finance': '💹',
-            'Human Resources': '👥',
-            'Commercial Law': '⚖️',
-            'Criminal Law': '⚖️',
-            'Contract Law': '📜',
-            'Constitutional Law': '🏛️',
-            'Legal Research': '🔍',
-            'Psychology': '🧠',
-            'Sociology': '👥',
-            'Social Work': '🤝',
-            'Education': '📚',
-            'Civil Engineering': '🏗️',
-            'Mechanical Engineering': '⚙️',
-            'Electrical Engineering': '⚡',
-            'Chemical Engineering': '🧪',
-            'Programming Fundamentals': '💻',
-            'Database Systems': '🗄️',
-            'Networking': '🌐',
-            'Web Development': '🌍',
-            'Anatomy': '🦴',
-            'Physiology': '🧬',
-            'Pharmacology': '💊',
-            'Public Health': '🏥',
-            'Nursing': '👩‍⚕️',
-            'Physiotherapy': '💪',
-            'English Literature': '📚',
-            'Philosophy': '💭',
-            'Political Science': '🏛️',
-            'Information Systems': '💻',
-            'Entrepreneurship': '🚀',
-            'Project Management': '📋'
-        };
-
-        // ================================================================
-        //  COLLEGE FALLBACK
-        // ================================================================
-        const COLLEGE_FALLBACK_SUBJECTS = {
-            'Communication': ['Academic Writing', 'Public Speaking', 'Critical Analysis', 'Research Communication', 'Business Communication'],
-            'Mathematics for Science': ['Calculus I', 'Linear Algebra', 'Differential Equations', 'Statistics'],
-            'Computer Literacy': ['Operating Systems', 'Word Processing', 'Spreadsheets', 'Digital Security'],
-            'Critical Thinking': ['Logical Reasoning', 'Argument Analysis', 'Cognitive Biases', 'Problem Solving'],
-            'Research Skills': ['Research Design', 'Data Collection', 'Data Analysis', 'Academic Integrity'],
-            'Academic Writing': ['Essay Structure', 'Research Papers', 'Citation Styles', 'Thesis Writing']
-        };
-
-        // ================================================================
-        //  CURRICULUM LOADING
-        // ================================================================
-        function loadCurriculumData() {
-            const country = document.getElementById('signupCountry').value;
-            const curriculumSelect = document.getElementById('signupCurriculum');
-            const gradeSelect = document.getElementById('signupGrade');
-            const subjectContainer = document.getElementById('subjectCheckboxes');
-
-            curriculumSelect.innerHTML = '<option value="">Select curriculum</option>';
-            gradeSelect.innerHTML = '<option value="">Select grade</option>';
-            subjectContainer.innerHTML = '<p style="grid-column:1/-1;color:#6b7280;font-size:0.9rem;">Select your subjects</p>';
-
-            const provinceField = document.getElementById('provinceField');
-            if (country === 'South Africa') {
-                provinceField.style.display = 'block';
-            } else {
-                provinceField.style.display = 'none';
-            }
-
-            if (!country) return;
-
-            const data = CURRICULUM_DATA[country];
-            if (!data) {
-                subjectContainer.innerHTML = '<p style="grid-column:1/-1;color:#6b7280;font-size:0.9rem;">No curriculum data for this country.</p>';
-                return;
-            }
-
-            if (data.curricula && data.curricula.length) {
-                data.curricula.forEach(cur => {
-                    const opt = document.createElement('option');
-                    opt.value = cur;
-                    opt.textContent = cur;
-                    curriculumSelect.appendChild(opt);
-                });
-            }
-
-            if (data.curricula && data.curricula.length === 1) {
-                curriculumSelect.value = data.curricula[0];
-                loadGrades();
-            }
-        }
-
-        function loadGrades() {
-            const country = document.getElementById('signupCountry').value;
-            const curriculum = document.getElementById('signupCurriculum').value;
-            const gradeSelect = document.getElementById('signupGrade');
-            gradeSelect.innerHTML = '<option value="">Select grade</option>';
-
-            if (!country || !curriculum) return;
-
-            const data = CURRICULUM_DATA[country];
-            if (!data) return;
-
-            const subjectsForCurriculum = data.subjects && data.subjects[curriculum];
-            if (!subjectsForCurriculum) return;
-
-            const grades = Object.keys(subjectsForCurriculum);
-            grades.forEach(g => {
-                const opt = document.createElement('option');
-                opt.value = g;
-                const label = g === 'College' ? 'College / Tertiary' : 'Grade ' + g;
-                opt.textContent = label;
-                gradeSelect.appendChild(opt);
+        function goToStep(step) {
+            document.querySelectorAll('.signup-step').forEach(el => el.style.display = 'none');
+            const target = document.querySelector(`.signup-step[data-step="${step}"]`);
+            if (target) target.style.display = 'block';
+            // Update stepper
+            document.querySelectorAll('.step-circle').forEach(el => {
+                const s = parseInt(el.dataset.step);
+                el.classList.remove('active', 'done');
+                if (s < step) el.classList.add('done');
+                else if (s === step) el.classList.add('active');
             });
+            currentStep = step;
         }
 
-        function loadSubjects() {
-            const country = document.getElementById('signupCountry').value;
-            const curriculum = document.getElementById('signupCurriculum').value;
-            const grade = document.getElementById('signupGrade').value;
+        function nextStep(step) {
+            // Validate current step before moving
+            if (step === 2) {
+                const fname = document.getElementById('signupFirstName').value.trim();
+                const lname = document.getElementById('signupLastName').value.trim();
+                const email = document.getElementById('signupEmail').value.trim();
+                const pass = document.getElementById('signupPassword').value.trim();
+                if (!fname || !lname || !email || !pass) {
+                    alert('Please fill in all personal details.');
+                    return;
+                }
+                if (pass.length < 6) {
+                    alert('Password must be at least 6 characters.');
+                    return;
+                }
+                signupData.firstName = fname;
+                signupData.lastName = lname;
+                signupData.email = email;
+                signupData.password = pass;
+            }
+            if (step === 3) {
+                const country = document.getElementById('signupCountry').value;
+                const province = document.getElementById('signupProvince').value;
+                if (!country) { alert('Please select your country.'); return; }
+                signupData.countryId = parseInt(country);
+                signupData.province = province || null;
+            }
+            if (step === 4) {
+                const level = document.getElementById('signupLevel').value;
+                const grade = document.getElementById('signupGrade').value;
+                if (!level || !grade) { alert('Please select education level and grade.'); return; }
+                signupData.educationLevelId = parseInt(level);
+                signupData.gradeId = parseInt(grade);
+            }
+            if (step === 5) {
+                const curriculum = document.getElementById('signupCurriculum').value;
+                if (!curriculum) { alert('Please select your curriculum.'); return; }
+                signupData.curriculumId = parseInt(curriculum);
+            }
+            goToStep(step);
+        }
+
+        function prevStep(step) {
+            goToStep(step);
+        }
+
+        // ================================================================
+        //  DYNAMIC DROPDOWNS
+        // ================================================================
+        async function loadCountries() {
+            try {
+                const res = await fetch('/api/countries');
+                const data = await res.json();
+                const sel = document.getElementById('signupCountry');
+                sel.innerHTML = '<option value="">Select country</option>';
+                data.forEach(c => {
+                    const opt = document.createElement('option');
+                    opt.value = c.id;
+                    opt.textContent = c.name;
+                    sel.appendChild(opt);
+                });
+            } catch (e) {
+                console.error('Error loading countries:', e);
+            }
+        }
+
+        async function loadProvinces() {
+            const countryId = document.getElementById('signupCountry').value;
+            const sel = document.getElementById('signupProvince');
+            sel.innerHTML = '<option value="">Select province</option>';
+            if (!countryId) return;
+            try {
+                const res = await fetch(`/api/provinces/${countryId}`);
+                const data = await res.json();
+                data.forEach(p => {
+                    const opt = document.createElement('option');
+                    opt.value = p;
+                    opt.textContent = p;
+                    sel.appendChild(opt);
+                });
+            } catch (e) {
+                console.error('Error loading provinces:', e);
+            }
+        }
+
+        async function loadEducationLevels() {
+            try {
+                const res = await fetch('/api/education-levels');
+                const data = await res.json();
+                const sel = document.getElementById('signupLevel');
+                sel.innerHTML = '<option value="">Select level</option>';
+                data.forEach(l => {
+                    const opt = document.createElement('option');
+                    opt.value = l.id;
+                    opt.textContent = l.name;
+                    sel.appendChild(opt);
+                });
+            } catch (e) {
+                console.error('Error loading education levels:', e);
+            }
+        }
+
+        async function loadGrades() {
+            const levelId = document.getElementById('signupLevel').value;
+            const sel = document.getElementById('signupGrade');
+            sel.innerHTML = '<option value="">Select grade</option>';
+            if (!levelId) return;
+            try {
+                const res = await fetch(`/api/grades/${levelId}`);
+                const data = await res.json();
+                data.forEach(g => {
+                    const opt = document.createElement('option');
+                    opt.value = g.id;
+                    opt.textContent = g.display || g.name;
+                    sel.appendChild(opt);
+                });
+            } catch (e) {
+                console.error('Error loading grades:', e);
+            }
+        }
+
+        async function loadCurricula() {
+            const countryId = document.getElementById('signupCountry').value;
+            const sel = document.getElementById('signupCurriculum');
+            sel.innerHTML = '<option value="">Select curriculum</option>';
+            if (!countryId) return;
+            try {
+                const res = await fetch(`/api/curricula/${countryId}`);
+                const data = await res.json();
+                data.forEach(c => {
+                    const opt = document.createElement('option');
+                    opt.value = c.id;
+                    opt.textContent = c.name;
+                    sel.appendChild(opt);
+                });
+            } catch (e) {
+                console.error('Error loading curricula:', e);
+            }
+        }
+
+        async function loadSubjects() {
+            const curriculumId = document.getElementById('signupCurriculum').value;
+            const gradeId = document.getElementById('signupGrade').value;
             const container = document.getElementById('subjectCheckboxes');
-
             container.innerHTML = '<p style="grid-column:1/-1;color:#6b7280;font-size:0.9rem;">Loading subjects...</p>';
-
-            if (!country || !curriculum || !grade) {
+            if (!curriculumId || !gradeId) {
                 container.innerHTML = '<p style="grid-column:1/-1;color:#6b7280;font-size:0.9rem;">Select your subjects</p>';
                 return;
             }
-
-            const data = CURRICULUM_DATA[country];
-            if (!data) {
-                container.innerHTML = '<p style="grid-column:1/-1;color:#6b7280;font-size:0.9rem;">No curriculum data available.</p>';
-                return;
-            }
-
-            const subjectsForCurriculum = data.subjects && data.subjects[curriculum];
-            if (!subjectsForCurriculum) {
-                container.innerHTML = '<p style="grid-column:1/-1;color:#6b7280;font-size:0.9rem;">No subjects for this curriculum.</p>';
-                return;
-            }
-
-            let subjects = subjectsForCurriculum[grade] || [];
-            if (subjects.length === 0) {
-                container.innerHTML = '<p style="grid-column:1/-1;color:#6b7280;font-size:0.9rem;">No subjects available for this selection.</p>';
-                return;
-            }
-
-            if (grade === 'College') {
-                subjects = subjects.filter(s => s !== 'English');
-                if (!subjects.includes('Communication')) {
-                    subjects.push('Communication');
+            try {
+                const res = await fetch(`/api/subjects/${curriculumId}/${gradeId}`);
+                const subjects = await res.json();
+                if (!subjects.length) {
+                    container.innerHTML = '<p style="grid-column:1/-1;color:#6b7280;font-size:0.9rem;">No subjects available.</p>';
+                    return;
                 }
-                const coreVarsity = ['Mathematics for Science', 'Computer Literacy', 'Critical Thinking', 'Research Skills', 'Academic Writing'];
-                coreVarsity.forEach(core => {
-                    if (!subjects.includes(core)) {
-                        subjects.push(core);
-                    }
-                });
+                container.innerHTML = subjects.map(sub => `
+                            <label>
+                                <input type="checkbox" value="${sub.replace(/"/g, '&quot;')}" class="subject-checkbox" />
+                                ${sub}
+                            </label>
+                        `).join('');
+            } catch (e) {
+                console.error('Error loading subjects:', e);
+                container.innerHTML = '<p style="grid-column:1/-1;color:#6b7280;font-size:0.9rem;">Error loading subjects.</p>';
             }
-
-            subjects.sort();
-
-            container.innerHTML = subjects.map(sub => `
-                        <label style="display:flex;align-items:center;gap:6px;font-size:0.9rem;cursor:pointer;padding:2px 4px;border-radius:4px;transition:background 0.15s;" onmouseenter="this.style.background='#f3f4f6'" onmouseleave="this.style.background=''">
-                            <input type="checkbox" value="${sub.replace(/"/g, '&quot;')}" class="subject-checkbox" />
-                            ${sub}
-                        </label>
-                    `).join('');
-        }
-
-        function getSelectedSubjects() {
-            const checkboxes = document.querySelectorAll('.subject-checkbox:checked');
-            return Array.from(checkboxes).map(cb => cb.value);
         }
 
         // ================================================================
-        //  NAVIGATION
+        //  AUTH – Signup
+        // ================================================================
+        async function signup() {
+            const subjects = Array.from(document.querySelectorAll('.subject-checkbox:checked')).map(cb => cb.value);
+            if (!subjects.length) {
+                document.getElementById('signupError').textContent = 'Please select at least one subject.';
+                document.getElementById('signupError').classList.add('show');
+                return;
+            }
+            signupData.subjects = subjects;
+            signupData.role = 'learner';
+
+            try {
+                const res = await fetch('/signup', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(signupData)
+                });
+                const data = await res.json();
+                if (!res.ok) {
+                    document.getElementById('signupError').textContent = data.error || 'Signup failed';
+                    document.getElementById('signupError').classList.add('show');
+                    return;
+                }
+                document.getElementById('signupSuccess').textContent = 'Account created! Please log in.';
+                document.getElementById('signupSuccess').classList.add('show');
+                setTimeout(() => {
+                    showLogin();
+                    document.getElementById('loginEmail').value = signupData.email;
+                }, 1000);
+            } catch (err) {
+                document.getElementById('signupError').textContent = 'Server error. Please try again.';
+                document.getElementById('signupError').classList.add('show');
+            }
+        }
+
+        // ================================================================
+        //  AUTH – Login
+        // ================================================================
+        async function login() {
+            const email = document.getElementById('loginEmail').value.trim();
+            const password = document.getElementById('loginPassword').value.trim();
+            if (!email || !password) { showError('loginError', 'Please enter email and password'); return; }
+            clearErrors();
+            setButtonLoading('loginBtn', true);
+
+            try {
+                const res = await fetch('/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, password })
+                });
+                const data = await res.json();
+                if (!res.ok) { showError('loginError', data.error || 'Invalid credentials'); return; }
+                if (data.success) {
+                    currentUser = { id: data.user.id, ...data.user };
+                    subscriptionStatus = data.user.subscription?.status || 'trial';
+                    daysRemaining = data.user.subscription?.daysRemaining || 3;
+                    localStorage.setItem('synapse_user', JSON.stringify(currentUser));
+                    showSuccess('loginSuccess', 'Login successful!');
+                    setTimeout(() => {
+                        closeAuth();
+                        document.getElementById('dashboard').classList.add('active');
+                        document.getElementById('heroSection').style.display = 'none';
+                        document.querySelector('.dashboard-preview').style.display = 'none';
+                        document.getElementById('features').style.display = 'none';
+                        document.getElementById('pricing').style.display = 'none';
+                        document.querySelector('.faq').style.display = 'none';
+                        document.getElementById('siteFooter').style.display = 'block';
+                        loadProgress();
+                        initDashboard(currentUser);
+                        setButtonLoading('loginBtn', false);
+                    }, 500);
+                }
+            } catch (err) {
+                showError('loginError', 'Server error. Please try again.');
+                setButtonLoading('loginBtn', false);
+            }
+        }
+
+        // ================================================================
+        //  DASHBOARD
+        // ================================================================
+        function initDashboard(user) {
+            currentUser = user;
+            document.getElementById('userName').textContent = user.firstName + ' ' + user.lastName || 'User';
+            document.getElementById('userRole').textContent = user.role || 'Learner';
+            const gradeDisplay = user.gradeId ? 'Level: ' + (user.gradeName || 'Set') : 'Level: Not set';
+            document.getElementById('userGrade').textContent = gradeDisplay;
+            checkSubscription();
+
+            // Build profile card
+            const profileHtml = `
+                        <div class="profile-card">
+                            <div class="row"><span class="label">Country</span><span class="value">${user.countryName || 'Not set'}</span></div>
+                            ${user.province ? `<div class="row"><span class="label">Province</span><span class="value">${user.province}</span></div>` : ''}
+                            <div class="row"><span class="label">Education Level</span><span class="value">${user.educationLevelName || 'Not set'}</span></div>
+                            <div class="row"><span class="label">Curriculum</span><span class="value">${user.curriculumName || 'Not set'}</span></div>
+                            <div class="row"><span class="label">Grade/Year</span><span class="value">${user.gradeName || 'Not set'}</span></div>
+                            <div class="row"><span class="label">Subjects</span>
+                                <div class="subject-tags">
+                                    ${(user.subjects || []).map(s => `<span class="subject-tag">${s}</span>`).join('')}
+                                    ${(!user.subjects || user.subjects.length === 0) ? '<span style="color:#6b7280;font-size:0.9rem;">None selected</span>' : ''}
+                                </div>
+                            </div>
+                        </div>
+                    `;
+
+            document.getElementById('welcomeMessage').textContent = `Welcome back, ${user.firstName || 'Student'} 👋`;
+            document.getElementById('welcomeSub').innerHTML = `Today's goal: Complete your next lesson. <span class="change-grade-link" onclick="showGradeSelection()">Update Profile</span>`;
+            const container = document.getElementById('dynamicContent');
+            container.innerHTML = profileHtml + `
+                        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin-top:16px;">
+                            <div style="background:linear-gradient(135deg,#eef2ff,white);border-color:#6366f1;padding:24px;border-radius:16px;border:2px solid #6366f1;box-shadow:0 4px 16px rgba(99,102,241,0.06);">
+                                <div style="font-size:2rem;">📚</div><div style="font-weight:700;font-size:1.1rem;color:#0b1120;margin-top:4px;">Continue Learning</div>
+                                <div style="font-size:0.9rem;color:#6b7280;">Resume your last lesson</div>
+                                <button onclick="showSubjects()" style="margin-top:10px;padding:8px 20px;background:#6366f1;color:white;border:none;border-radius:8px;cursor:pointer;font-weight:600;">Resume</button>
+                            </div>
+                            <div style="padding:24px;border-radius:16px;border:1px solid #e5e7eb;background:white;">
+                                <div style="font-size:2rem;">🎯</div><div style="font-weight:700;font-size:1.1rem;color:#0b1120;margin-top:4px;">Today's Goal</div>
+                                <div style="font-size:0.9rem;color:#6b7280;">Complete 1 lesson</div>
+                                <div style="margin-top:8px;height:6px;background:#e5e7eb;border-radius:4px;overflow:hidden;"><div style="width:0%;height:100%;background:linear-gradient(90deg,#6366f1,#8b5cf6);border-radius:4px;"></div></div>
+                            </div>
+                            <div style="padding:24px;border-radius:16px;border:1px solid #e5e7eb;background:white;">
+                                <div style="font-size:2rem;">🏆</div><div style="font-weight:700;font-size:1.1rem;color:#0b1120;margin-top:4px;">Achievements</div>
+                                <div style="font-size:0.9rem;color:#6b7280;">Keep learning!</div>
+                            </div>
+                        </div>
+                        <div style="margin-top:20px;text-align:center;padding:20px;background:#f8fafc;border-radius:16px;border:1px solid #e5e7eb;">
+                            <div style="font-size:1.1rem;font-weight:600;color:#0b1120;">Ready to learn?</div>
+                            <div style="color:#6b7280;font-size:0.95rem;">Pick a subject to get started.</div>
+                            <button onclick="showSubjects()" style="margin-top:12px;padding:12px 32px;background:linear-gradient(135deg,#6366f1,#8b5cf6);color:white;border:none;border-radius:12px;cursor:pointer;font-weight:700;font-size:1rem;">Go to Subjects →</button>
+                        </div>
+                    `;
+            renderSidebar();
+            renderRightSidebar();
+        }
+
+        // ================================================================
+        //  SUBJECTS (simplified for demo – same logic as before)
+        // ================================================================
+        function showSubjects() {
+            // Use the same subject display as before – but we can use user.subjects
+            const subjects = currentUser.subjects || [];
+            if (!subjects.length) {
+                document.getElementById('dynamicContent').innerHTML = `
+                            <div style="text-align:center;padding:40px;">
+                                <div style="font-size:3rem;">📚</div>
+                                <h3 style="margin:16px 0 8px;color:#0b1120;">No Subjects Yet</h3>
+                                <p style="color:#6b7280;max-width:400px;margin:0 auto 20px;">
+                                    You haven't selected any subjects. Update your profile to add them.
+                                </p>
+                                <button onclick="showGradeSelection()" style="padding:12px 32px;background:#6366f1;color:white;border:none;border-radius:12px;cursor:pointer;font-weight:600;">Update Profile</button>
+                            </div>
+                        `;
+                return;
+            }
+            let html = `<div class="subject-grid">`;
+            subjects.forEach(name => {
+                html += `<div class="subject-card" onclick="openSubject('${name}')"><span class="icon">📚</span><span class="name">${name}</span><div class="progress-badge">0%</div></div>`;
+            });
+            html += `</div><button class="back-btn" onclick="initDashboard(currentUser)" style="margin-top:16px;">← Back to Dashboard</button>`;
+            document.getElementById('dynamicContent').innerHTML = html;
+            document.getElementById('welcomeMessage').textContent = 'Your Subjects';
+            document.getElementById('welcomeSub').textContent = 'Select a subject to start learning.';
+        }
+
+        function openSubject(subject) {
+            currentSubject = subject;
+            // For demo, just show a placeholder
+            document.getElementById('dynamicContent').innerHTML = `
+                        <button class="back-btn" onclick="showSubjects()">← Back to Subjects</button>
+                        <div style="padding:20px;text-align:center;">
+                            <h2>${subject}</h2>
+                            <p style="color:#6b7280;">Topics and lessons will appear here.</p>
+                            <button onclick="openTutor('${subject}','Basics')" style="margin-top:12px;padding:10px 24px;background:#6366f1;color:white;border:none;border-radius:8px;cursor:pointer;">Start Lesson</button>
+                        </div>
+                    `;
+            document.getElementById('welcomeMessage').textContent = subject;
+            document.getElementById('welcomeSub').textContent = 'Select a topic.';
+        }
+
+        function openTutor(subject, topic) {
+            document.getElementById('dynamicContent').innerHTML = `
+                        <button class="back-btn" onclick="openSubject('${subject}')">← Back</button>
+                        <div class="tutor-container">
+                            <div class="tutor-header">
+                                <h3>AI Tutor</h3>
+                                <span class="context">${subject} - ${topic}</span>
+                            </div>
+                            <div class="chat-box" id="chatBox"><div class="msg bot">👋 Welcome! Ask me anything — I'll guide you step by step.</div></div>
+                            <div class="chat-input"><input type="text" id="chatInput" placeholder="Type your message..." onkeypress="if(event.key==='Enter') sendChat()" /><button class="btn-send" id="sendBtn" onclick="sendChat()">Send</button></div>
+                            <div class="chat-options"><input type="checkbox" id="speakToggle" /><label for="speakToggle">🔊 AI reads responses aloud</label></div>
+                        </div>
+                    `;
+            setTimeout(() => {
+                document.getElementById('chatInput').value = 'I\'m learning about "' + topic + '" in ' + subject +
+                    '. Can you teach me step by step?';
+                sendChat();
+            }, 500);
+        }
+
+        // ================================================================
+        //  CHAT (same as before)
+        // ================================================================
+        async function sendChat() {
+            const input = document.getElementById('chatInput');
+            const message = input.value.trim();
+            if (!message) return;
+            addMessage('user', message);
+            input.value = '';
+            input.disabled = true;
+            const btn = document.getElementById('sendBtn');
+            btn.disabled = true;
+            btn.innerHTML = '<span class="spinner"></span>';
+
+            const context = document.getElementById('welcomeSub').textContent;
+            const parts = context.split(' — ');
+            const subject = parts[0] || 'General';
+            const topic = parts[1] || '';
+
+            try {
+                const res = await fetch('/chat', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        userId: currentUser.id,
+                        message: message,
+                        subject: subject,
+                        topic: topic
+                    })
+                });
+                const data = await res.json();
+                if (data.reply) addMessage('bot', data.reply);
+                else addMessage('bot', '❌ ' + (data.error || 'No response'));
+            } catch (err) {
+                addMessage('bot', '❌ Server error. Please try again.');
+            } finally {
+                input.disabled = false;
+                input.focus();
+                btn.disabled = false;
+                btn.innerHTML = 'Send';
+            }
+        }
+
+        function addMessage(role, text) {
+            const box = document.getElementById('chatBox');
+            const div = document.createElement('div');
+            div.className = 'msg ' + (role === 'user' ? 'user' : 'bot');
+            if (role === 'bot' && typeof marked !== 'undefined') {
+                marked.setOptions({ breaks: true, gfm: true });
+                div.innerHTML = marked.parse(text);
+            } else { div.textContent = text; }
+            box.appendChild(div);
+            box.scrollTop = box.scrollHeight;
+            if (role === 'bot' && document.getElementById('speakToggle').checked) {
+                let clean = text.replace(/#{1,6}\s?/g, '').replace(/\*\*/g, '').replace(/\*/g, '').replace(/`/g, '')
+                    .replace(/[\\*\/_\-~#`|]/g, ' ').replace(/[📚🎯✏️🤔💡✅❌]/g, '').replace(/\s+/g, ' ').trim();
+                if (clean.length > 300) clean = clean.substring(0, 300) + '...';
+                window.speechSynthesis.cancel();
+                const u = new SpeechSynthesisUtterance(clean);
+                u.lang = 'en-US';
+                u.rate = 0.9;
+                const voices = window.speechSynthesis.getVoices();
+                const preferred = voices.find(v => v.lang.includes('en') && (v.name.includes('Google') || v.name
+                .includes('Natural')));
+                if (preferred) u.voice = preferred;
+                window.speechSynthesis.speak(u);
+            }
+        }
+
+        // ================================================================
+        //  SIDEBARS (simplified)
+        // ================================================================
+        function renderSidebar() {
+            const subjects = currentUser.subjects || [];
+            const list = document.getElementById('subjectList');
+            list.innerHTML = '';
+            subjects.forEach(name => {
+                const li = document.createElement('li');
+                li.textContent = name;
+                li.onclick = () => { currentSubject = name;
+                    openSubject(name); };
+                list.appendChild(li);
+            });
+            document.getElementById('progressContainer').innerHTML = `
+                        <div class="progress-item"><div class="label"><span>Overall Progress</span><span>0%</span></div><div class="bar"><div class="fill" style="width:0%;"></div></div></div>
+                    `;
+            document.getElementById('recentContainer').innerHTML = `<div style="font-size:0.85rem;color:#6b7280;">No recent activity</div>`;
+        }
+
+        function renderRightSidebar() {
+            document.getElementById('flashcardContainer').innerHTML = `
+                        <div class="flashcard-item"><div class="term">Tip</div><div class="def">Start with your weakest subject.</div></div>
+                    `;
+            document.getElementById('errorContainer').innerHTML = `
+                        <div class="error-item"><div class="concept">💡 Keep going!</div><div class="hint">Practice makes perfect.</div></div>
+                    `;
+        }
+
+        // ================================================================
+        //  NAVIGATION HELPERS
         // ================================================================
         function showInfoPage(page) {
             document.querySelectorAll('.info-page').forEach(el => el.classList.remove('active'));
@@ -2073,8 +1844,14 @@
             document.getElementById('loginPage').style.display = 'none';
             document.getElementById('signupPage').style.display = 'block';
             clearErrors();
-            const country = document.getElementById('signupCountry').value;
-            if (country) loadCurriculumData();
+            goToStep(1);
+            loadCountries();
+            loadEducationLevels();
+            // Load curricula when country changes
+            document.getElementById('signupCountry').addEventListener('change', loadCurricula);
+            document.getElementById('signupLevel').addEventListener('change', loadGrades);
+            document.getElementById('signupGrade').addEventListener('change', loadSubjects);
+            document.getElementById('signupCurriculum').addEventListener('change', loadSubjects);
         }
 
         function showLogin() {
@@ -2104,512 +1881,7 @@
         }
 
         // ================================================================
-        //  AUTH
-        // ================================================================
-        async function login() {
-            const email = document.getElementById('loginEmail').value.trim();
-            const password = document.getElementById('loginPassword').value.trim();
-            if (!email || !password) { showError('loginError', 'Please enter email and password'); return; }
-            clearErrors();
-            setButtonLoading('loginBtn', true);
-
-            try {
-                const res = await fetch('/login', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ email, password })
-                });
-                const data = await res.json();
-                if (!res.ok) { showError('loginError', data.error || 'Invalid credentials'); return; }
-                if (data.success) {
-                    currentUser = { id: email, ...data.user };
-                    subscriptionStatus = data.subscription?.status || 'trial';
-                    daysRemaining = data.subscription?.daysRemaining || 3;
-                    localStorage.setItem('synapse_user', JSON.stringify(currentUser));
-                    showSuccess('loginSuccess', 'Login successful!');
-                    setTimeout(() => {
-                        closeAuth();
-                        document.getElementById('dashboard').classList.add('active');
-                        document.getElementById('heroSection').style.display = 'none';
-                        document.querySelector('.dashboard-preview').style.display = 'none';
-                        document.getElementById('features').style.display = 'none';
-                        document.getElementById('pricing').style.display = 'none';
-                        document.querySelector('.faq').style.display = 'none';
-                        document.getElementById('siteFooter').style.display = 'block';
-                        loadProgress();
-                        initDashboard(currentUser);
-                        setButtonLoading('loginBtn', false);
-                    }, 500);
-                }
-            } catch (err) {
-                showError('loginError', 'Server error. Please try again.');
-                setButtonLoading('loginBtn', false);
-            }
-        }
-
-        async function signup() {
-            const name = document.getElementById('signupName').value.trim();
-            const email = document.getElementById('signupEmail').value.trim();
-            const password = document.getElementById('signupPassword').value.trim();
-            const country = document.getElementById('signupCountry').value;
-            const province = document.getElementById('signupProvince').value;
-            const curriculum = document.getElementById('signupCurriculum').value;
-            const grade = document.getElementById('signupGrade').value;
-            const school = document.getElementById('signupSchool').value.trim();
-            const role = document.getElementById('signupRole').value;
-            let subjects = getSelectedSubjects();
-
-            if (!name || !email || !password || !country || !curriculum || !grade || !subjects.length) {
-                showError('signupError', 'Please fill all required fields and select at least one subject.');
-                return;
-            }
-            if (password.length < 6) { showError('signupError', 'Password must be at least 6 characters'); return; }
-
-            if (grade === 'College') {
-                if (!subjects.includes('Communication')) {
-                    subjects.push('Communication');
-                }
-                const coreVarsity = ['Mathematics for Science', 'Computer Literacy', 'Critical Thinking', 'Research Skills', 'Academic Writing'];
-                coreVarsity.forEach(core => {
-                    if (!subjects.includes(core)) {
-                        subjects.push(core);
-                    }
-                });
-            }
-
-            clearErrors();
-            setButtonLoading('signupBtn', true);
-
-            try {
-                const res = await fetch('/signup', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ email, password, name, country, province, curriculum, grade, school, subjects, role })
-                });
-                const data = await res.json();
-                if (!res.ok) { showError('signupError', data.error || 'Signup failed'); return; }
-                if (data.success) {
-                    showSuccess('signupSuccess', 'Account created! Please log in.');
-                    setTimeout(() => {
-                        showLogin();
-                        document.getElementById('loginEmail').value = email;
-                        setButtonLoading('signupBtn', false);
-                    }, 1000);
-                }
-            } catch (err) {
-                showError('signupError', 'Server error. Please try again.');
-                setButtonLoading('signupBtn', false);
-            }
-        }
-
-        // ================================================================
-        //  DASHBOARD
-        // ================================================================
-        function initDashboard(user) {
-            currentUser = user;
-            document.getElementById('userName').textContent = user.name || 'User';
-            document.getElementById('userRole').textContent = user.role || 'Learner';
-            const gradeDisplay = user.grade === 'College' ? 'College' : (user.grade ? 'Grade ' + user.grade : 'Level: Not set');
-            document.getElementById('userGrade').textContent = gradeDisplay;
-            checkSubscription();
-
-            if (user.grade === 'College' && user.subjects) {
-                if (user.subjects.includes('English')) {
-                    user.subjects = user.subjects.filter(s => s !== 'English');
-                    if (!user.subjects.includes('Communication')) {
-                        user.subjects.push('Communication');
-                    }
-                    const coreVarsity = ['Mathematics for Science', 'Computer Literacy', 'Critical Thinking', 'Research Skills', 'Academic Writing'];
-                    coreVarsity.forEach(core => {
-                        if (!user.subjects.includes(core)) {
-                            user.subjects.push(core);
-                        }
-                    });
-                    localStorage.setItem('synapse_user', JSON.stringify(user));
-                    currentUser = user;
-                }
-            }
-
-            if (!user.subjects || user.subjects.length === 0) {
-                document.getElementById('welcomeMessage').textContent = 'Welcome, ' + user.name + ' 👋';
-                document.getElementById('welcomeSub').innerHTML = 'You don\'t have any subjects selected. <span class="change-grade-link" onclick="showGradeSelection()">Update Profile</span>';
-                const container = document.getElementById('dynamicContent');
-                container.innerHTML = `
-                            <div style="text-align:center;padding:40px;">
-                                <div style="font-size:3rem;">📚</div>
-                                <h3 style="margin:16px 0 8px;color:#0b1120;">No Subjects Yet</h3>
-                                <p style="color:#6b7280;max-width:400px;margin:0 auto 20px;">
-                                    You haven't selected any subjects. Please update your profile to start learning.
-                                </p>
-                                <button onclick="showGradeSelection()" style="padding:12px 32px;background:#6366f1;color:white;border:none;border-radius:12px;cursor:pointer;font-weight:600;">Update Profile</button>
-                            </div>
-                        `;
-                renderSidebar();
-                return;
-            }
-
-            showDashboardHome();
-        }
-
-        function showDashboardHome() {
-            currentView = 'welcome';
-            const container = document.getElementById('dynamicContent');
-            const levelLabel = (currentUser.grade === 'College') ? 'College / Tertiary' : 'Grade ' + currentUser.grade;
-            let totalCompleted = 0,
-                totalTopics = 0;
-            for (const subject in progressData) { const data = progressData[subject]; if (data && data.completed && data.total) { totalCompleted += data.completed.length;
-                    totalTopics += data.total; } }
-            const overallPercent = totalTopics > 0 ? Math.round((totalCompleted / totalTopics) * 100) : 0;
-
-            const isPremium = subscriptionStatus === 'active';
-            const subIcon = isPremium ? '⭐' : '🆓';
-            const subLabel = isPremium ? 'Premium' : 'Free Plan';
-            const subDetail = isPremium ? 'Your subscription is active' : `${daysRemaining} days remaining in trial`;
-            const upgradeBtn = isPremium ? '' : `<button onclick="subscribe()" style="margin-top:10px;padding:8px 20px;background:#6366f1;color:white;border:none;border-radius:8px;cursor:pointer;font-weight:600;">Upgrade to Premium</button>`;
-
-            container.innerHTML = `
-                        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin-top:16px;">
-                            <div style="background:linear-gradient(135deg,#1a1a3e, #0b1120);padding:24px;border-radius:16px;color:white;border:2px solid ${isPremium ? '#22c55e' : '#6366f1'};">
-                                <div style="font-size:2rem;">${subIcon}</div>
-                                <div style="font-weight:700;font-size:1.1rem;margin-top:4px;">${subLabel}</div>
-                                <div style="font-size:0.9rem;opacity:0.8;">${subDetail}</div>
-                                ${upgradeBtn}
-                            </div>
-                            <div style="background:linear-gradient(135deg,#eef2ff,white);border-color:#6366f1;padding:24px;border-radius:16px;border:2px solid #6366f1;box-shadow:0 4px 16px rgba(99,102,241,0.06);">
-                                <div style="font-size:2rem;">📚</div><div style="font-weight:700;font-size:1.1rem;color:#0b1120;margin-top:4px;">Continue Learning</div>
-                                <div style="font-size:0.9rem;color:#6b7280;">Resume your last lesson</div>
-                                <button onclick="showSubjects()" style="margin-top:10px;padding:8px 20px;background:#6366f1;color:white;border:none;border-radius:8px;cursor:pointer;font-weight:600;">Resume</button>
-                            </div>
-                            <div style="padding:24px;border-radius:16px;border:1px solid #e5e7eb;background:white;">
-                                <div style="font-size:2rem;">🎯</div><div style="font-weight:700;font-size:1.1rem;color:#0b1120;margin-top:4px;">Today's Goal</div>
-                                <div style="font-size:0.9rem;color:#6b7280;">Complete 1 lesson</div>
-                                <div style="margin-top:8px;height:6px;background:#e5e7eb;border-radius:4px;overflow:hidden;"><div style="width:${overallPercent}%;height:100%;background:linear-gradient(90deg,#6366f1,#8b5cf6);border-radius:4px;"></div></div>
-                            </div>
-                            <div style="padding:24px;border-radius:16px;border:1px solid #e5e7eb;background:white;">
-                                <div style="font-size:2rem;">🏆</div><div style="font-weight:700;font-size:1.1rem;color:#0b1120;margin-top:4px;">Achievements</div>
-                                <div style="font-size:0.9rem;color:#6b7280;">${totalCompleted} topics completed</div>
-                            </div>
-                        </div>
-                        <div style="margin-top:20px;text-align:center;padding:20px;background:#f8fafc;border-radius:16px;border:1px solid #e5e7eb;">
-                            <div style="font-size:1.1rem;font-weight:600;color:#0b1120;">Ready to learn?</div>
-                            <div style="color:#6b7280;font-size:0.95rem;">You're in ${levelLabel}. Pick a subject to get started.</div>
-                            <button onclick="showSubjects()" style="margin-top:12px;padding:12px 32px;background:linear-gradient(135deg,#6366f1,#8b5cf6);color:white;border:none;border-radius:12px;cursor:pointer;font-weight:700;font-size:1rem;">Go to Subjects →</button>
-                        </div>
-                    `;
-            document.getElementById('welcomeMessage').textContent = 'Welcome back, ' + (currentUser.name || 'Student') + ' 👋';
-            document.getElementById('welcomeSub').innerHTML = 'Today\'s goal: Complete your next lesson. <span class="change-grade-link" onclick="showGradeSelection()">Change Level</span>';
-        }
-
-        function showGradeSelection() {
-            currentView = 'grades';
-            const grades = ['10', '11', '12', 'College'];
-            document.getElementById('welcomeMessage').textContent = 'Select Your Level';
-            document.getElementById('welcomeSub').innerHTML = 'Choose your grade (10–12) or <strong>College / Tertiary</strong>.';
-            const container = document.getElementById('dynamicContent');
-            let html = `<div class="grade-grid">`;
-            grades.forEach(g => {
-                const label = (g === 'College') ? 'College / Tertiary' : 'Grade ' + g;
-                const sub = (g === 'College') ? 'Higher Education' : '';
-                html += `<div class="grade-card" data-grade="${g}" onclick="selectGrade('${g}')">${label}${sub ? `<span class="sub">${sub}</span>` : ''}</div>`;
-            });
-            html += `</div><button class="btn-confirm" id="gradeConfirmBtn" onclick="confirmGrade()">Continue to Subjects →</button>`;
-            container.innerHTML = html;
-        }
-
-        let tempSelectedGrade = '';
-
-        function selectGrade(grade) { tempSelectedGrade = grade;
-            document.querySelectorAll('.grade-card').forEach(c => c.classList.remove('selected'));
-            document.querySelector(`.grade-card[data-grade="${grade}"]`).classList.add('selected');
-            document.getElementById('gradeConfirmBtn').style.display = 'block'; }
-
-        function confirmGrade() {
-            if (!tempSelectedGrade) { alert('Please select your level.'); return; }
-            selectedGrade = tempSelectedGrade;
-
-            let subjects = currentUser.subjects || [];
-            if (selectedGrade === 'College') {
-                subjects = subjects.filter(s => s !== 'English');
-                if (!subjects.includes('Communication')) {
-                    subjects.push('Communication');
-                }
-                const coreVarsity = ['Mathematics for Science', 'Computer Literacy', 'Critical Thinking', 'Research Skills', 'Academic Writing'];
-                coreVarsity.forEach(core => {
-                    if (!subjects.includes(core)) {
-                        subjects.push(core);
-                    }
-                });
-            }
-
-            fetch('/save-profile', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ userId: currentUser.id, name: currentUser.name, country: currentUser.country, grade: selectedGrade, curriculum: currentUser.curriculum, province: currentUser.province, subjects: subjects })
-            }).catch(() => {});
-
-            currentUser.grade = selectedGrade;
-            currentUser.subjects = subjects;
-            localStorage.setItem('synapse_user', JSON.stringify(currentUser));
-            document.getElementById('userGrade').textContent = selectedGrade === 'College' ? 'College' : 'Grade ' + selectedGrade;
-            showSubjects();
-        }
-
-        // ================================================================
-        //  SUBJECTS
-        // ================================================================
-        function showSubjects() {
-            currentView = 'subjects';
-            let subjects = {};
-
-            if (currentUser.grade === 'College' && (!currentUser.subjects || currentUser.subjects.length === 0)) {
-                for (const [name, topics] of Object.entries(COLLEGE_FALLBACK_SUBJECTS)) {
-                    subjects[name] = topics;
-                }
-            } else if (currentUser.subjects && currentUser.subjects.length > 0) {
-                let userSubjects = currentUser.subjects;
-                if (currentUser.grade === 'College') {
-                    userSubjects = userSubjects.filter(s => s !== 'English');
-                    if (!userSubjects.includes('Communication')) {
-                        userSubjects.push('Communication');
-                    }
-                }
-                userSubjects.forEach(sub => {
-                    const topics = DEFAULT_TOPICS[sub] || ['Introduction', 'Basics', 'Intermediate', 'Advanced', 'Expert'];
-                    subjects[sub] = topics;
-                });
-            } else {
-                if (currentUser.grade === 'College') {
-                    for (const [name, topics] of Object.entries(COLLEGE_FALLBACK_SUBJECTS)) {
-                        subjects[name] = topics;
-                    }
-                } else {
-                    subjects = {
-                        'Mathematics': DEFAULT_TOPICS['Mathematics'],
-                        'English': DEFAULT_TOPICS['English']
-                    };
-                }
-            }
-
-            initProgress(subjects);
-            document.getElementById('welcomeMessage').textContent = 'Your Subjects';
-            document.getElementById('welcomeSub').innerHTML = (currentUser.curriculum || '') + ' · ' + (currentUser.grade || '') + ' · Select a subject to start learning.';
-            const container = document.getElementById('dynamicContent');
-            let html = `<div class="subject-grid">`;
-            const sortedSubjects = Object.keys(subjects).sort();
-            sortedSubjects.forEach(name => {
-                const prog = getSubjectProgress(name);
-                html += `<div class="subject-card" onclick="openSubject('${name}')"><span class="icon">${SUBJECT_ICONS[name] || '📚'}</span><span class="name">${name}</span><div class="progress-badge">${prog.percent}%</div></div>`;
-            });
-            html += `</div><button class="back-btn" onclick="showDashboardHome()" style="margin-top:16px;">← Back to Dashboard</button>`;
-            container.innerHTML = html;
-            renderSidebar();
-        }
-
-        function openSubject(subject) {
-            currentSubject = subject;
-            const topics = DEFAULT_TOPICS[subject] || ['Introduction', 'Basics', 'Intermediate', 'Advanced', 'Expert'];
-            if (!progressData[subject]) { progressData[subject] = { completed: [], total: topics.length };
-                saveProgress(); }
-            document.getElementById('welcomeMessage').textContent = subject;
-            document.getElementById('welcomeSub').textContent = 'Select a topic to start learning.';
-            const container = document.getElementById('dynamicContent');
-            let html = `<div style="margin-bottom:12px;color:#6b7280;font-size:0.9rem;">Showing ${topics.length} topics</div><div class="topic-grid">`;
-            topics.forEach(t => {
-                const completed = isTopicCompleted(subject, t);
-                const cls = completed ? 'topic-card completed' : 'topic-card';
-                const badgeText = completed ? '✅ Completed' : 'Not started';
-                html += `<div class="${cls}" onclick="openTutor('${subject}', '${t}')"><div class="title">${t}</div><div class="meta">${subject}</div><div class="resources"><span class="tag">Lesson</span><span class="tag">Quiz</span><span class="tag">Worksheet</span></div><div class="status-badge">${badgeText}</div></div>`;
-            });
-            html += `</div><button class="back-btn" onclick="showSubjects()" style="margin-top:16px;">← Back to Subjects</button>`;
-            container.innerHTML = html;
-            renderRightSidebar();
-            renderSidebar();
-        }
-
-        // ================================================================
-        //  AI TUTOR
-        // ================================================================
-        function openTutor(subject, topic) {
-            currentView = 'tutor';
-            document.getElementById('welcomeMessage').textContent = '💬 AI Tutor';
-            document.getElementById('welcomeSub').textContent = subject + ' — ' + topic;
-            const container = document.getElementById('dynamicContent');
-            container.innerHTML = `
-                        <button class="back-btn" onclick="openSubject('${subject}')">← Back to Topics</button>
-                        <div class="tutor-container">
-                            <div class="tutor-header">
-                                <h3>AI Tutor</h3>
-                                <span class="context">${subject} - ${topic}</span>
-                                <button id="completeBtn" onclick="markComplete('${subject}','${topic}')" style="padding:6px 16px;border-radius:8px;border:2px solid #22c55e;background:white;color:#22c55e;font-weight:600;cursor:pointer;transition:all 0.2s;">${isTopicCompleted(subject, topic) ? '✅ Completed' : 'Mark as Complete'}</button>
-                            </div>
-                            <div class="chat-box" id="chatBox"><div class="msg bot">👋 Welcome! Ask me anything — I'll guide you step by step.</div></div>
-                            <div class="chat-input"><input type="text" id="chatInput" placeholder="Type your message..." onkeypress="if(event.key==='Enter') sendChat()" /><button class="btn-send" id="sendBtn" onclick="sendChat()">Send</button></div>
-                            <div class="chat-options"><input type="checkbox" id="speakToggle" /><label for="speakToggle">🔊 AI reads responses aloud</label></div>
-                        </div>
-                    `;
-            setTimeout(() => {
-                document.getElementById('chatInput').value = 'I\'m learning about "' + topic + '" in ' + subject + '. Can you teach me step by step?';
-                sendChat();
-            }, 500);
-            renderSidebar();
-        }
-
-        function markComplete(subject, topic) {
-            if (isTopicCompleted(subject, topic)) { alert('This topic is already completed!'); return; }
-            if (markTopicCompleted(subject, topic)) {
-                const btn = document.getElementById('completeBtn');
-                if (btn) { btn.textContent = '✅ Completed';
-                    btn.style.background = '#d1fae5';
-                    btn.style.borderColor = '#22c55e';
-                    btn.style.color = '#065f46'; }
-                alert('🎉 Great job! Topic marked as complete.');
-                renderSidebar();
-            }
-        }
-
-        // ================================================================
-        //  CHAT – sends subject and topic to server
-        // ================================================================
-        async function sendChat() {
-            const input = document.getElementById('chatInput');
-            const message = input.value.trim();
-            if (!message) return;
-
-            addMessage('user', message);
-            input.value = '';
-            input.disabled = true;
-            const btn = document.getElementById('sendBtn');
-            btn.disabled = true;
-            btn.innerHTML = '<span class="spinner"></span>';
-
-            const context = document.getElementById('welcomeSub').textContent;
-            const parts = context.split(' — ');
-            const subject = parts[0] || 'General';
-            const topic = parts[1] || '';
-
-            try {
-                const res = await fetch('/chat', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        userId: currentUser.id,
-                        message: message,
-                        subject: subject,
-                        topic: topic
-                    })
-                });
-                const data = await res.json();
-                if (data.reply) addMessage('bot', data.reply);
-                else addMessage('bot', '❌ ' + (data.error || 'No response'));
-            } catch (err) {
-                console.error('Chat error:', err);
-                addMessage('bot', '❌ Server error. Please try again.');
-            } finally {
-                input.disabled = false;
-                input.focus();
-                btn.disabled = false;
-                btn.innerHTML = 'Send';
-            }
-        }
-
-        function addMessage(role, text) {
-            const box = document.getElementById('chatBox');
-            const div = document.createElement('div');
-            div.className = 'msg ' + (role === 'user' ? 'user' : 'bot');
-            if (role === 'bot' && typeof marked !== 'undefined') {
-                marked.setOptions({ breaks: true, gfm: true });
-                div.innerHTML = marked.parse(text);
-            } else { div.textContent = text; }
-            box.appendChild(div);
-            box.scrollTop = box.scrollHeight;
-            if (role === 'bot' && document.getElementById('speakToggle').checked) {
-                let clean = text.replace(/#{1,6}\s?/g, '').replace(/\*\*/g, '').replace(/\*/g, '').replace(/`/g, '').replace(/[\\*\/_\-~#`|]/g, ' ').replace(/[📚🎯✏️🤔💡✅❌]/g, '').replace(/\s+/g, ' ').trim();
-                if (clean.length > 300) clean = clean.substring(0, 300) + '...';
-                window.speechSynthesis.cancel();
-                const u = new SpeechSynthesisUtterance(clean);
-                u.lang = 'en-US';
-                u.rate = 0.9;
-                const voices = window.speechSynthesis.getVoices();
-                const preferred = voices.find(v => v.lang.includes('en') && (v.name.includes('Google') || v.name.includes('Natural')));
-                if (preferred) u.voice = preferred;
-                window.speechSynthesis.speak(u);
-            }
-        }
-
-        // ================================================================
-        //  SIDEBARS
-        // ================================================================
-        function renderSidebar() {
-            let subjects = {};
-
-            if (currentUser.grade === 'College' && (!currentUser.subjects || currentUser.subjects.length === 0)) {
-                for (const [name, topics] of Object.entries(COLLEGE_FALLBACK_SUBJECTS)) {
-                    subjects[name] = topics;
-                }
-            } else if (currentUser.subjects && currentUser.subjects.length > 0) {
-                let userSubjects = currentUser.subjects;
-                if (currentUser.grade === 'College') {
-                    userSubjects = userSubjects.filter(s => s !== 'English');
-                    if (!userSubjects.includes('Communication')) {
-                        userSubjects.push('Communication');
-                    }
-                }
-                userSubjects.forEach(sub => {
-                    const topics = DEFAULT_TOPICS[sub] || ['Introduction', 'Basics', 'Intermediate', 'Advanced', 'Expert'];
-                    subjects[sub] = topics;
-                });
-            } else {
-                if (currentUser.grade === 'College') {
-                    for (const [name, topics] of Object.entries(COLLEGE_FALLBACK_SUBJECTS)) {
-                        subjects[name] = topics;
-                    }
-                } else {
-                    subjects = {
-                        'Mathematics': DEFAULT_TOPICS['Mathematics'],
-                        'English': DEFAULT_TOPICS['English']
-                    };
-                }
-            }
-
-            initProgress(subjects);
-            const list = document.getElementById('subjectList');
-            list.innerHTML = '';
-            Object.keys(subjects).sort().forEach(key => {
-                const prog = getSubjectProgress(key);
-                const li = document.createElement('li');
-                li.className = key === currentSubject ? 'active' : '';
-                li.innerHTML = `<span class="icon">${SUBJECT_ICONS[key] || '📚'}</span>${key}<span class="progress-dot">${prog.percent}%</span>`;
-                li.onclick = () => { currentSubject = key;
-                    renderSidebar();
-                    openSubject(key); };
-                list.appendChild(li);
-            });
-            let totalCompleted = 0,
-                totalTopics = 0;
-            for (const subject in progressData) { const data = progressData[subject]; if (data && data.completed && data.total) { totalCompleted += data.completed.length;
-                    totalTopics += data.total; } }
-            const overallPercent = totalTopics > 0 ? Math.round((totalCompleted / totalTopics) * 100) : 0;
-            document.getElementById('progressContainer').innerHTML = `
-                        <div class="progress-item"><div class="label"><span>Overall Progress</span><span>${overallPercent}%</span></div><div class="bar"><div class="fill" style="width:${overallPercent}%;"></div></div></div>
-                        <div class="progress-item"><div class="label"><span>Topics Completed</span><span>${totalCompleted}/${totalTopics}</span></div><div class="bar"><div class="fill" style="width:${overallPercent}%;"></div></div></div>
-                    `;
-            const recentContainer = document.getElementById('recentContainer');
-            const subjectKeys = Object.keys(subjects);
-            if (subjectKeys.length > 0) {
-                const firstSubject = subjectKeys[0];
-                const firstTopics = subjects[firstSubject] || [];
-                const topic = firstTopics.length > 0 ? firstTopics[0] : 'Getting Started';
-                recentContainer.innerHTML = `<div class="recent-item" onclick="openTutor('${firstSubject}','${topic}')">${topic} <span class="sub">${firstSubject}</span></div><div class="recent-item" onclick="showSubjects()">Browse Subjects <span class="sub">All subjects</span></div>`;
-            } else { recentContainer.innerHTML = `<div style="font-size:0.85rem;color:#6b7280;">No recent activity</div>`; }
-        }
-
-        function renderRightSidebar() {
-            document.getElementById('flashcardContainer').innerHTML = `<div class="flashcard-item"><div class="term">Slope (m)</div><div class="def">The steepness of a line, rise over run.</div></div><div class="flashcard-item"><div class="term">Y-Intercept (b)</div><div class="def">Where the line crosses the y-axis.</div></div><div class="flashcard-item"><div class="term">Slope-Intercept Form</div><div class="def">y = mx + b</div></div>`;
-            document.getElementById('errorContainer').innerHTML = `<div class="error-item"><div class="concept">⚠️ Slope direction</div><div class="hint">Negative slope goes down, positive goes up.</div></div><div class="error-item"><div class="concept">⚠️ Y-Intercept</div><div class="hint">Remember to check where the line crosses the y-axis.</div></div>`;
-        }
-
-        // ================================================================
-        //  SUBSCRIPTION & PAYMENT
+        //  SUBSCRIPTION & PAYMENT (simplified)
         // ================================================================
         async function checkSubscription() {
             if (!currentUser) return;
@@ -2620,7 +1892,6 @@
                 daysRemaining = data.daysRemaining || 3;
                 updateBadge();
             } catch (err) {
-                console.error('Subscription check error:', err);
                 subscriptionStatus = 'trial';
                 daysRemaining = 3;
                 updateBadge();
@@ -2638,7 +1909,7 @@
                 btnDisplay = 'none'; } else { statusClass = 'sub-expired';
                 statusText = 'Expired'; }
             badge.innerHTML = `<span class="sub-badge ${statusClass}">${statusText}</span>
-                <button id="subscribeBtn" onclick="subscribe()" style="background:linear-gradient(135deg,#6366f1,#8b5cf6);color:white;border:none;padding:6px 16px;border-radius:20px;font-weight:600;font-size:0.8rem;cursor:pointer;font-family:inherit;display:${btnDisplay};">${subscriptionStatus === 'active' ? 'Renew' : 'Subscribe'}</button>`;
+                        <button id="subscribeBtn" onclick="subscribe()" style="background:linear-gradient(135deg,#6366f1,#8b5cf6);color:white;border:none;padding:6px 16px;border-radius:20px;font-weight:600;font-size:0.8rem;cursor:pointer;font-family:inherit;display:${btnDisplay};">${subscriptionStatus === 'active' ? 'Renew' : 'Subscribe'}</button>`;
         }
 
         async function subscribe() {
@@ -2656,7 +1927,6 @@
                     alert('Error creating payment. Please try again.');
                 }
             } catch (err) {
-                console.error('Payment error:', err);
                 alert('Payment service unavailable. Please try again later.');
             }
         }
@@ -2681,6 +1951,13 @@
         }
 
         // ================================================================
+        //  PROGRESS (mock)
+        // ================================================================
+        function loadProgress() {
+            // For demo, we don't store progress persistently
+        }
+
+        // ================================================================
         //  INIT
         // ================================================================
         document.addEventListener('DOMContentLoaded', function() {
@@ -2688,21 +1965,6 @@
             if (stored) {
                 try {
                     const user = JSON.parse(stored);
-                    if (user.grade === 'College' && user.subjects) {
-                        if (user.subjects.includes('English')) {
-                            user.subjects = user.subjects.filter(s => s !== 'English');
-                            if (!user.subjects.includes('Communication')) {
-                                user.subjects.push('Communication');
-                            }
-                            const coreVarsity = ['Mathematics for Science', 'Computer Literacy', 'Critical Thinking', 'Research Skills', 'Academic Writing'];
-                            coreVarsity.forEach(core => {
-                                if (!user.subjects.includes(core)) {
-                                    user.subjects.push(core);
-                                }
-                            });
-                            localStorage.setItem('synapse_user', JSON.stringify(user));
-                        }
-                    }
                     document.getElementById('heroSection').style.display = 'none';
                     document.querySelector('.dashboard-preview').style.display = 'none';
                     document.getElementById('features').style.display = 'none';
@@ -2718,12 +1980,13 @@
             }
             document.addEventListener('keydown', function(e) {
                 if (e.key === 'Enter') {
-                    if (document.getElementById('loginPage').style.display !== 'none' && document.getElementById('authOverlay').classList.contains('active')) { login(); }
-                    if (document.getElementById('signupPage').style.display !== 'none' && document.getElementById('authOverlay').classList.contains('active')) { signup(); }
+                    if (document.getElementById('loginPage').style.display !== 'none' && document.getElementById(
+                            'authOverlay').classList.contains('active')) { login(); }
                 }
             });
             document.addEventListener('keydown', function(e) { if (e.key === 'Escape') closeAuth(); });
-            document.getElementById('authOverlay').addEventListener('click', function(e) { if (e.target === this) closeAuth(); });
+            document.getElementById('authOverlay').addEventListener('click', function(e) { if (e.target === this)
+                closeAuth(); });
         });
     </script>
 </body>
