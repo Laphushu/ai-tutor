@@ -1,4 +1,4 @@
-// server/server.js – Complete app with PostgreSQL, bcrypt, Resend, and fallback
+// server/server.js – Complete app with PostgreSQL, bcrypt, Resend, and test user
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
@@ -42,7 +42,7 @@ async function requireActiveSubscription(req, res, next) {
     return res.status(403).json({ error: 'Subscription expired. Please upgrade to Premium.' });
   } catch (err) {
     console.error('⚠️ Subscription check error:', err.message);
-    // Fallback: allow access for testing (but warn)
+    // Fallback: allow access for testing
     console.warn('⚠️ Allowing access due to database error – for testing only');
     return next();
   }
@@ -175,7 +175,7 @@ app.get('/api/subjects/:curriculumId/:gradeId', (req, res) => {
 });
 
 // ============================================================
-//  AUTH – Signup with bcrypt + database
+//  AUTH – Signup
 // ============================================================
 app.post('/signup', async (req, res) => {
   const { firstName, lastName, email, password, countryId, province, educationLevelId, curriculumId, gradeId, subjects, role } = req.body;
@@ -216,18 +216,20 @@ app.post('/signup', async (req, res) => {
 });
 
 // ============================================================
-//  AUTH – Login
+//  AUTH – Login (with detailed error logging)
 // ============================================================
 app.post('/login', async (req, res) => {
   const { email, password } = req.body;
   try {
     const result = await pool.query('SELECT * FROM users WHERE email = $1', [email]);
     if (result.rows.length === 0) {
+      console.warn(`Login attempt for non-existent email: ${email}`);
       return res.status(401).json({ error: 'Invalid credentials' });
     }
     const user = result.rows[0];
     const valid = await bcrypt.compare(password, user.password_hash);
     if (!valid) {
+      console.warn(`Invalid password for email: ${email}`);
       return res.status(401).json({ error: 'Invalid credentials' });
     }
     const subResult = await pool.query('SELECT * FROM subscriptions WHERE user_id = $1', [user.id]);
@@ -302,7 +304,7 @@ app.post('/create-payment', async (req, res) => {
     const response = await fetch('https://api.paystack.co/transaction/initialize', {
       method: 'POST',
       headers: { 'Authorization': `Bearer ${PAYSTACK_SECRET}`, 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email, amount: 4999, currency: 'ZAR', callback_url: process.env.PAYSTACK_CALLBACK_URL || 'https://synapses-uwh1.onrender.com/success', metadata: { userId } })
+      body: JSON.stringify({ email, amount: 4999, currency: 'ZAR', callback_url: process.env.PAYSTACK_CALLBACK_URL || 'https://leagoacademy.co.za/success', metadata: { userId } })
     });
     const data = await response.json();
     if (!data.status) return res.status(400).json({ error: data.message });
@@ -418,9 +420,37 @@ app.post('/chat', requireActiveSubscription, async (req, res) => {
 app.get('/health', (req, res) => res.send('OK'));
 
 // ============================================================
+//  CREATE TEST USER IF NONE EXISTS
+// ============================================================
+async function ensureTestUser() {
+  try {
+    const result = await pool.query('SELECT * FROM users WHERE email = $1', ['test@leago.com']);
+    if (result.rows.length === 0) {
+      const hash = await bcrypt.hash('password123', SALT_ROUNDS);
+      const res = await pool.query(
+        `INSERT INTO users (email, password_hash, first_name, last_name, country_id, province, education_level_id, curriculum_id, grade_id, role)
+         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) RETURNING id`,
+        ['test@leago.com', hash, 'Test', 'User', 1, 'Gauteng', 1, 1, 104, 'learner']
+      );
+      const userId = res.rows[0].id;
+      await pool.query(
+        `INSERT INTO subscriptions (user_id, status, end_date) VALUES ($1, 'trial', NOW() + INTERVAL '3 days')`,
+        [userId]
+      );
+      console.log('✅ Test user created: test@leago.com / password123');
+    } else {
+      console.log('✅ Test user already exists');
+    }
+  } catch (err) {
+    console.error('Failed to create test user:', err.message);
+  }
+}
+
+// ============================================================
 //  START SERVER AFTER DB INIT
 // ============================================================
-initDB().then(() => {
+initDB().then(async () => {
+  await ensureTestUser();
   app.listen(PORT, () => {
     console.log(`✅ Leago AI Tutor running on port ${PORT}`);
     console.log(`💳 Payments ${PAYSTACK_SECRET ? 'enabled' : 'disabled'}`);
