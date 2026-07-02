@@ -1,4 +1,4 @@
-// server/server.js – Complete app with PostgreSQL, bcrypt, Resend, test user, and admin
+// server/server.js – full with subjects and university courses
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
@@ -15,41 +15,28 @@ app.use(express.json());
 app.use('/paystack-webhook', express.raw({ type: 'application/json' }));
 app.use(express.static(path.join(__dirname, '../client')));
 
-// Resend email client
 const resend = process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KEY) : null;
-
-// ============================================================
-//  SALT ROUNDS FOR BCRYPT
-// ============================================================
 const SALT_ROUNDS = 10;
 
-// ============================================================
-//  SUBSCRIPTION GATING MIDDLEWARE
-// ============================================================
+// Subscription middleware
 async function requireActiveSubscription(req, res, next) {
   const userId = req.body.userId || req.query.userId;
   if (!userId) return res.status(401).json({ error: 'Unauthorized' });
-
   try {
     const result = await pool.query('SELECT status, end_date FROM subscriptions WHERE user_id = $1', [userId]);
-    if (result.rows.length === 0) {
-      return res.status(403).json({ error: 'No subscription found. Please sign up.' });
-    }
+    if (result.rows.length === 0) return res.status(403).json({ error: 'No subscription found' });
     const sub = result.rows[0];
     const now = new Date();
     if (sub.status === 'active' && now < sub.end_date) return next();
     if (sub.status === 'trial' && now < sub.end_date) return next();
-    return res.status(403).json({ error: 'Subscription expired. Please upgrade to Premium.' });
+    return res.status(403).json({ error: 'Subscription expired' });
   } catch (err) {
-    console.error('⚠️ Subscription check error:', err.message);
-    console.warn('⚠️ Allowing access due to database error – for testing only');
+    console.warn('DB error – allowing access for testing');
     return next();
   }
 }
 
-// ============================================================
-//  ADMIN MIDDLEWARE
-// ============================================================
+// Admin middleware
 async function requireAdmin(req, res, next) {
   const userId = req.body.userId || req.query.userId;
   if (!userId) return res.status(401).json({ error: 'Unauthorized' });
@@ -59,14 +46,11 @@ async function requireAdmin(req, res, next) {
     if (result.rows[0].role !== 'admin') return res.status(403).json({ error: 'Admin access required' });
     next();
   } catch (err) {
-    console.error('Admin check error:', err.message);
     res.status(500).json({ error: 'Database error' });
   }
 }
 
-// ============================================================
-//  STATIC DATA
-// ============================================================
+// ===== STATIC DATA =====
 const countries = [
   { id: 1, name: 'South Africa', code: 'ZA' },
   { id: 2, name: 'Kenya', code: 'KE' },
@@ -87,37 +71,37 @@ const countries = [
 ];
 
 const educationLevels = [
-  { id: 1, name: 'High School', sort_order: 0 },
-  { id: 2, name: 'TVET College', sort_order: 1 },
-  { id: 3, name: 'University', sort_order: 2 },
-  { id: 4, name: 'Other', sort_order: 3 }
+  { id: 1, name: 'High School' },
+  { id: 2, name: 'TVET College' },
+  { id: 3, name: 'University' },
+  { id: 4, name: 'Other' }
 ];
 
 const grades = {
   1: [
-    { id: 101, name: 'Grade 8', display: 'Grade 8', sort_order: 0 },
-    { id: 102, name: 'Grade 9', display: 'Grade 9', sort_order: 1 },
-    { id: 103, name: 'Grade 10', display: 'Grade 10', sort_order: 2 },
-    { id: 104, name: 'Grade 11', display: 'Grade 11', sort_order: 3 },
-    { id: 105, name: 'Grade 12', display: 'Grade 12', sort_order: 4 }
+    { id: 101, name: 'Grade 8', display: 'Grade 8' },
+    { id: 102, name: 'Grade 9', display: 'Grade 9' },
+    { id: 103, name: 'Grade 10', display: 'Grade 10' },
+    { id: 104, name: 'Grade 11', display: 'Grade 11' },
+    { id: 105, name: 'Grade 12', display: 'Grade 12' }
   ],
   2: [
-    { id: 201, name: 'N1', display: 'N1', sort_order: 0 },
-    { id: 202, name: 'N2', display: 'N2', sort_order: 1 },
-    { id: 203, name: 'N3', display: 'N3', sort_order: 2 },
-    { id: 204, name: 'N4', display: 'N4', sort_order: 3 },
-    { id: 205, name: 'N5', display: 'N5', sort_order: 4 },
-    { id: 206, name: 'N6', display: 'N6', sort_order: 5 }
+    { id: 201, name: 'N1', display: 'N1' },
+    { id: 202, name: 'N2', display: 'N2' },
+    { id: 203, name: 'N3', display: 'N3' },
+    { id: 204, name: 'N4', display: 'N4' },
+    { id: 205, name: 'N5', display: 'N5' },
+    { id: 206, name: 'N6', display: 'N6' }
   ],
   3: [
-    { id: 301, name: 'First Year', display: 'First Year', sort_order: 0 },
-    { id: 302, name: 'Second Year', display: 'Second Year', sort_order: 1 },
-    { id: 303, name: 'Third Year', display: 'Third Year', sort_order: 2 },
-    { id: 304, name: 'Fourth Year', display: 'Fourth Year', sort_order: 3 },
-    { id: 305, name: 'Postgraduate', display: 'Postgraduate', sort_order: 4 }
+    { id: 301, name: 'First Year', display: 'First Year' },
+    { id: 302, name: 'Second Year', display: 'Second Year' },
+    { id: 303, name: 'Third Year', display: 'Third Year' },
+    { id: 304, name: 'Fourth Year', display: 'Fourth Year' },
+    { id: 305, name: 'Postgraduate', display: 'Postgraduate' }
   ],
   4: [
-    { id: 401, name: 'Other', display: 'Other', sort_order: 0 }
+    { id: 401, name: 'Other', display: 'Other' }
   ]
 };
 
@@ -151,24 +135,37 @@ const curricula = [
   { id: 8, country_id: 4, name: 'Cambridge' }
 ];
 
+// ===== SUBJECT MAP (with university courses) =====
 const subjectMap = {
+  // CAPS (id:1) – High School grades
   1: {
     101: ['Mathematics', 'English Home Language', 'Afrikaans First Additional Language', 'Life Orientation', 'Life Sciences', 'Physical Sciences', 'History', 'Geography', 'Accounting', 'Business Studies', 'Economics', 'Engineering Graphics and Design', 'Computer Applications Technology', 'Information Technology', 'Consumer Studies', 'Tourism', 'Hospitality Studies', 'Agricultural Sciences', 'Visual Arts', 'Music', 'Drama', 'Design'],
     102: ['Mathematics', 'English Home Language', 'Afrikaans First Additional Language', 'Life Orientation', 'Life Sciences', 'Physical Sciences', 'History', 'Geography', 'Accounting', 'Business Studies', 'Economics', 'Engineering Graphics and Design', 'Computer Applications Technology', 'Information Technology', 'Consumer Studies', 'Tourism', 'Hospitality Studies', 'Agricultural Sciences', 'Visual Arts', 'Music', 'Drama', 'Design'],
     103: ['Mathematics', 'English Home Language', 'Afrikaans First Additional Language', 'Life Orientation', 'Life Sciences', 'Physical Sciences', 'History', 'Geography', 'Accounting', 'Business Studies', 'Economics', 'Engineering Graphics and Design', 'Computer Applications Technology', 'Information Technology', 'Consumer Studies', 'Tourism', 'Hospitality Studies', 'Agricultural Sciences', 'Visual Arts', 'Music', 'Drama', 'Design'],
     104: ['Mathematics', 'English Home Language', 'Afrikaans First Additional Language', 'Life Orientation', 'Life Sciences', 'Physical Sciences', 'History', 'Geography', 'Accounting', 'Business Studies', 'Economics', 'Engineering Graphics and Design', 'Computer Applications Technology', 'Information Technology', 'Consumer Studies', 'Tourism', 'Hospitality Studies', 'Agricultural Sciences', 'Visual Arts', 'Music', 'Drama', 'Design'],
-    105: ['Mathematics', 'English Home Language', 'Afrikaans First Additional Language', 'Life Orientation', 'Life Sciences', 'Physical Sciences', 'History', 'Geography', 'Accounting', 'Business Studies', 'Economics', 'Engineering Graphics and Design', 'Computer Applications Technology', 'Information Technology', 'Consumer Studies', 'Tourism', 'Hospitality Studies', 'Agricultural Sciences', 'Visual Arts', 'Music', 'Drama', 'Design']
+    105: ['Mathematics', 'English Home Language', 'Afrikaans First Additional Language', 'Life Orientation', 'Life Sciences', 'Physical Sciences', 'History', 'Geography', 'Accounting', 'Business Studies', 'Economics', 'Engineering Graphics and Design', 'Computer Applications Technology', 'Information Technology', 'Consumer Studies', 'Tourism', 'Hospitality Studies', 'Agricultural Sciences', 'Visual Arts', 'Music', 'Drama', 'Design'],
+    // College (University) – for grade 301-305 (First Year to Postgraduate)
+    301: ['Communication', 'Academic Writing', 'Critical Thinking', 'Research Skills', 'Computer Literacy', 'Mathematics for Science', 'Statistics', 'Physics', 'Chemistry', 'Biology', 'Accounting', 'Economics', 'Business Management', 'Marketing', 'Finance', 'Human Resources', 'Commercial Law', 'Criminal Law', 'Contract Law', 'Constitutional Law', 'Legal Research', 'Criminology', 'Psychology', 'Sociology', 'Social Work', 'Education (Foundation Phase)', 'Education (Intermediate Phase)', 'Educational Psychology', 'Civil Engineering', 'Mechanical Engineering', 'Electrical Engineering', 'Chemical Engineering', 'Programming Fundamentals', 'Database Systems', 'Networking', 'Web Development', 'Anatomy', 'Physiology', 'Pharmacology', 'Public Health', 'Nursing', 'Physiotherapy', 'English Literature', 'History', 'Philosophy', 'Political Science', 'Information Systems', 'Entrepreneurship', 'Project Management'],
+    302: ['Communication', 'Academic Writing', 'Critical Thinking', 'Research Skills', 'Computer Literacy', 'Mathematics for Science', 'Statistics', 'Physics', 'Chemistry', 'Biology', 'Accounting', 'Economics', 'Business Management', 'Marketing', 'Finance', 'Human Resources', 'Commercial Law', 'Criminal Law', 'Contract Law', 'Constitutional Law', 'Legal Research', 'Criminology', 'Psychology', 'Sociology', 'Social Work', 'Education (Foundation Phase)', 'Education (Intermediate Phase)', 'Educational Psychology', 'Civil Engineering', 'Mechanical Engineering', 'Electrical Engineering', 'Chemical Engineering', 'Programming Fundamentals', 'Database Systems', 'Networking', 'Web Development', 'Anatomy', 'Physiology', 'Pharmacology', 'Public Health', 'Nursing', 'Physiotherapy', 'English Literature', 'History', 'Philosophy', 'Political Science', 'Information Systems', 'Entrepreneurship', 'Project Management'],
+    303: ['Communication', 'Academic Writing', 'Critical Thinking', 'Research Skills', 'Computer Literacy', 'Mathematics for Science', 'Statistics', 'Physics', 'Chemistry', 'Biology', 'Accounting', 'Economics', 'Business Management', 'Marketing', 'Finance', 'Human Resources', 'Commercial Law', 'Criminal Law', 'Contract Law', 'Constitutional Law', 'Legal Research', 'Criminology', 'Psychology', 'Sociology', 'Social Work', 'Education (Foundation Phase)', 'Education (Intermediate Phase)', 'Educational Psychology', 'Civil Engineering', 'Mechanical Engineering', 'Electrical Engineering', 'Chemical Engineering', 'Programming Fundamentals', 'Database Systems', 'Networking', 'Web Development', 'Anatomy', 'Physiology', 'Pharmacology', 'Public Health', 'Nursing', 'Physiotherapy', 'English Literature', 'History', 'Philosophy', 'Political Science', 'Information Systems', 'Entrepreneurship', 'Project Management'],
+    304: ['Communication', 'Academic Writing', 'Critical Thinking', 'Research Skills', 'Computer Literacy', 'Mathematics for Science', 'Statistics', 'Physics', 'Chemistry', 'Biology', 'Accounting', 'Economics', 'Business Management', 'Marketing', 'Finance', 'Human Resources', 'Commercial Law', 'Criminal Law', 'Contract Law', 'Constitutional Law', 'Legal Research', 'Criminology', 'Psychology', 'Sociology', 'Social Work', 'Education (Foundation Phase)', 'Education (Intermediate Phase)', 'Educational Psychology', 'Civil Engineering', 'Mechanical Engineering', 'Electrical Engineering', 'Chemical Engineering', 'Programming Fundamentals', 'Database Systems', 'Networking', 'Web Development', 'Anatomy', 'Physiology', 'Pharmacology', 'Public Health', 'Nursing', 'Physiotherapy', 'English Literature', 'History', 'Philosophy', 'Political Science', 'Information Systems', 'Entrepreneurship', 'Project Management'],
+    305: ['Communication', 'Academic Writing', 'Critical Thinking', 'Research Skills', 'Computer Literacy', 'Mathematics for Science', 'Statistics', 'Physics', 'Chemistry', 'Biology', 'Accounting', 'Economics', 'Business Management', 'Marketing', 'Finance', 'Human Resources', 'Commercial Law', 'Criminal Law', 'Contract Law', 'Constitutional Law', 'Legal Research', 'Criminology', 'Psychology', 'Sociology', 'Social Work', 'Education (Foundation Phase)', 'Education (Intermediate Phase)', 'Educational Psychology', 'Civil Engineering', 'Mechanical Engineering', 'Electrical Engineering', 'Chemical Engineering', 'Programming Fundamentals', 'Database Systems', 'Networking', 'Web Development', 'Anatomy', 'Physiology', 'Pharmacology', 'Public Health', 'Nursing', 'Physiotherapy', 'English Literature', 'History', 'Philosophy', 'Political Science', 'Information Systems', 'Entrepreneurship', 'Project Management']
   },
+  // IEB (id:2) – High School and College
   2: {
     103: ['Mathematics', 'English Home Language', 'Afrikaans First Additional Language', 'Life Orientation', 'Life Sciences', 'Physical Sciences', 'History', 'Geography', 'Accounting', 'Business Studies', 'Economics', 'Engineering Graphics and Design', 'Computer Applications Technology', 'Information Technology', 'Consumer Studies', 'Tourism', 'Drama', 'Visual Arts', 'Music', 'Design', 'Agricultural Sciences'],
     104: ['Mathematics', 'English Home Language', 'Afrikaans First Additional Language', 'Life Orientation', 'Life Sciences', 'Physical Sciences', 'History', 'Geography', 'Accounting', 'Business Studies', 'Economics', 'Engineering Graphics and Design', 'Computer Applications Technology', 'Information Technology', 'Consumer Studies', 'Tourism', 'Drama', 'Visual Arts', 'Music', 'Design', 'Agricultural Sciences'],
-    105: ['Mathematics', 'English Home Language', 'Afrikaans First Additional Language', 'Life Orientation', 'Life Sciences', 'Physical Sciences', 'History', 'Geography', 'Accounting', 'Business Studies', 'Economics', 'Engineering Graphics and Design', 'Computer Applications Technology', 'Information Technology', 'Consumer Studies', 'Tourism', 'Drama', 'Visual Arts', 'Music', 'Design', 'Agricultural Sciences']
+    105: ['Mathematics', 'English Home Language', 'Afrikaans First Additional Language', 'Life Orientation', 'Life Sciences', 'Physical Sciences', 'History', 'Geography', 'Accounting', 'Business Studies', 'Economics', 'Engineering Graphics and Design', 'Computer Applications Technology', 'Information Technology', 'Consumer Studies', 'Tourism', 'Drama', 'Visual Arts', 'Music', 'Design', 'Agricultural Sciences'],
+    301: ['Communication', 'Academic Writing', 'Critical Thinking', 'Research Skills', 'Computer Literacy', 'Mathematics for Science', 'Statistics', 'Physics', 'Chemistry', 'Biology', 'Accounting', 'Economics', 'Business Management', 'Marketing', 'Finance', 'Human Resources', 'Commercial Law', 'Criminal Law', 'Contract Law', 'Constitutional Law', 'Legal Research', 'Criminology', 'Psychology', 'Sociology', 'Social Work', 'Education (Foundation Phase)', 'Education (Intermediate Phase)', 'Educational Psychology', 'Civil Engineering', 'Mechanical Engineering', 'Electrical Engineering', 'Chemical Engineering', 'Programming Fundamentals', 'Database Systems', 'Networking', 'Web Development', 'Anatomy', 'Physiology', 'Pharmacology', 'Public Health', 'Nursing', 'Physiotherapy', 'English Literature', 'History', 'Philosophy', 'Political Science', 'Information Systems', 'Entrepreneurship', 'Project Management'],
+    302: ['Communication', 'Academic Writing', 'Critical Thinking', 'Research Skills', 'Computer Literacy', 'Mathematics for Science', 'Statistics', 'Physics', 'Chemistry', 'Biology', 'Accounting', 'Economics', 'Business Management', 'Marketing', 'Finance', 'Human Resources', 'Commercial Law', 'Criminal Law', 'Contract Law', 'Constitutional Law', 'Legal Research', 'Criminology', 'Psychology', 'Sociology', 'Social Work', 'Education (Foundation Phase)', 'Education (Intermediate Phase)', 'Educational Psychology', 'Civil Engineering', 'Mechanical Engineering', 'Electrical Engineering', 'Chemical Engineering', 'Programming Fundamentals', 'Database Systems', 'Networking', 'Web Development', 'Anatomy', 'Physiology', 'Pharmacology', 'Public Health', 'Nursing', 'Physiotherapy', 'English Literature', 'History', 'Philosophy', 'Political Science', 'Information Systems', 'Entrepreneurship', 'Project Management'],
+    303: ['Communication', 'Academic Writing', 'Critical Thinking', 'Research Skills', 'Computer Literacy', 'Mathematics for Science', 'Statistics', 'Physics', 'Chemistry', 'Biology', 'Accounting', 'Economics', 'Business Management', 'Marketing', 'Finance', 'Human Resources', 'Commercial Law', 'Criminal Law', 'Contract Law', 'Constitutional Law', 'Legal Research', 'Criminology', 'Psychology', 'Sociology', 'Social Work', 'Education (Foundation Phase)', 'Education (Intermediate Phase)', 'Educational Psychology', 'Civil Engineering', 'Mechanical Engineering', 'Electrical Engineering', 'Chemical Engineering', 'Programming Fundamentals', 'Database Systems', 'Networking', 'Web Development', 'Anatomy', 'Physiology', 'Pharmacology', 'Public Health', 'Nursing', 'Physiotherapy', 'English Literature', 'History', 'Philosophy', 'Political Science', 'Information Systems', 'Entrepreneurship', 'Project Management'],
+    304: ['Communication', 'Academic Writing', 'Critical Thinking', 'Research Skills', 'Computer Literacy', 'Mathematics for Science', 'Statistics', 'Physics', 'Chemistry', 'Biology', 'Accounting', 'Economics', 'Business Management', 'Marketing', 'Finance', 'Human Resources', 'Commercial Law', 'Criminal Law', 'Contract Law', 'Constitutional Law', 'Legal Research', 'Criminology', 'Psychology', 'Sociology', 'Social Work', 'Education (Foundation Phase)', 'Education (Intermediate Phase)', 'Educational Psychology', 'Civil Engineering', 'Mechanical Engineering', 'Electrical Engineering', 'Chemical Engineering', 'Programming Fundamentals', 'Database Systems', 'Networking', 'Web Development', 'Anatomy', 'Physiology', 'Pharmacology', 'Public Health', 'Nursing', 'Physiotherapy', 'English Literature', 'History', 'Philosophy', 'Political Science', 'Information Systems', 'Entrepreneurship', 'Project Management'],
+    305: ['Communication', 'Academic Writing', 'Critical Thinking', 'Research Skills', 'Computer Literacy', 'Mathematics for Science', 'Statistics', 'Physics', 'Chemistry', 'Biology', 'Accounting', 'Economics', 'Business Management', 'Marketing', 'Finance', 'Human Resources', 'Commercial Law', 'Criminal Law', 'Contract Law', 'Constitutional Law', 'Legal Research', 'Criminology', 'Psychology', 'Sociology', 'Social Work', 'Education (Foundation Phase)', 'Education (Intermediate Phase)', 'Educational Psychology', 'Civil Engineering', 'Mechanical Engineering', 'Electrical Engineering', 'Chemical Engineering', 'Programming Fundamentals', 'Database Systems', 'Networking', 'Web Development', 'Anatomy', 'Physiology', 'Pharmacology', 'Public Health', 'Nursing', 'Physiotherapy', 'English Literature', 'History', 'Philosophy', 'Political Science', 'Information Systems', 'Entrepreneurship', 'Project Management']
   }
+  // Add other curricula as needed...
 };
 
-// ============================================================
-//  API ENDPOINTS
-// ============================================================
+// ===== API ENDPOINTS =====
 app.get('/api/countries', (req, res) => res.json(countries));
 app.get('/api/provinces/:countryId', (req, res) => {
   const id = parseInt(req.params.countryId);
@@ -191,7 +188,7 @@ app.get('/api/subjects/:curriculumId/:gradeId', (req, res) => {
 });
 
 // ============================================================
-//  AUTH – Signup
+//  AUTH – Signup with subjects stored
 // ============================================================
 app.post('/signup', async (req, res) => {
   const { firstName, lastName, email, password, countryId, province, educationLevelId, curriculumId, gradeId, subjects, role } = req.body;
@@ -200,14 +197,14 @@ app.post('/signup', async (req, res) => {
   }
   try {
     const existing = await pool.query('SELECT id FROM users WHERE email = $1', [email]);
-    if (existing.rows.length > 0) {
-      return res.status(400).json({ error: 'Email already registered' });
-    }
+    if (existing.rows.length > 0) return res.status(400).json({ error: 'Email already registered' });
     const passwordHash = await bcrypt.hash(password, SALT_ROUNDS);
+    // Convert subjects array to JSON string for JSONB
+    const subjectsJson = JSON.stringify(subjects);
     const result = await pool.query(
-      `INSERT INTO users (email, password_hash, first_name, last_name, country_id, province, education_level_id, curriculum_id, grade_id, role)
-       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) RETURNING id`,
-      [email, passwordHash, firstName, lastName, countryId, province, educationLevelId, curriculumId, gradeId, role || 'learner']
+      `INSERT INTO users (email, password_hash, first_name, last_name, country_id, province, education_level_id, curriculum_id, grade_id, role, subjects)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11) RETURNING id`,
+      [email, passwordHash, firstName, lastName, countryId, province, educationLevelId, curriculumId, gradeId, role || 'learner', subjectsJson]
     );
     const userId = result.rows[0].id;
     await pool.query(
@@ -232,7 +229,7 @@ app.post('/signup', async (req, res) => {
 });
 
 // ============================================================
-//  AUTH – Login
+//  AUTH – Login returns subjects
 // ============================================================
 app.post('/login', async (req, res) => {
   const { email, password } = req.body;
@@ -248,6 +245,7 @@ app.post('/login', async (req, res) => {
       console.warn(`Invalid password for email: ${email}`);
       return res.status(401).json({ error: 'Invalid credentials' });
     }
+    // Get subscription
     const subResult = await pool.query('SELECT * FROM subscriptions WHERE user_id = $1', [user.id]);
     let sub = subResult.rows[0];
     if (!sub) {
@@ -273,6 +271,8 @@ app.post('/login', async (req, res) => {
     const userData = { ...user };
     delete userData.password_hash;
     delete userData.password;
+    // Parse subjects from JSONB
+    userData.subjects = user.subjects || [];
     userData.subscription = { status, daysRemaining };
     res.json({ success: true, user: userData, token: 'mock' });
   } catch (err) {
@@ -282,15 +282,13 @@ app.post('/login', async (req, res) => {
 });
 
 // ============================================================
-//  SUBSCRIPTION STATUS
+//  SUBSCRIPTION STATUS (unchanged)
 // ============================================================
 app.get('/subscription-status/:userId', async (req, res) => {
   const userId = parseInt(req.params.userId);
   try {
     const result = await pool.query('SELECT status, end_date FROM subscriptions WHERE user_id = $1', [userId]);
-    if (result.rows.length === 0) {
-      return res.json({ status: 'trial', daysRemaining: 3 });
-    }
+    if (result.rows.length === 0) return res.json({ status: 'trial', daysRemaining: 3 });
     const sub = result.rows[0];
     const now = new Date();
     let status = 'expired', days = 0;
@@ -303,13 +301,12 @@ app.get('/subscription-status/:userId', async (req, res) => {
     }
     res.json({ status, daysRemaining: Math.max(0, days) });
   } catch (err) {
-    console.error('Subscription status error:', err.message);
     res.status(500).json({ error: 'Database error' });
   }
 });
 
 // ============================================================
-//  PAYMENT & WEBHOOK
+//  PAYMENT & WEBHOOK (same)
 // ============================================================
 const PAYSTACK_SECRET = process.env.PAYSTACK_SECRET_KEY;
 app.post('/create-payment', async (req, res) => {
@@ -355,7 +352,7 @@ app.post('/paystack-webhook', express.raw({ type: 'application/json' }), async (
 app.get('/success', (req, res) => res.send('<h1>Payment successful</h1><a href="/">Go back</a>'));
 
 // ============================================================
-//  PROGRESS TRACKING
+//  PROGRESS TRACKING (unchanged)
 // ============================================================
 app.post('/api/progress', async (req, res) => {
   const { userId, subject, topic } = req.body;
@@ -367,7 +364,6 @@ app.post('/api/progress', async (req, res) => {
     );
     res.json({ success: true });
   } catch (err) {
-    console.error('Progress error:', err.message);
     res.status(500).json({ error: 'Database error' });
   }
 });
@@ -383,13 +379,12 @@ app.get('/api/progress/:userId', async (req, res) => {
     });
     res.json(progress);
   } catch (err) {
-    console.error('Progress fetch error:', err.message);
     res.status(500).json({ error: 'Database error' });
   }
 });
 
 // ============================================================
-//  AI CHAT
+//  AI CHAT (protected)
 // ============================================================
 app.post('/chat', requireActiveSubscription, async (req, res) => {
   const { userId, message, subject, topic } = req.body;
@@ -431,14 +426,12 @@ app.post('/chat', requireActiveSubscription, async (req, res) => {
 });
 
 // ============================================================
-//  ADMIN API
+//  ADMIN API (unchanged)
 // ============================================================
-
-// GET all users with subscription info
 app.get('/api/admin/users', requireAdmin, async (req, res) => {
   try {
     const result = await pool.query(`
-      SELECT u.id, u.email, u.first_name, u.last_name, u.role, u.created_at,
+      SELECT u.id, u.email, u.first_name, u.last_name, u.role, u.created_at, u.subjects,
              s.status, s.end_date
       FROM users u
       LEFT JOIN subscriptions s ON u.id = s.user_id
@@ -451,7 +444,6 @@ app.get('/api/admin/users', requireAdmin, async (req, res) => {
   }
 });
 
-// GET stats
 app.get('/api/admin/stats', requireAdmin, async (req, res) => {
   try {
     const users = await pool.query('SELECT COUNT(*) FROM users');
@@ -470,7 +462,6 @@ app.get('/api/admin/stats', requireAdmin, async (req, res) => {
   }
 });
 
-// GET all subscriptions
 app.get('/api/admin/subscriptions', requireAdmin, async (req, res) => {
   try {
     const result = await pool.query(`
@@ -488,12 +479,12 @@ app.get('/api/admin/subscriptions', requireAdmin, async (req, res) => {
 });
 
 // ============================================================
-//  HEALTH CHECK
+//  HEALTH
 // ============================================================
 app.get('/health', (req, res) => res.send('OK'));
 
 // ============================================================
-//  CREATE TEST USER IF NONE EXISTS
+//  TEST & ADMIN USERS
 // ============================================================
 async function ensureTestUser() {
   try {
@@ -501,9 +492,9 @@ async function ensureTestUser() {
     if (result.rows.length === 0) {
       const hash = await bcrypt.hash('password123', SALT_ROUNDS);
       const res = await pool.query(
-        `INSERT INTO users (email, password_hash, first_name, last_name, country_id, province, education_level_id, curriculum_id, grade_id, role)
-         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) RETURNING id`,
-        ['test@leago.com', hash, 'Test', 'User', 1, 'Gauteng', 1, 1, 104, 'learner']
+        `INSERT INTO users (email, password_hash, first_name, last_name, country_id, province, education_level_id, curriculum_id, grade_id, role, subjects)
+         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11) RETURNING id`,
+        ['test@leago.com', hash, 'Test', 'User', 1, 'Gauteng', 1, 1, 104, 'learner', '[]']
       );
       const userId = res.rows[0].id;
       await pool.query(
@@ -511,26 +502,19 @@ async function ensureTestUser() {
         [userId]
       );
       console.log('✅ Test user created: test@leago.com / password123');
-    } else {
-      console.log('✅ Test user already exists');
     }
-  } catch (err) {
-    console.error('Failed to create test user:', err.message);
-  }
+  } catch (err) { console.error('Failed to create test user:', err.message); }
 }
 
-// ============================================================
-//  CREATE ADMIN USER IF NONE EXISTS
-// ============================================================
 async function ensureAdminUser() {
   try {
     const result = await pool.query('SELECT * FROM users WHERE email = $1', ['admin@leago.com']);
     if (result.rows.length === 0) {
       const hash = await bcrypt.hash('admin123', SALT_ROUNDS);
       const res = await pool.query(
-        `INSERT INTO users (email, password_hash, first_name, last_name, country_id, province, education_level_id, curriculum_id, grade_id, role)
-         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) RETURNING id`,
-        ['admin@leago.com', hash, 'Admin', 'Leago', 1, 'Gauteng', 1, 1, 104, 'admin']
+        `INSERT INTO users (email, password_hash, first_name, last_name, country_id, province, education_level_id, curriculum_id, grade_id, role, subjects)
+         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11) RETURNING id`,
+        ['admin@leago.com', hash, 'Admin', 'Leago', 1, 'Gauteng', 1, 1, 104, 'admin', '[]']
       );
       const userId = res.rows[0].id;
       await pool.query(
@@ -538,16 +522,12 @@ async function ensureAdminUser() {
         [userId]
       );
       console.log('✅ Admin user created: admin@leago.com / admin123');
-    } else {
-      console.log('✅ Admin user already exists');
     }
-  } catch (err) {
-    console.error('Failed to create admin user:', err.message);
-  }
+  } catch (err) { console.error('Failed to create admin user:', err.message); }
 }
 
 // ============================================================
-//  START SERVER AFTER DB INIT
+//  START
 // ============================================================
 initDB().then(async () => {
   await ensureTestUser();
