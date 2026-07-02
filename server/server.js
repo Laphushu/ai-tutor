@@ -1,4 +1,4 @@
-// server/server.js – Complete app with PostgreSQL, bcrypt, Resend, and test user
+// server/server.js – Complete app with PostgreSQL, bcrypt, Resend, test user, and admin
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
@@ -24,7 +24,7 @@ const resend = process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KE
 const SALT_ROUNDS = 10;
 
 // ============================================================
-//  SUBSCRIPTION GATING MIDDLEWARE (with fallback)
+//  SUBSCRIPTION GATING MIDDLEWARE
 // ============================================================
 async function requireActiveSubscription(req, res, next) {
   const userId = req.body.userId || req.query.userId;
@@ -42,14 +42,30 @@ async function requireActiveSubscription(req, res, next) {
     return res.status(403).json({ error: 'Subscription expired. Please upgrade to Premium.' });
   } catch (err) {
     console.error('⚠️ Subscription check error:', err.message);
-    // Fallback: allow access for testing
     console.warn('⚠️ Allowing access due to database error – for testing only');
     return next();
   }
 }
 
 // ============================================================
-//  STATIC DATA (countries, provinces, education levels, grades, curricula, subjects)
+//  ADMIN MIDDLEWARE
+// ============================================================
+async function requireAdmin(req, res, next) {
+  const userId = req.body.userId || req.query.userId;
+  if (!userId) return res.status(401).json({ error: 'Unauthorized' });
+  try {
+    const result = await pool.query('SELECT role FROM users WHERE id = $1', [userId]);
+    if (result.rows.length === 0) return res.status(401).json({ error: 'User not found' });
+    if (result.rows[0].role !== 'admin') return res.status(403).json({ error: 'Admin access required' });
+    next();
+  } catch (err) {
+    console.error('Admin check error:', err.message);
+    res.status(500).json({ error: 'Database error' });
+  }
+}
+
+// ============================================================
+//  STATIC DATA
 // ============================================================
 const countries = [
   { id: 1, name: 'South Africa', code: 'ZA' },
@@ -216,7 +232,7 @@ app.post('/signup', async (req, res) => {
 });
 
 // ============================================================
-//  AUTH – Login (with detailed error logging)
+//  AUTH – Login
 // ============================================================
 app.post('/login', async (req, res) => {
   const { email, password } = req.body;
@@ -373,7 +389,7 @@ app.get('/api/progress/:userId', async (req, res) => {
 });
 
 // ============================================================
-//  AI CHAT – protected by subscription gate
+//  AI CHAT
 // ============================================================
 app.post('/chat', requireActiveSubscription, async (req, res) => {
   const { userId, message, subject, topic } = req.body;
@@ -415,6 +431,63 @@ app.post('/chat', requireActiveSubscription, async (req, res) => {
 });
 
 // ============================================================
+//  ADMIN API
+// ============================================================
+
+// GET all users with subscription info
+app.get('/api/admin/users', requireAdmin, async (req, res) => {
+  try {
+    const result = await pool.query(`
+      SELECT u.id, u.email, u.first_name, u.last_name, u.role, u.created_at,
+             s.status, s.end_date
+      FROM users u
+      LEFT JOIN subscriptions s ON u.id = s.user_id
+      ORDER BY u.created_at DESC
+    `);
+    res.json(result.rows);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Database error' });
+  }
+});
+
+// GET stats
+app.get('/api/admin/stats', requireAdmin, async (req, res) => {
+  try {
+    const users = await pool.query('SELECT COUNT(*) FROM users');
+    const subscriptions = await pool.query('SELECT COUNT(*) FROM subscriptions WHERE status = $1', ['active']);
+    const trials = await pool.query('SELECT COUNT(*) FROM subscriptions WHERE status = $1', ['trial']);
+    const progress = await pool.query('SELECT COUNT(*) FROM progress');
+    res.json({
+      totalUsers: parseInt(users.rows[0].count),
+      activeSubscriptions: parseInt(subscriptions.rows[0].count),
+      trialUsers: parseInt(trials.rows[0].count),
+      totalProgress: parseInt(progress.rows[0].count)
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Database error' });
+  }
+});
+
+// GET all subscriptions
+app.get('/api/admin/subscriptions', requireAdmin, async (req, res) => {
+  try {
+    const result = await pool.query(`
+      SELECT u.id, u.email, u.first_name, u.last_name,
+             s.status, s.start_date, s.end_date
+      FROM users u
+      JOIN subscriptions s ON u.id = s.user_id
+      ORDER BY s.end_date DESC
+    `);
+    res.json(result.rows);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Database error' });
+  }
+});
+
+// ============================================================
 //  HEALTH CHECK
 // ============================================================
 app.get('/health', (req, res) => res.send('OK'));
@@ -447,10 +520,38 @@ async function ensureTestUser() {
 }
 
 // ============================================================
+//  CREATE ADMIN USER IF NONE EXISTS
+// ============================================================
+async function ensureAdminUser() {
+  try {
+    const result = await pool.query('SELECT * FROM users WHERE email = $1', ['admin@leago.com']);
+    if (result.rows.length === 0) {
+      const hash = await bcrypt.hash('admin123', SALT_ROUNDS);
+      const res = await pool.query(
+        `INSERT INTO users (email, password_hash, first_name, last_name, country_id, province, education_level_id, curriculum_id, grade_id, role)
+         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) RETURNING id`,
+        ['admin@leago.com', hash, 'Admin', 'Leago', 1, 'Gauteng', 1, 1, 104, 'admin']
+      );
+      const userId = res.rows[0].id;
+      await pool.query(
+        `INSERT INTO subscriptions (user_id, status, end_date) VALUES ($1, 'active', NOW() + INTERVAL '365 days')`,
+        [userId]
+      );
+      console.log('✅ Admin user created: admin@leago.com / admin123');
+    } else {
+      console.log('✅ Admin user already exists');
+    }
+  } catch (err) {
+    console.error('Failed to create admin user:', err.message);
+  }
+}
+
+// ============================================================
 //  START SERVER AFTER DB INIT
 // ============================================================
 initDB().then(async () => {
   await ensureTestUser();
+  await ensureAdminUser();
   app.listen(PORT, () => {
     console.log(`✅ Leago AI Tutor running on port ${PORT}`);
     console.log(`💳 Payments ${PAYSTACK_SECRET ? 'enabled' : 'disabled'}`);
@@ -459,7 +560,6 @@ initDB().then(async () => {
   });
 }).catch(err => {
   console.error('Failed to initialize database:', err.message);
-  // Server will still start (tables may not exist, but app will try)
   app.listen(PORT, () => {
     console.log(`⚠️ Server started with database issues – some features may not work.`);
   });
