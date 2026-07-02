@@ -1,4 +1,4 @@
-// server/server.js – Production-ready version with PostgreSQL, bcrypt, Resend
+// server/server.js – Production-ready with PostgreSQL, bcrypt, Resend
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
@@ -46,39 +46,110 @@ async function requireActiveSubscription(req, res, next) {
 }
 
 // ============================================================
-//  API ENDPOINTS (countries, provinces, etc.) – unchanged
+//  STATIC DATA (countries, provinces, education levels, grades, curricula, subjects)
 // ============================================================
 const countries = [
   { id: 1, name: 'South Africa', code: 'ZA' },
   { id: 2, name: 'Kenya', code: 'KE' },
-  // ... (keep your full list)
+  { id: 3, name: 'Nigeria', code: 'NG' },
+  { id: 4, name: 'Zimbabwe', code: 'ZW' },
+  { id: 5, name: 'Botswana', code: 'BW' },
+  { id: 6, name: 'Namibia', code: 'NA' },
+  { id: 7, name: 'Ghana', code: 'GH' },
+  { id: 8, name: 'Egypt', code: 'EG' },
+  { id: 9, name: 'Uganda', code: 'UG' },
+  { id: 10, name: 'Tanzania', code: 'TZ' },
+  { id: 11, name: 'Zambia', code: 'ZM' },
+  { id: 12, name: 'Mozambique', code: 'MZ' },
+  { id: 13, name: 'Angola', code: 'AO' },
+  { id: 14, name: 'Cameroon', code: 'CM' },
+  { id: 15, name: 'Ethiopia', code: 'ET' },
+  { id: 16, name: 'Morocco', code: 'MA' }
 ];
+
 const educationLevels = [
-  { id: 1, name: 'High School' },
-  { id: 2, name: 'TVET College' },
-  { id: 3, name: 'University' },
-  { id: 4, name: 'Other' }
+  { id: 1, name: 'High School', sort_order: 0 },
+  { id: 2, name: 'TVET College', sort_order: 1 },
+  { id: 3, name: 'University', sort_order: 2 },
+  { id: 4, name: 'Other', sort_order: 3 }
 ];
+
 const grades = {
-  1: [{ id: 101, name: 'Grade 8', display: 'Grade 8' }, ...],
-  // ... (keep your full data)
-};
-const provinces = {
-  1: ['Eastern Cape', 'Free State', ...],
-  // ...
-};
-const curricula = [
-  { id: 1, country_id: 1, name: 'CAPS' },
-  // ...
-];
-const subjectMap = {
-  1: {
-    101: ['Mathematics', 'English Home Language', ...],
-    // ...
-  },
-  // ...
+  1: [
+    { id: 101, name: 'Grade 8', display: 'Grade 8', sort_order: 0 },
+    { id: 102, name: 'Grade 9', display: 'Grade 9', sort_order: 1 },
+    { id: 103, name: 'Grade 10', display: 'Grade 10', sort_order: 2 },
+    { id: 104, name: 'Grade 11', display: 'Grade 11', sort_order: 3 },
+    { id: 105, name: 'Grade 12', display: 'Grade 12', sort_order: 4 }
+  ],
+  2: [
+    { id: 201, name: 'N1', display: 'N1', sort_order: 0 },
+    { id: 202, name: 'N2', display: 'N2', sort_order: 1 },
+    { id: 203, name: 'N3', display: 'N3', sort_order: 2 },
+    { id: 204, name: 'N4', display: 'N4', sort_order: 3 },
+    { id: 205, name: 'N5', display: 'N5', sort_order: 4 },
+    { id: 206, name: 'N6', display: 'N6', sort_order: 5 }
+  ],
+  3: [
+    { id: 301, name: 'First Year', display: 'First Year', sort_order: 0 },
+    { id: 302, name: 'Second Year', display: 'Second Year', sort_order: 1 },
+    { id: 303, name: 'Third Year', display: 'Third Year', sort_order: 2 },
+    { id: 304, name: 'Fourth Year', display: 'Fourth Year', sort_order: 3 },
+    { id: 305, name: 'Postgraduate', display: 'Postgraduate', sort_order: 4 }
+  ],
+  4: [
+    { id: 401, name: 'Other', display: 'Other', sort_order: 0 }
+  ]
 };
 
+const provinces = {
+  1: ['Eastern Cape', 'Free State', 'Gauteng', 'KwaZulu-Natal', 'Limpopo', 'Mpumalanga', 'Northern Cape', 'North West', 'Western Cape'],
+  2: ['Nairobi', 'Mombasa', 'Kisumu', 'Nakuru', 'Eldoret', 'Thika', 'Malindi', 'Kitale'],
+  3: ['Lagos', 'Abuja', 'Kano', 'Ibadan', 'Port Harcourt', 'Kaduna', 'Enugu', 'Benin City'],
+  4: ['Harare', 'Bulawayo', 'Mutare', 'Gweru', 'Kwekwe', 'Masvingo', 'Chitungwiza'],
+  5: ['Gaborone', 'Francistown', 'Molepolole', 'Serowe', 'Selibe Phikwe', 'Maun'],
+  6: ['Windhoek', 'Walvis Bay', 'Swakopmund', 'Oshakati', 'Rundu', 'Otjiwarongo'],
+  7: ['Accra', 'Kumasi', 'Tamale', 'Sekondi-Takoradi', 'Cape Coast', 'Tema'],
+  8: ['Cairo', 'Alexandria', 'Giza', 'Shubra El Kheima', 'Port Said', 'Suez'],
+  9: ['Kampala', 'Gulu', 'Mbarara', 'Jinja', 'Kasese', 'Arua'],
+  10: ['Dar es Salaam', 'Mwanza', 'Arusha', 'Dodoma', 'Mbeya', 'Morogoro'],
+  11: ['Lusaka', 'Kitwe', 'Ndola', 'Livingstone', 'Kabwe', 'Chingola'],
+  12: ['Maputo', 'Matola', 'Beira', 'Nampula', 'Tete', 'Quelimane'],
+  13: ['Luanda', 'Lubango', 'Benguela', 'Huambo', 'Namibe', 'Cabinda'],
+  14: ['Douala', 'Yaoundé', 'Garoua', 'Bamenda', 'Maroua', 'Bafoussam'],
+  15: ['Addis Ababa', 'Adama', 'Gondar', 'Mekele', 'Hawassa', 'Bahir Dar'],
+  16: ['Casablanca', 'Rabat', 'Fes', 'Marrakech', 'Tangier', 'Agadir']
+};
+
+const curricula = [
+  { id: 1, country_id: 1, name: 'CAPS' },
+  { id: 2, country_id: 1, name: 'IEB' },
+  { id: 3, country_id: 2, name: 'CBC' },
+  { id: 4, country_id: 2, name: '8-4-4' },
+  { id: 5, country_id: 3, name: 'WAEC' },
+  { id: 6, country_id: 3, name: 'NECO' },
+  { id: 7, country_id: 4, name: 'ZIMSEC' },
+  { id: 8, country_id: 4, name: 'Cambridge' }
+];
+
+const subjectMap = {
+  1: {
+    101: ['Mathematics', 'English Home Language', 'Afrikaans First Additional Language', 'Life Orientation', 'Life Sciences', 'Physical Sciences', 'History', 'Geography', 'Accounting', 'Business Studies', 'Economics', 'Engineering Graphics and Design', 'Computer Applications Technology', 'Information Technology', 'Consumer Studies', 'Tourism', 'Hospitality Studies', 'Agricultural Sciences', 'Visual Arts', 'Music', 'Drama', 'Design'],
+    102: ['Mathematics', 'English Home Language', 'Afrikaans First Additional Language', 'Life Orientation', 'Life Sciences', 'Physical Sciences', 'History', 'Geography', 'Accounting', 'Business Studies', 'Economics', 'Engineering Graphics and Design', 'Computer Applications Technology', 'Information Technology', 'Consumer Studies', 'Tourism', 'Hospitality Studies', 'Agricultural Sciences', 'Visual Arts', 'Music', 'Drama', 'Design'],
+    103: ['Mathematics', 'English Home Language', 'Afrikaans First Additional Language', 'Life Orientation', 'Life Sciences', 'Physical Sciences', 'History', 'Geography', 'Accounting', 'Business Studies', 'Economics', 'Engineering Graphics and Design', 'Computer Applications Technology', 'Information Technology', 'Consumer Studies', 'Tourism', 'Hospitality Studies', 'Agricultural Sciences', 'Visual Arts', 'Music', 'Drama', 'Design'],
+    104: ['Mathematics', 'English Home Language', 'Afrikaans First Additional Language', 'Life Orientation', 'Life Sciences', 'Physical Sciences', 'History', 'Geography', 'Accounting', 'Business Studies', 'Economics', 'Engineering Graphics and Design', 'Computer Applications Technology', 'Information Technology', 'Consumer Studies', 'Tourism', 'Hospitality Studies', 'Agricultural Sciences', 'Visual Arts', 'Music', 'Drama', 'Design'],
+    105: ['Mathematics', 'English Home Language', 'Afrikaans First Additional Language', 'Life Orientation', 'Life Sciences', 'Physical Sciences', 'History', 'Geography', 'Accounting', 'Business Studies', 'Economics', 'Engineering Graphics and Design', 'Computer Applications Technology', 'Information Technology', 'Consumer Studies', 'Tourism', 'Hospitality Studies', 'Agricultural Sciences', 'Visual Arts', 'Music', 'Drama', 'Design']
+  },
+  2: {
+    103: ['Mathematics', 'English Home Language', 'Afrikaans First Additional Language', 'Life Orientation', 'Life Sciences', 'Physical Sciences', 'History', 'Geography', 'Accounting', 'Business Studies', 'Economics', 'Engineering Graphics and Design', 'Computer Applications Technology', 'Information Technology', 'Consumer Studies', 'Tourism', 'Drama', 'Visual Arts', 'Music', 'Design', 'Agricultural Sciences'],
+    104: ['Mathematics', 'English Home Language', 'Afrikaans First Additional Language', 'Life Orientation', 'Life Sciences', 'Physical Sciences', 'History', 'Geography', 'Accounting', 'Business Studies', 'Economics', 'Engineering Graphics and Design', 'Computer Applications Technology', 'Information Technology', 'Consumer Studies', 'Tourism', 'Drama', 'Visual Arts', 'Music', 'Design', 'Agricultural Sciences'],
+    105: ['Mathematics', 'English Home Language', 'Afrikaans First Additional Language', 'Life Orientation', 'Life Sciences', 'Physical Sciences', 'History', 'Geography', 'Accounting', 'Business Studies', 'Economics', 'Engineering Graphics and Design', 'Computer Applications Technology', 'Information Technology', 'Consumer Studies', 'Tourism', 'Drama', 'Visual Arts', 'Music', 'Design', 'Agricultural Sciences']
+  }
+};
+
+// ============================================================
+//  API ENDPOINTS
+// ============================================================
 app.get('/api/countries', (req, res) => res.json(countries));
 app.get('/api/provinces/:countryId', (req, res) => {
   const id = parseInt(req.params.countryId);
@@ -109,26 +180,21 @@ app.post('/signup', async (req, res) => {
     return res.status(400).json({ error: 'All fields are required' });
   }
   try {
-    // Check if user exists
     const existing = await pool.query('SELECT id FROM users WHERE email = $1', [email]);
     if (existing.rows.length > 0) {
       return res.status(400).json({ error: 'Email already registered' });
     }
-    // Hash password
     const passwordHash = await bcrypt.hash(password, SALT_ROUNDS);
-    // Insert user
     const result = await pool.query(
       `INSERT INTO users (email, password_hash, first_name, last_name, country_id, province, education_level_id, curriculum_id, grade_id, role)
        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) RETURNING id`,
       [email, passwordHash, firstName, lastName, countryId, province, educationLevelId, curriculumId, gradeId, role || 'learner']
     );
     const userId = result.rows[0].id;
-    // Insert trial subscription
     await pool.query(
       `INSERT INTO subscriptions (user_id, status, end_date) VALUES ($1, 'trial', NOW() + INTERVAL '3 days')`,
       [userId]
     );
-    // Send welcome email (if Resend is configured)
     if (resend) {
       try {
         await resend.emails.send({
@@ -147,7 +213,7 @@ app.post('/signup', async (req, res) => {
 });
 
 // ============================================================
-//  AUTH – Login with bcrypt
+//  AUTH – Login
 // ============================================================
 app.post('/login', async (req, res) => {
   const { email, password } = req.body;
@@ -161,11 +227,9 @@ app.post('/login', async (req, res) => {
     if (!valid) {
       return res.status(401).json({ error: 'Invalid credentials' });
     }
-    // Get subscription
     const subResult = await pool.query('SELECT * FROM subscriptions WHERE user_id = $1', [user.id]);
     let sub = subResult.rows[0];
     if (!sub) {
-      // create one if missing (should not happen)
       await pool.query(
         `INSERT INTO subscriptions (user_id, status, end_date) VALUES ($1, 'trial', NOW() + INTERVAL '3 days')`,
         [user.id]
@@ -187,7 +251,7 @@ app.post('/login', async (req, res) => {
     }
     const userData = { ...user };
     delete userData.password_hash;
-    delete userData.password; // just in case
+    delete userData.password;
     userData.subscription = { status, daysRemaining };
     res.json({ success: true, user: userData, token: 'mock' });
   } catch (err) {
@@ -197,7 +261,7 @@ app.post('/login', async (req, res) => {
 });
 
 // ============================================================
-//  SUBSCRIPTION STATUS (from database)
+//  SUBSCRIPTION STATUS
 // ============================================================
 app.get('/subscription-status/:userId', async (req, res) => {
   const userId = parseInt(req.params.userId);
@@ -223,9 +287,25 @@ app.get('/subscription-status/:userId', async (req, res) => {
 });
 
 // ============================================================
-//  PAYMENT WEBHOOK (updates subscription)
+//  PAYMENT & WEBHOOK
 // ============================================================
 const PAYSTACK_SECRET = process.env.PAYSTACK_SECRET_KEY;
+app.post('/create-payment', async (req, res) => {
+  const { userId, email } = req.body;
+  if (!userId || !email) return res.status(400).json({ error: 'Missing fields' });
+  if (!PAYSTACK_SECRET) return res.status(500).json({ error: 'Paystack not configured' });
+  try {
+    const response = await fetch('https://api.paystack.co/transaction/initialize', {
+      method: 'POST',
+      headers: { 'Authorization': `Bearer ${PAYSTACK_SECRET}`, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, amount: 4999, currency: 'ZAR', callback_url: process.env.PAYSTACK_CALLBACK_URL || 'https://synapses-uwh1.onrender.com/success', metadata: { userId } })
+    });
+    const data = await response.json();
+    if (!data.status) return res.status(400).json({ error: data.message });
+    res.json({ authorization_url: data.data.authorization_url });
+  } catch (e) { res.status(500).json({ error: 'Payment error' }); }
+});
+
 app.post('/paystack-webhook', express.raw({ type: 'application/json' }), async (req, res) => {
   const event = req.body;
   if (event.event === 'charge.success') {
@@ -247,8 +327,10 @@ app.post('/paystack-webhook', express.raw({ type: 'application/json' }), async (
   res.sendStatus(200);
 });
 
+app.get('/success', (req, res) => res.send('<h1>Payment successful</h1><a href="/">Go back</a>'));
+
 // ============================================================
-//  PROGRESS TRACKING (with database)
+//  PROGRESS TRACKING
 // ============================================================
 app.post('/api/progress', async (req, res) => {
   const { userId, subject, topic } = req.body;
@@ -285,8 +367,6 @@ app.get('/api/progress/:userId', async (req, res) => {
 app.post('/chat', requireActiveSubscription, async (req, res) => {
   const { userId, message, subject, topic } = req.body;
   if (!userId || !message) return res.status(400).json({ error: 'Missing data' });
-  // Try DeepSeek or Hugging Face (same as before)
-  // I'll keep the fallback logic unchanged
   const DEEPSEEK_API_KEY = process.env.DEEPSEEK_API_KEY;
   const HF_API_TOKEN = process.env.HF_API_TOKEN;
   if (DEEPSEEK_API_KEY) {
