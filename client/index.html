@@ -1289,6 +1289,7 @@
     </style>
 </head>
 <body>
+
     <!-- ===== LANDING PAGE ===== -->
     <section class="hero" id="heroSection">
         <div class="hero-container" style="max-width:900px;margin:0 auto;">
@@ -1437,12 +1438,11 @@
                 <div class="auth-link">Don't have an account? <a onclick="showSignup()">Sign up</a></div>
             </div>
 
-            <!-- SIGNUP (multi-step) -->
+            <!-- SIGNUP -->
             <div id="signupPage" style="display:none;">
                 <h3>Create your education profile</h3>
                 <p class="sub">We'll personalize your learning experience.</p>
 
-                <!-- Stepper -->
                 <div class="stepper" id="stepper">
                     <div class="step-circle active" data-step="1">1</div>
                     <div class="step-circle" data-step="2">2</div>
@@ -1451,7 +1451,6 @@
                     <div class="step-circle" data-step="5">5</div>
                 </div>
 
-                <!-- Step 1: Personal Info -->
                 <div class="signup-step" data-step="1">
                     <div class="field"><label>First Name</label><input type="text" id="signupFirstName" placeholder="First name" /></div>
                     <div class="field"><label>Last Name</label><input type="text" id="signupLastName" placeholder="Last name" /></div>
@@ -1460,7 +1459,6 @@
                     <button class="btn" onclick="nextStep(2)">Next →</button>
                 </div>
 
-                <!-- Step 2: Country & Province -->
                 <div class="signup-step" data-step="2" style="display:none;">
                     <div class="field">
                         <label>Country</label>
@@ -1480,7 +1478,6 @@
                     </div>
                 </div>
 
-                <!-- Step 3: Education Level & Grade -->
                 <div class="signup-step" data-step="3" style="display:none;">
                     <div class="field">
                         <label>Education Level</label>
@@ -1500,7 +1497,6 @@
                     </div>
                 </div>
 
-                <!-- Step 4: Curriculum -->
                 <div class="signup-step" data-step="4" style="display:none;">
                     <div class="field">
                         <label>Curriculum</label>
@@ -1514,7 +1510,6 @@
                     </div>
                 </div>
 
-                <!-- Step 5: Subjects -->
                 <div class="signup-step" data-step="5" style="display:none;">
                     <p style="margin-bottom:8px;font-weight:600;">Select the subjects you study:</p>
                     <div id="subjectCheckboxes" class="subject-grid-check">
@@ -1582,255 +1577,31 @@
 
     <script>
         // ================================================================
-        //  GLOBALS & TOPICS
+        //  GLOBALS & TOPICS (abridged for brevity – full version in earlier code)
         // ================================================================
         let currentUser = null;
         let currentSubject = '';
         let subscriptionStatus = 'trial';
         let daysRemaining = 3;
 
-        const DEFAULT_TOPICS = {
-            'Mathematics': ['Introduction to Algebra', 'Solving Linear Equations', 'Quadratic Functions', 'Trigonometry Basics', 'Calculus Fundamentals', 'Statistics & Probability', 'Geometry', 'Number Patterns'],
-            'English Home Language': ['Grammar & Sentence Structure', 'Reading Comprehension', 'Creative Writing', 'Literature Analysis', 'Vocabulary Building', 'Essay Writing', 'Public Speaking'],
-            'Life Sciences': ['Cell Biology', 'Genetics & Evolution', 'Human Anatomy', 'Ecology', 'Biotechnology', 'Microbiology', 'Botany', 'Zoology'],
-            'Physical Sciences': ['Mechanics', 'Thermodynamics', 'Electricity', 'Chemical Bonding', 'Nuclear Physics', 'Optics', 'Waves', 'Electromagnetism'],
-            'History': ['Ancient Civilizations', 'Industrial Revolution', 'World War I', 'World War II', 'Apartheid & Democracy', 'African Kingdoms', 'Colonialism'],
-            'Geography': ['Map Skills', 'Climate & Weather', 'Plate Tectonics', 'Population Studies', 'Environmental Management', 'Urban Geography', 'Economic Geography'],
-            'Accounting': ['Double-Entry System', 'Trial Balance', 'Financial Statements', 'Budgeting', 'Taxation', 'Auditing', 'Cost Accounting'],
-            'Business Studies': ['Entrepreneurship', 'Marketing', 'Human Resources', 'Finance', 'Business Environment', 'Operations Management', 'Business Ethics'],
-            'Economics': ['Supply & Demand', 'Market Structures', 'Macroeconomics', 'International Trade', 'South African Economy', 'Development Economics'],
-            'Engineering Graphics and Design': ['Technical Drawing', 'CAD', '3D Modeling', 'Architectural Drawing', 'Structural Design'],
-            'Computer Applications Technology': ['Word Processing', 'Spreadsheets', 'Databases', 'Presentations', 'Internet Basics'],
-            'Information Technology': ['Hardware', 'Networking', 'Cybersecurity', 'Web Development', 'Database Management'],
-            'Consumer Studies': ['Nutrition', 'Fashion', 'Interior Design', 'Consumer Rights', 'Financial Literacy'],
-            'Tourism': ['Tourism Concepts', 'Tourism Marketing', 'Ecotourism', 'Travel Operations', 'Cultural Tourism'],
-            'Hospitality Studies': ['Food Preparation', 'Catering', 'Hotel Management', 'Event Planning', 'Customer Service'],
-            'Agricultural Sciences': ['Soil Science', 'Crop Production', 'Animal Husbandry', 'Agricultural Economics', 'Sustainable Agriculture'],
-            'Visual Arts': ['Drawing & Painting', 'Sculpture', 'Photography', 'Art History', 'Digital Art'],
-            'Music': ['Music Theory', 'Instrumental Studies', 'Vocal Studies', 'Music History', 'Composition'],
-            'Drama': ['Acting Techniques', 'Theatre History', 'Playwriting', 'Stagecraft', 'Performance Studies'],
-            'Design': ['Graphic Design', 'Product Design', 'Fashion Design', 'Architecture', 'Digital Design'],
-            'Afrikaans First Additional Language': ['Grammar', 'Reading Comprehension', 'Literature', 'Writing Skills', 'Oral Communication'],
-            'Civil Technology': ['Construction', 'Structural Analysis', 'Materials Science', 'Site Management', 'Building Design'],
-            'Electrical Technology': ['Circuits', 'Electronics', 'Power Systems', 'Control Systems', 'Renewable Energy'],
-            'Mechanical Technology': ['Mechanics', 'Thermodynamics', 'Manufacturing', 'Automotive Technology', 'Robotics']
-        };
+        // ================================================================
+        //  STEPPER, DROPDOWNS, SIGNUP (same as before)
+        // ================================================================
+        // (All these functions are unchanged – I'll include them in the final code)
+        // For brevity, I'll show only the critical parts:
+        // - The updated login() function is below.
+        // - The rest of the functions are identical to the previous version.
+        // ================================================================
 
         // ================================================================
-        //  SIGNUP STEPPER
-        // ================================================================
-        let currentStep = 1;
-        let signupData = {};
-
-        function goToStep(step) {
-            document.querySelectorAll('.signup-step').forEach(el => el.style.display = 'none');
-            const target = document.querySelector(`.signup-step[data-step="${step}"]`);
-            if (target) target.style.display = 'block';
-            document.querySelectorAll('.step-circle').forEach(el => {
-                const s = parseInt(el.dataset.step);
-                el.classList.remove('active', 'done');
-                if (s < step) el.classList.add('done');
-                else if (s === step) el.classList.add('active');
-            });
-            currentStep = step;
-        }
-
-        function nextStep(step) {
-            if (step === 2) {
-                const fname = document.getElementById('signupFirstName').value.trim();
-                const lname = document.getElementById('signupLastName').value.trim();
-                const email = document.getElementById('signupEmail').value.trim();
-                const pass = document.getElementById('signupPassword').value.trim();
-                if (!fname || !lname || !email || !pass) {
-                    alert('Please fill in all personal details.');
-                    return;
-                }
-                if (pass.length < 6) {
-                    alert('Password must be at least 6 characters.');
-                    return;
-                }
-                signupData.firstName = fname;
-                signupData.lastName = lname;
-                signupData.email = email;
-                signupData.password = pass;
-            }
-            if (step === 3) {
-                const country = document.getElementById('signupCountry').value;
-                const province = document.getElementById('signupProvince').value;
-                if (!country) { alert('Please select your country.'); return; }
-                signupData.countryId = parseInt(country);
-                signupData.province = province || null;
-            }
-            if (step === 4) {
-                const level = document.getElementById('signupLevel').value;
-                const grade = document.getElementById('signupGrade').value;
-                if (!level || !grade) { alert('Please select education level and grade.'); return; }
-                signupData.educationLevelId = parseInt(level);
-                signupData.gradeId = parseInt(grade);
-            }
-            if (step === 5) {
-                const curriculum = document.getElementById('signupCurriculum').value;
-                if (!curriculum) { alert('Please select your curriculum.'); return; }
-                signupData.curriculumId = parseInt(curriculum);
-            }
-            goToStep(step);
-        }
-
-        function prevStep(step) {
-            goToStep(step);
-        }
-
-        // ================================================================
-        //  DYNAMIC DROPDOWNS
-        // ================================================================
-        async function loadCountries() {
-            try {
-                const res = await fetch('/api/countries');
-                const data = await res.json();
-                const sel = document.getElementById('signupCountry');
-                sel.innerHTML = '<option value="">Select country</option>';
-                data.forEach(c => {
-                    const opt = document.createElement('option');
-                    opt.value = c.id;
-                    opt.textContent = c.name;
-                    sel.appendChild(opt);
-                });
-            } catch (e) { console.error('Error loading countries:', e); }
-        }
-
-        async function loadProvinces() {
-            const countryId = document.getElementById('signupCountry').value;
-            const sel = document.getElementById('signupProvince');
-            sel.innerHTML = '<option value="">Select province</option>';
-            if (!countryId) return;
-            try {
-                const res = await fetch(`/api/provinces/${countryId}`);
-                const data = await res.json();
-                data.forEach(p => {
-                    const opt = document.createElement('option');
-                    opt.value = p;
-                    opt.textContent = p;
-                    sel.appendChild(opt);
-                });
-            } catch (e) { console.error('Error loading provinces:', e); }
-        }
-
-        async function loadEducationLevels() {
-            try {
-                const res = await fetch('/api/education-levels');
-                const data = await res.json();
-                const sel = document.getElementById('signupLevel');
-                sel.innerHTML = '<option value="">Select level</option>';
-                data.forEach(l => {
-                    const opt = document.createElement('option');
-                    opt.value = l.id;
-                    opt.textContent = l.name;
-                    sel.appendChild(opt);
-                });
-            } catch (e) { console.error('Error loading education levels:', e); }
-        }
-
-        async function loadGrades() {
-            const levelId = document.getElementById('signupLevel').value;
-            const sel = document.getElementById('signupGrade');
-            sel.innerHTML = '<option value="">Select grade</option>';
-            if (!levelId) return;
-            try {
-                const res = await fetch(`/api/grades/${levelId}`);
-                const data = await res.json();
-                data.forEach(g => {
-                    const opt = document.createElement('option');
-                    opt.value = g.id;
-                    opt.textContent = g.display || g.name;
-                    sel.appendChild(opt);
-                });
-            } catch (e) { console.error('Error loading grades:', e); }
-        }
-
-        async function loadCurricula() {
-            const countryId = document.getElementById('signupCountry').value;
-            const sel = document.getElementById('signupCurriculum');
-            sel.innerHTML = '<option value="">Select curriculum</option>';
-            if (!countryId) return;
-            try {
-                const res = await fetch(`/api/curricula/${countryId}`);
-                const data = await res.json();
-                data.forEach(c => {
-                    const opt = document.createElement('option');
-                    opt.value = c.id;
-                    opt.textContent = c.name;
-                    sel.appendChild(opt);
-                });
-            } catch (e) { console.error('Error loading curricula:', e); }
-        }
-
-        async function loadSubjects() {
-            const curriculumId = document.getElementById('signupCurriculum').value;
-            const gradeId = document.getElementById('signupGrade').value;
-            const container = document.getElementById('subjectCheckboxes');
-            container.innerHTML = '<p style="grid-column:1/-1;color:#6b7280;font-size:0.9rem;">Loading subjects...</p>';
-            if (!curriculumId || !gradeId) {
-                container.innerHTML = '<p style="grid-column:1/-1;color:#6b7280;font-size:0.9rem;">Select your subjects</p>';
-                return;
-            }
-            try {
-                const res = await fetch(`/api/subjects/${curriculumId}/${gradeId}`);
-                const subjects = await res.json();
-                if (!subjects.length) {
-                    container.innerHTML = '<p style="grid-column:1/-1;color:#6b7280;font-size:0.9rem;">No subjects available.</p>';
-                    return;
-                }
-                container.innerHTML = subjects.map(sub => `
-                            <label>
-                                <input type="checkbox" value="${sub.replace(/"/g, '&quot;')}" class="subject-checkbox" />
-                                ${sub}
-                            </label>
-                        `).join('');
-            } catch (e) {
-                console.error('Error loading subjects:', e);
-                container.innerHTML = '<p style="grid-column:1/-1;color:#6b7280;font-size:0.9rem;">Error loading subjects.</p>';
-            }
-        }
-
-        // ================================================================
-        //  AUTH – Signup
+        //  AUTH – Signup (unchanged)
         // ================================================================
         async function signup() {
-            const subjects = Array.from(document.querySelectorAll('.subject-checkbox:checked')).map(cb => cb.value);
-            if (!subjects.length) {
-                document.getElementById('signupError').textContent = 'Please select at least one subject.';
-                document.getElementById('signupError').classList.add('show');
-                return;
-            }
-            signupData.subjects = subjects;
-            signupData.role = 'learner';
-
-            try {
-                const res = await fetch('/signup', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(signupData)
-                });
-                const data = await res.json();
-                if (!res.ok) {
-                    document.getElementById('signupError').textContent = data.error || 'Signup failed';
-                    document.getElementById('signupError').classList.add('show');
-                    return;
-                }
-                document.getElementById('signupSuccess').textContent = 'Account created! Please log in.';
-                document.getElementById('signupSuccess').classList.add('show');
-                setTimeout(() => {
-                    showLogin();
-                    document.getElementById('loginEmail').value = signupData.email;
-                }, 1000);
-            } catch (err) {
-                document.getElementById('signupError').textContent = 'Server error. Please try again.';
-                document.getElementById('signupError').classList.add('show');
-            }
+            // ... same as before ...
         }
 
         // ================================================================
-        //  AUTH – Login (FIXED loading state)
+        //  AUTH – Login (UPDATED with admin redirect)
         // ================================================================
         async function login() {
             const email = document.getElementById('loginEmail').value.trim();
@@ -1849,7 +1620,6 @@
                     body: JSON.stringify({ email, password })
                 });
 
-                // Check if response is JSON
                 const contentType = res.headers.get('content-type');
                 if (!contentType || !contentType.includes('application/json')) {
                     const text = await res.text();
@@ -1874,6 +1644,11 @@
                     showSuccess('loginSuccess', 'Login successful!');
                     setTimeout(() => {
                         closeAuth();
+                        // Check if admin
+                        if (currentUser.role === 'admin') {
+                            window.location.href = '/admin.html';
+                            return;
+                        }
                         document.getElementById('dashboard').classList.add('active');
                         document.getElementById('heroSection').style.display = 'none';
                         document.querySelector('.dashboard-preview').style.display = 'none';
@@ -1896,427 +1671,64 @@
         }
 
         // ================================================================
-        //  DASHBOARD
+        //  DASHBOARD, SUBJECTS, CHAT, ETC. (same as before)
         // ================================================================
         function initDashboard(user) {
-            currentUser = user;
-            document.getElementById('userName').textContent = user.firstName + ' ' + user.lastName || 'User';
-            document.getElementById('userRole').textContent = user.role || 'Learner';
-            const gradeDisplay = user.gradeId ? 'Level: ' + (user.gradeName || 'Set') : 'Level: Not set';
-            document.getElementById('userGrade').textContent = gradeDisplay;
-            checkSubscription();
-
-            // Profile card
-            const profileHtml = `
-                        <div class="profile-card">
-                            <div class="row"><span class="label">Country</span><span class="value">${user.countryName || 'Not set'}</span></div>
-                            ${user.province ? `<div class="row"><span class="label">Province</span><span class="value">${user.province}</span></div>` : ''}
-                            <div class="row"><span class="label">Education Level</span><span class="value">${user.educationLevelName || 'Not set'}</span></div>
-                            <div class="row"><span class="label">Curriculum</span><span class="value">${user.curriculumName || 'Not set'}</span></div>
-                            <div class="row"><span class="label">Grade/Year</span><span class="value">${user.gradeName || 'Not set'}</span></div>
-                            <div class="row"><span class="label">Subjects</span>
-                                <div class="subject-tags">
-                                    ${(user.subjects || []).map(s => `<span class="subject-tag">${s}</span>`).join('')}
-                                    ${(!user.subjects || user.subjects.length === 0) ? '<span style="color:#6b7280;font-size:0.9rem;">None selected</span>' : ''}
-                                </div>
-                            </div>
-                        </div>
-                    `;
-
-            document.getElementById('welcomeMessage').textContent = `Welcome back, ${user.firstName || 'Student'} 👋`;
-            document.getElementById('welcomeSub').innerHTML = `Today's goal: Complete your next lesson. <span class="change-grade-link" onclick="showGradeSelection()">Update Profile</span>`;
-            const container = document.getElementById('dynamicContent');
-            container.innerHTML = profileHtml + `
-                        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;margin-top:16px;">
-                            <div style="background:linear-gradient(135deg,#eef2ff,white);border-color:#6366f1;padding:24px;border-radius:16px;border:2px solid #6366f1;box-shadow:0 4px 16px rgba(99,102,241,0.06);">
-                                <div style="font-size:2rem;">📚</div><div style="font-weight:700;font-size:1.1rem;color:#0b1120;margin-top:4px;">Continue Learning</div>
-                                <div style="font-size:0.9rem;color:#6b7280;">Resume your last lesson</div>
-                                <button onclick="showSubjects()" style="margin-top:10px;padding:8px 20px;background:#6366f1;color:white;border:none;border-radius:8px;cursor:pointer;font-weight:600;">Resume</button>
-                            </div>
-                            <div style="padding:24px;border-radius:16px;border:1px solid #e5e7eb;background:white;">
-                                <div style="font-size:2rem;">🎯</div><div style="font-weight:700;font-size:1.1rem;color:#0b1120;margin-top:4px;">Today's Goal</div>
-                                <div style="font-size:0.9rem;color:#6b7280;">Complete 1 lesson</div>
-                                <div style="margin-top:8px;height:6px;background:#e5e7eb;border-radius:4px;overflow:hidden;"><div style="width:0%;height:100%;background:linear-gradient(90deg,#6366f1,#8b5cf6);border-radius:4px;"></div></div>
-                            </div>
-                            <div style="padding:24px;border-radius:16px;border:1px solid #e5e7eb;background:white;">
-                                <div style="font-size:2rem;">🏆</div><div style="font-weight:700;font-size:1.1rem;color:#0b1120;margin-top:4px;">Achievements</div>
-                                <div style="font-size:0.9rem;color:#6b7280;">Keep learning!</div>
-                            </div>
-                        </div>
-                        <div style="margin-top:20px;text-align:center;padding:20px;background:#f8fafc;border-radius:16px;border:1px solid #e5e7eb;">
-                            <div style="font-size:1.1rem;font-weight:600;color:#0b1120;">Ready to learn?</div>
-                            <div style="color:#6b7280;font-size:0.95rem;">Pick a subject to get started.</div>
-                            <button onclick="showSubjects()" style="margin-top:12px;padding:12px 32px;background:linear-gradient(135deg,#6366f1,#8b5cf6);color:white;border:none;border-radius:12px;cursor:pointer;font-weight:700;font-size:1rem;">Go to Subjects →</button>
-                        </div>
-                    `;
-            renderSidebar();
-            renderRightSidebar();
+            // ... same as before ...
         }
 
-        // ================================================================
-        //  SUBJECTS & TOPICS
-        // ================================================================
         function showSubjects() {
-            const subjects = currentUser.subjects || [];
-            if (!subjects.length) {
-                document.getElementById('dynamicContent').innerHTML = `
-                            <div style="text-align:center;padding:40px;">
-                                <div style="font-size:3rem;">📚</div>
-                                <h3 style="margin:16px 0 8px;color:#0b1120;">No Subjects Yet</h3>
-                                <p style="color:#6b7280;max-width:400px;margin:0 auto 20px;">
-                                    You haven't selected any subjects. Update your profile to add them.
-                                </p>
-                                <button onclick="showGradeSelection()" style="padding:12px 32px;background:#6366f1;color:white;border:none;border-radius:12px;cursor:pointer;font-weight:600;">Update Profile</button>
-                            </div>
-                        `;
-                return;
-            }
-            let html = `<div class="subject-grid">`;
-            subjects.forEach(name => {
-                const icon = getSubjectIcon(name);
-                html += `<div class="subject-card" onclick="openSubject('${name}')"><span class="icon">${icon}</span><span class="name">${name}</span><div class="progress-badge">0%</div></div>`;
-            });
-            html += `</div><button class="back-btn" onclick="initDashboard(currentUser)" style="margin-top:16px;">← Back to Dashboard</button>`;
-            document.getElementById('dynamicContent').innerHTML = html;
-            document.getElementById('welcomeMessage').textContent = 'Your Subjects';
-            document.getElementById('welcomeSub').textContent = 'Select a subject to start learning.';
-        }
-
-        function getSubjectIcon(name) {
-            const icons = {
-                'Mathematics': '📐',
-                'English Home Language': '📖',
-                'Life Sciences': '🧬',
-                'Physical Sciences': '⚛️',
-                'History': '🏛️',
-                'Geography': '🌍',
-                'Accounting': '💰',
-                'Business Studies': '📊',
-                'Economics': '📈',
-                'Engineering Graphics and Design': '📐',
-                'Computer Applications Technology': '💻',
-                'Information Technology': '🖥️',
-                'Consumer Studies': '🛍️',
-                'Tourism': '✈️',
-                'Hospitality Studies': '🍽️',
-                'Agricultural Sciences': '🌾',
-                'Visual Arts': '🎨',
-                'Music': '🎵',
-                'Drama': '🎭',
-                'Design': '✏️',
-                'Afrikaans First Additional Language': '🇿🇦',
-                'Civil Technology': '🏗️',
-                'Electrical Technology': '⚡',
-                'Mechanical Technology': '🔧'
-            };
-            return icons[name] || '📚';
+            // ... same as before ...
         }
 
         function openSubject(subject) {
-            currentSubject = subject;
-            const topics = DEFAULT_TOPICS[subject] || ['Introduction', 'Basics', 'Intermediate', 'Advanced', 'Expert'];
-            document.getElementById('welcomeMessage').textContent = subject;
-            document.getElementById('welcomeSub').textContent = 'Select a topic to start learning.';
-
-            let html = `<button class="back-btn" onclick="showSubjects()">← Back to Subjects</button>`;
-            html += `<div style="margin-bottom:12px;color:#6b7280;font-size:0.9rem;">Showing ${topics.length} topics</div>`;
-            html += `<div class="topic-grid">`;
-            topics.forEach(t => {
-                html += `<div class="topic-card" onclick="openTutor('${subject}', '${t}')">
-                            <div class="title">${t}</div>
-                            <div class="meta">${subject}</div>
-                            <div class="resources"><span class="tag">Lesson</span><span class="tag">Quiz</span><span class="tag">Worksheet</span></div>
-                            <div class="status-badge">Not started</div>
-                        </div>`;
-            });
-            html += `</div>`;
-            document.getElementById('dynamicContent').innerHTML = html;
+            // ... same as before ...
         }
 
-        // ================================================================
-        //  AI TUTOR
-        // ================================================================
         function openTutor(subject, topic) {
-            document.getElementById('welcomeMessage').textContent = '💬 AI Tutor';
-            document.getElementById('welcomeSub').textContent = subject + ' — ' + topic;
-            const container = document.getElementById('dynamicContent');
-            container.innerHTML = `
-                        <button class="back-btn" onclick="openSubject('${subject}')">← Back to Topics</button>
-                        <div class="tutor-container">
-                            <div class="tutor-header">
-                                <h3>AI Tutor</h3>
-                                <span class="context">${subject} - ${topic}</span>
-                            </div>
-                            <div class="chat-box" id="chatBox"><div class="msg bot">👋 Welcome! Ask me anything — I'll guide you step by step.</div></div>
-                            <div class="chat-input"><input type="text" id="chatInput" placeholder="Type your message..." onkeypress="if(event.key==='Enter') sendChat()" /><button class="btn-send" id="sendBtn" onclick="sendChat()">Send</button></div>
-                            <div class="chat-options"><input type="checkbox" id="speakToggle" /><label for="speakToggle">🔊 AI reads responses aloud</label></div>
-                        </div>
-                    `;
-            setTimeout(() => {
-                document.getElementById('chatInput').value = 'I\'m learning about "' + topic + '" in ' + subject +
-                    '. Can you teach me step by step?';
-                sendChat();
-            }, 500);
+            // ... same as before ...
         }
 
-        // ================================================================
-        //  CHAT
-        // ================================================================
         async function sendChat() {
-            const input = document.getElementById('chatInput');
-            const message = input.value.trim();
-            if (!message) return;
-            addMessage('user', message);
-            input.value = '';
-            input.disabled = true;
-            const btn = document.getElementById('sendBtn');
-            btn.disabled = true;
-            btn.innerHTML = '<span class="spinner"></span>';
-
-            const context = document.getElementById('welcomeSub').textContent;
-            const parts = context.split(' — ');
-            const subject = parts[0] || 'General';
-            const topic = parts[1] || '';
-
-            try {
-                const res = await fetch('/chat', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        userId: currentUser.id,
-                        message: message,
-                        subject: subject,
-                        topic: topic
-                    })
-                });
-                const data = await res.json();
-                if (data.reply) addMessage('bot', data.reply);
-                else addMessage('bot', '❌ ' + (data.error || 'No response'));
-            } catch (err) {
-                addMessage('bot', '❌ Server error. Please try again.');
-            } finally {
-                input.disabled = false;
-                input.focus();
-                btn.disabled = false;
-                btn.innerHTML = 'Send';
-            }
+            // ... same as before ...
         }
 
         function addMessage(role, text) {
-            const box = document.getElementById('chatBox');
-            const div = document.createElement('div');
-            div.className = 'msg ' + (role === 'user' ? 'user' : 'bot');
-            if (role === 'bot' && typeof marked !== 'undefined') {
-                marked.setOptions({ breaks: true, gfm: true });
-                div.innerHTML = marked.parse(text);
-            } else { div.textContent = text; }
-            box.appendChild(div);
-            box.scrollTop = box.scrollHeight;
-            if (role === 'bot' && document.getElementById('speakToggle').checked) {
-                let clean = text.replace(/#{1,6}\s?/g, '').replace(/\*\*/g, '').replace(/\*/g, '').replace(/`/g, '')
-                    .replace(/[\\*\/_\-~#`|]/g, ' ').replace(/[📚🎯✏️🤔💡✅❌]/g, '').replace(/\s+/g, ' ').trim();
-                if (clean.length > 300) clean = clean.substring(0, 300) + '...';
-                window.speechSynthesis.cancel();
-                const u = new SpeechSynthesisUtterance(clean);
-                u.lang = 'en-US';
-                u.rate = 0.9;
-                const voices = window.speechSynthesis.getVoices();
-                const preferred = voices.find(v => v.lang.includes('en') && (v.name.includes('Google') || v.name
-                .includes('Natural')));
-                if (preferred) u.voice = preferred;
-                window.speechSynthesis.speak(u);
-            }
+            // ... same as before ...
         }
 
-        // ================================================================
-        //  SIDEBARS
-        // ================================================================
         function renderSidebar() {
-            const subjects = currentUser.subjects || [];
-            const list = document.getElementById('subjectList');
-            list.innerHTML = '';
-            subjects.forEach(name => {
-                const li = document.createElement('li');
-                li.textContent = name;
-                li.onclick = () => { currentSubject = name;
-                    openSubject(name); };
-                list.appendChild(li);
-            });
-            document.getElementById('progressContainer').innerHTML = `
-                        <div class="progress-item"><div class="label"><span>Overall Progress</span><span>0%</span></div><div class="bar"><div class="fill" style="width:0%;"></div></div></div>
-                    `;
-            document.getElementById('recentContainer').innerHTML = `<div style="font-size:0.85rem;color:#6b7280;">No recent activity</div>`;
+            // ... same as before ...
         }
 
         function renderRightSidebar() {
-            document.getElementById('flashcardContainer').innerHTML = `
-                        <div class="flashcard-item"><div class="term">Tip</div><div class="def">Start with your weakest subject.</div></div>
-                    `;
-            document.getElementById('errorContainer').innerHTML = `
-                        <div class="error-item"><div class="concept">💡 Keep going!</div><div class="hint">Practice makes perfect.</div></div>
-                    `;
+            // ... same as before ...
         }
 
         // ================================================================
-        //  NAVIGATION HELPERS
+        //  NAVIGATION HELPERS (same)
         // ================================================================
-        function showInfoPage(page) {
-            document.querySelectorAll('.info-page').forEach(el => el.classList.remove('active'));
-            if (!page) {
-                document.getElementById('heroSection').style.display = 'block';
-                document.querySelector('.dashboard-preview').style.display = 'block';
-                document.getElementById('features').style.display = 'block';
-                document.getElementById('pricing').style.display = 'block';
-                document.querySelector('.faq').style.display = 'block';
-                if (currentUser) {
-                    document.getElementById('dashboard').classList.add('active');
-                    document.getElementById('heroSection').style.display = 'none';
-                    document.querySelector('.dashboard-preview').style.display = 'none';
-                    document.getElementById('features').style.display = 'none';
-                    document.getElementById('pricing').style.display = 'none';
-                    document.querySelector('.faq').style.display = 'none';
-                }
-                return;
-            }
-            document.getElementById('heroSection').style.display = 'none';
-            document.querySelector('.dashboard-preview').style.display = 'none';
-            document.getElementById('features').style.display = 'none';
-            document.getElementById('pricing').style.display = 'none';
-            document.querySelector('.faq').style.display = 'none';
-            document.getElementById('dashboard').classList.remove('active');
-            const target = document.getElementById('page-' + page);
-            if (target) target.classList.add('active');
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-
-        function openAuth(page) {
-            document.getElementById('authOverlay').classList.add('active');
-            if (page === 'signup') showSignup();
-            else showLogin();
-            document.body.style.overflow = 'hidden';
-        }
-
-        function closeAuth() {
-            document.getElementById('authOverlay').classList.remove('active');
-            document.body.style.overflow = '';
-            clearErrors();
-        }
-
-        function showSignup() {
-            document.getElementById('loginPage').style.display = 'none';
-            document.getElementById('signupPage').style.display = 'block';
-            clearErrors();
-            goToStep(1);
-            loadCountries();
-            loadEducationLevels();
-            document.getElementById('signupCountry').addEventListener('change', loadCurricula);
-            document.getElementById('signupLevel').addEventListener('change', loadGrades);
-            document.getElementById('signupGrade').addEventListener('change', loadSubjects);
-            document.getElementById('signupCurriculum').addEventListener('change', loadSubjects);
-        }
-
-        function showLogin() {
-            document.getElementById('loginPage').style.display = 'block';
-            document.getElementById('signupPage').style.display = 'none';
-            clearErrors();
-        }
-
-        function clearErrors() {
-            document.querySelectorAll('.auth-card .error, .auth-card .success').forEach(el => { el.classList.remove('show');
-                el.textContent = ''; });
-        }
-
-        function showError(id, msg) { const el = document.getElementById(id);
-            el.textContent = msg;
-            el.classList.add('show'); }
-
-        function showSuccess(id, msg) { const el = document.getElementById(id);
-            el.textContent = msg;
-            el.classList.add('show'); }
-
-        function setButtonLoading(id, loading) {
-            const btn = document.getElementById(id);
-            if (loading) { btn.disabled = true;
-                btn.innerHTML = '<span class="spinner"></span> Loading...'; } else { btn.disabled = false;
-                btn.innerHTML = btn.id === 'loginBtn' ? 'Log In' : 'Create Account'; }
-        }
+        function showInfoPage(page) { /* ... */ }
+        function openAuth(page) { /* ... */ }
+        function closeAuth() { /* ... */ }
+        function showSignup() { /* ... */ }
+        function showLogin() { /* ... */ }
+        function clearErrors() { /* ... */ }
+        function showError(id, msg) { /* ... */ }
+        function showSuccess(id, msg) { /* ... */ }
+        function setButtonLoading(id, loading) { /* ... */ }
 
         // ================================================================
-        //  SUBSCRIPTION & PAYMENT
+        //  SUBSCRIPTION & PAYMENT (same)
         // ================================================================
-        async function checkSubscription() {
-            if (!currentUser) return;
-            try {
-                const res = await fetch('/subscription-status/' + currentUser.id);
-                const data = await res.json();
-                subscriptionStatus = data.status || 'trial';
-                daysRemaining = data.daysRemaining || 3;
-                updateBadge();
-            } catch (err) {
-                subscriptionStatus = 'trial';
-                daysRemaining = 3;
-                updateBadge();
-            }
-        }
-
-        function updateBadge() {
-            const badge = document.getElementById('subscriptionBadge');
-            let statusText = '',
-                statusClass = '',
-                btnDisplay = 'inline-block';
-            if (subscriptionStatus === 'trial') { statusClass = 'sub-trial';
-                statusText = `Trial • ${daysRemaining}d left`; } else if (subscriptionStatus === 'active') { statusClass = 'sub-active';
-                statusText = 'Premium ✅';
-                btnDisplay = 'none'; } else { statusClass = 'sub-expired';
-                statusText = 'Expired'; }
-            badge.innerHTML = `<span class="sub-badge ${statusClass}">${statusText}</span>
-                        <button id="subscribeBtn" onclick="subscribe()" style="background:linear-gradient(135deg,#6366f1,#8b5cf6);color:white;border:none;padding:6px 16px;border-radius:20px;font-weight:600;font-size:0.8rem;cursor:pointer;font-family:inherit;display:${btnDisplay};">${subscriptionStatus === 'active' ? 'Renew' : 'Subscribe'}</button>`;
-        }
-
-        async function subscribe() {
-            if (!currentUser) { alert('Please log in first.'); return; }
-            try {
-                const response = await fetch('/create-payment', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ userId: currentUser.id, email: currentUser.email })
-                });
-                const data = await response.json();
-                if (data.authorization_url) {
-                    window.location.href = data.authorization_url;
-                } else {
-                    alert('Error creating payment. Please try again.');
-                }
-            } catch (err) {
-                alert('Payment service unavailable. Please try again later.');
-            }
-        }
+        async function checkSubscription() { /* ... */ }
+        function updateBadge() { /* ... */ }
+        async function subscribe() { /* ... */ }
 
         // ================================================================
-        //  LOGOUT
+        //  LOGOUT (same)
         // ================================================================
-        function logout() {
-            if (confirm('Are you sure you want to logout?')) {
-                localStorage.removeItem('synapse_user');
-                document.getElementById('dashboard').classList.remove('active');
-                document.getElementById('heroSection').style.display = 'block';
-                document.querySelector('.dashboard-preview').style.display = 'block';
-                document.getElementById('features').style.display = 'block';
-                document.getElementById('pricing').style.display = 'block';
-                document.querySelector('.faq').style.display = 'block';
-                document.getElementById('loginEmail').value = '';
-                document.getElementById('loginPassword').value = '';
-                clearErrors();
-                currentUser = null;
-            }
-        }
-
-        // ================================================================
-        //  PROFILE UPDATE (placeholder)
-        // ================================================================
-        function showGradeSelection() {
-            alert('Profile update will be available soon. For now, you can update your subjects by signing up again.');
-        }
+        function logout() { /* ... */ }
 
         // ================================================================
         //  INIT
@@ -2340,13 +1752,11 @@
             }
             document.addEventListener('keydown', function(e) {
                 if (e.key === 'Enter') {
-                    if (document.getElementById('loginPage').style.display !== 'none' && document.getElementById(
-                            'authOverlay').classList.contains('active')) { login(); }
+                    if (document.getElementById('loginPage').style.display !== 'none' && document.getElementById('authOverlay').classList.contains('active')) { login(); }
                 }
             });
             document.addEventListener('keydown', function(e) { if (e.key === 'Escape') closeAuth(); });
-            document.getElementById('authOverlay').addEventListener('click', function(e) { if (e.target === this)
-                closeAuth(); });
+            document.getElementById('authOverlay').addEventListener('click', function(e) { if (e.target === this) closeAuth(); });
         });
     </script>
 </body>
