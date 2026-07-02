@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Leago Academy — Admin</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', system-ui, sans-serif; background: #f8fafc; padding: 20px; }
+        .container { max-width: 1200px; margin: 0 auto; }
+        h1 { margin-bottom: 20px; }
+        .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 16px; margin-bottom: 30px; }
+        .stat-card { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); text-align: center; }
+        .stat-card .number { font-size: 2rem; font-weight: 700; color: #0b1120; }
+        .stat-card .label { font-size: 0.85rem; color: #6b7280; }
+        table { width: 100%; background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.06); border-collapse: collapse; }
+        th { background: #f1f5f9; text-align: left; padding: 12px 16px; font-weight: 600; color: #0b1120; }
+        td { padding: 10px 16px; border-bottom: 1px solid #e5e7eb; }
+        tr:last-child td { border-bottom: none; }
+        .status-badge { padding: 3px 10px; border-radius: 12px; font-size: 0.75rem; font-weight: 600; }
+        .status-trial { background: #fef3c7; color: #92400e; }
+        .status-active { background: #d1fae5; color: #065f46; }
+        .status-expired { background: #fee2e2; color: #991b1b; }
+        .back-link { display: inline-block; margin-bottom: 20px; color: #6366f1; text-decoration: none; font-weight: 600; }
+        .back-link:hover { text-decoration: underline; }
+        .loading { text-align: center; padding: 40px; color: #6b7280; }
+        .error { color: #ef4444; padding: 20px; text-align: center; background: #fee2e2; border-radius: 8px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="/" class="back-link">← Back to Leago</a>
+        <h1>🔐 Admin Dashboard</h1>
+        <div id="stats" class="stats"></div>
+        <h2>Users</h2>
+        <div id="usersTable"></div>
+        <h2 style="margin-top:30px;">Subscriptions</h2>
+        <div id="subscriptionsTable"></div>
+    </div>
+    <script>
+        async function fetchAdminData() {
+            try {
+                const loginRes = await fetch('/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email: 'admin@leago.com', password: 'admin123' })
+                });
+                const loginData = await loginRes.json();
+                if (!loginData.success) {
+                    document.getElementById('usersTable').innerHTML = '<div class="error">Failed to log in as admin. Please check admin credentials.</div>';
+                    return;
+                }
+                const userId = loginData.user.id;
+
+                const [statsRes, usersRes, subsRes] = await Promise.all([
+                    fetch(`/api/admin/stats?userId=${userId}`),
+                    fetch(`/api/admin/users?userId=${userId}`),
+                    fetch(`/api/admin/subscriptions?userId=${userId}`)
+                ]);
+
+                if (!statsRes.ok || !usersRes.ok || !subsRes.ok) {
+                    throw new Error('Failed to fetch admin data');
+                }
+
+                const stats = await statsRes.json();
+                const users = await usersRes.json();
+                const subscriptions = await subsRes.json();
+
+                document.getElementById('stats').innerHTML = `
+                    <div class="stat-card"><div class="number">${stats.totalUsers}</div><div class="label">Total Users</div></div>
+                    <div class="stat-card"><div class="number">${stats.activeSubscriptions}</div><div class="label">Active Subscriptions</div></div>
+                    <div class="stat-card"><div class="number">${stats.trialUsers}</div><div class="label">Trial Users</div></div>
+                    <div class="stat-card"><div class="number">${stats.totalProgress}</div><div class="label">Progress Entries</div></div>
+                `;
+
+                let usersHtml = `<table><thead><tr><th>ID</th><th>Email</th><th>Name</th><th>Role</th><th>Status</th><th>Created</th></tr></thead><tbody>`;
+                users.forEach(u => {
+                    const statusClass = u.status === 'trial' ? 'status-trial' : u.status === 'active' ? 'status-active' : 'status-expired';
+                    usersHtml += `<tr>
+                        <td>${u.id}</td>
+                        <td>${u.email}</td>
+                        <td>${u.first_name} ${u.last_name}</td>
+                        <td>${u.role || 'learner'}</td>
+                        <td><span class="status-badge ${statusClass}">${u.status || 'none'}</span></td>
+                        <td>${new Date(u.created_at).toLocaleDateString()}</td>
+                    </tr>`;
+                });
+                usersHtml += `</tbody></table>`;
+                document.getElementById('usersTable').innerHTML = usersHtml;
+
+                let subsHtml = `<table><thead><tr><th>User</th><th>Email</th><th>Status</th><th>Start</th><th>End</th></tr></thead><tbody>`;
+                subscriptions.forEach(s => {
+                    const statusClass = s.status === 'trial' ? 'status-trial' : s.status === 'active' ? 'status-active' : 'status-expired';
+                    subsHtml += `<tr>
+                        <td>${s.first_name} ${s.last_name}</td>
+                        <td>${s.email}</td>
+                        <td><span class="status-badge ${statusClass}">${s.status}</span></td>
+                        <td>${new Date(s.start_date).toLocaleDateString()}</td>
+                        <td>${new Date(s.end_date).toLocaleDateString()}</td>
+                    </tr>`;
+                });
+                subsHtml += `</tbody></table>`;
+                document.getElementById('subscriptionsTable').innerHTML = subsHtml;
+            } catch (err) {
+                console.error(err);
+                document.getElementById('usersTable').innerHTML = `<div class="error">Error loading admin data: ${err.message}</div>`;
+            }
+        }
+        fetchAdminData();
+    </script>
+</body>
+</html>
+
