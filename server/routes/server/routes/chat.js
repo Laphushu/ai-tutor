@@ -3,7 +3,6 @@ const express = require('express');
 const { pool } = require('../db');
 const router = express.Router();
 
-// Simple subscription check (we'll inline it)
 async function checkSubscription(req, res, next) {
   const userId = req.body.userId || req.query.userId;
   if (!userId) return res.status(401).json({ error: 'Unauthorized' });

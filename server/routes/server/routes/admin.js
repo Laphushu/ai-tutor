@@ -3,7 +3,6 @@ const express = require('express');
 const { pool } = require('../db');
 const router = express.Router();
 
-// Admin middleware (simple check – you can improve later)
 async function requireAdmin(req, res, next) {
   const userId = req.body.userId || req.query.userId;
   if (!userId) return res.status(401).json({ error: 'Unauthorized' });
