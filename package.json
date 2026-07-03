@@ -1,27 +1,21 @@
 {
-  "name": "english-ai-tutor",
-  "version": "1.0.0",
-  "description": "Leago AI Tutor Platform",
+  "name": "leago-academy",
+  "version": "2.0.0",
+  "description": "AI Education Platform for Africa",
   "main": "server/server.js",
   "scripts": {
     "start": "node server/server.js",
     "dev": "nodemon server/server.js"
   },
   "dependencies": {
-    "bcrypt": "^6.0.0",
-    "bcryptjs": "^2.4.3",
+    "bcrypt": "^5.1.1",
     "cors": "^2.8.5",
-    "dotenv": "^16.6.1",
+    "dotenv": "^16.3.1",
     "express": "^4.18.2",
-    "jsonwebtoken": "^9.0.2",
-    "openai": "^4.20.0",
-    "paystack": "^1.0.0",
-    "pg": "^8.22.0",
-    "resend": "^3.5.0"
+    "pg": "^8.11.3",
+    "resend": "^3.0.0"
   },
   "devDependencies": {
     "nodemon": "^3.0.1"
-  },
-  "author": "Laphushu Tshukudu",
-  "license": "ISC"
+  }
 }

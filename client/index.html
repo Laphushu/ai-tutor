@@ -1577,7 +1577,7 @@
 
     <script>
         // ================================================================
-        //  GLOBALS & TOPICS
+        //  GLOBALS
         // ================================================================
         let currentUser = null;
         let currentSubject = '';
@@ -1586,9 +1586,6 @@
         let currentStep = 1;
         let signupData = {};
 
-        // ================================================================
-        //  DEFAULT TOPICS
-        // ================================================================
         const DEFAULT_TOPICS = {
             'Mathematics': ['Introduction to Algebra', 'Solving Linear Equations', 'Quadratic Functions', 'Trigonometry Basics', 'Calculus Fundamentals', 'Statistics & Probability', 'Geometry', 'Number Patterns'],
             'English Home Language': ['Grammar & Sentence Structure', 'Reading Comprehension', 'Creative Writing', 'Literature Analysis', 'Vocabulary Building', 'Essay Writing', 'Public Speaking'],
@@ -1617,7 +1614,7 @@
         };
 
         // ================================================================
-        //  SIGNUP STEPPER
+        //  STEPPER FUNCTIONS
         // ================================================================
         function goToStep(step) {
             document.querySelectorAll('.signup-step').forEach(el => el.style.display = 'none');
@@ -1656,7 +1653,7 @@
                 const province = document.getElementById('signupProvince').value;
                 if (!country) { alert('Please select your country.'); return; }
                 signupData.countryId = parseInt(country);
-                signupData.province = province || null;
+                signupData.provinceId = province ? parseInt(province) : null;
             }
             if (step === 4) {
                 const level = document.getElementById('signupLevel').value;
@@ -1678,11 +1675,11 @@
         }
 
         // ================================================================
-        //  DYNAMIC DROPDOWNS
+        //  LOAD DATA FROM API (new endpoints)
         // ================================================================
         async function loadCountries() {
             try {
-                const res = await fetch('/api/countries');
+                const res = await fetch('/api/subjects/countries');
                 const data = await res.json();
                 const sel = document.getElementById('signupCountry');
                 sel.innerHTML = '<option value="">Select country</option>';
@@ -1701,12 +1698,12 @@
             sel.innerHTML = '<option value="">Select province</option>';
             if (!countryId) return;
             try {
-                const res = await fetch(`/api/provinces/${countryId}`);
+                const res = await fetch(`/api/subjects/provinces/${countryId}`);
                 const data = await res.json();
                 data.forEach(p => {
                     const opt = document.createElement('option');
-                    opt.value = p;
-                    opt.textContent = p;
+                    opt.value = p.id;
+                    opt.textContent = p.name;
                     sel.appendChild(opt);
                 });
             } catch (e) { console.error('Error loading provinces:', e); }
@@ -1714,7 +1711,7 @@
 
         async function loadEducationLevels() {
             try {
-                const res = await fetch('/api/education-levels');
+                const res = await fetch('/api/subjects/education-levels');
                 const data = await res.json();
                 const sel = document.getElementById('signupLevel');
                 sel.innerHTML = '<option value="">Select level</option>';
@@ -1733,12 +1730,12 @@
             sel.innerHTML = '<option value="">Select grade</option>';
             if (!levelId) return;
             try {
-                const res = await fetch(`/api/grades/${levelId}`);
+                const res = await fetch(`/api/subjects/grades/${levelId}`);
                 const data = await res.json();
                 data.forEach(g => {
                     const opt = document.createElement('option');
                     opt.value = g.id;
-                    opt.textContent = g.display || g.name;
+                    opt.textContent = g.display_name || g.name;
                     sel.appendChild(opt);
                 });
             } catch (e) { console.error('Error loading grades:', e); }
@@ -1750,7 +1747,7 @@
             sel.innerHTML = '<option value="">Select curriculum</option>';
             if (!countryId) return;
             try {
-                const res = await fetch(`/api/curricula/${countryId}`);
+                const res = await fetch(`/api/subjects/curricula/${countryId}`);
                 const data = await res.json();
                 data.forEach(c => {
                     const opt = document.createElement('option');
@@ -1771,7 +1768,7 @@
                 return;
             }
             try {
-                const res = await fetch(`/api/subjects/${curriculumId}/${gradeId}`);
+                const res = await fetch(`/api/subjects/subjects/${curriculumId}/${gradeId}`);
                 const subjects = await res.json();
                 if (!subjects.length) {
                     container.innerHTML = '<p style="grid-column:1/-1;color:#6b7280;font-size:0.9rem;">No subjects available.</p>';
@@ -1790,7 +1787,7 @@
         }
 
         // ================================================================
-        //  AUTH – Signup
+        //  AUTH – Signup (with new API)
         // ================================================================
         async function signup() {
             const subjects = Array.from(document.querySelectorAll('.subject-checkbox:checked')).map(cb => cb.value);
@@ -1803,7 +1800,7 @@
             signupData.role = 'learner';
 
             try {
-                const res = await fetch('/signup', {
+                const res = await fetch('/api/auth/signup', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(signupData)
@@ -1827,7 +1824,7 @@
         }
 
         // ================================================================
-        //  AUTH – Login (UPDATED with admin redirect)
+        //  AUTH – Login (with new API)
         // ================================================================
         async function login() {
             const email = document.getElementById('loginEmail').value.trim();
@@ -1840,20 +1837,11 @@
             setButtonLoading('loginBtn', true);
 
             try {
-                const res = await fetch('/login', {
+                const res = await fetch('/api/auth/login', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ email, password })
                 });
-
-                const contentType = res.headers.get('content-type');
-                if (!contentType || !contentType.includes('application/json')) {
-                    const text = await res.text();
-                    console.error('Non-JSON response:', text);
-                    showError('loginError', 'Server error. Please try again.');
-                    setButtonLoading('loginBtn', false);
-                    return;
-                }
 
                 const data = await res.json();
                 if (!res.ok) {
@@ -1863,14 +1851,11 @@
                 }
 
                 if (data.success) {
-                    currentUser = { id: data.user.id, ...data.user };
-                    subscriptionStatus = data.user.subscription?.status || 'trial';
-                    daysRemaining = data.user.subscription?.daysRemaining || 3;
+                    currentUser = data.user;
                     localStorage.setItem('synapse_user', JSON.stringify(currentUser));
                     showSuccess('loginSuccess', 'Login successful!');
                     setTimeout(() => {
                         closeAuth();
-                        // Check if admin
                         if (currentUser.role === 'admin') {
                             window.location.href = '/admin.html';
                             return;
@@ -1901,16 +1886,17 @@
         // ================================================================
         function initDashboard(user) {
             currentUser = user;
-            document.getElementById('userName').textContent = user.firstName + ' ' + user.lastName || 'User';
+            const fullName = `${user.firstName || ''} ${user.lastName || ''}`.trim() || 'Student';
+            document.getElementById('userName').textContent = fullName;
             document.getElementById('userRole').textContent = user.role || 'Learner';
-            const gradeDisplay = user.gradeId ? 'Level: ' + (user.gradeName || 'Set') : 'Level: Not set';
+            const gradeDisplay = user.gradeName || 'Level: Not set';
             document.getElementById('userGrade').textContent = gradeDisplay;
             checkSubscription();
 
             const profileHtml = `
                         <div class="profile-card">
                             <div class="row"><span class="label">Country</span><span class="value">${user.countryName || 'Not set'}</span></div>
-                            ${user.province ? `<div class="row"><span class="label">Province</span><span class="value">${user.province}</span></div>` : ''}
+                            ${user.provinceName ? `<div class="row"><span class="label">Province</span><span class="value">${user.provinceName}</span></div>` : ''}
                             <div class="row"><span class="label">Education Level</span><span class="value">${user.educationLevelName || 'Not set'}</span></div>
                             <div class="row"><span class="label">Curriculum</span><span class="value">${user.curriculumName || 'Not set'}</span></div>
                             <div class="row"><span class="label">Grade/Year</span><span class="value">${user.gradeName || 'Not set'}</span></div>
@@ -1923,7 +1909,7 @@
                         </div>
                     `;
 
-            document.getElementById('welcomeMessage').textContent = `Welcome back, ${user.firstName || 'Student'} 👋`;
+            document.getElementById('welcomeMessage').textContent = `Welcome back, ${fullName} 👋`;
             document.getElementById('welcomeSub').innerHTML = `Today's goal: Complete your next lesson. <span class="change-grade-link" onclick="showGradeSelection()">Update Profile</span>`;
             const container = document.getElementById('dynamicContent');
             container.innerHTML = profileHtml + `
@@ -2060,7 +2046,7 @@
         }
 
         // ================================================================
-        //  CHAT
+        //  CHAT (uses /api/chat)
         // ================================================================
         async function sendChat() {
             const input = document.getElementById('chatInput');
@@ -2079,7 +2065,7 @@
             const topic = parts[1] || '';
 
             try {
-                const res = await fetch('/chat', {
+                const res = await fetch('/api/chat', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
@@ -2247,7 +2233,7 @@
         async function checkSubscription() {
             if (!currentUser) return;
             try {
-                const res = await fetch('/subscription-status/' + currentUser.id);
+                const res = await fetch(`/api/auth/subscription/${currentUser.id}`);
                 const data = await res.json();
                 subscriptionStatus = data.status || 'trial';
                 daysRemaining = data.daysRemaining || 3;
@@ -2276,7 +2262,7 @@
         async function subscribe() {
             if (!currentUser) { alert('Please log in first.'); return; }
             try {
-                const response = await fetch('/create-payment', {
+                const response = await fetch('/api/payments/create', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ userId: currentUser.id, email: currentUser.email })
