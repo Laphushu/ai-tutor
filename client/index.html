@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Leago Academy</title>
     <style>
+        /* ===== CSS (unchanged – keep your existing styles) ===== */
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: 'Segoe UI', sans-serif; background: #f8fafc; }
         .hero { background: linear-gradient(135deg, #0b1120 0%, #1a1a3e 100%); padding: 80px 20px; text-align: center; color: white; }
@@ -84,6 +85,12 @@
         .sub-trial { background: #fef3c7; color: #92400e; }
         .sub-active { background: #d1fae5; color: #065f46; }
         .sub-expired { background: #fee2e2; color: #991b1b; }
+        /* Info pages (legal) */
+        .info-page { display: none; max-width: 800px; margin: 40px auto; padding: 40px 36px; background: white; border-radius: 28px; box-shadow: 0 24px 80px rgba(0,0,0,0.08); line-height: 1.6; color: #0b1120; }
+        .info-page.active { display: block; }
+        .info-page h1 { font-size: 2rem; margin-bottom: 8px; }
+        .info-page .back-link { display: inline-block; margin-top: 24px; font-weight: 600; color: #6366f1; cursor: pointer; }
+        .info-page .back-link:hover { text-decoration: underline; }
     </style>
 </head>
 <body>
@@ -121,7 +128,7 @@
                 <div class="auth-link">Don't have an account? <a onclick="showSignup()">Sign up</a></div>
             </div>
 
-            <!-- SIGNUP (hardcoded data) -->
+            <!-- SIGNUP (hardcoded data with IDs) -->
             <div id="signupPage" style="display:none;">
                 <h3>Create your education profile</h3>
                 <p style="color:#6b7280;font-size:0.95rem;margin-bottom:20px;">We'll personalize your learning experience.</p>
@@ -249,20 +256,59 @@
         </div>
     </div>
 
+    <!-- ===== LEGAL PAGES (footer links) ===== -->
+    <div class="info-page" id="page-about"><h1>About Leago Academy</h1><p>Empowering Africa Through Intelligent Learning...</p><span class="back-link" onclick="showInfoPage('')">← Back to Leago</span></div>
+    <div class="info-page" id="page-privacy"><h1>Privacy Policy</h1><p>Effective Date: 1 July 2026...</p><span class="back-link" onclick="showInfoPage('')">← Back to Leago</span></div>
+    <div class="info-page" id="page-tos"><h1>Terms of Service</h1><p>Last Updated: 1 July 2026...</p><span class="back-link" onclick="showInfoPage('')">← Back to Leago</span></div>
+    <div class="info-page" id="page-contact"><h1>Contact Leago Academy</h1><p>We are here to help...</p><span class="back-link" onclick="showInfoPage('')">← Back to Leago</span></div>
+
+    <!-- ===== FOOTER ===== -->
+    <footer class="site-footer" style="background:#0b1120;color:#9ca3af;padding:40px 20px;margin-top:60px;">
+        <div style="max-width:1100px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:32px;">
+            <div><h4 style="color:white;">🧠 Leago Academy</h4><p style="opacity:0.8;">Empowering African Students Through AI-Powered Education.</p></div>
+            <div><h4 style="color:white;">Company</h4><a onclick="showInfoPage('about')" style="display:block;cursor:pointer;color:#9ca3af;text-decoration:none;padding:4px 0;">About Us</a><a href="#pricing" onclick="document.getElementById('pricing').scrollIntoView({behavior:'smooth'})" style="display:block;cursor:pointer;color:#9ca3af;text-decoration:none;padding:4px 0;">Pricing</a><a onclick="showInfoPage('contact')" style="display:block;cursor:pointer;color:#9ca3af;text-decoration:none;padding:4px 0;">Contact</a></div>
+            <div><h4 style="color:white;">Legal</h4><a onclick="showInfoPage('privacy')" style="display:block;cursor:pointer;color:#9ca3af;text-decoration:none;padding:4px 0;">Privacy Policy</a><a onclick="showInfoPage('tos')" style="display:block;cursor:pointer;color:#9ca3af;text-decoration:none;padding:4px 0;">Terms of Service</a></div>
+            <div><h4 style="color:white;">Support</h4><a href="mailto:support@leagoacademy.co.za" style="display:block;color:#9ca3af;text-decoration:none;padding:4px 0;">support@leagoacademy.co.za</a><a href="https://www.leagoacademy.co.za" style="display:block;color:#9ca3af;text-decoration:none;padding:4px 0;">www.leagoacademy.co.za</a></div>
+        </div>
+        <div style="max-width:1100px;margin:20px auto 0;border-top:1px solid #1a1a3e;padding-top:20px;text-align:center;font-size:0.85rem;">© 2026 Leago Academy. All rights reserved.</div>
+    </footer>
+
     <script>
         // ================================================================
-        //  HARDCORED DATA FOR SIGNUP
+        //  HARDCORED DATA (with IDs for provinces)
         // ================================================================
         const HARDCODED_DATA = {
             provinces: {
-                '1': ['Eastern Cape', 'Free State', 'Gauteng', 'KwaZulu-Natal', 'Limpopo', 'Mpumalanga', 'Northern Cape', 'North West', 'Western Cape'],
-                '2': ['Nairobi', 'Mombasa', 'Kisumu', 'Nakuru', 'Eldoret'],
-                '3': ['Lagos', 'Abuja', 'Kano', 'Ibadan', 'Port Harcourt']
+                '1': [
+                    { id: 1, name: 'Eastern Cape' },
+                    { id: 2, name: 'Free State' },
+                    { id: 3, name: 'Gauteng' },
+                    { id: 4, name: 'KwaZulu-Natal' },
+                    { id: 5, name: 'Limpopo' },
+                    { id: 6, name: 'Mpumalanga' },
+                    { id: 7, name: 'Northern Cape' },
+                    { id: 8, name: 'North West' },
+                    { id: 9, name: 'Western Cape' }
+                ],
+                '2': [
+                    { id: 10, name: 'Nairobi' },
+                    { id: 11, name: 'Mombasa' },
+                    { id: 12, name: 'Kisumu' },
+                    { id: 13, name: 'Nakuru' },
+                    { id: 14, name: 'Eldoret' }
+                ],
+                '3': [
+                    { id: 15, name: 'Lagos' },
+                    { id: 16, name: 'Abuja' },
+                    { id: 17, name: 'Kano' },
+                    { id: 18, name: 'Ibadan' },
+                    { id: 19, name: 'Port Harcourt' }
+                ]
             },
             grades: {
-                '1': ['Grade 8', 'Grade 9', 'Grade 10', 'Grade 11', 'Grade 12'],
-                '2': ['N1', 'N2', 'N3', 'N4', 'N5', 'N6'],
-                '3': ['First Year', 'Second Year', 'Third Year', 'Fourth Year', 'Postgraduate'],
+                '1': ['Grade 8','Grade 9','Grade 10','Grade 11','Grade 12'],
+                '2': ['N1','N2','N3','N4','N5','N6'],
+                '3': ['First Year','Second Year','Third Year','Fourth Year','Postgraduate'],
                 '4': ['Other']
             },
             subjects: {
@@ -276,10 +322,11 @@
             const sel = document.getElementById('signupProvince');
             sel.innerHTML = '<option value="">Select province</option>';
             if (!countryId) return;
-            (HARDCODED_DATA.provinces[countryId] || []).forEach(p => {
+            const provs = HARDCODED_DATA.provinces[countryId] || [];
+            provs.forEach(p => {
                 const opt = document.createElement('option');
-                opt.value = p;
-                opt.textContent = p;
+                opt.value = p.id;   // now we send province ID
+                opt.textContent = p.name;
                 sel.appendChild(opt);
             });
         }
@@ -289,7 +336,8 @@
             const sel = document.getElementById('signupGrade');
             sel.innerHTML = '<option value="">Select grade</option>';
             if (!levelId) return;
-            (HARDCODED_DATA.grades[levelId] || []).forEach(g => {
+            const grades = HARDCODED_DATA.grades[levelId] || [];
+            grades.forEach(g => {
                 const opt = document.createElement('option');
                 opt.value = g;
                 opt.textContent = g;
@@ -345,7 +393,7 @@
                 const province = document.getElementById('signupProvince').value;
                 if (!country) { alert('Please select your country.'); return; }
                 signupData.countryId = parseInt(country);
-                signupData.province = province || null;
+                signupData.province = province;   // this is the ID now
             }
             if (step === 4) {
                 const level = document.getElementById('signupLevel').value;
@@ -417,7 +465,6 @@
                 const data = await res.json();
                 if (!res.ok) { showError('loginError', data.error || 'Invalid credentials'); setButtonLoading('loginBtn', false); return; }
                 if (data.success) {
-                    // Log the user object to see what we got
                     console.log('Login response user:', data.user);
                     localStorage.setItem('synapse_user', JSON.stringify(data.user));
                     showSuccess('loginSuccess', 'Login successful!');
@@ -439,19 +486,16 @@
         }
 
         // ================================================================
-        //  DASHBOARD – DISPLAYS ALL USER DATA
+        //  DASHBOARD
         // ================================================================
         function initDashboard(user) {
             console.log('initDashboard user:', user);
-            // Top bar
             const fullName = `${user.firstName || ''} ${user.lastName || ''}`.trim() || 'Student';
             document.getElementById('userName').textContent = fullName;
             document.getElementById('userGrade').textContent = user.gradeName || 'Level: Not set';
 
-            // Welcome
             document.getElementById('welcomeMessage').textContent = `Welcome back, ${fullName} 👋`;
 
-            // Profile card
             const profileHtml = `
                 <div class="profile-card">
                     <div class="row"><span class="label">Country</span><span class="value">${user.countryName || 'Not set'}</span></div>
@@ -469,7 +513,6 @@
             `;
             document.getElementById('dynamicContent').innerHTML = profileHtml;
 
-            // Sidebar subjects
             const list = document.getElementById('subjectList');
             list.innerHTML = '';
             if (user.subjects && user.subjects.length) {
@@ -482,13 +525,12 @@
                 list.innerHTML = '<li style="color:#9ca3af;">No subjects selected</li>';
             }
 
-            // Progress (placeholder)
             document.getElementById('progressContainer').innerHTML = `
                 <div style="font-size:0.9rem;color:#6b7280;">Complete your first lesson</div>
             `;
             document.getElementById('recentContainer').innerHTML = `<div style="font-size:0.85rem;color:#6b7280;">No recent activity</div>`;
 
-            // Subscription badge
+            // ✅ Subscription badge
             updateBadge(user.subscription);
         }
 
@@ -561,6 +603,35 @@
                 clearErrors();
                 window.location.reload();
             }
+        }
+
+        function showInfoPage(page) {
+            document.querySelectorAll('.info-page').forEach(el => el.classList.remove('active'));
+            if (!page) {
+                document.getElementById('heroSection').style.display = 'block';
+                document.querySelector('.dashboard-preview').style.display = 'block';
+                document.getElementById('features').style.display = 'block';
+                document.getElementById('pricing').style.display = 'block';
+                document.querySelector('.faq').style.display = 'block';
+                if (currentUser) {
+                    document.getElementById('dashboard').classList.add('active');
+                    document.getElementById('heroSection').style.display = 'none';
+                    document.querySelector('.dashboard-preview').style.display = 'none';
+                    document.getElementById('features').style.display = 'none';
+                    document.getElementById('pricing').style.display = 'none';
+                    document.querySelector('.faq').style.display = 'none';
+                }
+                return;
+            }
+            document.getElementById('heroSection').style.display = 'none';
+            document.querySelector('.dashboard-preview').style.display = 'none';
+            document.getElementById('features').style.display = 'none';
+            document.getElementById('pricing').style.display = 'none';
+            document.querySelector('.faq').style.display = 'none';
+            document.getElementById('dashboard').classList.remove('active');
+            const target = document.getElementById('page-' + page);
+            if (target) target.classList.add('active');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
         // ================================================================

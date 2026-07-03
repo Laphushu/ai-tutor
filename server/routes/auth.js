@@ -5,9 +5,19 @@ const { pool } = require('../db');
 const router = express.Router();
 const SALT_ROUNDS = 10;
 
+// Helper: get province ID from name and country
+async function getProvinceId(countryId, provinceName) {
+  if (!provinceName) return null;
+  const result = await pool.query(
+    'SELECT id FROM provinces WHERE country_id = $1 AND name = $2',
+    [countryId, provinceName]
+  );
+  return result.rows.length ? result.rows[0].id : null;
+}
+
 // Signup
 router.post('/signup', async (req, res) => {
-  const { firstName, lastName, email, password, countryId, provinceId, educationLevelId, curriculumId, gradeId, subjects, role } = req.body;
+  const { firstName, lastName, email, password, countryId, province, educationLevelId, curriculumId, gradeId, subjects, role } = req.body;
   if (!firstName || !lastName || !email || !password || !countryId || !educationLevelId || !curriculumId || !gradeId) {
     return res.status(400).json({ error: 'All required fields must be filled' });
   }
@@ -19,10 +29,11 @@ router.post('/signup', async (req, res) => {
     if (existing.rows.length) return res.status(400).json({ error: 'Email already registered' });
     const hash = await bcrypt.hash(password, SALT_ROUNDS);
     const subjectsJson = JSON.stringify(subjects);
+    const provinceId = await getProvinceId(countryId, province);
     const result = await pool.query(
       `INSERT INTO users (email, password_hash, first_name, last_name, country_id, province_id, education_level_id, curriculum_id, grade_id, role, subjects)
        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11) RETURNING id`,
-      [email, hash, firstName, lastName, countryId, provinceId || null, educationLevelId, curriculumId, gradeId, role || 'learner', subjectsJson]
+      [email, hash, firstName, lastName, countryId, provinceId, educationLevelId, curriculumId, gradeId, role || 'learner', subjectsJson]
     );
     const userId = result.rows[0].id;
     await pool.query(
@@ -84,7 +95,7 @@ router.post('/login', async (req, res) => {
       gradeName: user.grade_name || 'Not set',
       subjects: user.subjects || [],
       role: user.role || 'learner',
-      subscription: { status, daysRemaining }
+      subscription: { status, daysRemaining }  // ✅ this is returned
     };
     res.json({ success: true, user: userData, token: 'mock-token' });
   } catch (err) {
