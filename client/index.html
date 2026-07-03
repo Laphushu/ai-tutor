@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Leago Academy</title>
     <style>
-        /* ===== CSS (unchanged – keep your existing styles) ===== */
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: 'Segoe UI', sans-serif; background: #f8fafc; }
         .hero { background: linear-gradient(135deg, #0b1120 0%, #1a1a3e 100%); padding: 80px 20px; text-align: center; color: white; }
@@ -85,12 +84,17 @@
         .sub-trial { background: #fef3c7; color: #92400e; }
         .sub-active { background: #d1fae5; color: #065f46; }
         .sub-expired { background: #fee2e2; color: #991b1b; }
-        /* Info pages (legal) */
         .info-page { display: none; max-width: 800px; margin: 40px auto; padding: 40px 36px; background: white; border-radius: 28px; box-shadow: 0 24px 80px rgba(0,0,0,0.08); line-height: 1.6; color: #0b1120; }
         .info-page.active { display: block; }
         .info-page h1 { font-size: 2rem; margin-bottom: 8px; }
         .info-page .back-link { display: inline-block; margin-top: 24px; font-weight: 600; color: #6366f1; cursor: pointer; }
         .info-page .back-link:hover { text-decoration: underline; }
+        .site-footer { background: #0b1120; color: #9ca3af; padding: 40px 20px; margin-top: 60px; }
+        .site-footer .inner { max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 32px; }
+        .site-footer .inner h4 { color: white; font-size: 1.1rem; margin-bottom: 12px; }
+        .site-footer .inner a { display: block; color: #9ca3af; text-decoration: none; font-size: 0.9rem; padding: 4px 0; transition: color 0.2s; cursor: pointer; }
+        .site-footer .inner a:hover { color: white; }
+        .site-footer .bottom { max-width: 1100px; margin: 20px auto 0; border-top: 1px solid #1a1a3e; padding-top: 20px; text-align: center; font-size: 0.85rem; }
     </style>
 </head>
 <body>
@@ -111,6 +115,15 @@
         </div>
     </section>
 
+    <!-- ===== DASHBOARD PREVIEW (optional) ===== -->
+    <div class="dashboard-preview" style="max-width:1100px;margin:-40px auto 40px;padding:0 20px;">
+        <div style="background:white;border-radius:20px;padding:24px 28px;box-shadow:0 20px 60px rgba(0,0,0,0.12);text-align:center;">
+            <div style="font-size:3rem;">📊</div>
+            <strong>Dashboard Preview</strong>
+            <p style="margin-top:4px;font-size:0.85rem;color:#9ca3af;">Your personalised learning dashboard</p>
+        </div>
+    </div>
+
     <!-- ===== AUTH OVERLAY ===== -->
     <div class="auth-overlay" id="authOverlay">
         <div class="auth-card">
@@ -128,7 +141,7 @@
                 <div class="auth-link">Don't have an account? <a onclick="showSignup()">Sign up</a></div>
             </div>
 
-            <!-- SIGNUP (hardcoded data with IDs) -->
+            <!-- SIGNUP (hardcoded data) -->
             <div id="signupPage" style="display:none;">
                 <h3>Create your education profile</h3>
                 <p style="color:#6b7280;font-size:0.95rem;margin-bottom:20px;">We'll personalize your learning experience.</p>
@@ -242,9 +255,7 @@
             <main class="center-panel" id="centerPanel">
                 <div class="welcome" id="welcomeMessage">Welcome back, Student 👋</div>
                 <div class="welcome-sub" id="welcomeSub">Today's goal: Complete your next lesson.</div>
-                <div id="dynamicContent">
-                    <!-- Profile card will be inserted here -->
-                </div>
+                <div id="dynamicContent"></div>
             </main>
 
             <aside class="sidebar-right" id="sidebarRight">
@@ -256,26 +267,26 @@
         </div>
     </div>
 
-    <!-- ===== LEGAL PAGES (footer links) ===== -->
+    <!-- ===== LEGAL PAGES ===== -->
     <div class="info-page" id="page-about"><h1>About Leago Academy</h1><p>Empowering Africa Through Intelligent Learning...</p><span class="back-link" onclick="showInfoPage('')">← Back to Leago</span></div>
     <div class="info-page" id="page-privacy"><h1>Privacy Policy</h1><p>Effective Date: 1 July 2026...</p><span class="back-link" onclick="showInfoPage('')">← Back to Leago</span></div>
     <div class="info-page" id="page-tos"><h1>Terms of Service</h1><p>Last Updated: 1 July 2026...</p><span class="back-link" onclick="showInfoPage('')">← Back to Leago</span></div>
     <div class="info-page" id="page-contact"><h1>Contact Leago Academy</h1><p>We are here to help...</p><span class="back-link" onclick="showInfoPage('')">← Back to Leago</span></div>
 
     <!-- ===== FOOTER ===== -->
-    <footer class="site-footer" style="background:#0b1120;color:#9ca3af;padding:40px 20px;margin-top:60px;">
-        <div style="max-width:1100px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:32px;">
-            <div><h4 style="color:white;">🧠 Leago Academy</h4><p style="opacity:0.8;">Empowering African Students Through AI-Powered Education.</p></div>
-            <div><h4 style="color:white;">Company</h4><a onclick="showInfoPage('about')" style="display:block;cursor:pointer;color:#9ca3af;text-decoration:none;padding:4px 0;">About Us</a><a href="#pricing" onclick="document.getElementById('pricing').scrollIntoView({behavior:'smooth'})" style="display:block;cursor:pointer;color:#9ca3af;text-decoration:none;padding:4px 0;">Pricing</a><a onclick="showInfoPage('contact')" style="display:block;cursor:pointer;color:#9ca3af;text-decoration:none;padding:4px 0;">Contact</a></div>
-            <div><h4 style="color:white;">Legal</h4><a onclick="showInfoPage('privacy')" style="display:block;cursor:pointer;color:#9ca3af;text-decoration:none;padding:4px 0;">Privacy Policy</a><a onclick="showInfoPage('tos')" style="display:block;cursor:pointer;color:#9ca3af;text-decoration:none;padding:4px 0;">Terms of Service</a></div>
-            <div><h4 style="color:white;">Support</h4><a href="mailto:support@leagoacademy.co.za" style="display:block;color:#9ca3af;text-decoration:none;padding:4px 0;">support@leagoacademy.co.za</a><a href="https://www.leagoacademy.co.za" style="display:block;color:#9ca3af;text-decoration:none;padding:4px 0;">www.leagoacademy.co.za</a></div>
+    <footer class="site-footer" id="siteFooter">
+        <div class="inner">
+            <div><h4>🧠 Leago Academy</h4><p style="font-size:0.9rem; opacity:0.8;">Empowering African Students Through AI-Powered Education.</p></div>
+            <div><h4>Company</h4><a onclick="showInfoPage('about')">About Us</a><a href="#pricing" onclick="document.getElementById('pricing').scrollIntoView({behavior:'smooth'})">Pricing</a><a onclick="showInfoPage('contact')">Contact</a></div>
+            <div><h4>Legal</h4><a onclick="showInfoPage('privacy')">Privacy Policy</a><a onclick="showInfoPage('tos')">Terms of Service</a></div>
+            <div><h4>Support</h4><a href="mailto:support@leagoacademy.co.za">support@leagoacademy.co.za</a><a href="https://www.leagoacademy.co.za">www.leagoacademy.co.za</a></div>
         </div>
-        <div style="max-width:1100px;margin:20px auto 0;border-top:1px solid #1a1a3e;padding-top:20px;text-align:center;font-size:0.85rem;">© 2026 Leago Academy. All rights reserved.</div>
+        <div class="bottom">© 2026 Leago Academy. All rights reserved.</div>
     </footer>
 
     <script>
         // ================================================================
-        //  HARDCORED DATA (with IDs for provinces)
+        // HARDCORED DATA (with IDs for provinces)
         // ================================================================
         const HARDCODED_DATA = {
             provinces: {
@@ -325,7 +336,7 @@
             const provs = HARDCODED_DATA.provinces[countryId] || [];
             provs.forEach(p => {
                 const opt = document.createElement('option');
-                opt.value = p.id;   // now we send province ID
+                opt.value = p.id;
                 opt.textContent = p.name;
                 sel.appendChild(opt);
             });
@@ -360,7 +371,7 @@
         }
 
         // ================================================================
-        //  STEPPER
+        // STEPPER
         // ================================================================
         let currentStep = 1;
         let signupData = {};
@@ -393,7 +404,7 @@
                 const province = document.getElementById('signupProvince').value;
                 if (!country) { alert('Please select your country.'); return; }
                 signupData.countryId = parseInt(country);
-                signupData.province = province;   // this is the ID now
+                signupData.province = province;
             }
             if (step === 4) {
                 const level = document.getElementById('signupLevel').value;
@@ -413,7 +424,7 @@
         function prevStep(step) { goToStep(step); }
 
         // ================================================================
-        //  AUTH
+        // AUTH – Signup
         // ================================================================
         async function signup() {
             const subjects = Array.from(document.querySelectorAll('.subject-checkbox:checked')).map(cb => cb.value);
@@ -449,10 +460,16 @@
             }
         }
 
+        // ================================================================
+        // AUTH – Login (fixed: safe element hiding)
+        // ================================================================
         async function login() {
             const email = document.getElementById('loginEmail').value.trim();
             const password = document.getElementById('loginPassword').value.trim();
-            if (!email || !password) { showError('loginError', 'Please enter email and password'); return; }
+            if (!email || !password) {
+                showError('loginError', 'Please enter email and password');
+                return;
+            }
             clearErrors();
             setButtonLoading('loginBtn', true);
 
@@ -463,7 +480,11 @@
                     body: JSON.stringify({ email, password })
                 });
                 const data = await res.json();
-                if (!res.ok) { showError('loginError', data.error || 'Invalid credentials'); setButtonLoading('loginBtn', false); return; }
+                if (!res.ok) {
+                    showError('loginError', data.error || 'Invalid credentials');
+                    setButtonLoading('loginBtn', false);
+                    return;
+                }
                 if (data.success) {
                     console.log('Login response user:', data.user);
                     localStorage.setItem('synapse_user', JSON.stringify(data.user));
@@ -471,10 +492,19 @@
                     setTimeout(() => {
                         closeAuth();
                         document.getElementById('dashboard').classList.add('active');
-                        document.getElementById('heroSection').style.display = 'none';
-                        document.getElementById('features').style.display = 'none';
-                        document.getElementById('pricing').style.display = 'none';
-                        document.querySelector('.faq').style.display = 'none';
+                        // Safely hide elements
+                        const hero = document.getElementById('heroSection');
+                        if (hero) hero.style.display = 'none';
+                        const preview = document.querySelector('.dashboard-preview');
+                        if (preview) preview.style.display = 'none';
+                        const features = document.getElementById('features');
+                        if (features) features.style.display = 'none';
+                        const pricing = document.getElementById('pricing');
+                        if (pricing) pricing.style.display = 'none';
+                        const faq = document.querySelector('.faq');
+                        if (faq) faq.style.display = 'none';
+                        const footer = document.getElementById('siteFooter');
+                        if (footer) footer.style.display = 'block';
                         initDashboard(data.user);
                         setButtonLoading('loginBtn', false);
                     }, 500);
@@ -486,7 +516,7 @@
         }
 
         // ================================================================
-        //  DASHBOARD
+        // DASHBOARD
         // ================================================================
         function initDashboard(user) {
             console.log('initDashboard user:', user);
@@ -530,7 +560,6 @@
             `;
             document.getElementById('recentContainer').innerHTML = `<div style="font-size:0.85rem;color:#6b7280;">No recent activity</div>`;
 
-            // ✅ Subscription badge
             updateBadge(user.subscription);
         }
 
@@ -547,7 +576,7 @@
         }
 
         // ================================================================
-        //  NAVIGATION HELPERS
+        // NAVIGATION HELPERS
         // ================================================================
         function openAuth(page) {
             document.getElementById('authOverlay').classList.add('active');
@@ -595,9 +624,8 @@
                 localStorage.removeItem('synapse_user');
                 document.getElementById('dashboard').classList.remove('active');
                 document.getElementById('heroSection').style.display = 'block';
-                document.getElementById('features').style.display = 'block';
-                document.getElementById('pricing').style.display = 'block';
-                document.querySelector('.faq').style.display = 'block';
+                const preview = document.querySelector('.dashboard-preview');
+                if (preview) preview.style.display = 'block';
                 document.getElementById('loginEmail').value = '';
                 document.getElementById('loginPassword').value = '';
                 clearErrors();
@@ -609,25 +637,18 @@
             document.querySelectorAll('.info-page').forEach(el => el.classList.remove('active'));
             if (!page) {
                 document.getElementById('heroSection').style.display = 'block';
-                document.querySelector('.dashboard-preview').style.display = 'block';
-                document.getElementById('features').style.display = 'block';
-                document.getElementById('pricing').style.display = 'block';
-                document.querySelector('.faq').style.display = 'block';
+                const preview = document.querySelector('.dashboard-preview');
+                if (preview) preview.style.display = 'block';
                 if (currentUser) {
                     document.getElementById('dashboard').classList.add('active');
                     document.getElementById('heroSection').style.display = 'none';
-                    document.querySelector('.dashboard-preview').style.display = 'none';
-                    document.getElementById('features').style.display = 'none';
-                    document.getElementById('pricing').style.display = 'none';
-                    document.querySelector('.faq').style.display = 'none';
+                    if (preview) preview.style.display = 'none';
                 }
                 return;
             }
             document.getElementById('heroSection').style.display = 'none';
-            document.querySelector('.dashboard-preview').style.display = 'none';
-            document.getElementById('features').style.display = 'none';
-            document.getElementById('pricing').style.display = 'none';
-            document.querySelector('.faq').style.display = 'none';
+            const preview = document.querySelector('.dashboard-preview');
+            if (preview) preview.style.display = 'none';
             document.getElementById('dashboard').classList.remove('active');
             const target = document.getElementById('page-' + page);
             if (target) target.classList.add('active');
@@ -635,18 +656,20 @@
         }
 
         // ================================================================
-        //  INIT
+        // INIT
         // ================================================================
+        let currentUser = null;
+
         document.addEventListener('DOMContentLoaded', function() {
             const stored = localStorage.getItem('synapse_user');
             if (stored) {
                 try {
                     const user = JSON.parse(stored);
                     console.log('Stored user:', user);
+                    currentUser = user;
                     document.getElementById('heroSection').style.display = 'none';
-                    document.getElementById('features').style.display = 'none';
-                    document.getElementById('pricing').style.display = 'none';
-                    document.querySelector('.faq').style.display = 'none';
+                    const preview = document.querySelector('.dashboard-preview');
+                    if (preview) preview.style.display = 'none';
                     document.getElementById('dashboard').classList.add('active');
                     initDashboard(user);
                 } catch (e) { console.error('Error parsing stored user:', e); }
