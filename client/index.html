@@ -3,29 +3,103 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Leago Academy — AI Education Platform</title>
+    <title>Leago Academy</title>
     <style>
-        /* (keep your existing styles – unchanged) */
-        /* I'll include the full CSS from your previous version */
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Segoe UI', system-ui, sans-serif; background: #f8fafc; min-height: 100vh; }
-        /* ... (copy your full CSS from the previous index.html) */
-        /* For brevity, I'll keep the minimal styling here – you can paste your full CSS */
+        body { font-family: 'Segoe UI', sans-serif; background: #f8fafc; }
+        .hero { background: linear-gradient(135deg, #0b1120 0%, #1a1a3e 100%); padding: 80px 20px; text-align: center; color: white; }
+        .hero .logo { font-size: 2.8rem; font-weight: 800; }
+        .hero .logo span { background: linear-gradient(135deg, #818cf8, #a855f7); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .hero h1 { font-size: 3rem; max-width: 700px; margin: 20px auto; }
+        .hero .cta-group { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; margin-top: 20px; }
+        .btn-primary, .btn-secondary { padding: 14px 32px; border-radius: 14px; font-weight: 700; cursor: pointer; text-decoration: none; display: inline-block; }
+        .btn-primary { background: linear-gradient(135deg, #6366f1, #8b5cf6); color: white; border: none; }
+        .btn-secondary { background: transparent; color: white; border: 2px solid rgba(255,255,255,0.3); }
+        .btn-secondary:hover { border-color: white; }
+        .auth-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); backdrop-filter: blur(8px); justify-content: center; align-items: center; z-index: 1000; padding: 20px; }
+        .auth-overlay.active { display: flex; }
+        .auth-card { background: white; border-radius: 28px; padding: 40px; max-width: 600px; width: 100%; max-height: 95vh; overflow-y: auto; position: relative; }
+        .auth-card .close-btn { position: absolute; top: 16px; right: 20px; background: none; border: none; font-size: 1.5rem; cursor: pointer; color: #9ca3af; }
+        .auth-card .logo-sm { text-align: center; margin-bottom: 20px; }
+        .auth-card .logo-sm h2 { font-size: 1.6rem; }
+        .auth-card .logo-sm h2 span { background: linear-gradient(135deg, #6366f1, #a855f7); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .field { margin-bottom: 14px; }
+        .field label { display: block; font-weight: 600; font-size: 0.85rem; color: #1f2937; margin-bottom: 4px; }
+        .field input, .field select { width: 100%; padding: 12px 14px; border: 2px solid #e5e7eb; border-radius: 10px; font-size: 1rem; background: #fff; }
+        .field input:focus, .field select:focus { outline: none; border-color: #6366f1; }
+        .btn { width: 100%; padding: 14px; border: none; border-radius: 12px; font-size: 1rem; font-weight: 700; cursor: pointer; background: linear-gradient(135deg, #6366f1, #8b5cf6); color: #fff; }
+        .btn:disabled { opacity: 0.6; cursor: not-allowed; }
+        .auth-link { text-align: center; margin-top: 16px; font-size: 0.9rem; color: #6b7280; }
+        .auth-link a { color: #6366f1; cursor: pointer; font-weight: 600; }
+        .error { color: #ef4444; font-size: 0.85rem; margin-top: 4px; display: none; }
+        .error.show { display: block; }
+        .success { color: #22c55e; font-size: 0.85rem; margin-top: 4px; display: none; }
+        .success.show { display: block; }
+        .spinner { display: inline-block; width: 20px; height: 20px; border: 3px solid rgba(255,255,255,0.25); border-top-color: #fff; border-radius: 50%; animation: spin 0.7s linear infinite; vertical-align: middle; margin-right: 8px; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .stepper { display: flex; justify-content: space-between; margin-bottom: 24px; position: relative; }
+        .stepper::before { content: ''; position: absolute; top: 50%; left: 10%; right: 10%; height: 2px; background: #e5e7eb; z-index: 0; }
+        .step-circle { width: 36px; height: 36px; border-radius: 50%; background: #e5e7eb; display: flex; align-items: center; justify-content: center; font-weight: 700; color: #6b7280; position: relative; z-index: 1; transition: all 0.3s; }
+        .step-circle.active { background: #6366f1; color: white; }
+        .step-circle.done { background: #22c55e; color: white; }
+        .subject-grid-check { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px,1fr)); gap: 8px; max-height: 300px; overflow-y: auto; border: 1px solid #e5e7eb; border-radius: 10px; padding: 12px; }
+        .subject-grid-check label { display: flex; align-items: center; gap: 6px; font-size: 0.9rem; cursor: pointer; padding: 4px 6px; border-radius: 4px; }
+        .subject-grid-check label:hover { background: #f3f4f6; }
+        .subject-grid-check input[type="checkbox"] { width: 16px; height: 16px; accent-color: #6366f1; }
+        .dashboard { display: none; max-width: 1200px; margin: 0 auto; padding: 20px; }
+        .dashboard.active { display: block; }
+        .top-nav { background: white; padding: 16px 28px; display: flex; justify-content: space-between; align-items: center; border-radius: 16px; margin-bottom: 24px; flex-wrap: wrap; gap: 12px; }
+        .top-nav .logo { font-size: 1.4rem; font-weight: 800; color: #0b1120; }
+        .top-nav .logo span { background: linear-gradient(135deg, #6366f1, #a855f7); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .user-info { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+        .user-info .name { font-weight: 600; color: #0b1120; }
+        .user-info .grade-badge { background: #eef2ff; color: #6366f1; padding: 2px 12px; border-radius: 12px; font-size: 0.75rem; font-weight: 600; cursor: default; }
+        .logout-btn { background: none; border: none; color: #9ca3af; cursor: pointer; padding: 6px 14px; border-radius: 8px; font-family: inherit; }
+        .logout-btn:hover { background: #f3f4f6; color: #ef4444; }
+        .dashboard-grid { display: grid; grid-template-columns: 220px 1fr 250px; gap: 20px; }
+        @media (max-width: 900px) { .dashboard-grid { grid-template-columns: 1fr; } }
+        .sidebar-left { background: white; border-radius: 16px; padding: 24px 18px; }
+        .sidebar-left .section-title { font-size: 0.7rem; text-transform: uppercase; color: #6b7280; font-weight: 700; letter-spacing: 0.5px; margin: 16px 0 8px; }
+        .sidebar-left .section-title:first-child { margin-top: 0; }
+        .subject-list { list-style: none; }
+        .subject-list li { padding: 8px 12px; border-radius: 8px; cursor: default; font-size: 0.9rem; color: #1f2937; border-bottom: 1px solid #f3f4f6; }
+        .subject-list li:last-child { border-bottom: none; }
+        .center-panel { background: white; border-radius: 16px; padding: 28px 32px; min-height: 400px; }
+        .center-panel .welcome { font-size: 1.6rem; font-weight: 700; color: #0b1120; }
+        .center-panel .welcome-sub { color: #6b7280; margin-bottom: 20px; }
+        .profile-card { background: #f8fafc; border-radius: 12px; padding: 16px 20px; margin-bottom: 20px; border: 1px solid #e5e7eb; }
+        .profile-card .row { display: flex; justify-content: space-between; padding: 4px 0; font-size: 0.9rem; }
+        .profile-card .row .label { color: #6b7280; font-weight: 500; }
+        .profile-card .row .value { font-weight: 600; color: #0b1120; }
+        .subject-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 4px; }
+        .subject-tag { background: #eef2ff; color: #6366f1; padding: 2px 12px; border-radius: 12px; font-size: 0.8rem; font-weight: 600; }
+        .sidebar-right { background: white; border-radius: 16px; padding: 24px 18px; }
+        .sidebar-right .section-title { font-size: 0.7rem; text-transform: uppercase; color: #6b7280; font-weight: 700; letter-spacing: 0.5px; margin: 16px 0 8px; }
+        .sidebar-right .section-title:first-child { margin-top: 0; }
+        .flashcard-item, .error-item { padding: 10px 14px; background: #f8fafc; border-radius: 10px; margin-bottom: 6px; font-size: 0.85rem; }
+        .flashcard-item .term { font-weight: 600; }
+        .error-item { background: #fef2f2; border-left: 3px solid #ef4444; }
+        .error-item .concept { font-weight: 600; color: #991b1b; }
+        .sub-badge { font-size: 0.7rem; padding: 3px 12px; border-radius: 12px; font-weight: 600; }
+        .sub-trial { background: #fef3c7; color: #92400e; }
+        .sub-active { background: #d1fae5; color: #065f46; }
+        .sub-expired { background: #fee2e2; color: #991b1b; }
     </style>
 </head>
 <body>
-    <!-- ===== LANDING PAGE ===== -->
+
+    <!-- ===== LANDING ===== -->
     <section class="hero" id="heroSection">
-        <div class="hero-container" style="max-width:900px;margin:0 auto;">
+        <div style="max-width:900px;margin:0 auto;">
             <div class="logo">🧠 <span>Leago</span></div>
-            <span class="logo-sub">AI Education Platform</span>
-            <div class="badge">✨ Africa's AI Learning Platform</div>
-            <h1>Master Every Subject with <span class="highlight">Your Personal AI Teacher</span></h1>
-            <p class="hero-subtitle">Personalized AI learning for African students.</p>
+            <span style="font-size:0.9rem;color:#9ca3af;display:block;margin-top:-6px;">AI Education Platform</span>
+            <div style="display:inline-block;background:rgba(99,102,241,0.15);border:1px solid rgba(99,102,241,0.3);padding:6px 20px;border-radius:30px;font-size:0.85rem;color:#818cf8;margin:20px 0;">✨ Africa's AI Learning Platform</div>
+            <h1>Master Every Subject with <span style="background:linear-gradient(135deg,#818cf8,#a855f7);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">Your Personal AI Teacher</span></h1>
+            <p style="font-size:1.1rem;color:#c4b5d4;max-width:700px;margin:0 auto 24px;">Personalized AI learning for African students.</p>
             <div class="cta-group">
                 <a class="btn-primary" onclick="openAuth('signup')">Start Free</a>
                 <a class="btn-secondary" onclick="openAuth('login')">Log In</a>
-                <span class="cta-note">No credit card required · Premium from R49.99/month</span>
+                <span style="font-size:0.85rem;color:#9ca3af;width:100%;">No credit card required · Premium from R49.99/month</span>
             </div>
         </div>
     </section>
@@ -34,12 +108,12 @@
     <div class="auth-overlay" id="authOverlay">
         <div class="auth-card">
             <button class="close-btn" onclick="closeAuth()">✕</button>
-            <div class="logo-sm"><h2>🧠 <span>Leago</span></h2><p>Your AI Tutor</p></div>
+            <div class="logo-sm"><h2>🧠 <span>Leago</span></h2><p style="color:#6b7280;font-size:0.9rem;">Your AI Tutor</p></div>
 
             <!-- LOGIN -->
             <div id="loginPage">
                 <h3>Welcome back</h3>
-                <p class="sub">Log in to continue learning.</p>
+                <p style="color:#6b7280;font-size:0.95rem;margin-bottom:20px;">Log in to continue learning.</p>
                 <div class="field"><label>Email</label><input type="email" id="loginEmail" placeholder="you@example.com" /></div>
                 <div class="field"><label>Password</label><input type="password" id="loginPassword" placeholder="Enter password" /></div>
                 <div class="error" id="loginError"></div><div class="success" id="loginSuccess"></div>
@@ -47,11 +121,10 @@
                 <div class="auth-link">Don't have an account? <a onclick="showSignup()">Sign up</a></div>
             </div>
 
-            <!-- SIGNUP (with hardcoded data) -->
+            <!-- SIGNUP (hardcoded data) -->
             <div id="signupPage" style="display:none;">
                 <h3>Create your education profile</h3>
-                <p class="sub">We'll personalize your learning experience.</p>
-
+                <p style="color:#6b7280;font-size:0.95rem;margin-bottom:20px;">We'll personalize your learning experience.</p>
                 <div class="stepper" id="stepper">
                     <div class="step-circle active" data-step="1">1</div>
                     <div class="step-circle" data-step="2">2</div>
@@ -69,10 +142,9 @@
                     <button class="btn" onclick="nextStep(2)">Next →</button>
                 </div>
 
-                <!-- Step 2: Country & Province (hardcoded) -->
+                <!-- Step 2 -->
                 <div class="signup-step" data-step="2" style="display:none;">
-                    <div class="field">
-                        <label>Country</label>
+                    <div class="field"><label>Country</label>
                         <select id="signupCountry" onchange="loadProvincesHardcoded()">
                             <option value="">Select country</option>
                             <option value="1">South Africa</option>
@@ -80,11 +152,8 @@
                             <option value="3">Nigeria</option>
                         </select>
                     </div>
-                    <div class="field">
-                        <label>Province / State / Region</label>
-                        <select id="signupProvince">
-                            <option value="">Select province</option>
-                        </select>
+                    <div class="field"><label>Province / State</label>
+                        <select id="signupProvince"><option value="">Select province</option></select>
                     </div>
                     <div style="display:flex;gap:12px;margin-top:16px;">
                         <button class="btn" onclick="prevStep(1)" style="background:#e5e7eb;color:#0b1120;">← Back</button>
@@ -92,10 +161,9 @@
                     </div>
                 </div>
 
-                <!-- Step 3: Education Level & Grade (hardcoded) -->
+                <!-- Step 3 -->
                 <div class="signup-step" data-step="3" style="display:none;">
-                    <div class="field">
-                        <label>Education Level</label>
+                    <div class="field"><label>Education Level</label>
                         <select id="signupLevel" onchange="loadGradesHardcoded()">
                             <option value="">Select level</option>
                             <option value="1">High School</option>
@@ -104,11 +172,8 @@
                             <option value="4">Other</option>
                         </select>
                     </div>
-                    <div class="field">
-                        <label>Grade / Year</label>
-                        <select id="signupGrade">
-                            <option value="">Select grade</option>
-                        </select>
+                    <div class="field"><label>Grade / Year</label>
+                        <select id="signupGrade"><option value="">Select grade</option></select>
                     </div>
                     <div style="display:flex;gap:12px;margin-top:16px;">
                         <button class="btn" onclick="prevStep(2)" style="background:#e5e7eb;color:#0b1120;">← Back</button>
@@ -116,10 +181,9 @@
                     </div>
                 </div>
 
-                <!-- Step 4: Curriculum (hardcoded) -->
+                <!-- Step 4 -->
                 <div class="signup-step" data-step="4" style="display:none;">
-                    <div class="field">
-                        <label>Curriculum</label>
+                    <div class="field"><label>Curriculum</label>
                         <select id="signupCurriculum" onchange="loadSubjectsHardcoded()">
                             <option value="">Select curriculum</option>
                             <option value="1">CAPS</option>
@@ -132,14 +196,11 @@
                     </div>
                 </div>
 
-                <!-- Step 5: Subjects (hardcoded) -->
+                <!-- Step 5 -->
                 <div class="signup-step" data-step="5" style="display:none;">
-                    <p style="margin-bottom:8px;font-weight:600;">Select the subjects you study:</p>
-                    <div id="subjectCheckboxes" class="subject-grid-check">
-                        <!-- Filled by loadSubjectsHardcoded() -->
-                    </div>
-                    <div class="error" id="signupError"></div>
-                    <div class="success" id="signupSuccess"></div>
+                    <p style="font-weight:600;margin-bottom:8px;">Select the subjects you study:</p>
+                    <div id="subjectCheckboxes" class="subject-grid-check"><p style="grid-column:1/-1;color:#6b7280;">Select your subjects</p></div>
+                    <div class="error" id="signupError"></div><div class="success" id="signupSuccess"></div>
                     <div style="display:flex;gap:12px;margin-top:16px;">
                         <button class="btn" onclick="prevStep(4)" style="background:#e5e7eb;color:#0b1120;">← Back</button>
                         <button class="btn" id="signupBtn" onclick="signup()">Create Account</button>
@@ -155,38 +216,42 @@
             <a href="#" class="logo">🧠 <span>Leago</span></a>
             <div class="user-info">
                 <span class="name" id="userName">User</span>
-                <span class="role" id="userRole">Learner</span>
                 <span class="grade-badge" id="userGrade">Level: Not set</span>
                 <span id="subscriptionBadge"></span>
                 <button class="logout-btn" onclick="logout()">Logout</button>
             </div>
         </nav>
+
         <div class="dashboard-grid">
             <aside class="sidebar-left" id="sidebarLeft">
                 <div class="section-title">Subjects</div>
-                <ul class="subject-list" id="subjectList"></ul>
+                <ul class="subject-list" id="subjectList"><li style="color:#9ca3af;">No subjects selected</li></ul>
                 <div class="section-title" style="margin-top:20px;">Your Progress</div>
-                <div id="progressContainer"></div>
+                <div id="progressContainer"><div style="font-size:0.9rem;color:#6b7280;">Complete your first lesson</div></div>
                 <div class="section-title" style="margin-top:20px;">Recent</div>
-                <div id="recentContainer"></div>
+                <div id="recentContainer"><div style="font-size:0.85rem;color:#6b7280;">No recent activity</div></div>
             </aside>
+
             <main class="center-panel" id="centerPanel">
                 <div class="welcome" id="welcomeMessage">Welcome back, Student 👋</div>
                 <div class="welcome-sub" id="welcomeSub">Today's goal: Complete your next lesson.</div>
-                <div id="dynamicContent"></div>
+                <div id="dynamicContent">
+                    <!-- Profile card will be inserted here -->
+                </div>
             </main>
+
             <aside class="sidebar-right" id="sidebarRight">
                 <div class="section-title">Key Terms</div>
-                <div id="flashcardContainer"></div>
+                <div id="flashcardContainer"><div style="font-size:0.85rem;color:#6b7280;">Start learning to see key terms</div></div>
                 <div class="section-title" style="margin-top:20px;">Weak Spots</div>
-                <div id="errorContainer"></div>
+                <div id="errorContainer"><div style="font-size:0.85rem;color:#6b7280;">No weak spots yet</div></div>
             </aside>
         </div>
     </div>
 
     <script>
         // ================================================================
-        //  HARDCORED DATA (no API calls needed)
+        //  HARDCORED DATA FOR SIGNUP
         // ================================================================
         const HARDCODED_DATA = {
             provinces: {
@@ -200,26 +265,18 @@
                 '3': ['First Year', 'Second Year', 'Third Year', 'Fourth Year', 'Postgraduate'],
                 '4': ['Other']
             },
-            curricula: {
-                '1': ['CAPS', 'IEB'],
-                '2': ['CBC', '8-4-4'],
-                '3': ['WAEC', 'NECO']
-            },
             subjects: {
-                '1-1': ['Mathematics', 'English Home Language', 'Afrikaans First Additional Language', 'Life Orientation', 'Life Sciences', 'Physical Sciences', 'History', 'Geography', 'Accounting', 'Business Studies', 'Economics', 'Computer Applications Technology', 'Information Technology', 'Consumer Studies', 'Tourism', 'Hospitality Studies', 'Agricultural Sciences', 'Visual Arts', 'Music', 'Drama', 'Design']
+                '1': ['Mathematics', 'English Home Language', 'Afrikaans First Additional Language', 'Life Orientation', 'Life Sciences', 'Physical Sciences', 'History', 'Geography', 'Accounting', 'Business Studies', 'Economics', 'Computer Applications Technology', 'Information Technology', 'Consumer Studies', 'Tourism', 'Hospitality Studies', 'Agricultural Sciences', 'Visual Arts', 'Music', 'Drama', 'Design'],
+                '2': ['Mathematics', 'English Home Language', 'Afrikaans First Additional Language', 'Life Orientation', 'Life Sciences', 'Physical Sciences', 'History', 'Geography', 'Accounting', 'Business Studies', 'Economics', 'Engineering Graphics and Design', 'Computer Applications Technology', 'Information Technology', 'Consumer Studies', 'Tourism', 'Drama', 'Visual Arts', 'Music', 'Design', 'Agricultural Sciences']
             }
         };
 
-        // ================================================================
-        //  LOAD FUNCTIONS (using hardcoded data)
-        // ================================================================
         function loadProvincesHardcoded() {
             const countryId = document.getElementById('signupCountry').value;
             const sel = document.getElementById('signupProvince');
             sel.innerHTML = '<option value="">Select province</option>';
             if (!countryId) return;
-            const provinces = HARDCODED_DATA.provinces[countryId] || [];
-            provinces.forEach(p => {
+            (HARDCODED_DATA.provinces[countryId] || []).forEach(p => {
                 const opt = document.createElement('option');
                 opt.value = p;
                 opt.textContent = p;
@@ -232,8 +289,7 @@
             const sel = document.getElementById('signupGrade');
             sel.innerHTML = '<option value="">Select grade</option>';
             if (!levelId) return;
-            const grades = HARDCODED_DATA.grades[levelId] || [];
-            grades.forEach(g => {
+            (HARDCODED_DATA.grades[levelId] || []).forEach(g => {
                 const opt = document.createElement('option');
                 opt.value = g;
                 opt.textContent = g;
@@ -241,17 +297,12 @@
             });
         }
 
-        function loadCurriculaHardcoded() {
-            // Not needed – we have a fixed select in the HTML
-        }
-
         function loadSubjectsHardcoded() {
             const curriculumId = document.getElementById('signupCurriculum').value;
             const container = document.getElementById('subjectCheckboxes');
-            container.innerHTML = '<p style="grid-column:1/-1;color:#6b7280;font-size:0.9rem;">Select your subjects</p>';
-            if (!curriculumId) return;
-            // For demo, we use a fixed list for any selection
-            const subjects = HARDCODED_DATA.subjects['1-1'] || ['Mathematics', 'English', 'Life Sciences', 'Physical Sciences', 'History', 'Geography', 'Accounting', 'Business Studies', 'Economics'];
+            container.innerHTML = '<p style="grid-column:1/-1;color:#6b7280;">Loading subjects...</p>';
+            if (!curriculumId) { container.innerHTML = '<p style="grid-column:1/-1;color:#6b7280;">Select a curriculum</p>'; return; }
+            const subjects = HARDCODED_DATA.subjects[curriculumId] || ['Mathematics', 'English', 'Life Sciences', 'Physical Sciences', 'History', 'Geography', 'Accounting', 'Business Studies', 'Economics'];
             container.innerHTML = subjects.map(sub => `
                 <label>
                     <input type="checkbox" value="${sub}" class="subject-checkbox" />
@@ -326,7 +377,6 @@
             signupData.subjects = subjects;
             signupData.role = 'learner';
 
-            // Use your existing signup endpoint – or create one
             try {
                 const res = await fetch('/api/auth/signup', {
                     method: 'POST',
@@ -367,13 +417,14 @@
                 const data = await res.json();
                 if (!res.ok) { showError('loginError', data.error || 'Invalid credentials'); setButtonLoading('loginBtn', false); return; }
                 if (data.success) {
+                    // Log the user object to see what we got
+                    console.log('Login response user:', data.user);
                     localStorage.setItem('synapse_user', JSON.stringify(data.user));
                     showSuccess('loginSuccess', 'Login successful!');
                     setTimeout(() => {
                         closeAuth();
                         document.getElementById('dashboard').classList.add('active');
                         document.getElementById('heroSection').style.display = 'none';
-                        document.querySelector('.dashboard-preview').style.display = 'none';
                         document.getElementById('features').style.display = 'none';
                         document.getElementById('pricing').style.display = 'none';
                         document.querySelector('.faq').style.display = 'none';
@@ -387,18 +438,70 @@
             }
         }
 
+        // ================================================================
+        //  DASHBOARD – DISPLAYS ALL USER DATA
+        // ================================================================
         function initDashboard(user) {
-            document.getElementById('userName').textContent = `${user.firstName} ${user.lastName}`;
-            document.getElementById('userGrade').textContent = user.grade || 'Level: Not set';
-            document.getElementById('welcomeMessage').textContent = `Welcome, ${user.firstName} 👋`;
-            const subjects = user.subjects || [];
+            console.log('initDashboard user:', user);
+            // Top bar
+            const fullName = `${user.firstName || ''} ${user.lastName || ''}`.trim() || 'Student';
+            document.getElementById('userName').textContent = fullName;
+            document.getElementById('userGrade').textContent = user.gradeName || 'Level: Not set';
+
+            // Welcome
+            document.getElementById('welcomeMessage').textContent = `Welcome back, ${fullName} 👋`;
+
+            // Profile card
+            const profileHtml = `
+                <div class="profile-card">
+                    <div class="row"><span class="label">Country</span><span class="value">${user.countryName || 'Not set'}</span></div>
+                    ${user.provinceName ? `<div class="row"><span class="label">Province</span><span class="value">${user.provinceName}</span></div>` : ''}
+                    <div class="row"><span class="label">Education Level</span><span class="value">${user.educationLevelName || 'Not set'}</span></div>
+                    <div class="row"><span class="label">Curriculum</span><span class="value">${user.curriculumName || 'Not set'}</span></div>
+                    <div class="row"><span class="label">Grade/Year</span><span class="value">${user.gradeName || 'Not set'}</span></div>
+                    <div class="row"><span class="label">Subjects</span>
+                        <div class="subject-tags">
+                            ${(user.subjects || []).map(s => `<span class="subject-tag">${s}</span>`).join('')}
+                            ${(!user.subjects || user.subjects.length === 0) ? '<span style="color:#6b7280;">None selected</span>' : ''}
+                        </div>
+                    </div>
+                </div>
+            `;
+            document.getElementById('dynamicContent').innerHTML = profileHtml;
+
+            // Sidebar subjects
             const list = document.getElementById('subjectList');
             list.innerHTML = '';
-            subjects.forEach(s => {
-                const li = document.createElement('li');
-                li.textContent = s;
-                list.appendChild(li);
-            });
+            if (user.subjects && user.subjects.length) {
+                user.subjects.forEach(s => {
+                    const li = document.createElement('li');
+                    li.textContent = s;
+                    list.appendChild(li);
+                });
+            } else {
+                list.innerHTML = '<li style="color:#9ca3af;">No subjects selected</li>';
+            }
+
+            // Progress (placeholder)
+            document.getElementById('progressContainer').innerHTML = `
+                <div style="font-size:0.9rem;color:#6b7280;">Complete your first lesson</div>
+            `;
+            document.getElementById('recentContainer').innerHTML = `<div style="font-size:0.85rem;color:#6b7280;">No recent activity</div>`;
+
+            // Subscription badge
+            updateBadge(user.subscription);
+        }
+
+        function updateBadge(subscription) {
+            const badge = document.getElementById('subscriptionBadge');
+            if (!subscription) { badge.innerHTML = ''; return; }
+            const status = subscription.status || 'trial';
+            const days = subscription.daysRemaining || 3;
+            let statusText = '', statusClass = '';
+            if (status === 'trial') { statusText = `Trial • ${days}d left`; statusClass = 'sub-trial'; }
+            else if (status === 'active') { statusText = 'Premium ✅'; statusClass = 'sub-active'; }
+            else { statusText = 'Expired'; statusClass = 'sub-expired'; }
+            badge.innerHTML = `<span class="sub-badge ${statusClass}">${statusText}</span>`;
         }
 
         // ================================================================
@@ -422,7 +525,6 @@
             document.getElementById('signupPage').style.display = 'block';
             clearErrors();
             goToStep(1);
-            // Load hardcoded data into selects
             loadProvincesHardcoded();
             loadGradesHardcoded();
             loadSubjectsHardcoded();
@@ -440,6 +542,7 @@
 
         function showError(id, msg) { const el = document.getElementById(id); el.textContent = msg; el.classList.add('show'); }
         function showSuccess(id, msg) { const el = document.getElementById(id); el.textContent = msg; el.classList.add('show'); }
+
         function setButtonLoading(id, loading) {
             const btn = document.getElementById(id);
             if (loading) { btn.disabled = true; btn.innerHTML = '<span class="spinner"></span> Loading...'; } else { btn.disabled = false; btn.innerHTML = 'Log In'; }
@@ -450,29 +553,32 @@
                 localStorage.removeItem('synapse_user');
                 document.getElementById('dashboard').classList.remove('active');
                 document.getElementById('heroSection').style.display = 'block';
-                document.querySelector('.dashboard-preview').style.display = 'block';
                 document.getElementById('features').style.display = 'block';
                 document.getElementById('pricing').style.display = 'block';
                 document.querySelector('.faq').style.display = 'block';
                 document.getElementById('loginEmail').value = '';
                 document.getElementById('loginPassword').value = '';
                 clearErrors();
+                window.location.reload();
             }
         }
 
+        // ================================================================
+        //  INIT
+        // ================================================================
         document.addEventListener('DOMContentLoaded', function() {
             const stored = localStorage.getItem('synapse_user');
             if (stored) {
                 try {
                     const user = JSON.parse(stored);
+                    console.log('Stored user:', user);
                     document.getElementById('heroSection').style.display = 'none';
-                    document.querySelector('.dashboard-preview').style.display = 'none';
                     document.getElementById('features').style.display = 'none';
                     document.getElementById('pricing').style.display = 'none';
                     document.querySelector('.faq').style.display = 'none';
                     document.getElementById('dashboard').classList.add('active');
                     initDashboard(user);
-                } catch (e) {}
+                } catch (e) { console.error('Error parsing stored user:', e); }
             }
             document.addEventListener('keydown', function(e) {
                 if (e.key === 'Enter') {
