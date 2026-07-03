@@ -8,6 +8,7 @@ router.get('/countries', async (req, res) => {
     const result = await pool.query('SELECT * FROM countries ORDER BY name');
     res.json(result.rows);
   } catch (err) {
+    console.error(err);
     res.status(500).json({ error: 'Database error' });
   }
 });
@@ -18,6 +19,7 @@ router.get('/provinces/:countryId', async (req, res) => {
     const result = await pool.query('SELECT * FROM provinces WHERE country_id = $1 ORDER BY name', [countryId]);
     res.json(result.rows);
   } catch (err) {
+    console.error(err);
     res.status(500).json({ error: 'Database error' });
   }
 });
@@ -27,6 +29,7 @@ router.get('/education-levels', async (req, res) => {
     const result = await pool.query('SELECT * FROM education_levels ORDER BY sort_order');
     res.json(result.rows);
   } catch (err) {
+    console.error(err);
     res.status(500).json({ error: 'Database error' });
   }
 });
@@ -37,6 +40,7 @@ router.get('/grades/:levelId', async (req, res) => {
     const result = await pool.query('SELECT * FROM grades WHERE education_level_id = $1 ORDER BY sort_order', [levelId]);
     res.json(result.rows);
   } catch (err) {
+    console.error(err);
     res.status(500).json({ error: 'Database error' });
   }
 });
@@ -47,6 +51,7 @@ router.get('/curricula/:countryId', async (req, res) => {
     const result = await pool.query('SELECT * FROM curricula WHERE country_id = $1 ORDER BY name', [countryId]);
     res.json(result.rows);
   } catch (err) {
+    console.error(err);
     res.status(500).json({ error: 'Database error' });
   }
 });
@@ -61,6 +66,7 @@ router.get('/subjects/:curriculumId/:gradeId', async (req, res) => {
     );
     res.json(result.rows.map(r => r.name));
   } catch (err) {
+    console.error(err);
     res.status(500).json({ error: 'Database error' });
   }
 });
