@@ -1,3 +1,4 @@
+// server/routes/auth.js
 const express = require('express');
 const bcrypt = require('bcrypt');
 const { pool } = require('../db');
@@ -35,7 +36,7 @@ router.post('/signup', async (req, res) => {
   }
 });
 
-// Login – RETURNS FULL USER OBJECT
+// Login
 router.post('/login', async (req, res) => {
   const { email, password } = req.body;
   try {
@@ -59,8 +60,6 @@ router.post('/login', async (req, res) => {
     const user = result.rows[0];
     const valid = await bcrypt.compare(password, user.password_hash);
     if (!valid) return res.status(401).json({ error: 'Invalid credentials' });
-
-    // Get subscription
     const subResult = await pool.query('SELECT status, end_date FROM subscriptions WHERE user_id = $1', [user.id]);
     let sub = subResult.rows[0] || { status: 'trial', end_date: new Date(Date.now() + 3*24*60*60*1000) };
     const now = new Date();
@@ -68,8 +67,6 @@ router.post('/login', async (req, res) => {
     if (sub.status === 'active' && now < sub.end_date) { status = 'active'; daysRemaining = Math.ceil((sub.end_date - now)/(1000*60*60*24)); }
     else if (sub.status === 'trial' && now < sub.end_date) { status = 'trial'; daysRemaining = Math.ceil((sub.end_date - now)/(1000*60*60*24)); }
     else { status = 'expired'; daysRemaining = 0; }
-
-    // Build the user object with ALL fields
     const userData = {
       id: user.id,
       firstName: user.first_name || 'Student',
@@ -89,7 +86,6 @@ router.post('/login', async (req, res) => {
       role: user.role || 'learner',
       subscription: { status, daysRemaining }
     };
-
     res.json({ success: true, user: userData, token: 'mock-token' });
   } catch (err) {
     console.error('Login error:', err.message);
