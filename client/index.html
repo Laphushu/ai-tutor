@@ -62,7 +62,8 @@
         .sidebar-left .section-title { font-size: 0.7rem; text-transform: uppercase; color: #6b7280; font-weight: 700; letter-spacing: 0.5px; margin: 16px 0 8px; }
         .sidebar-left .section-title:first-child { margin-top: 0; }
         .subject-list { list-style: none; }
-        .subject-list li { padding: 8px 12px; border-radius: 8px; cursor: default; font-size: 0.9rem; color: #1f2937; border-bottom: 1px solid #f3f4f6; }
+        .subject-list li { padding: 8px 12px; border-radius: 8px; cursor: pointer; font-size: 0.9rem; color: #1f2937; border-bottom: 1px solid #f3f4f6; transition: background 0.2s; }
+        .subject-list li:hover { background: #eef2ff; }
         .subject-list li:last-child { border-bottom: none; }
         .center-panel { background: white; border-radius: 16px; padding: 28px 32px; min-height: 400px; }
         .center-panel .welcome { font-size: 1.6rem; font-weight: 700; color: #0b1120; }
@@ -84,6 +85,8 @@
         .sub-trial { background: #fef3c7; color: #92400e; }
         .sub-active { background: #d1fae5; color: #065f46; }
         .sub-expired { background: #fee2e2; color: #991b1b; }
+        .subscribe-btn { background: linear-gradient(135deg, #6366f1, #8b5cf6); color: white; border: none; padding: 6px 16px; border-radius: 20px; font-weight: 600; font-size: 0.8rem; cursor: pointer; font-family: inherit; margin-left: 8px; }
+        .subscribe-btn:hover { transform: scale(1.02); }
         .info-page { display: none; max-width: 800px; margin: 40px auto; padding: 40px 36px; background: white; border-radius: 28px; box-shadow: 0 24px 80px rgba(0,0,0,0.08); line-height: 1.6; color: #0b1120; }
         .info-page.active { display: block; }
         .info-page h1 { font-size: 2rem; margin-bottom: 8px; }
@@ -95,6 +98,43 @@
         .site-footer .inner a { display: block; color: #9ca3af; text-decoration: none; font-size: 0.9rem; padding: 4px 0; transition: color 0.2s; cursor: pointer; }
         .site-footer .inner a:hover { color: white; }
         .site-footer .bottom { max-width: 1100px; margin: 20px auto 0; border-top: 1px solid #1a1a3e; padding-top: 20px; text-align: center; font-size: 0.85rem; }
+        .subject-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 16px; }
+        .subject-card { background: white; border: 2px solid #e5e7eb; border-radius: 16px; padding: 28px 16px; text-align: center; cursor: pointer; transition: all 0.25s; box-shadow: 0 2px 8px rgba(0,0,0,0.02); }
+        .subject-card:hover { border-color: #6366f1; transform: translateY(-4px); box-shadow: 0 12px 32px rgba(99,102,241,0.12); }
+        .subject-card .icon { font-size: 2.8rem; display: block; margin-bottom: 6px; }
+        .subject-card .name { font-weight: 700; font-size: 0.95rem; color: #0b1120; }
+        .subject-card .progress-badge { display: inline-block; font-size: 0.7rem; color: #6366f1; background: #eef2ff; padding: 2px 10px; border-radius: 12px; margin-top: 6px; }
+        .back-btn { background: none; border: 1px solid #e5e7eb; padding: 10px 20px; border-radius: 12px; cursor: pointer; font-weight: 600; color: #4b5563; transition: all 0.2s; font-family: inherit; display: inline-block; margin-bottom: 16px; }
+        .back-btn:hover { background: #f3f4f6; }
+        .topic-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 16px; margin-top: 12px; }
+        .topic-card { background: white; border: 2px solid #e5e7eb; border-radius: 14px; padding: 20px 18px; transition: all 0.25s; cursor: pointer; position: relative; }
+        .topic-card:hover { border-color: #6366f1; box-shadow: 0 8px 24px rgba(99,102,241,0.08); }
+        .topic-card .title { font-weight: 700; font-size: 1rem; color: #0b1120; }
+        .topic-card .meta { font-size: 0.8rem; color: #6b7280; margin-top: 4px; }
+        .topic-card .resources { margin-top: 10px; display: flex; gap: 6px; flex-wrap: wrap; }
+        .topic-card .resources .tag { background: #eef2ff; color: #6366f1; padding: 2px 12px; border-radius: 12px; font-size: 0.7rem; font-weight: 600; }
+        .topic-card .status-badge { position: absolute; top: 12px; right: 12px; font-size: 0.7rem; font-weight: 600; padding: 2px 10px; border-radius: 12px; background: #e5e7eb; color: #6b7280; }
+        .tutor-container { background: white; border-radius: 20px; padding: 28px; box-shadow: 0 4px 20px rgba(0,0,0,0.04); margin-top: 12px; }
+        .tutor-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 10px; }
+        .tutor-header h3 { font-size: 1.2rem; font-weight: 700; color: #0b1120; }
+        .tutor-header .context { font-size: 0.9rem; color: #6b7280; background: #f3f4f6; padding: 4px 16px; border-radius: 20px; }
+        .chat-box { background: #f8fafc; border-radius: 16px; padding: 20px; max-height: 400px; overflow-y: auto; border: 1px solid #e5e7eb; margin-bottom: 16px; }
+        .chat-box .msg { padding: 12px 16px; border-radius: 14px; max-width: 85%; margin-bottom: 10px; font-size: 0.95rem; line-height: 1.6; word-wrap: break-word; }
+        .chat-box .msg.user { background: #6366f1; color: #fff; margin-left: auto; text-align: right; }
+        .chat-box .msg.bot { background: #e5e7eb; color: #0b1120; margin-right: auto; }
+        .chat-box .msg.bot h1, .chat-box .msg.bot h2, .chat-box .msg.bot h3, .chat-box .msg.bot h4, .chat-box .msg.bot h5, .chat-box .msg.bot h6 { margin: 8px 0 4px; font-weight: 700; color: #0b1120; }
+        .chat-box .msg.bot ul, .chat-box .msg.bot ol { padding-left: 20px; margin: 4px 0 8px; }
+        .chat-box .msg.bot p { margin: 6px 0; }
+        .chat-box .msg.bot code { background: #e5e7eb; padding: 1px 6px; border-radius: 4px; font-size: 0.9em; }
+        .chat-box .msg.bot pre { background: #e5e7eb; padding: 10px; border-radius: 8px; overflow-x: auto; }
+        .chat-input { display: flex; gap: 10px; }
+        .chat-input input { flex: 1; padding: 14px 18px; border: 2px solid #e5e7eb; border-radius: 14px; font-size: 0.95rem; font-family: inherit; transition: border-color 0.25s; }
+        .chat-input input:focus { outline: none; border-color: #6366f1; }
+        .chat-input .btn-send { padding: 0 28px; background: linear-gradient(135deg, #6366f1, #8b5cf6); color: #fff; border: none; border-radius: 14px; font-weight: 700; cursor: pointer; transition: all 0.25s; font-family: inherit; }
+        .chat-input .btn-send:disabled { opacity: 0.6; cursor: not-allowed; }
+        .chat-options { display: flex; align-items: center; gap: 14px; margin-top: 12px; font-size: 0.85rem; color: #6b7280; }
+        .chat-options input[type="checkbox"] { width: 18px; height: 18px; accent-color: #6366f1; cursor: pointer; }
+        .chat-options label { cursor: pointer; }
     </style>
 </head>
 <body>
@@ -115,15 +155,6 @@
         </div>
     </section>
 
-    <!-- ===== DASHBOARD PREVIEW (optional) ===== -->
-    <div class="dashboard-preview" style="max-width:1100px;margin:-40px auto 40px;padding:0 20px;">
-        <div style="background:white;border-radius:20px;padding:24px 28px;box-shadow:0 20px 60px rgba(0,0,0,0.12);text-align:center;">
-            <div style="font-size:3rem;">📊</div>
-            <strong>Dashboard Preview</strong>
-            <p style="margin-top:4px;font-size:0.85rem;color:#9ca3af;">Your personalised learning dashboard</p>
-        </div>
-    </div>
-
     <!-- ===== AUTH OVERLAY ===== -->
     <div class="auth-overlay" id="authOverlay">
         <div class="auth-card">
@@ -141,7 +172,7 @@
                 <div class="auth-link">Don't have an account? <a onclick="showSignup()">Sign up</a></div>
             </div>
 
-            <!-- SIGNUP (hardcoded data) -->
+            <!-- SIGNUP -->
             <div id="signupPage" style="display:none;">
                 <h3>Create your education profile</h3>
                 <p style="color:#6b7280;font-size:0.95rem;margin-bottom:20px;">We'll personalize your learning experience.</p>
@@ -245,7 +276,7 @@
         <div class="dashboard-grid">
             <aside class="sidebar-left" id="sidebarLeft">
                 <div class="section-title">Subjects</div>
-                <ul class="subject-list" id="subjectList"><li style="color:#9ca3af;">No subjects selected</li></ul>
+                <ul class="subject-list" id="subjectList"></ul>
                 <div class="section-title" style="margin-top:20px;">Your Progress</div>
                 <div id="progressContainer"><div style="font-size:0.9rem;color:#6b7280;">Complete your first lesson</div></div>
                 <div class="section-title" style="margin-top:20px;">Recent</div>
@@ -286,7 +317,7 @@
 
     <script>
         // ================================================================
-        // HARDCORED DATA (with IDs for provinces)
+        // HARDCORED DATA
         // ================================================================
         const HARDCODED_DATA = {
             provinces: {
@@ -461,7 +492,7 @@
         }
 
         // ================================================================
-        // AUTH – Login (fixed: safe element hiding)
+        // AUTH – Login
         // ================================================================
         async function login() {
             const email = document.getElementById('loginEmail').value.trim();
@@ -492,7 +523,6 @@
                     setTimeout(() => {
                         closeAuth();
                         document.getElementById('dashboard').classList.add('active');
-                        // Safely hide elements
                         const hero = document.getElementById('heroSection');
                         if (hero) hero.style.display = 'none';
                         const preview = document.querySelector('.dashboard-preview');
@@ -516,7 +546,7 @@
         }
 
         // ================================================================
-        // DASHBOARD
+        // DASHBOARD – shows user data and clickable subjects
         // ================================================================
         function initDashboard(user) {
             console.log('initDashboard user:', user);
@@ -543,16 +573,18 @@
             `;
             document.getElementById('dynamicContent').innerHTML = profileHtml;
 
+            // Sidebar: clickable subjects
             const list = document.getElementById('subjectList');
             list.innerHTML = '';
             if (user.subjects && user.subjects.length) {
                 user.subjects.forEach(s => {
                     const li = document.createElement('li');
                     li.textContent = s;
+                    li.onclick = () => openSubject(s);
                     list.appendChild(li);
                 });
             } else {
-                list.innerHTML = '<li style="color:#9ca3af;">No subjects selected</li>';
+                list.innerHTML = '<li style="color:#9ca3af;cursor:default;">No subjects selected</li>';
             }
 
             document.getElementById('progressContainer').innerHTML = `
@@ -560,6 +592,7 @@
             `;
             document.getElementById('recentContainer').innerHTML = `<div style="font-size:0.85rem;color:#6b7280;">No recent activity</div>`;
 
+            // Subscription badge with Subscribe button
             updateBadge(user.subscription);
         }
 
@@ -569,10 +602,195 @@
             const status = subscription.status || 'trial';
             const days = subscription.daysRemaining || 3;
             let statusText = '', statusClass = '';
+            let showButton = true;
             if (status === 'trial') { statusText = `Trial • ${days}d left`; statusClass = 'sub-trial'; }
-            else if (status === 'active') { statusText = 'Premium ✅'; statusClass = 'sub-active'; }
+            else if (status === 'active') { statusText = 'Premium ✅'; statusClass = 'sub-active'; showButton = false; }
             else { statusText = 'Expired'; statusClass = 'sub-expired'; }
-            badge.innerHTML = `<span class="sub-badge ${statusClass}">${statusText}</span>`;
+            const buttonHtml = showButton ? `<button class="subscribe-btn" onclick="subscribe()">Subscribe</button>` : '';
+            badge.innerHTML = `<span class="sub-badge ${statusClass}">${statusText}</span> ${buttonHtml}`;
+        }
+
+        // ================================================================
+        // SUBSCRIBE (payment)
+        // ================================================================
+        async function subscribe() {
+            const user = JSON.parse(localStorage.getItem('synapse_user'));
+            if (!user) { alert('Please log in first.'); return; }
+            try {
+                const response = await fetch('/api/payments/create', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ userId: user.id, email: user.email })
+                });
+                const data = await response.json();
+                if (data.authorization_url) {
+                    window.location.href = data.authorization_url;
+                } else {
+                    alert('Error creating payment. Please try again.');
+                }
+            } catch (err) {
+                alert('Payment service unavailable. Please try again later.');
+            }
+        }
+
+        // ================================================================
+        // SUBJECT TOPICS (click to open)
+        // ================================================================
+        const DEFAULT_TOPICS = {
+            'Mathematics': ['Algebra', 'Trigonometry', 'Calculus', 'Statistics'],
+            'English Home Language': ['Grammar', 'Literature', 'Writing', 'Comprehension'],
+            'Life Sciences': ['Cell Biology', 'Genetics', 'Ecology', 'Human Anatomy'],
+            'Physical Sciences': ['Mechanics', 'Thermodynamics', 'Electricity', 'Chemical Bonding'],
+            'History': ['Ancient Civilizations', 'Industrial Revolution', 'World Wars', 'Apartheid'],
+            'Geography': ['Map Skills', 'Climate', 'Plate Tectonics', 'Population'],
+            'Accounting': ['Double Entry', 'Financial Statements', 'Budgeting', 'Taxation'],
+            'Business Studies': ['Entrepreneurship', 'Marketing', 'HR', 'Finance'],
+            'Economics': ['Supply & Demand', 'Market Structures', 'Macroeconomics', 'International Trade']
+        };
+
+        function openSubject(subject) {
+            const topics = DEFAULT_TOPICS[subject] || ['Introduction', 'Basics', 'Intermediate', 'Advanced', 'Expert'];
+            document.getElementById('welcomeMessage').textContent = subject;
+            document.getElementById('welcomeSub').textContent = 'Select a topic to start learning.';
+
+            let html = `<button class="back-btn" onclick="showSubjects()">← Back to Subjects</button>`;
+            html += `<div style="margin-bottom:12px;color:#6b7280;font-size:0.9rem;">Showing ${topics.length} topics</div>`;
+            html += `<div class="topic-grid">`;
+            topics.forEach(t => {
+                html += `<div class="topic-card" onclick="openTutor('${subject}', '${t}')">
+                            <div class="title">${t}</div>
+                            <div class="meta">${subject}</div>
+                            <div class="resources"><span class="tag">Lesson</span><span class="tag">Quiz</span><span class="tag">Worksheet</span></div>
+                            <div class="status-badge">Not started</div>
+                        </div>`;
+            });
+            html += `</div>`;
+            document.getElementById('dynamicContent').innerHTML = html;
+        }
+
+        function showSubjects() {
+            const user = JSON.parse(localStorage.getItem('synapse_user'));
+            if (!user || !user.subjects || user.subjects.length === 0) {
+                document.getElementById('dynamicContent').innerHTML = `
+                    <div style="text-align:center;padding:40px;">
+                        <div style="font-size:3rem;">📚</div>
+                        <h3 style="margin:16px 0 8px;color:#0b1120;">No Subjects Yet</h3>
+                        <p style="color:#6b7280;">You haven't selected any subjects. Update your profile to add them.</p>
+                    </div>
+                `;
+                return;
+            }
+            let html = `<div class="subject-grid">`;
+            user.subjects.forEach(name => {
+                const icon = getSubjectIcon(name);
+                html += `<div class="subject-card" onclick="openSubject('${name}')"><span class="icon">${icon}</span><span class="name">${name}</span><div class="progress-badge">0%</div></div>`;
+            });
+            html += `</div><button class="back-btn" onclick="initDashboard(user)" style="margin-top:16px;">← Back to Dashboard</button>`;
+            document.getElementById('dynamicContent').innerHTML = html;
+            document.getElementById('welcomeMessage').textContent = 'Your Subjects';
+            document.getElementById('welcomeSub').textContent = 'Select a subject to start learning.';
+        }
+
+        function getSubjectIcon(name) {
+            const icons = {
+                'Mathematics': '📐',
+                'English Home Language': '📖',
+                'Life Sciences': '🧬',
+                'Physical Sciences': '⚛️',
+                'History': '🏛️',
+                'Geography': '🌍',
+                'Accounting': '💰',
+                'Business Studies': '📊',
+                'Economics': '📈'
+            };
+            return icons[name] || '📚';
+        }
+
+        function openTutor(subject, topic) {
+            document.getElementById('welcomeMessage').textContent = '💬 AI Tutor';
+            document.getElementById('welcomeSub').textContent = subject + ' — ' + topic;
+            const container = document.getElementById('dynamicContent');
+            container.innerHTML = `
+                <button class="back-btn" onclick="openSubject('${subject}')">← Back to Topics</button>
+                <div class="tutor-container">
+                    <div class="tutor-header">
+                        <h3>AI Tutor</h3>
+                        <span class="context">${subject} - ${topic}</span>
+                    </div>
+                    <div class="chat-box" id="chatBox"><div class="msg bot">👋 Welcome! Ask me anything — I'll guide you step by step.</div></div>
+                    <div class="chat-input"><input type="text" id="chatInput" placeholder="Type your message..." onkeypress="if(event.key==='Enter') sendChat()" /><button class="btn-send" id="sendBtn" onclick="sendChat()">Send</button></div>
+                    <div class="chat-options"><input type="checkbox" id="speakToggle" /><label for="speakToggle">🔊 AI reads responses aloud</label></div>
+                </div>
+            `;
+            setTimeout(() => {
+                document.getElementById('chatInput').value = 'I\'m learning about "' + topic + '" in ' + subject + '. Can you teach me step by step?';
+                sendChat();
+            }, 500);
+        }
+
+        async function sendChat() {
+            const input = document.getElementById('chatInput');
+            const message = input.value.trim();
+            if (!message) return;
+            addMessage('user', message);
+            input.value = '';
+            input.disabled = true;
+            const btn = document.getElementById('sendBtn');
+            btn.disabled = true;
+            btn.innerHTML = '<span class="spinner"></span>';
+            const user = JSON.parse(localStorage.getItem('synapse_user'));
+            const context = document.getElementById('welcomeSub').textContent;
+            const parts = context.split(' — ');
+            const subject = parts[0] || 'General';
+            const topic = parts[1] || '';
+
+            try {
+                const res = await fetch('/api/chat', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        userId: user.id,
+                        message: message,
+                        subject: subject,
+                        topic: topic
+                    })
+                });
+                const data = await res.json();
+                if (data.reply) addMessage('bot', data.reply);
+                else addMessage('bot', '❌ ' + (data.error || 'No response'));
+            } catch (err) {
+                addMessage('bot', '❌ Server error. Please try again.');
+            } finally {
+                input.disabled = false;
+                input.focus();
+                btn.disabled = false;
+                btn.innerHTML = 'Send';
+            }
+        }
+
+        function addMessage(role, text) {
+            const box = document.getElementById('chatBox');
+            const div = document.createElement('div');
+            div.className = 'msg ' + (role === 'user' ? 'user' : 'bot');
+            if (role === 'bot' && typeof marked !== 'undefined') {
+                marked.setOptions({ breaks: true, gfm: true });
+                div.innerHTML = marked.parse(text);
+            } else { div.textContent = text; }
+            box.appendChild(div);
+            box.scrollTop = box.scrollHeight;
+            if (role === 'bot' && document.getElementById('speakToggle').checked) {
+                let clean = text.replace(/#{1,6}\s?/g, '').replace(/\*\*/g, '').replace(/\*/g, '').replace(/`/g, '')
+                    .replace(/[\\*\/_\-~#`|]/g, ' ').replace(/[📚🎯✏️🤔💡✅❌]/g, '').replace(/\s+/g, ' ').trim();
+                if (clean.length > 300) clean = clean.substring(0, 300) + '...';
+                window.speechSynthesis.cancel();
+                const u = new SpeechSynthesisUtterance(clean);
+                u.lang = 'en-US';
+                u.rate = 0.9;
+                const voices = window.speechSynthesis.getVoices();
+                const preferred = voices.find(v => v.lang.includes('en') && (v.name.includes('Google') || v.name.includes('Natural')));
+                if (preferred) u.voice = preferred;
+                window.speechSynthesis.speak(u);
+            }
         }
 
         // ================================================================
@@ -639,7 +857,8 @@
                 document.getElementById('heroSection').style.display = 'block';
                 const preview = document.querySelector('.dashboard-preview');
                 if (preview) preview.style.display = 'block';
-                if (currentUser) {
+                const user = JSON.parse(localStorage.getItem('synapse_user'));
+                if (user) {
                     document.getElementById('dashboard').classList.add('active');
                     document.getElementById('heroSection').style.display = 'none';
                     if (preview) preview.style.display = 'none';
@@ -658,15 +877,12 @@
         // ================================================================
         // INIT
         // ================================================================
-        let currentUser = null;
-
         document.addEventListener('DOMContentLoaded', function() {
             const stored = localStorage.getItem('synapse_user');
             if (stored) {
                 try {
                     const user = JSON.parse(stored);
                     console.log('Stored user:', user);
-                    currentUser = user;
                     document.getElementById('heroSection').style.display = 'none';
                     const preview = document.querySelector('.dashboard-preview');
                     if (preview) preview.style.display = 'none';
