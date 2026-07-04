@@ -4,18 +4,39 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Leago Academy</title>
+
+    <!-- KaTeX for math rendering -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" crossorigin="anonymous">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" crossorigin="anonymous"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
+
+    <!-- GSAP for animations -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <!-- Marked for markdown -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { font-family: 'Segoe UI', sans-serif; background: #f8fafc; }
-        .hero { background: linear-gradient(135deg, #0b1120 0%, #1a1a3e 100%); padding: 80px 20px; text-align: center; color: white; }
+        .hero { background: linear-gradient(135deg, #0b1120 0%, #1a1a3e 100%); padding: 80px 20px; text-align: center; color: white; position: relative; overflow: hidden; }
         .hero .logo { font-size: 2.8rem; font-weight: 800; }
         .hero .logo span { background: linear-gradient(135deg, #818cf8, #a855f7); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         .hero h1 { font-size: 3rem; max-width: 700px; margin: 20px auto; }
         .hero .cta-group { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; margin-top: 20px; }
-        .btn-primary, .btn-secondary { padding: 14px 32px; border-radius: 14px; font-weight: 700; cursor: pointer; text-decoration: none; display: inline-block; }
+        .btn-primary, .btn-secondary { padding: 14px 32px; border-radius: 14px; font-weight: 700; cursor: pointer; text-decoration: none; display: inline-block; transition: transform 0.2s; }
         .btn-primary { background: linear-gradient(135deg, #6366f1, #8b5cf6); color: white; border: none; }
         .btn-secondary { background: transparent; color: white; border: 2px solid rgba(255,255,255,0.3); }
         .btn-secondary:hover { border-color: white; }
+        .btn-primary:hover, .btn-secondary:hover { transform: translateY(-2px); }
+        .badge { display: inline-block; background: rgba(99,102,241,0.15); border: 1px solid rgba(99,102,241,0.3); padding: 6px 20px; border-radius: 30px; font-size: 0.85rem; color: #818cf8; margin: 20px 0; }
+        .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; max-width: 1100px; margin: 40px auto; }
+        .feature-card { background: white; padding: 28px 20px; border-radius: 16px; box-shadow: 0 4px 16px rgba(0,0,0,0.04); text-align: center; border: 1px solid rgba(0,0,0,0.04); transition: transform 0.3s; }
+        .feature-card:hover { transform: translateY(-4px); }
+        .feature-card .icon { font-size: 2.4rem; display: block; margin-bottom: 8px; }
         .auth-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); backdrop-filter: blur(8px); justify-content: center; align-items: center; z-index: 1000; padding: 20px; }
         .auth-overlay.active { display: flex; }
         .auth-card { background: white; border-radius: 28px; padding: 40px; max-width: 600px; width: 100%; max-height: 95vh; overflow-y: auto; position: relative; }
@@ -99,11 +120,10 @@
         .site-footer .inner a:hover { color: white; }
         .site-footer .bottom { max-width: 1100px; margin: 20px auto 0; border-top: 1px solid #1a1a3e; padding-top: 20px; text-align: center; font-size: 0.85rem; }
         .subject-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 16px; }
-        .subject-card { background: white; border: 2px solid #e5e7eb; border-radius: 16px; padding: 28px 16px; text-align: center; cursor: pointer; transition: all 0.25s; box-shadow: 0 2px 8px rgba(0,0,0,0.02); }
-        .subject-card:hover { border-color: #6366f1; transform: translateY(-4px); box-shadow: 0 12px 32px rgba(99,102,241,0.12); }
+        .subject-card { background: white; border: 2px solid #e5e7eb; border-radius: 16px; padding: 28px 16px; text-align: center; cursor: pointer; transition: all 0.25s; }
+        .subject-card:hover { border-color: #6366f1; transform: translateY(-4px); }
         .subject-card .icon { font-size: 2.8rem; display: block; margin-bottom: 6px; }
         .subject-card .name { font-weight: 700; font-size: 0.95rem; color: #0b1120; }
-        .subject-card .progress-badge { display: inline-block; font-size: 0.7rem; color: #6366f1; background: #eef2ff; padding: 2px 10px; border-radius: 12px; margin-top: 6px; }
         .back-btn { background: none; border: 1px solid #e5e7eb; padding: 10px 20px; border-radius: 12px; cursor: pointer; font-weight: 600; color: #4b5563; transition: all 0.2s; font-family: inherit; display: inline-block; margin-bottom: 16px; }
         .back-btn:hover { background: #f3f4f6; }
         .topic-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 16px; margin-top: 12px; }
@@ -135,6 +155,32 @@
         .chat-options { display: flex; align-items: center; gap: 14px; margin-top: 12px; font-size: 0.85rem; color: #6b7280; }
         .chat-options input[type="checkbox"] { width: 18px; height: 18px; accent-color: #6366f1; cursor: pointer; }
         .chat-options label { cursor: pointer; }
+        .pricing { max-width: 1100px; margin: 40px auto; padding: 0 20px; }
+        .pricing .section-title { text-align: center; margin-bottom: 32px; }
+        .pricing .section-title h2 { font-size: 2rem; font-weight: 700; color: #0b1120; }
+        .pricing-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px; }
+        .pricing-card { background: white; padding: 36px 28px; border-radius: 20px; box-shadow: 0 4px 16px rgba(0,0,0,0.04); text-align: center; border: 2px solid transparent; transition: all 0.3s; }
+        .pricing-card:hover { border-color: #6366f1; }
+        .pricing-card.popular { border-color: #6366f1; background: linear-gradient(135deg, #ffffff, #f8faff); }
+        .pricing-card .plan { font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px; font-weight: 600; color: #6b7280; }
+        .pricing-card .price { font-size: 2.8rem; font-weight: 800; color: #0b1120; margin: 8px 0 4px; }
+        .pricing-card .price span { font-size: 1rem; font-weight: 400; color: #6b7280; }
+        .pricing-card .description { color: #6b7280; font-size: 0.95rem; margin-bottom: 16px; }
+        .pricing-card .features-list { list-style: none; text-align: left; margin: 16px 0 24px; }
+        .pricing-card .features-list li { padding: 6px 0; font-size: 0.95rem; color: #1f2937; display: flex; align-items: center; gap: 10px; }
+        .pricing-card .features-list li::before { content: '✓'; color: #22c55e; font-weight: 700; }
+        .pricing-card .btn-pricing { width: 100%; padding: 14px; border: none; border-radius: 12px; font-size: 1rem; font-weight: 700; cursor: pointer; background: linear-gradient(135deg, #6366f1, #8b5cf6); color: white; transition: all 0.3s; }
+        .pricing-card .btn-pricing:hover { transform: translateY(-2px); }
+        .pricing-card .btn-pricing.outline { background: white; color: #6366f1; border: 2px solid #6366f1; }
+        .pricing-card .btn-pricing.outline:hover { background: #f8faff; }
+        .faq { max-width: 800px; margin: 0 auto 40px; padding: 0 20px; }
+        .faq .section-title { text-align: center; margin-bottom: 28px; }
+        .faq .section-title h2 { font-size: 2rem; font-weight: 700; color: #0b1120; }
+        .faq-item { background: white; border-radius: 14px; padding: 18px 22px; margin-bottom: 10px; border: 1px solid #e5e7eb; }
+        .faq-item .question { font-weight: 600; color: #0b1120; font-size: 1rem; }
+        .faq-item .answer { color: #4b5563; margin-top: 4px; line-height: 1.5; font-size: 0.95rem; }
+        .dashboard-preview { max-width: 1100px; margin: -40px auto 40px; padding: 0 20px; }
+        .dashboard-preview .mockup { background: white; border-radius: 20px; padding: 24px 28px; box-shadow: 0 20px 60px rgba(0,0,0,0.12); text-align: center; }
     </style>
 </head>
 <body>
@@ -144,7 +190,7 @@
         <div style="max-width:900px;margin:0 auto;">
             <div class="logo">🧠 <span>Leago</span></div>
             <span style="font-size:0.9rem;color:#9ca3af;display:block;margin-top:-6px;">AI Education Platform</span>
-            <div style="display:inline-block;background:rgba(99,102,241,0.15);border:1px solid rgba(99,102,241,0.3);padding:6px 20px;border-radius:30px;font-size:0.85rem;color:#818cf8;margin:20px 0;">✨ Africa's AI Learning Platform</div>
+            <div class="badge">✨ Africa's AI Learning Platform</div>
             <h1>Master Every Subject with <span style="background:linear-gradient(135deg,#818cf8,#a855f7);-webkit-background-clip:text;-webkit-text-fill-color:transparent;">Your Personal AI Teacher</span></h1>
             <p style="font-size:1.1rem;color:#c4b5d4;max-width:700px;margin:0 auto 24px;">Personalized AI learning for African students.</p>
             <div class="cta-group">
@@ -155,7 +201,109 @@
         </div>
     </section>
 
-    <!-- ===== AUTH OVERLAY ===== -->
+    <!-- FEATURES -->
+    <div style="max-width:1100px;margin:0 auto;padding:0 20px;">
+        <div class="features-grid">
+            <div class="feature-card">
+                <span class="icon">🧠</span>
+                <h3>AI Teacher</h3>
+                <p>Personalised step-by-step explanations that adapt to your curriculum.</p>
+            </div>
+            <div class="feature-card">
+                <span class="icon">📚</span>
+                <h3>Curriculum‑Aligned</h3>
+                <p>Follows CAPS, IEB, CBC, WAEC, ZIMSEC, and more.</p>
+            </div>
+            <div class="feature-card">
+                <span class="icon">📝</span>
+                <h3>Homework &amp; Quizzes</h3>
+                <p>Practice what you learn with interactive exercises.</p>
+            </div>
+            <div class="feature-card">
+                <span class="icon">📊</span>
+                <h3>Progress Tracking</h3>
+                <p>Monitor your improvement over time.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- PRICING -->
+    <section class="pricing" id="pricing">
+        <div class="section-title">
+            <h2>Choose Your Learning Plan</h2>
+            <p>Whether you're exploring or preparing for exams, there's a plan designed for you.</p>
+        </div>
+        <div class="pricing-grid">
+            <div class="pricing-card">
+                <div class="plan">Free Plan</div>
+                <div class="price">R0 <span>/ month</span></div>
+                <div class="description">Perfect for students getting started.</div>
+                <ul class="features-list">
+                    <li>Limited AI learning sessions</li>
+                    <li>Limited daily questions</li>
+                    <li>Interactive quizzes</li>
+                    <li>Access to all available subjects</li>
+                    <li>Personal learning dashboard</li>
+                    <li>Progress tracking</li>
+                </ul>
+                <button class="btn-pricing outline" onclick="openAuth('signup')">Start Free</button>
+                <p style="font-size:0.8rem;color:#6b7280;margin-top:8px;">No payment details required.</p>
+            </div>
+            <div class="pricing-card popular">
+                <div style="font-size:0.75rem;color:#6366f1;font-weight:700;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;">Most Popular</div>
+                <div class="plan">Premium</div>
+                <div class="price">R49.99 <span>/ month</span></div>
+                <div class="description">Unlock the complete Leago Academy experience.</div>
+                <ul class="features-list">
+                    <li>Everything in Free, plus:</li>
+                    <li>Unlimited AI Teacher</li>
+                    <li>Unlimited learning sessions</li>
+                    <li>Homework assistance</li>
+                    <li>Exam preparation</li>
+                    <li>Personalized study plans</li>
+                    <li>Detailed learning analytics</li>
+                    <li>Priority support</li>
+                    <li>Early access to new features</li>
+                </ul>
+                <button class="btn-pricing" onclick="openAuth('login')">Upgrade to Premium</button>
+                <p style="font-size:0.8rem;color:#6b7280;margin-top:8px;">Cancel anytime. Payments secured by Paystack.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ -->
+    <section class="faq" id="faq">
+        <div class="section-title">
+            <h2>Frequently Asked Questions</h2>
+        </div>
+        <div class="faq-item">
+            <div class="question">Can I use Leago Academy for free?</div>
+            <div class="answer">Yes. Our Free Plan allows you to explore the platform with selected features at no cost.</div>
+        </div>
+        <div class="faq-item">
+            <div class="question">Can I cancel Premium?</div>
+            <div class="answer">Yes. You may cancel your subscription at any time. Your Premium access will remain active until the end of your current billing period.</div>
+        </div>
+        <div class="faq-item">
+            <div class="question">Which payment methods are accepted?</div>
+            <div class="answer">Payments are securely processed through Paystack using the payment methods available in your region.</div>
+        </div>
+        <div class="faq-item">
+            <div class="question">Will the price change?</div>
+            <div class="answer">If pricing changes in the future, existing subscribers will be notified in advance.</div>
+        </div>
+    </section>
+
+    <!-- DASHBOARD PREVIEW -->
+    <div class="dashboard-preview">
+        <div class="mockup">
+            <div style="font-size:3rem;">📊</div>
+            <strong>Dashboard Preview</strong>
+            <p style="margin-top:4px;font-size:0.85rem;color:#9ca3af;">Your personalised learning dashboard</p>
+        </div>
+    </div>
+
+    <!-- AUTH OVERLAY -->
     <div class="auth-overlay" id="authOverlay">
         <div class="auth-card">
             <button class="close-btn" onclick="closeAuth()">✕</button>
@@ -298,13 +446,13 @@
         </div>
     </div>
 
-    <!-- ===== LEGAL PAGES ===== -->
+    <!-- LEGAL PAGES -->
     <div class="info-page" id="page-about"><h1>About Leago Academy</h1><p>Empowering Africa Through Intelligent Learning...</p><span class="back-link" onclick="showInfoPage('')">← Back to Leago</span></div>
     <div class="info-page" id="page-privacy"><h1>Privacy Policy</h1><p>Effective Date: 1 July 2026...</p><span class="back-link" onclick="showInfoPage('')">← Back to Leago</span></div>
     <div class="info-page" id="page-tos"><h1>Terms of Service</h1><p>Last Updated: 1 July 2026...</p><span class="back-link" onclick="showInfoPage('')">← Back to Leago</span></div>
     <div class="info-page" id="page-contact"><h1>Contact Leago Academy</h1><p>We are here to help...</p><span class="back-link" onclick="showInfoPage('')">← Back to Leago</span></div>
 
-    <!-- ===== FOOTER ===== -->
+    <!-- FOOTER -->
     <footer class="site-footer" id="siteFooter">
         <div class="inner">
             <div><h4>🧠 Leago Academy</h4><p style="font-size:0.9rem; opacity:0.8;">Empowering African Students Through AI-Powered Education.</p></div>
@@ -546,9 +694,12 @@
         }
 
         // ================================================================
-        // DASHBOARD – shows user data and clickable subjects
+        // DASHBOARD
         // ================================================================
+        let currentUser = null;
+
         function initDashboard(user) {
+            currentUser = user;
             console.log('initDashboard user:', user);
             const fullName = `${user.firstName || ''} ${user.lastName || ''}`.trim() || 'Student';
             document.getElementById('userName').textContent = fullName;
@@ -592,7 +743,6 @@
             `;
             document.getElementById('recentContainer').innerHTML = `<div style="font-size:0.85rem;color:#6b7280;">No recent activity</div>`;
 
-            // Subscription badge with Subscribe button
             updateBadge(user.subscription);
         }
 
@@ -611,7 +761,7 @@
         }
 
         // ================================================================
-        // SUBSCRIBE (payment)
+        // SUBSCRIBE
         // ================================================================
         async function subscribe() {
             const user = JSON.parse(localStorage.getItem('synapse_user'));
@@ -634,10 +784,10 @@
         }
 
         // ================================================================
-        // SUBJECT TOPICS (click to open)
+        // SUBJECT TOPICS
         // ================================================================
         const DEFAULT_TOPICS = {
-            'Mathematics': ['Algebra', 'Trigonometry', 'Calculus', 'Statistics'],
+            'Mathematics': ['Algebra', 'Trigonometry', 'Calculus', 'Statistics', 'Geometry'],
             'English Home Language': ['Grammar', 'Literature', 'Writing', 'Comprehension'],
             'Life Sciences': ['Cell Biology', 'Genetics', 'Ecology', 'Human Anatomy'],
             'Physical Sciences': ['Mechanics', 'Thermodynamics', 'Electricity', 'Chemical Bonding'],
@@ -706,6 +856,9 @@
             return icons[name] || '📚';
         }
 
+        // ================================================================
+        // AI TUTOR (with math rendering)
+        // ================================================================
         function openTutor(subject, topic) {
             document.getElementById('welcomeMessage').textContent = '💬 AI Tutor';
             document.getElementById('welcomeSub').textContent = subject + ' — ' + topic;
@@ -756,8 +909,11 @@
                     })
                 });
                 const data = await res.json();
-                if (data.reply) addMessage('bot', data.reply);
-                else addMessage('bot', '❌ ' + (data.error || 'No response'));
+                if (data.reply) {
+                    addMessage('bot', data.reply);
+                } else {
+                    addMessage('bot', '❌ ' + (data.error || 'No response'));
+                }
             } catch (err) {
                 addMessage('bot', '❌ Server error. Please try again.');
             } finally {
@@ -775,9 +931,23 @@
             if (role === 'bot' && typeof marked !== 'undefined') {
                 marked.setOptions({ breaks: true, gfm: true });
                 div.innerHTML = marked.parse(text);
-            } else { div.textContent = text; }
+                // Render LaTeX
+                setTimeout(() => {
+                    if (typeof renderMathInElement === 'function') {
+                        renderMathInElement(div, {
+                            delimiters: [
+                                {left: '$$', right: '$$', display: true},
+                                {left: '$', right: '$', display: false}
+                            ]
+                        });
+                    }
+                }, 50);
+            } else {
+                div.textContent = text;
+            }
             box.appendChild(div);
             box.scrollTop = box.scrollHeight;
+            // Text-to-speech (if enabled)
             if (role === 'bot' && document.getElementById('speakToggle').checked) {
                 let clean = text.replace(/#{1,6}\s?/g, '').replace(/\*\*/g, '').replace(/\*/g, '').replace(/`/g, '')
                     .replace(/[\\*\/_\-~#`|]/g, ' ').replace(/[📚🎯✏️🤔💡✅❌]/g, '').replace(/\s+/g, ' ').trim();
@@ -875,9 +1045,23 @@
         }
 
         // ================================================================
-        // INIT
+        // GSAP animations + Lucide icons
         // ================================================================
         document.addEventListener('DOMContentLoaded', function() {
+            // GSAP hero animations
+            if (typeof gsap !== 'undefined') {
+                gsap.from('.hero h1', { duration: 1, y: 50, opacity: 0, ease: 'power2.out' });
+                gsap.from('.hero .badge', { duration: 0.8, scale: 0.8, opacity: 0, delay: 0.3 });
+                gsap.from('.hero .cta-group', { duration: 0.8, y: 30, opacity: 0, delay: 0.6 });
+                gsap.from('.feature-card', { duration: 0.8, y: 40, opacity: 0, stagger: 0.15, delay: 0.8 });
+            }
+
+            // Lucide icons
+            if (typeof lucide !== 'undefined') {
+                lucide.createIcons();
+            }
+
+            // Check if user is logged in
             const stored = localStorage.getItem('synapse_user');
             if (stored) {
                 try {
@@ -890,12 +1074,14 @@
                     initDashboard(user);
                 } catch (e) { console.error('Error parsing stored user:', e); }
             }
+
+            // Global key handlers
             document.addEventListener('keydown', function(e) {
                 if (e.key === 'Enter') {
                     if (document.getElementById('loginPage').style.display !== 'none' && document.getElementById('authOverlay').classList.contains('active')) { login(); }
                 }
+                if (e.key === 'Escape') closeAuth();
             });
-            document.addEventListener('keydown', function(e) { if (e.key === 'Escape') closeAuth(); });
             document.getElementById('authOverlay').addEventListener('click', function(e) { if (e.target === this) closeAuth(); });
         });
     </script>
