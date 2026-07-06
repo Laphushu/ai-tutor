@@ -1,4 +1,3 @@
-// server/routes/payments.js
 const express = require('express');
 const { pool } = require('../db');
 const router = express.Router();
@@ -36,6 +35,9 @@ router.post('/webhook', express.raw({ type: 'application/json' }), async (req, r
     const userId = event.data.metadata?.userId;
     if (userId) {
       try {
+        // Upgrade to premium
+        await pool.query('UPDATE users SET plan = $1 WHERE id = $2', ['premium', userId]);
+        // Insert/update subscription
         await pool.query(
           `INSERT INTO subscriptions (user_id, status, start_date, end_date)
            VALUES ($1, 'active', NOW(), NOW() + INTERVAL '30 days')

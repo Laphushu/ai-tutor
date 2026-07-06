@@ -1,22 +1,51 @@
-// server/routes/chat.js
 const express = require('express');
 const { pool } = require('../db');
 const math = require('mathjs');
 const router = express.Router();
 
+// Middleware to check daily limit and increment count
 async function checkSubscription(req, res, next) {
   const userId = req.body.userId || req.query.userId;
   if (!userId) return res.status(401).json({ error: 'Unauthorized' });
+
   try {
-    const result = await pool.query('SELECT status, end_date FROM subscriptions WHERE user_id = $1', [userId]);
-    if (result.rows.length === 0) return res.status(403).json({ error: 'No subscription found' });
-    const sub = result.rows[0];
-    const now = new Date();
-    if (sub.status === 'active' && now < sub.end_date) return next();
-    if (sub.status === 'trial' && now < sub.end_date) return next();
-    return res.status(403).json({ error: 'Subscription expired' });
+    const result = await pool.query(
+      'SELECT plan, daily_question_count, last_question_date FROM users WHERE id = $1',
+      [userId]
+    );
+    if (result.rows.length === 0) return res.status(404).json({ error: 'User not found' });
+    const user = result.rows[0];
+
+    // Premium users skip limit
+    if (user.plan === 'premium') {
+      return next();
+    }
+
+    // Free user: enforce 10 questions/day
+    const today = new Date().toISOString().split('T')[0];
+    const lastDate = user.last_question_date ? user.last_question_date.toISOString().split('T')[0] : null;
+    let count = user.daily_question_count || 0;
+
+    // Reset if new day
+    if (lastDate !== today) {
+      count = 0;
+      await pool.query('UPDATE users SET daily_question_count = 0, last_question_date = $1 WHERE id = $2', [today, userId]);
+    }
+
+    if (count >= 10) {
+      return res.status(403).json({
+        error: 'limit_reached',
+        message: 'You have reached your daily limit of 10 questions. Upgrade to Premium for unlimited access.'
+      });
+    }
+
+    // Increment count
+    await pool.query('UPDATE users SET daily_question_count = $1, last_question_date = $2 WHERE id = $3', [count + 1, today, userId]);
+    req.user = { ...user, daily_question_count: count + 1 };
+    next();
   } catch (err) {
-    console.warn('DB error – allowing access for testing');
+    console.error('Subscription check error:', err.message);
+    // Fallback: allow access for testing
     return next();
   }
 }
@@ -27,18 +56,15 @@ router.post('/', checkSubscription, async (req, res) => {
 
   console.log('📨 Chat request:', { userId, subject, topic, messageLength: message.length });
 
-  // ---- Step 1: Try to solve as a math expression ----
+  // ---- Math solver ----
   let mathResult = null;
   try {
-    // Check if it looks like a math question (contains numbers, operators, =, solve, etc.)
     const isMath = /[0-9+\-*/().=]/.test(message) && !message.toLowerCase().includes('what is');
     if (isMath) {
-      // If it contains '=', try to solve as an equation (simple evaluation of both sides)
       if (message.includes('=')) {
         const sides = message.split('=');
         const left = sides[0].trim();
         const right = sides[1].trim();
-        // Try to evaluate both sides
         const leftResult = math.evaluate(left);
         const rightResult = math.evaluate(right);
         if (leftResult === rightResult) {
@@ -47,7 +73,6 @@ router.post('/', checkSubscription, async (req, res) => {
           mathResult = `❌ False: ${left} = ${right} (${leftResult} ≠ ${rightResult})`;
         }
       } else {
-        // Just evaluate the expression
         const evaluated = math.evaluate(message);
         mathResult = `${message} = ${evaluated}`;
       }
@@ -57,15 +82,13 @@ router.post('/', checkSubscription, async (req, res) => {
   }
 
   if (mathResult) {
-    // Return the math result with LaTeX formatting
     return res.json({ reply: `$$ ${mathResult} $$` });
   }
 
-  // ---- Step 2: Try AI APIs ----
+  // ---- AI APIs ----
   const DEEPSEEK_API_KEY = process.env.DEEPSEEK_API_KEY;
   const HF_API_TOKEN = process.env.HF_API_TOKEN;
 
-  // Try DeepSeek first (if key is set)
   if (DEEPSEEK_API_KEY) {
     try {
       const prompt = `Teach "${topic}" in "${subject}" step by step. Student asks: "${message}"`;
@@ -96,7 +119,6 @@ router.post('/', checkSubscription, async (req, res) => {
     }
   }
 
-  // Try Hugging Face
   if (HF_API_TOKEN) {
     try {
       const prompt = `Teach "${topic}" in "${subject}" step by step. Student asks: "${message}"`;
@@ -127,11 +149,9 @@ router.post('/', checkSubscription, async (req, res) => {
     } catch (e) {
       console.error('❌ Hugging Face exception:', e.message);
     }
-  } else {
-    console.warn('⚠️ HF_API_TOKEN not set – skipping Hugging Face');
   }
 
-  // ---- Step 3: Ultimate fallback ----
+  // ---- Ultimate fallback ----
   console.log('📝 Using fallback response');
   res.json({
     reply: `📚 **Step-by-step for "${topic || subject}"**\n\n1. Read your textbook section.\n2. Identify key terms.\n3. Work through examples.\n4. Practice problems.\n5. Review difficult areas.`

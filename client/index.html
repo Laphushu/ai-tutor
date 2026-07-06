@@ -5,18 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Leago Academy</title>
 
-    <!-- KaTeX for math rendering -->
+    <!-- KaTeX -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" crossorigin="anonymous">
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" crossorigin="anonymous"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
 
-    <!-- GSAP for animations -->
+    <!-- GSAP -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
 
-    <!-- Marked for markdown -->
+    <!-- Marked -->
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 
     <style>
@@ -185,7 +185,7 @@
 </head>
 <body>
 
-    <!-- ===== LANDING ===== -->
+    <!-- LANDING -->
     <section class="hero" id="heroSection">
         <div style="max-width:900px;margin:0 auto;">
             <div class="logo">🧠 <span>Leago</span></div>
@@ -409,7 +409,7 @@
         </div>
     </div>
 
-    <!-- ===== DASHBOARD ===== -->
+    <!-- DASHBOARD -->
     <div class="dashboard" id="dashboard">
         <nav class="top-nav">
             <a href="#" class="logo">🧠 <span>Leago</span></a>
@@ -549,9 +549,7 @@
             `).join('');
         }
 
-        // ================================================================
         // STEPPER
-        // ================================================================
         let currentStep = 1;
         let signupData = {};
 
@@ -602,9 +600,7 @@
 
         function prevStep(step) { goToStep(step); }
 
-        // ================================================================
         // AUTH – Signup
-        // ================================================================
         async function signup() {
             const subjects = Array.from(document.querySelectorAll('.subject-checkbox:checked')).map(cb => cb.value);
             if (!subjects.length) {
@@ -639,9 +635,7 @@
             }
         }
 
-        // ================================================================
         // AUTH – Login
-        // ================================================================
         async function login() {
             const email = document.getElementById('loginEmail').value.trim();
             const password = document.getElementById('loginPassword').value.trim();
@@ -693,9 +687,7 @@
             }
         }
 
-        // ================================================================
         // DASHBOARD
-        // ================================================================
         let currentUser = null;
 
         function initDashboard(user) {
@@ -703,7 +695,8 @@
             console.log('initDashboard user:', user);
             const fullName = `${user.firstName || ''} ${user.lastName || ''}`.trim() || 'Student';
             document.getElementById('userName').textContent = fullName;
-            document.getElementById('userGrade').textContent = user.gradeName || 'Level: Not set';
+            const gradeDisplay = user.gradeName || 'Level: Not set';
+            document.getElementById('userGrade').textContent = gradeDisplay;
 
             document.getElementById('welcomeMessage').textContent = `Welcome back, ${fullName} 👋`;
 
@@ -743,26 +736,35 @@
             `;
             document.getElementById('recentContainer').innerHTML = `<div style="font-size:0.85rem;color:#6b7280;">No recent activity</div>`;
 
-            updateBadge(user.subscription);
+            // Fetch subscription status (plan + remaining questions)
+            fetchSubscriptionStatus(user.id);
         }
 
-        function updateBadge(subscription) {
+        async function fetchSubscriptionStatus(userId) {
+            try {
+                const res = await fetch(`/api/auth/subscription/${userId}`);
+                const data = await res.json();
+                if (data.plan) {
+                    updateBadge(data.plan, data.remainingQuestions);
+                }
+            } catch (err) {
+                console.error('Error fetching subscription:', err);
+            }
+        }
+
+        function updateBadge(plan, remainingQuestions) {
             const badge = document.getElementById('subscriptionBadge');
-            if (!subscription) { badge.innerHTML = ''; return; }
-            const status = subscription.status || 'trial';
-            const days = subscription.daysRemaining || 3;
-            let statusText = '', statusClass = '';
-            let showButton = true;
-            if (status === 'trial') { statusText = `Trial • ${days}d left`; statusClass = 'sub-trial'; }
-            else if (status === 'active') { statusText = 'Premium ✅'; statusClass = 'sub-active'; showButton = false; }
-            else { statusText = 'Expired'; statusClass = 'sub-expired'; }
-            const buttonHtml = showButton ? `<button class="subscribe-btn" onclick="subscribe()">Subscribe</button>` : '';
-            badge.innerHTML = `<span class="sub-badge ${statusClass}">${statusText}</span> ${buttonHtml}`;
+            if (!plan) { badge.innerHTML = ''; return; }
+            if (plan === 'premium') {
+                badge.innerHTML = `<span class="sub-badge sub-active">Premium ✅</span>`;
+            } else {
+                const remaining = remainingQuestions !== undefined ? remainingQuestions : '10';
+                badge.innerHTML = `<span class="sub-badge sub-trial">Free • ${remaining} questions left today</span>
+                                   <button class="subscribe-btn" onclick="subscribe()">Subscribe</button>`;
+            }
         }
 
-        // ================================================================
         // SUBSCRIBE
-        // ================================================================
         async function subscribe() {
             const user = JSON.parse(localStorage.getItem('synapse_user'));
             if (!user) { alert('Please log in first.'); return; }
@@ -783,9 +785,7 @@
             }
         }
 
-        // ================================================================
         // SUBJECT TOPICS
-        // ================================================================
         const DEFAULT_TOPICS = {
             'Mathematics': ['Algebra', 'Trigonometry', 'Calculus', 'Statistics', 'Geometry'],
             'English Home Language': ['Grammar', 'Literature', 'Writing', 'Comprehension'],
@@ -856,9 +856,7 @@
             return icons[name] || '📚';
         }
 
-        // ================================================================
-        // AI TUTOR (with math rendering)
-        // ================================================================
+        // AI TUTOR
         function openTutor(subject, topic) {
             document.getElementById('welcomeMessage').textContent = '💬 AI Tutor';
             document.getElementById('welcomeSub').textContent = subject + ' — ' + topic;
@@ -908,6 +906,13 @@
                         topic: topic
                     })
                 });
+                if (res.status === 403) {
+                    const data = await res.json();
+                    if (data.error === 'limit_reached') {
+                        addMessage('bot', `📚 **You've reached your daily limit of 10 questions.**\n\nUpgrade to Premium for unlimited AI tutoring.\n\nClick the **Subscribe** button above to continue learning without interruptions.`);
+                        return;
+                    }
+                }
                 const data = await res.json();
                 if (data.reply) {
                     addMessage('bot', data.reply);
@@ -947,7 +952,7 @@
             }
             box.appendChild(div);
             box.scrollTop = box.scrollHeight;
-            // Text-to-speech (if enabled)
+            // Text-to-speech
             if (role === 'bot' && document.getElementById('speakToggle').checked) {
                 let clean = text.replace(/#{1,6}\s?/g, '').replace(/\*\*/g, '').replace(/\*/g, '').replace(/`/g, '')
                     .replace(/[\\*\/_\-~#`|]/g, ' ').replace(/[📚🎯✏️🤔💡✅❌]/g, '').replace(/\s+/g, ' ').trim();
@@ -963,9 +968,7 @@
             }
         }
 
-        // ================================================================
         // NAVIGATION HELPERS
-        // ================================================================
         function openAuth(page) {
             document.getElementById('authOverlay').classList.add('active');
             if (page === 'signup') showSignup();
@@ -1044,9 +1047,7 @@
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        // ================================================================
-        // GSAP animations + Lucide icons
-        // ================================================================
+        // GSAP + Lucide + INIT
         document.addEventListener('DOMContentLoaded', function() {
             // GSAP hero animations
             if (typeof gsap !== 'undefined') {

@@ -1,4 +1,3 @@
-// server/db.js – PostgreSQL with automatic column addition
 const { Pool } = require('pg');
 
 const pool = new Pool({
@@ -9,7 +8,6 @@ const pool = new Pool({
 async function initDB() {
   const client = await pool.connect();
   try {
-    // ---- Create tables if not exist ----
     await client.query(`
       CREATE TABLE IF NOT EXISTS countries (
         id SERIAL PRIMARY KEY,
@@ -72,38 +70,19 @@ async function initDB() {
         curriculum_id INTEGER REFERENCES curricula(id),
         grade_id INTEGER REFERENCES grades(id),
         role VARCHAR(20) DEFAULT 'learner',
+        plan VARCHAR(20) DEFAULT 'free',
+        subjects JSONB DEFAULT '[]'::jsonb,
+        daily_question_count INTEGER DEFAULT 0,
+        last_question_date DATE,
         created_at TIMESTAMP DEFAULT NOW()
       );
     `);
-
-    // ---- Add missing columns if needed ----
-    // 1. subjects column
-    await client.query(`
-      DO $$
-      BEGIN
-        IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='users' AND column_name='subjects') THEN
-          ALTER TABLE users ADD COLUMN subjects JSONB DEFAULT '[]'::jsonb;
-        END IF;
-      END $$;
-    `);
-
-    // 2. province_id column (if missing)
-    await client.query(`
-      DO $$
-      BEGIN
-        IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='users' AND column_name='province_id') THEN
-          ALTER TABLE users ADD COLUMN province_id INTEGER REFERENCES provinces(id);
-        END IF;
-      END $$;
-    `);
-
-    // ---- Create remaining tables ----
     await client.query(`
       CREATE TABLE IF NOT EXISTS subscriptions (
         user_id INTEGER PRIMARY KEY REFERENCES users(id) ON DELETE CASCADE,
-        status VARCHAR(20) DEFAULT 'trial',
+        status VARCHAR(20) DEFAULT 'free',
         start_date TIMESTAMP DEFAULT NOW(),
-        end_date TIMESTAMP DEFAULT NOW() + INTERVAL '3 days'
+        end_date TIMESTAMP
       );
     `);
     await client.query(`
@@ -128,9 +107,8 @@ async function initDB() {
       );
     `);
 
-    // ---- Seed default data (countries, provinces, curricula, grades, subjects) ----
-    // (same as before – you already have it in your current db.js)
-    // ... keep your seeding code here ...
+    // Seed default data (countries, provinces, curricula, grades, subjects)
+    // ... (keep your existing seeding code, unchanged) ...
 
     console.log('✅ Database tables and default data ready (PostgreSQL)');
   } catch (err) {

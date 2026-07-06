@@ -1,11 +1,9 @@
-// server/routes/auth.js
 const express = require('express');
 const bcrypt = require('bcrypt');
 const { pool } = require('../db');
 const router = express.Router();
 const SALT_ROUNDS = 10;
 
-// Helper: get province ID from name and country
 async function getProvinceId(countryId, provinceName) {
   if (!provinceName) return null;
   const result = await pool.query(
@@ -15,7 +13,7 @@ async function getProvinceId(countryId, provinceName) {
   return result.rows.length ? result.rows[0].id : null;
 }
 
-// Signup
+// Signup – free plan by default
 router.post('/signup', async (req, res) => {
   const { firstName, lastName, email, password, countryId, province, educationLevelId, curriculumId, gradeId, subjects, role } = req.body;
   if (!firstName || !lastName || !email || !password || !countryId || !educationLevelId || !curriculumId || !gradeId) {
@@ -31,15 +29,11 @@ router.post('/signup', async (req, res) => {
     const subjectsJson = JSON.stringify(subjects);
     const provinceId = await getProvinceId(countryId, province);
     const result = await pool.query(
-      `INSERT INTO users (email, password_hash, first_name, last_name, country_id, province_id, education_level_id, curriculum_id, grade_id, role, subjects)
-       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11) RETURNING id`,
-      [email, hash, firstName, lastName, countryId, provinceId, educationLevelId, curriculumId, gradeId, role || 'learner', subjectsJson]
+      `INSERT INTO users (email, password_hash, first_name, last_name, country_id, province_id, education_level_id, curriculum_id, grade_id, role, subjects, plan, daily_question_count, last_question_date)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14) RETURNING id`,
+      [email, hash, firstName, lastName, countryId, provinceId, educationLevelId, curriculumId, gradeId, role || 'learner', subjectsJson, 'free', 0, null]
     );
     const userId = result.rows[0].id;
-    await pool.query(
-      `INSERT INTO subscriptions (user_id, status, end_date) VALUES ($1, 'trial', NOW() + INTERVAL '3 days')`,
-      [userId]
-    );
     res.json({ success: true, userId });
   } catch (err) {
     console.error('Signup error:', err.message);
@@ -47,14 +41,14 @@ router.post('/signup', async (req, res) => {
   }
 });
 
-// Login
+// Login – returns plan
 router.post('/login', async (req, res) => {
   const { email, password } = req.body;
   try {
     const result = await pool.query(`
       SELECT u.id, u.email, u.password_hash, u.first_name, u.last_name,
              u.country_id, u.province_id, u.education_level_id, u.curriculum_id, u.grade_id,
-             u.role, u.subjects,
+             u.role, u.subjects, u.plan,
              c.name AS country_name, p.name AS province_name,
              el.name AS education_level_name,
              cur.name AS curriculum_name,
@@ -71,13 +65,17 @@ router.post('/login', async (req, res) => {
     const user = result.rows[0];
     const valid = await bcrypt.compare(password, user.password_hash);
     if (!valid) return res.status(401).json({ error: 'Invalid credentials' });
-    const subResult = await pool.query('SELECT status, end_date FROM subscriptions WHERE user_id = $1', [user.id]);
-    let sub = subResult.rows[0] || { status: 'trial', end_date: new Date(Date.now() + 3*24*60*60*1000) };
-    const now = new Date();
-    let status = sub.status, daysRemaining = 0;
-    if (sub.status === 'active' && now < sub.end_date) { status = 'active'; daysRemaining = Math.ceil((sub.end_date - now)/(1000*60*60*24)); }
-    else if (sub.status === 'trial' && now < sub.end_date) { status = 'trial'; daysRemaining = Math.ceil((sub.end_date - now)/(1000*60*60*24)); }
-    else { status = 'expired'; daysRemaining = 0; }
+
+    // Check if premium subscription expired
+    let plan = user.plan || 'free';
+    if (plan === 'premium') {
+      const subResult = await pool.query('SELECT end_date FROM subscriptions WHERE user_id = $1', [user.id]);
+      if (subResult.rows.length && new Date(subResult.rows[0].end_date) < new Date()) {
+        plan = 'free';
+        await pool.query('UPDATE users SET plan = $1 WHERE id = $2', ['free', user.id]);
+      }
+    }
+
     const userData = {
       id: user.id,
       firstName: user.first_name || 'Student',
@@ -95,7 +93,7 @@ router.post('/login', async (req, res) => {
       gradeName: user.grade_name || 'Not set',
       subjects: user.subjects || [],
       role: user.role || 'learner',
-      subscription: { status, daysRemaining }  // ✅ this is returned
+      plan: plan
     };
     res.json({ success: true, user: userData, token: 'mock-token' });
   } catch (err) {
@@ -104,18 +102,30 @@ router.post('/login', async (req, res) => {
   }
 });
 
-// Subscription status
+// Get subscription status and remaining questions
 router.get('/subscription/:userId', async (req, res) => {
   const userId = parseInt(req.params.userId);
   try {
-    const result = await pool.query('SELECT status, end_date FROM subscriptions WHERE user_id = $1', [userId]);
-    if (result.rows.length === 0) return res.json({ status: 'trial', daysRemaining: 3 });
-    const sub = result.rows[0];
-    const now = new Date();
-    let status = 'expired', days = 0;
-    if (sub.status === 'active' && now < sub.end_date) { status = 'active'; days = Math.ceil((sub.end_date - now)/(1000*60*60*24)); }
-    else if (sub.status === 'trial' && now < sub.end_date) { status = 'trial'; days = Math.ceil((sub.end_date - now)/(1000*60*60*24)); }
-    res.json({ status, daysRemaining: Math.max(0, days) });
+    const result = await pool.query(
+      'SELECT plan, daily_question_count, last_question_date FROM users WHERE id = $1',
+      [userId]
+    );
+    if (result.rows.length === 0) return res.status(404).json({ error: 'User not found' });
+    const user = result.rows[0];
+    const today = new Date().toISOString().split('T')[0];
+    const lastDate = user.last_question_date ? user.last_question_date.toISOString().split('T')[0] : null;
+    let remaining = 10;
+    if (user.plan === 'premium') {
+      remaining = Infinity;
+    } else {
+      const count = (lastDate === today) ? (user.daily_question_count || 0) : 0;
+      remaining = Math.max(0, 10 - count);
+    }
+    res.json({
+      plan: user.plan,
+      remainingQuestions: remaining,
+      isPremium: user.plan === 'premium'
+    });
   } catch (err) {
     res.status(500).json({ error: 'Database error' });
   }
