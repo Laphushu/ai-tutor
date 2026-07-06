@@ -59,7 +59,11 @@
         .hero .cta-group .cta-note { font-size: 0.85rem; color: #9ca3af; width: 100%; }
 
         /* ===== FEATURES ===== */
-        .features { max-width: 1100px; margin: 0 auto 0; padding: 20px 20px 60px; }
+        .features {
+            max-width: 1100px;
+            margin: 0 auto 0;      /* ← removed large bottom margin */
+            padding: 20px 20px 60px; /* ← bottom padding instead */
+        }
         .features .section-title { text-align: center; margin-bottom: 32px; }
         .features .section-title h2 { font-size: 2rem; font-weight: 700; color: #0b1120; }
         .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; }
