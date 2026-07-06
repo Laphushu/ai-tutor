@@ -58,15 +58,20 @@
         .hero .cta-group .btn-secondary:hover { border-color: white; background: rgba(255,255,255,0.05); }
         .hero .cta-group .cta-note { font-size: 0.85rem; color: #9ca3af; width: 100%; }
 
-        /* ===== FEATURES ===== */
+        /* ===== FEATURES – FIXED SPACE ===== */
         .features {
             max-width: 1100px;
-            margin: 0 auto 0;      /* ← removed large bottom margin */
-            padding: 20px 20px 60px; /* ← bottom padding instead */
+            margin: 0 auto 0 !important;
+            padding: 20px 20px 0 20px;
         }
         .features .section-title { text-align: center; margin-bottom: 32px; }
         .features .section-title h2 { font-size: 2rem; font-weight: 700; color: #0b1120; }
-        .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; }
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-bottom: 0;
+        }
         .feature-card { background: white; padding: 28px 20px; border-radius: 16px; box-shadow: 0 4px 16px rgba(0,0,0,0.04); text-align: center; border: 1px solid rgba(0,0,0,0.04); transition: all 0.3s; }
         .feature-card:hover { transform: translateY(-4px); box-shadow: 0 12px 40px rgba(0,0,0,0.08); }
         .feature-card .icon { font-size: 2.4rem; display: block; margin-bottom: 8px; }
