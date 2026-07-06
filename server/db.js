@@ -8,6 +8,7 @@ const pool = new Pool({
 async function initDB() {
   const client = await pool.connect();
   try {
+    // ---- Existing tables ----
     await client.query(`
       CREATE TABLE IF NOT EXISTS countries (
         id SERIAL PRIMARY KEY,
@@ -70,13 +71,37 @@ async function initDB() {
         curriculum_id INTEGER REFERENCES curricula(id),
         grade_id INTEGER REFERENCES grades(id),
         role VARCHAR(20) DEFAULT 'learner',
-        plan VARCHAR(20) DEFAULT 'free',
         subjects JSONB DEFAULT '[]'::jsonb,
-        daily_question_count INTEGER DEFAULT 0,
-        last_question_date DATE,
         created_at TIMESTAMP DEFAULT NOW()
       );
     `);
+    // ---- Add new columns if missing ----
+    await client.query(`
+      DO $$
+      BEGIN
+        IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='users' AND column_name='plan') THEN
+          ALTER TABLE users ADD COLUMN plan VARCHAR(20) DEFAULT 'free';
+        END IF;
+      END $$;
+    `);
+    await client.query(`
+      DO $$
+      BEGIN
+        IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='users' AND column_name='daily_question_count') THEN
+          ALTER TABLE users ADD COLUMN daily_question_count INTEGER DEFAULT 0;
+        END IF;
+      END $$;
+    `);
+    await client.query(`
+      DO $$
+      BEGIN
+        IF NOT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_name='users' AND column_name='last_question_date') THEN
+          ALTER TABLE users ADD COLUMN last_question_date DATE;
+        END IF;
+      END $$;
+    `);
+
+    // ---- Continue with subscriptions, progress, payments tables ----
     await client.query(`
       CREATE TABLE IF NOT EXISTS subscriptions (
         user_id INTEGER PRIMARY KEY REFERENCES users(id) ON DELETE CASCADE,
@@ -107,10 +132,10 @@ async function initDB() {
       );
     `);
 
-    // Seed default data (countries, provinces, curricula, grades, subjects)
-    // ... (keep your existing seeding code, unchanged) ...
+    // ---- Seed default data (keep your existing seeding) ----
+    // ... (your existing seeding code for countries, provinces, etc.) ...
 
-    console.log('✅ Database tables and default data ready (PostgreSQL)');
+    console.log('✅ Database tables ready (including new columns)');
   } catch (err) {
     console.error('❌ DB init error:', err.message);
   } finally {

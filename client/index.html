@@ -5,18 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Leago Academy</title>
 
-    <!-- KaTeX for math rendering -->
+    <!-- KaTeX -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" crossorigin="anonymous">
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" crossorigin="anonymous"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
 
-    <!-- GSAP for animations -->
+    <!-- GSAP -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
 
-    <!-- Marked for markdown -->
+    <!-- Marked -->
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 
     <style>
@@ -59,7 +59,7 @@
         .hero .cta-group .cta-note { font-size: 0.85rem; color: #9ca3af; width: 100%; }
 
         /* ===== FEATURES ===== */
-        .features { max-width: 1100px; margin: 0 auto 60px; padding: 0 20px; }
+        .features { max-width: 1100px; margin: 0 auto 0; padding: 20px 20px 60px; }
         .features .section-title { text-align: center; margin-bottom: 32px; }
         .features .section-title h2 { font-size: 2rem; font-weight: 700; color: #0b1120; }
         .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; }
@@ -288,7 +288,6 @@
         @media (max-width:480px) {
             .hero h1 { font-size: 1.8rem; }
             .features-grid { grid-template-columns: 1fr; }
-            .grade-grid { grid-template-columns: repeat(auto-fill, minmax(60px, 1fr)); }
             .subject-grid-check { grid-template-columns: 1fr; }
         }
     </style>
