@@ -58,7 +58,7 @@
         .hero .cta-group .btn-secondary:hover { border-color: white; background: rgba(255,255,255,0.05); }
         .hero .cta-group .cta-note { font-size: 0.85rem; color: #9ca3af; width: 100%; }
 
-        /* ===== FEATURES ===== */
+        /* ===== FEATURES – FIXED SPACE ===== */
         .features {
             max-width: 1100px;
             margin: 0 auto 0 !important;
@@ -400,7 +400,7 @@
                 <div><h4>Legal</h4><a onclick="showInfoPage('privacy')">Privacy Policy</a><a onclick="showInfoPage('tos')">Terms of Service</a></div>
                 <div><h4>Support</h4><a href="mailto:support@leagoacademy.co.za">support@leagoacademy.co.za</a><a href="https://www.leagoacademy.co.za">www.leagoacademy.co.za</a></div>
             </div>
-            <div class="bottom">© 2026 Leago Academy. All rights reserved. <span style="color:#818cf8;font-weight:600;">v4.1</span></div>
+            <div class="bottom">© 2026 Leago Academy. All rights reserved. <span style="color:#818cf8;font-weight:600;">v4.0</span></div>
         </footer>
     </div>
 
@@ -1075,7 +1075,7 @@
         }
 
         // ================================================================
-        //  AI TUTOR – with fixed math rendering
+        //  AI TUTOR – with improved math rendering
         // ================================================================
         function openTutor(subject, topic) {
             document.getElementById('welcomeMessage').textContent = '💬 AI Tutor';
@@ -1152,38 +1152,68 @@
             }
         }
 
-        // ---- FIXED addMessage with LaTeX delimiter conversion ----
+        // ===== IMPROVED addMessage – robust math rendering =====
         function addMessage(role, text) {
             const box = document.getElementById('chatBox');
             const div = document.createElement('div');
             div.className = 'msg ' + (role === 'user' ? 'user' : 'bot');
+
             if (role === 'bot' && typeof marked !== 'undefined') {
-                marked.setOptions({ breaks: true, gfm: true });
-                // Convert LaTeX delimiters to KaTeX format
-                let processedText = text;
-                // Replace display math \[ ... \] with $$ ... $$
-                processedText = processedText.replace(/\\\[/g, '$$').replace(/\\\]/g, '$$');
-                // Replace inline math \( ... \) with $ ... $
-                processedText = processedText.replace(/\\\(/g, '$').replace(/\\\)/g, '$');
-                // Also handle cases where \begin{align} etc. might be used – not needed now.
-                div.innerHTML = marked.parse(processedText);
-                // Render KaTeX
-                setTimeout(() => {
+                // Configure marked to preserve backslashes for LaTeX
+                marked.setOptions({
+                    breaks: true,
+                    gfm: true,
+                    mangle: false,
+                    headerIds: false
+                });
+                // Parse markdown
+                div.innerHTML = marked.parse(text);
+
+                // Render math using KaTeX – with retry
+                const renderMath = () => {
                     if (typeof renderMathInElement === 'function') {
-                        renderMathInElement(div, {
-                            delimiters: [
-                                { left: '$$', right: '$$', display: true },
-                                { left: '$', right: '$', display: false }
-                            ]
-                        });
+                        try {
+                            renderMathInElement(div, {
+                                delimiters: [
+                                    { left: '$$', right: '$$', display: true },
+                                    { left: '$', right: '$', display: false },
+                                    { left: '\\(', right: '\\)', display: false },
+                                    { left: '\\[', right: '\\]', display: true }
+                                ],
+                                throwOnError: false,
+                                trust: true,
+                                macros: {
+                                    "\\R": "\\mathbb{R}",
+                                    "\\N": "\\mathbb{N}"
+                                }
+                            });
+                            return true;
+                        } catch (e) {
+                            console.warn('KaTeX render error:', e);
+                            return false;
+                        }
                     }
-                }, 50);
+                    return false;
+                };
+
+                // Try immediately, then again after a delay if needed
+                if (!renderMath()) {
+                    setTimeout(() => {
+                        renderMath();
+                    }, 300);
+                }
+                // Extra safety: try again after 1 second if still not rendered
+                setTimeout(() => {
+                    renderMath();
+                }, 1000);
             } else {
                 div.textContent = text;
             }
+
             box.appendChild(div);
             box.scrollTop = box.scrollHeight;
-            // Text-to-speech
+
+            // TTS (unchanged)
             if (role === 'bot' && document.getElementById('speakToggle').checked) {
                 let clean = text.replace(/#{1,6}\s?/g, '').replace(/\*\*/g, '').replace(/\*/g, '').replace(/`/g, '')
                     .replace(/[\\*\/_\-~#`|]/g, ' ').replace(/[📚🎯✏️🤔💡✅❌]/g, '').replace(/\s+/g, ' ').trim();
@@ -1193,8 +1223,7 @@
                 u.lang = 'en-US';
                 u.rate = 0.9;
                 const voices = window.speechSynthesis.getVoices();
-                const preferred = voices.find(v => v.lang.includes('en') && (v.name.includes('Google') || v.name
-                    .includes('Natural')));
+                const preferred = voices.find(v => v.lang.includes('en') && (v.name.includes('Google') || v.name.includes('Natural')));
                 if (preferred) u.voice = preferred;
                 window.speechSynthesis.speak(u);
             }
