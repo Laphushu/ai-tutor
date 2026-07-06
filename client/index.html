@@ -400,7 +400,7 @@
                 <div><h4>Legal</h4><a onclick="showInfoPage('privacy')">Privacy Policy</a><a onclick="showInfoPage('tos')">Terms of Service</a></div>
                 <div><h4>Support</h4><a href="mailto:support@leagoacademy.co.za">support@leagoacademy.co.za</a><a href="https://www.leagoacademy.co.za">www.leagoacademy.co.za</a></div>
             </div>
-            <div class="bottom">© 2026 Leago Academy. All rights reserved. <span style="color:#818cf8;font-weight:600;">v2.0</span></div>
+            <div class="bottom">© 2026 Leago Academy. All rights reserved. <span style="color:#818cf8;font-weight:600;">v4.0</span></div>
         </footer>
     </div>
 
@@ -453,12 +453,64 @@
                 </div>
 
                 <div class="signup-step" data-step="2" style="display:none;">
-                    <div class="field"><label>Country</label>
+                    <div class="field">
+                        <label>Country</label>
                         <select id="signupCountry" onchange="loadProvincesHardcoded()">
                             <option value="">Select country</option>
-                            <option value="1">South Africa</option>
-                            <option value="2">Kenya</option>
-                            <option value="3">Nigeria</option>
+                            <option value="1">🇿🇦 South Africa</option>
+                            <option value="2">🇰🇪 Kenya</option>
+                            <option value="3">🇳🇬 Nigeria</option>
+                            <option value="4">🇿🇼 Zimbabwe</option>
+                            <option value="5">🇧🇼 Botswana</option>
+                            <option value="6">🇳🇦 Namibia</option>
+                            <option value="7">🇬🇭 Ghana</option>
+                            <option value="8">🇪🇬 Egypt</option>
+                            <option value="9">🇺🇬 Uganda</option>
+                            <option value="10">🇹🇿 Tanzania</option>
+                            <option value="11">🇿🇲 Zambia</option>
+                            <option value="12">🇲🇿 Mozambique</option>
+                            <option value="13">🇦🇴 Angola</option>
+                            <option value="14">🇨🇲 Cameroon</option>
+                            <option value="15">🇪🇹 Ethiopia</option>
+                            <option value="16">🇲🇦 Morocco</option>
+                            <option value="17">🇩🇿 Algeria</option>
+                            <option value="18">🇧🇯 Benin</option>
+                            <option value="19">🇧🇫 Burkina Faso</option>
+                            <option value="20">🇧🇮 Burundi</option>
+                            <option value="21">🇨🇻 Cape Verde</option>
+                            <option value="22">🇨🇫 Central African Republic</option>
+                            <option value="23">🇹🇩 Chad</option>
+                            <option value="24">🇰🇲 Comoros</option>
+                            <option value="25">🇨🇬 Congo</option>
+                            <option value="26">🇨🇮 Côte d'Ivoire</option>
+                            <option value="27">🇩🇯 Djibouti</option>
+                            <option value="28">🇬🇶 Equatorial Guinea</option>
+                            <option value="29">🇪🇷 Eritrea</option>
+                            <option value="30">🇸🇿 Eswatini</option>
+                            <option value="31">🇬🇦 Gabon</option>
+                            <option value="32">🇬🇲 Gambia</option>
+                            <option value="33">🇬🇳 Guinea</option>
+                            <option value="34">🇬🇼 Guinea-Bissau</option>
+                            <option value="35">🇱🇸 Lesotho</option>
+                            <option value="36">🇱🇷 Liberia</option>
+                            <option value="37">🇱🇾 Libya</option>
+                            <option value="38">🇲🇬 Madagascar</option>
+                            <option value="39">🇲🇼 Malawi</option>
+                            <option value="40">🇲🇱 Mali</option>
+                            <option value="41">🇲🇷 Mauritania</option>
+                            <option value="42">🇲🇺 Mauritius</option>
+                            <option value="43">🇳🇪 Niger</option>
+                            <option value="44">🇷🇼 Rwanda</option>
+                            <option value="45">🇸🇹 São Tomé and Príncipe</option>
+                            <option value="46">🇸🇳 Senegal</option>
+                            <option value="47">🇸🇨 Seychelles</option>
+                            <option value="48">🇸🇱 Sierra Leone</option>
+                            <option value="49">🇸🇴 Somalia</option>
+                            <option value="50">🇸🇸 South Sudan</option>
+                            <option value="51">🇸🇩 Sudan</option>
+                            <option value="52">🇹🇬 Togo</option>
+                            <option value="53">🇹🇳 Tunisia</option>
+                            <option value="54">🇨🇩 DRC</option>
                         </select>
                     </div>
                     <div class="field"><label>Province / State</label>
@@ -558,13 +610,15 @@
 
     <script>
         // ================================================================
-        //  HARDCODED DATA FOR SIGNUP
+        //  HARDCODED DATA – ALL AFRICAN COUNTRIES, ALL SUBJECTS
         // ================================================================
         const HARDCODED_DATA = {
             provinces: {
                 '1': [{ id: 1, name: 'Eastern Cape' }, { id: 2, name: 'Free State' }, { id: 3, name: 'Gauteng' }, { id: 4, name: 'KwaZulu-Natal' }, { id: 5, name: 'Limpopo' }, { id: 6, name: 'Mpumalanga' }, { id: 7, name: 'Northern Cape' }, { id: 8, name: 'North West' }, { id: 9, name: 'Western Cape' }],
                 '2': [{ id: 10, name: 'Nairobi' }, { id: 11, name: 'Mombasa' }, { id: 12, name: 'Kisumu' }, { id: 13, name: 'Nakuru' }, { id: 14, name: 'Eldoret' }],
-                '3': [{ id: 15, name: 'Lagos' }, { id: 16, name: 'Abuja' }, { id: 17, name: 'Kano' }, { id: 18, name: 'Ibadan' }, { id: 19, name: 'Port Harcourt' }]
+                '3': [{ id: 15, name: 'Lagos' }, { id: 16, name: 'Abuja' }, { id: 17, name: 'Kano' }, { id: 18, name: 'Ibadan' }, { id: 19, name: 'Port Harcourt' }],
+                '4': [{ id: 20, name: 'Harare' }, { id: 21, name: 'Bulawayo' }, { id: 22, name: 'Mutare' }],
+                // Add more provinces for other countries if needed.
             },
             grades: {
                 '1': ['Grade 8', 'Grade 9', 'Grade 10', 'Grade 11', 'Grade 12'],
@@ -572,12 +626,78 @@
                 '3': ['First Year', 'Second Year', 'Third Year', 'Fourth Year', 'Postgraduate'],
                 '4': ['Other']
             },
-            subjects: {
-                '1': ['Mathematics', 'English Home Language', 'Afrikaans First Additional Language', 'Life Orientation', 'Life Sciences', 'Physical Sciences', 'History', 'Geography', 'Accounting', 'Business Studies', 'Economics', 'Computer Applications Technology', 'Information Technology', 'Consumer Studies', 'Tourism', 'Hospitality Studies', 'Agricultural Sciences', 'Visual Arts', 'Music', 'Drama', 'Design'],
-                '2': ['Mathematics', 'English Home Language', 'Afrikaans First Additional Language', 'Life Orientation', 'Life Sciences', 'Physical Sciences', 'History', 'Geography', 'Accounting', 'Business Studies', 'Economics', 'Engineering Graphics and Design', 'Computer Applications Technology', 'Information Technology', 'Consumer Studies', 'Tourism', 'Drama', 'Visual Arts', 'Music', 'Design', 'Agricultural Sciences']
-            }
+            // HIGH SCHOOL SUBJECTS – CAPS (curriculum 1) and IEB (curriculum 2)
+            highSchoolSubjects: {
+                '1': [
+                    'Mathematics', 'English Home Language', 'English First Additional Language',
+                    'Afrikaans Home Language', 'Afrikaans First Additional Language',
+                    'isiZulu Home Language', 'isiXhosa Home Language', 'Sepedi Home Language',
+                    'Setswana Home Language', 'Sesotho Home Language', 'Xitsonga Home Language',
+                    'Tshivenda Home Language', 'isiNdebele Home Language', 'South African Sign Language',
+                    'Life Orientation', 'Life Sciences', 'Physical Sciences', 'History', 'Geography',
+                    'Accounting', 'Business Studies', 'Economics', 'Consumer Studies', 'Tourism',
+                    'Hospitality Studies', 'Engineering Graphics and Design', 'Civil Technology',
+                    'Electrical Technology', 'Mechanical Technology', 'Computer Applications Technology',
+                    'Information Technology', 'Agricultural Sciences', 'Agricultural Management Practices',
+                    'Dance Studies', 'Dramatic Arts', 'Visual Arts', 'Music', 'Design',
+                    'Religion Studies', 'Maritime Economics'
+                ],
+                '2': [
+                    'Mathematics', 'English Home Language', 'Afrikaans First Additional Language',
+                    'Life Orientation', 'Life Sciences', 'Physical Sciences', 'History', 'Geography',
+                    'Accounting', 'Business Studies', 'Economics', 'Engineering Graphics and Design',
+                    'Computer Applications Technology', 'Information Technology', 'Consumer Studies',
+                    'Tourism', 'Dramatic Arts', 'Visual Arts', 'Music', 'Design', 'Agricultural Sciences',
+                    'Religion Studies', 'Sepedi First Additional Language', 'Setswana First Additional Language',
+                    'isiXhosa First Additional Language', 'isiZulu First Additional Language'
+                ]
+            },
+            // UNIVERSITY MODULES – comprehensive list covering multiple faculties
+            universitySubjects: [
+                // Foundation & General
+                'Communication', 'Academic Writing', 'Critical Thinking', 'Research Skills', 'Computer Literacy',
+                // Science & Maths
+                'Mathematics for Science', 'Advanced Mathematics', 'Statistics', 'Calculus I', 'Linear Algebra',
+                'Physics', 'Chemistry', 'Biology', 'Biochemistry', 'Microbiology', 'Genetics', 'Ecology',
+                'Environmental Science', 'Geology', 'Oceanography',
+                // Commerce & Business
+                'Accounting', 'Financial Accounting', 'Management Accounting', 'Economics', 'Microeconomics',
+                'Macroeconomics', 'Business Management', 'Marketing', 'Finance', 'Human Resources',
+                'Entrepreneurship', 'Project Management', 'Supply Chain Management', 'Operations Management',
+                'Information Systems', 'Business Analytics',
+                // Humanities & Social Sciences
+                'English Literature', 'History', 'Philosophy', 'Political Science', 'Psychology',
+                'Sociology', 'Anthropology', 'Social Work', 'Criminology', 'Linguistics',
+                // Law
+                'Commercial Law', 'Criminal Law', 'Contract Law', 'Constitutional Law', 'Legal Research',
+                'Human Rights Law', 'Environmental Law', 'Tax Law',
+                // Engineering
+                'Civil Engineering', 'Mechanical Engineering', 'Electrical Engineering', 'Chemical Engineering',
+                'Aerospace Engineering', 'Biomedical Engineering', 'Materials Science', 'Fluid Mechanics',
+                'Thermodynamics', 'Structural Analysis', 'Geotechnical Engineering',
+                // Computer Science & IT
+                'Programming Fundamentals', 'Data Structures', 'Database Systems', 'Networking',
+                'Web Development', 'Cybersecurity', 'Artificial Intelligence', 'Machine Learning',
+                'Software Engineering', 'Game Development',
+                // Health Sciences
+                'Anatomy', 'Physiology', 'Pharmacology', 'Pathology', 'Public Health', 'Epidemiology',
+                'Nursing', 'Physiotherapy', 'Occupational Therapy', 'Clinical Psychology',
+                'Nutrition', 'Medical Ethics', 'Health Policy',
+                // Education
+                'Education (Foundation Phase)', 'Education (Intermediate Phase)', 'Education (Senior Phase)',
+                'Educational Psychology', 'Curriculum Design', 'Classroom Management', 'Assessment & Evaluation',
+                'Inclusive Education', 'Educational Technology',
+                // Arts & Design
+                'Art History', 'Music Theory', 'Musicology', 'Theatre Studies', 'Film Studies',
+                'Graphic Design', 'Animation', 'Fashion Design', 'Architecture', 'Urban Planning',
+                // Other
+                'Hospitality Management', 'Tourism Management', 'Event Planning', 'Agriculture', 'Agribusiness'
+            ]
         };
 
+        // ================================================================
+        //  LOAD FUNCTIONS – USING HARDCODED DATA
+        // ================================================================
         function loadProvincesHardcoded() {
             const countryId = document.getElementById('signupCountry').value;
             const sel = document.getElementById('signupProvince');
@@ -607,17 +727,32 @@
         }
 
         function loadSubjectsHardcoded() {
+            const educationLevelId = document.getElementById('signupLevel').value;
             const curriculumId = document.getElementById('signupCurriculum').value;
             const container = document.getElementById('subjectCheckboxes');
             container.innerHTML = '<p style="grid-column:1/-1;color:#6b7280;">Loading subjects...</p>';
+
+            // If education level is University (3), show university modules
+            if (educationLevelId === '3') {
+                const subjects = HARDCODED_DATA.universitySubjects || [];
+                container.innerHTML = subjects.map(sub => `
+                    <label>
+                        <input type="checkbox" value="${sub}" class="subject-checkbox" />
+                        ${sub}
+                    </label>
+                `).join('');
+                return;
+            }
+
+            // For other levels (High School, TVET, Other), use curriculum-based subjects
             if (!curriculumId) { container.innerHTML = '<p style="grid-column:1/-1;color:#6b7280;">Select a curriculum</p>'; return; }
-            const subjects = HARDCODED_DATA.subjects[curriculumId] || ['Mathematics', 'English', 'Life Sciences', 'Physical Sciences', 'History', 'Geography', 'Accounting', 'Business Studies', 'Economics'];
+            const subjects = HARDCODED_DATA.highSchoolSubjects[curriculumId] || ['Mathematics', 'English', 'Life Sciences', 'Physical Sciences', 'History', 'Geography', 'Accounting', 'Business Studies', 'Economics'];
             container.innerHTML = subjects.map(sub => `
-                        <label>
-                            <input type="checkbox" value="${sub}" class="subject-checkbox" />
-                            ${sub}
-                        </label>
-                    `).join('');
+                <label>
+                    <input type="checkbox" value="${sub}" class="subject-checkbox" />
+                    ${sub}
+                </label>
+            `).join('');
         }
 
         // ================================================================
@@ -670,6 +805,8 @@
                 const curriculum = document.getElementById('signupCurriculum').value;
                 if (!curriculum) { alert('Please select your curriculum.'); return; }
                 signupData.curriculumId = parseInt(curriculum);
+                // Reload subjects based on current education level and curriculum
+                loadSubjectsHardcoded();
             }
             goToStep(step);
         }
