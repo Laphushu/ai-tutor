@@ -18,6 +18,7 @@ async function checkSubscription(req, res, next) {
 
     // Premium users skip limit
     if (user.plan === 'premium') {
+      req.user = user;
       return next();
     }
 
@@ -59,8 +60,11 @@ router.post('/', checkSubscription, async (req, res) => {
   // ---- Math solver ----
   let mathResult = null;
   try {
-    const isMath = /[0-9+\-*/().=]/.test(message) && !message.toLowerCase().includes('what is');
+    // Check if the message is a calculation (contains numbers and operators)
+    const isMath = /[0-9+\-*/().^]/.test(message) && !message.toLowerCase().includes('what is') && !message.toLowerCase().includes('teach') && !message.toLowerCase().includes('explain');
+    
     if (isMath) {
+      // Check for equation (contains =)
       if (message.includes('=')) {
         const sides = message.split('=');
         const left = sides[0].trim();
@@ -68,13 +72,14 @@ router.post('/', checkSubscription, async (req, res) => {
         const leftResult = math.evaluate(left);
         const rightResult = math.evaluate(right);
         if (leftResult === rightResult) {
-          mathResult = `✅ True: ${left} = ${right}`;
+          mathResult = `✅ True: $${left} = ${right}$$`;
         } else {
-          mathResult = `❌ False: ${left} = ${right} (${leftResult} ≠ ${rightResult})`;
+          mathResult = `❌ False: $${left} = ${right}$ (${leftResult} ≠ ${rightResult})`;
         }
       } else {
+        // Direct calculation
         const evaluated = math.evaluate(message);
-        mathResult = `${message} = ${evaluated}`;
+        mathResult = `$${message} = ${evaluated}$$`;
       }
     }
   } catch (e) {
@@ -82,24 +87,37 @@ router.post('/', checkSubscription, async (req, res) => {
   }
 
   if (mathResult) {
-    return res.json({ reply: `$$ ${mathResult} $$` });
+    return res.json({ reply: mathResult });
   }
 
   // ---- AI APIs ----
   const DEEPSEEK_API_KEY = process.env.DEEPSEEK_API_KEY;
   const HF_API_TOKEN = process.env.HF_API_TOKEN;
 
+  // Build a better prompt
+  const prompt = `The student is learning "${topic}" in "${subject}". Their question is: "${message}"
+
+Provide a clear, step-by-step explanation. 
+Use LaTeX for math. Use single dollar signs $...$ for inline math and double $$...$$ for displayed equations.
+Always show fractions, limits, and equations with proper formatting.
+Be encouraging and thorough.`;
+
   if (DEEPSEEK_API_KEY) {
     try {
-      const prompt = `Teach "${topic}" in "${subject}" step by step. Student asks: "${message}"`;
       console.log('🚀 Trying DeepSeek...');
       const response = await fetch('https://api.deepseek.com/v1/chat/completions', {
         method: 'POST',
         headers: { 'Authorization': `Bearer ${DEEPSEEK_API_KEY}`, 'Content-Type': 'application/json' },
         body: JSON.stringify({
           model: 'deepseek-chat',
-          messages: [{ role: 'system', content: 'You are a tutor for African students. Use LaTeX for equations (e.g., $x^2$).' }, { role: 'user', content: prompt }],
-          max_tokens: 600,
+          messages: [
+            { 
+              role: 'system', 
+              content: 'You are a patient AI tutor for African students. Use LaTeX for equations with single $ for inline and double $$ for display math. Never use \\[ or \\]. Always show step-by-step reasoning.' 
+            }, 
+            { role: 'user', content: prompt }
+          ],
+          max_tokens: 2048,  // Increased for full explanations
           temperature: 0.7
         })
       });
@@ -121,14 +139,13 @@ router.post('/', checkSubscription, async (req, res) => {
 
   if (HF_API_TOKEN) {
     try {
-      const prompt = `Teach "${topic}" in "${subject}" step by step. Student asks: "${message}"`;
       console.log('🤖 Trying Hugging Face...');
       const response = await fetch('https://api-inference.huggingface.co/models/google/flan-t5-large', {
         method: 'POST',
         headers: { 'Authorization': `Bearer ${HF_API_TOKEN}`, 'Content-Type': 'application/json' },
         body: JSON.stringify({
           inputs: prompt,
-          parameters: { max_new_tokens: 250, temperature: 0.6, do_sample: true, return_full_text: false }
+          parameters: { max_new_tokens: 500, temperature: 0.6, do_sample: true, return_full_text: false }
         })
       });
       if (!response.ok) {
@@ -154,7 +171,7 @@ router.post('/', checkSubscription, async (req, res) => {
   // ---- Ultimate fallback ----
   console.log('📝 Using fallback response');
   res.json({
-    reply: `📚 **Step-by-step for "${topic || subject}"**\n\n1. Read your textbook section.\n2. Identify key terms.\n3. Work through examples.\n4. Practice problems.\n5. Review difficult areas.`
+    reply: `📚 **Step-by-step for ${topic || subject}**\n\n1. Read your textbook section carefully.\n2. Identify key terms and definitions.\n3. Work through examples step by step.\n4. Practice with similar problems.\n5. Review areas you found difficult.`
   });
 });
 
