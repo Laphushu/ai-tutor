@@ -627,7 +627,6 @@
                 '2': [{ id: 10, name: 'Nairobi' }, { id: 11, name: 'Mombasa' }, { id: 12, name: 'Kisumu' }, { id: 13, name: 'Nakuru' }, { id: 14, name: 'Eldoret' }],
                 '3': [{ id: 15, name: 'Lagos' }, { id: 16, name: 'Abuja' }, { id: 17, name: 'Kano' }, { id: 18, name: 'Ibadan' }, { id: 19, name: 'Port Harcourt' }],
                 '4': [{ id: 20, name: 'Harare' }, { id: 21, name: 'Bulawayo' }, { id: 22, name: 'Mutare' }],
-                // Add more provinces for other countries if needed.
             },
             grades: {
                 '1': ['Grade 8', 'Grade 9', 'Grade 10', 'Grade 11', 'Grade 12'],
@@ -635,7 +634,6 @@
                 '3': ['First Year', 'Second Year', 'Third Year', 'Fourth Year', 'Postgraduate'],
                 '4': ['Other']
             },
-            // HIGH SCHOOL SUBJECTS – CAPS (curriculum 1) and IEB (curriculum 2)
             highSchoolSubjects: {
                 '1': [
                     'Mathematics', 'English Home Language', 'English First Additional Language',
@@ -661,45 +659,33 @@
                     'isiXhosa First Additional Language', 'isiZulu First Additional Language'
                 ]
             },
-            // UNIVERSITY MODULES – comprehensive list covering multiple faculties
             universitySubjects: [
-                // Foundation & General
                 'Communication', 'Academic Writing', 'Critical Thinking', 'Research Skills', 'Computer Literacy',
-                // Science & Maths
                 'Mathematics for Science', 'Advanced Mathematics', 'Statistics', 'Calculus I', 'Linear Algebra',
                 'Physics', 'Chemistry', 'Biology', 'Biochemistry', 'Microbiology', 'Genetics', 'Ecology',
                 'Environmental Science', 'Geology', 'Oceanography',
-                // Commerce & Business
                 'Accounting', 'Financial Accounting', 'Management Accounting', 'Economics', 'Microeconomics',
                 'Macroeconomics', 'Business Management', 'Marketing', 'Finance', 'Human Resources',
                 'Entrepreneurship', 'Project Management', 'Supply Chain Management', 'Operations Management',
                 'Information Systems', 'Business Analytics',
-                // Humanities & Social Sciences
                 'English Literature', 'History', 'Philosophy', 'Political Science', 'Psychology',
                 'Sociology', 'Anthropology', 'Social Work', 'Criminology', 'Linguistics',
-                // Law
                 'Commercial Law', 'Criminal Law', 'Contract Law', 'Constitutional Law', 'Legal Research',
                 'Human Rights Law', 'Environmental Law', 'Tax Law',
-                // Engineering
                 'Civil Engineering', 'Mechanical Engineering', 'Electrical Engineering', 'Chemical Engineering',
                 'Aerospace Engineering', 'Biomedical Engineering', 'Materials Science', 'Fluid Mechanics',
                 'Thermodynamics', 'Structural Analysis', 'Geotechnical Engineering',
-                // Computer Science & IT
                 'Programming Fundamentals', 'Data Structures', 'Database Systems', 'Networking',
                 'Web Development', 'Cybersecurity', 'Artificial Intelligence', 'Machine Learning',
                 'Software Engineering', 'Game Development',
-                // Health Sciences
                 'Anatomy', 'Physiology', 'Pharmacology', 'Pathology', 'Public Health', 'Epidemiology',
                 'Nursing', 'Physiotherapy', 'Occupational Therapy', 'Clinical Psychology',
                 'Nutrition', 'Medical Ethics', 'Health Policy',
-                // Education
                 'Education (Foundation Phase)', 'Education (Intermediate Phase)', 'Education (Senior Phase)',
                 'Educational Psychology', 'Curriculum Design', 'Classroom Management', 'Assessment & Evaluation',
                 'Inclusive Education', 'Educational Technology',
-                // Arts & Design
                 'Art History', 'Music Theory', 'Musicology', 'Theatre Studies', 'Film Studies',
                 'Graphic Design', 'Animation', 'Fashion Design', 'Architecture', 'Urban Planning',
-                // Other
                 'Hospitality Management', 'Tourism Management', 'Event Planning', 'Agriculture', 'Agribusiness'
             ]
         };
@@ -741,7 +727,6 @@
             const container = document.getElementById('subjectCheckboxes');
             container.innerHTML = '<p style="grid-column:1/-1;color:#6b7280;">Loading subjects...</p>';
 
-            // If education level is University (3), show university modules
             if (educationLevelId === '3') {
                 const subjects = HARDCODED_DATA.universitySubjects || [];
                 container.innerHTML = subjects.map(sub => `
@@ -753,7 +738,6 @@
                 return;
             }
 
-            // For other levels (High School, TVET, Other), use curriculum-based subjects
             if (!curriculumId) { container.innerHTML = '<p style="grid-column:1/-1;color:#6b7280;">Select a curriculum</p>'; return; }
             const subjects = HARDCODED_DATA.highSchoolSubjects[curriculumId] || ['Mathematics', 'English', 'Life Sciences', 'Physical Sciences', 'History', 'Geography', 'Accounting', 'Business Studies', 'Economics'];
             container.innerHTML = subjects.map(sub => `
@@ -814,7 +798,6 @@
                 const curriculum = document.getElementById('signupCurriculum').value;
                 if (!curriculum) { alert('Please select your curriculum.'); return; }
                 signupData.curriculumId = parseInt(curriculum);
-                // Reload subjects based on current education level and curriculum
                 loadSubjectsHardcoded();
             }
             goToStep(step);
@@ -934,7 +917,6 @@
                     `;
             document.getElementById('dynamicContent').innerHTML = profileHtml;
 
-            // Sidebar subjects
             const list = document.getElementById('subjectList');
             list.innerHTML = '';
             if (user.subjects && user.subjects.length) {
@@ -953,7 +935,6 @@
                     `;
             document.getElementById('recentContainer').innerHTML = `<div style="font-size:0.85rem;color:#6b7280;">No recent activity</div>`;
 
-            // Fetch subscription status
             fetchSubscriptionStatus(user.id);
         }
 
@@ -970,7 +951,6 @@
                         return;
                     }
                 }
-                // Fallback
                 updateBadge('free', 10);
             } catch (err) {
                 console.error('Error fetching subscription:', err);
@@ -1168,17 +1148,17 @@
             div.className = 'msg ' + (role === 'user' ? 'user' : 'bot');
 
             if (role === 'bot' && typeof marked !== 'undefined') {
-                // Configure marked to preserve backslashes for LaTeX
                 marked.setOptions({
                     breaks: true,
                     gfm: true,
                     mangle: false,
                     headerIds: false
                 });
-                // Parse markdown
                 div.innerHTML = marked.parse(text);
 
-                // Render math using KaTeX – with retry
+                // PREPROCESS: replace \[ and \] with $$ (just in case)
+                div.innerHTML = div.innerHTML.replace(/\\\[/g, '$$').replace(/\\\]/g, '$$');
+
                 const renderMath = () => {
                     if (typeof renderMathInElement === 'function') {
                         try {
@@ -1205,16 +1185,10 @@
                     return false;
                 };
 
-                // Try immediately, then again after a delay if needed
                 if (!renderMath()) {
-                    setTimeout(() => {
-                        renderMath();
-                    }, 300);
+                    setTimeout(() => renderMath(), 300);
                 }
-                // Extra safety: try again after 1 second if still not rendered
-                setTimeout(() => {
-                    renderMath();
-                }, 1000);
+                setTimeout(() => renderMath(), 1000);
             } else {
                 div.textContent = text;
             }
@@ -1222,7 +1196,6 @@
             box.appendChild(div);
             box.scrollTop = box.scrollHeight;
 
-            // TTS (unchanged)
             if (role === 'bot' && document.getElementById('speakToggle').checked) {
                 let clean = text.replace(/#{1,6}\s?/g, '').replace(/\*\*/g, '').replace(/\*/g, '').replace(/`/g, '')
                     .replace(/[\\*\/_\-~#`|]/g, ' ').replace(/[📚🎯✏️🤔💡✅❌]/g, '').replace(/\s+/g, ' ').trim();
@@ -1326,7 +1299,6 @@
         //  GSAP & INIT
         // ================================================================
         document.addEventListener('DOMContentLoaded', function() {
-            // GSAP animations
             if (typeof gsap !== 'undefined') {
                 gsap.from('.hero h1', { duration: 1, y: 50, opacity: 0, ease: 'power2.out' });
                 gsap.from('.hero .badge', { duration: 0.8, scale: 0.8, opacity: 0, delay: 0.3 });
@@ -1338,7 +1310,6 @@
                 lucide.createIcons();
             }
 
-            // Check if user is logged in
             const stored = localStorage.getItem('synapse_user');
             if (stored) {
                 try {
