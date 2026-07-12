@@ -3,2052 +3,662 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Leago Academy – AI Learning Platform</title>
+    <title>Leago Academy – AI Education Platform</title>
 
-    <!-- ===== GOOGLE ADSENSE ===== -->
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5343712358770166"
-     crossorigin="anonymous"></script>
-    <meta name="google-adsense-account" content="ca-pub-5343712358770166">
-
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-KL4YBPERZ5"></script>
+    <!-- Google Fonts & Tailwind -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz@14..32&display=swap" rel="stylesheet" />
+    <script src="https://cdn.tailwindcss.com"></script>
     <script>
-      window.dataLayer = window.dataLayer || [];
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date());
-      gtag('config', 'G-KL4YBPERZ5');
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { inter: ['Inter', 'sans-serif'] },
+                    colors: {
+                        dark: '#090B1D',
+                        purple: {
+                            400: '#A855F7',
+                            500: '#8B5CF6',
+                            600: '#7C3AED',
+                        },
+                    },
+                    borderRadius: { xl: '16px' },
+                    boxShadow: {
+                        glow: '0 0 40px rgba(124, 58, 237, 0.25)',
+                        'glow-lg': '0 0 60px rgba(124, 58, 237, 0.35)',
+                    },
+                },
+            },
+        };
     </script>
 
-    <!-- Google Search Console -->
-    <meta name="google-site-verification" content="YOUR_UNIQUE_CODE" />
-
-    <!-- KaTeX -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" crossorigin="anonymous">
-    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" crossorigin="anonymous"></script>
-    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
-
-    <!-- GSAP -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
-
-    <!-- Lucide Icons -->
-    <script src="https://unpkg.com/lucide@latest"></script>
-
-    <!-- Marked -->
-    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-
+    <!-- Custom CSS for glass, animations, and the AI illustration -->
     <style>
-        /* ===== RESET & BASE ===== */
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; background: #f8fafc; min-height: 100vh; color: #0b1120; }
-        .hidden { display: none !important; }
+        * { margin: 0; padding: 0; box-sizing: border-box; scroll-behavior: smooth; }
+        body { background: #090B1D; font-family: 'Inter', sans-serif; color: #fff; }
 
-        /* ===== BUTTONS ===== */
-        .btn-primary {
-            display: inline-block;
-            padding: 16px 40px;
-            background: linear-gradient(135deg, #6366f1, #8b5cf6);
-            color: white;
-            border: none;
-            border-radius: 14px;
-            font-size: 1.1rem;
-            font-weight: 700;
-            cursor: pointer;
-            text-decoration: none;
-            transition: all 0.3s;
-            box-shadow: 0 8px 30px rgba(99, 102, 241, 0.3);
-        }
-        .btn-primary:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 12px 40px rgba(99, 102, 241, 0.4);
-        }
-        .btn-secondary {
-            display: inline-block;
-            padding: 16px 40px;
-            background: transparent;
-            color: white;
-            border: 2px solid rgba(255,255,255,0.3);
-            border-radius: 14px;
-            font-size: 1.1rem;
-            font-weight: 700;
-            cursor: pointer;
-            text-decoration: none;
-            transition: all 0.3s;
-        }
-        .btn-secondary:hover {
-            border-color: white;
-            background: rgba(255,255,255,0.05);
-        }
-        .btn-outline {
-            display: inline-block;
-            padding: 14px 36px;
-            background: transparent;
-            color: #6366f1;
-            border: 2px solid #6366f1;
-            border-radius: 12px;
-            font-size: 1rem;
-            font-weight: 700;
-            cursor: pointer;
-            text-decoration: none;
-            transition: all 0.3s;
-        }
-        .btn-outline:hover {
-            background: #6366f1;
-            color: white;
-        }
-
-        /* ===== HEADER / NAV ===== */
-        .header {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            z-index: 1000;
-            background: rgba(11, 17, 32, 0.92);
+        /* Glassmorphism card */
+        .glass {
+            background: rgba(255, 255, 255, 0.04);
             backdrop-filter: blur(12px);
-            padding: 16px 40px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 1px solid rgba(255,255,255,0.06);
-        }
-        .header .logo {
-            font-size: 1.6rem;
-            font-weight: 800;
-            color: white;
-            text-decoration: none;
-        }
-        .header .logo span {
-            background: linear-gradient(135deg, #818cf8, #a855f7);
-            -webkit-background-clip: text;
-            background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-        .header .nav-links {
-            display: flex;
-            align-items: center;
-            gap: 32px;
-        }
-        .header .nav-links a {
-            color: #c4b5d4;
-            text-decoration: none;
-            font-size: 0.95rem;
-            transition: color 0.2s;
-        }
-        .header .nav-links a:hover {
-            color: white;
-        }
-        .header .nav-links .btn-login {
-            background: rgba(255,255,255,0.08);
-            padding: 10px 24px;
-            border-radius: 10px;
-            border: 1px solid rgba(255,255,255,0.1);
-            color: white;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-        .header .nav-links .btn-login:hover {
-            background: rgba(255,255,255,0.15);
-        }
-        .header .nav-links .btn-start {
-            background: linear-gradient(135deg, #6366f1, #8b5cf6);
-            padding: 10px 28px;
-            border-radius: 10px;
-            color: white;
-            font-weight: 700;
-            border: none;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-        .header .nav-links .btn-start:hover {
-            transform: scale(1.04);
-        }
-        .mobile-toggle {
-            display: none;
-            background: none;
-            border: none;
-            color: white;
-            font-size: 1.8rem;
-            cursor: pointer;
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.06);
         }
 
-        /* ===== HERO ===== */
-        .hero {
-            background: linear-gradient(135deg, #0b1120 0%, #1a1a3e 100%);
-            padding: 140px 20px 80px;
-            text-align: center;
-            color: white;
-            position: relative;
-            overflow: hidden;
-        }
-        .hero::before {
-            content: '';
-            position: absolute;
-            top: -30%;
-            right: -10%;
-            width: 600px;
-            height: 600px;
-            background: radial-gradient(circle, rgba(99, 102, 241, 0.12) 0%, transparent 70%);
-            border-radius: 50%;
-        }
-        .hero::after {
-            content: '';
-            position: absolute;
-            bottom: -20%;
-            left: -10%;
-            width: 500px;
-            height: 500px;
-            background: radial-gradient(circle, rgba(168, 85, 247, 0.08) 0%, transparent 70%);
-            border-radius: 50%;
-        }
-        .hero .badge {
-            display: inline-block;
-            background: rgba(99,102,241,0.15);
-            border: 1px solid rgba(99,102,241,0.3);
-            padding: 8px 24px;
-            border-radius: 30px;
-            font-size: 0.85rem;
-            color: #818cf8;
-            margin-bottom: 24px;
-            position: relative;
-            z-index: 1;
-        }
-        .hero h1 {
-            font-size: 4rem;
-            font-weight: 800;
-            max-width: 850px;
-            margin: 0 auto 16px;
-            line-height: 1.15;
-            position: relative;
-            z-index: 1;
-        }
-        .hero h1 .highlight {
-            background: linear-gradient(135deg, #818cf8, #a855f7);
-            -webkit-background-clip: text;
-            background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-        .hero .hero-subtitle {
-            font-size: 1.2rem;
-            color: #c4b5d4;
-            max-width: 700px;
-            margin: 0 auto 20px;
-            line-height: 1.7;
-            position: relative;
-            z-index: 1;
-        }
-        .hero .hero-subtitle .curriculum-badge {
-            display: inline-block;
-            background: rgba(255,255,255,0.06);
-            padding: 4px 16px;
-            border-radius: 20px;
-            font-size: 0.85rem;
-            color: #a855f7;
-        }
-        .hero .cta-group {
-            display: flex;
-            flex-direction: row;
-            flex-wrap: wrap;
-            justify-content: center;
-            align-items: center;
-            gap: 14px;
-            position: relative;
-            z-index: 1;
-            margin-top: 8px;
-        }
-        .hero .stats {
-            display: flex;
-            justify-content: center;
-            gap: 48px;
-            margin-top: 40px;
-            position: relative;
-            z-index: 1;
-        }
-        .hero .stats .stat-item {
-            text-align: center;
-        }
-        .hero .stats .stat-number {
-            font-size: 2.2rem;
-            font-weight: 800;
-            color: white;
-        }
-        .hero .stats .stat-label {
-            font-size: 0.9rem;
-            color: #9ca3af;
+        /* Sticky nav blur */
+        .nav-blur {
+            background: rgba(9, 11, 29, 0.82);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
         }
 
-        /* ===== FEATURES ===== */
-        .features-section {
-            max-width: 1100px;
-            margin: -30px auto 0;
-            padding: 0 20px 40px;
-            position: relative;
-            z-index: 2;
+        /* Glow on hover for feature cards */
+        .card-glow:hover {
+            box-shadow: 0 0 30px rgba(124, 58, 237, 0.15);
+            transform: translateY(-4px);
+            transition: all 0.3s ease;
         }
-        .features-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 20px;
-        }
-        .feature-card {
-            background: white;
-            padding: 28px 24px;
+
+        /* Subject card */
+        .subject-card {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.06);
             border-radius: 16px;
-            box-shadow: 0 4px 16px rgba(0,0,0,0.04);
-            text-align: center;
-            border: 1px solid rgba(0,0,0,0.04);
-            transition: all 0.3s;
-        }
-        .feature-card:hover {
-            transform: translateY(-6px);
-            box-shadow: 0 16px 48px rgba(0,0,0,0.08);
-        }
-        .feature-card .icon {
-            font-size: 2.6rem;
-            display: block;
-            margin-bottom: 10px;
-        }
-        .feature-card h3 {
-            font-size: 1.1rem;
-            font-weight: 700;
-            color: #0b1120;
-            margin-bottom: 4px;
-        }
-        .feature-card p {
-            font-size: 0.9rem;
-            color: #6b7280;
-            line-height: 1.5;
-        }
-
-        /* ===== SUBJECTS ===== */
-        .subjects-section {
-            max-width: 1100px;
-            margin: 40px auto;
-            padding: 0 20px;
-            text-align: center;
-        }
-        .subjects-section h2 {
-            font-size: 2.2rem;
-            font-weight: 700;
-            color: #0b1120;
-            margin-bottom: 8px;
-        }
-        .subjects-section .sub {
-            color: #6b7280;
-            font-size: 1.05rem;
-            margin-bottom: 28px;
-        }
-        .subjects-grid {
+            padding: 16px 20px;
             display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
+            align-items: center;
             gap: 12px;
+            transition: all 0.3s ease;
         }
-        .subject-tag {
-            background: white;
-            padding: 12px 28px;
-            border-radius: 40px;
-            border: 1px solid #e5e7eb;
-            font-weight: 600;
-            font-size: 0.95rem;
-            color: #0b1120;
-            transition: all 0.3s;
-            cursor: default;
-        }
-        .subject-tag:hover {
-            border-color: #6366f1;
-            background: #eef2ff;
+        .subject-card:hover {
+            background: rgba(124, 58, 237, 0.12);
+            border-color: #7C3AED;
             transform: translateY(-2px);
         }
 
-        /* ===== HOW IT WORKS ===== */
-        .how-it-works {
-            max-width: 1100px;
-            margin: 60px auto;
-            padding: 0 20px;
-            text-align: center;
-        }
-        .how-it-works h2 {
-            font-size: 2.2rem;
-            font-weight: 700;
-            color: #0b1120;
-            margin-bottom: 8px;
-        }
-        .how-it-works .sub {
-            color: #6b7280;
-            font-size: 1.05rem;
-            margin-bottom: 36px;
-        }
-        .steps-grid {
-            display: grid;
-            grid-template-columns: repeat(5, 1fr);
-            gap: 16px;
-        }
-        .step-item {
-            background: white;
-            padding: 24px 16px;
-            border-radius: 16px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.04);
-            border: 1px solid #f1f3f5;
-            transition: all 0.3s;
-        }
-        .step-item:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 12px 32px rgba(0,0,0,0.06);
-        }
-        .step-item .step-number {
-            display: inline-block;
-            width: 40px;
-            height: 40px;
-            background: linear-gradient(135deg, #6366f1, #8b5cf6);
-            color: white;
-            border-radius: 50%;
-            line-height: 40px;
-            font-weight: 800;
-            font-size: 1.1rem;
-            margin-bottom: 12px;
-        }
-        .step-item h4 {
-            font-size: 1rem;
-            font-weight: 700;
-            color: #0b1120;
-            margin-bottom: 4px;
-        }
-        .step-item p {
-            font-size: 0.85rem;
-            color: #6b7280;
-            line-height: 1.5;
-        }
-
-        /* ===== TESTIMONIALS ===== */
-        .testimonials {
-            max-width: 1100px;
-            margin: 60px auto;
-            padding: 0 20px;
-            text-align: center;
-        }
-        .testimonials h2 {
-            font-size: 2.2rem;
-            font-weight: 700;
-            color: #0b1120;
-            margin-bottom: 8px;
-        }
-        .testimonials .sub {
-            color: #6b7280;
-            font-size: 1.05rem;
-            margin-bottom: 28px;
-        }
-        .testimonial-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 24px;
-        }
-        .testimonial-card {
-            background: white;
-            padding: 28px 24px;
-            border-radius: 16px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.04);
-            border: 1px solid #f1f3f5;
-            text-align: left;
-            transition: all 0.3s;
-        }
-        .testimonial-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 12px 32px rgba(0,0,0,0.06);
-        }
-        .testimonial-card .quote {
-            font-size: 0.95rem;
-            color: #1f2937;
-            line-height: 1.6;
-            margin-bottom: 12px;
-        }
-        .testimonial-card .quote::before {
-            content: '"';
-            font-size: 2rem;
-            color: #6366f1;
-            font-weight: 700;
-            opacity: 0.3;
-            margin-right: 2px;
-        }
-        .testimonial-card .quote::after {
-            content: '"';
-            font-size: 2rem;
-            color: #6366f1;
-            font-weight: 700;
-            opacity: 0.3;
-            margin-left: 2px;
-        }
-        .testimonial-card .author {
-            font-weight: 700;
-            color: #0b1120;
-        }
-        .testimonial-card .author-detail {
-            font-size: 0.85rem;
-            color: #6b7280;
-        }
-
-        /* ===== PRICING ===== */
-        .pricing-section {
-            max-width: 1100px;
-            margin: 40px auto 60px;
-            padding: 0 20px;
-            text-align: center;
-        }
-        .pricing-section h2 {
-            font-size: 2.2rem;
-            font-weight: 700;
-            color: #0b1120;
-            margin-bottom: 8px;
-        }
-        .pricing-section .sub {
-            color: #6b7280;
-            font-size: 1.05rem;
-            margin-bottom: 32px;
-        }
-        .pricing-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 24px;
-            max-width: 800px;
-            margin: 0 auto;
-        }
-        .pricing-card {
-            background: white;
-            padding: 36px 28px;
-            border-radius: 20px;
-            box-shadow: 0 4px 16px rgba(0,0,0,0.04);
-            text-align: center;
-            border: 2px solid transparent;
-            transition: all 0.3s;
-            position: relative;
-        }
-        .pricing-card:hover {
-            border-color: #6366f1;
-        }
-        .pricing-card.popular {
-            border-color: #6366f1;
-            background: linear-gradient(135deg, #ffffff, #f8faff);
-        }
-        .pricing-card .popular-badge {
-            position: absolute;
-            top: -12px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: linear-gradient(135deg, #6366f1, #8b5cf6);
-            color: white;
-            padding: 4px 20px;
-            border-radius: 20px;
-            font-size: 0.75rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-        .pricing-card .plan {
-            font-size: 0.85rem;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            font-weight: 600;
-            color: #6b7280;
-            margin-top: 8px;
-        }
-        .pricing-card .price {
-            font-size: 3rem;
-            font-weight: 800;
-            color: #0b1120;
-            margin: 8px 0 4px;
-        }
-        .pricing-card .price span {
-            font-size: 1rem;
-            font-weight: 400;
-            color: #6b7280;
-        }
-        .pricing-card .description {
-            color: #6b7280;
-            font-size: 0.95rem;
-            margin-bottom: 16px;
-        }
-        .pricing-card .features-list {
-            list-style: none;
-            text-align: left;
-            margin: 16px 0 24px;
-        }
-        .pricing-card .features-list li {
-            padding: 6px 0;
-            font-size: 0.95rem;
-            color: #1f2937;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        .pricing-card .features-list li::before {
-            content: '✓';
-            color: #22c55e;
-            font-weight: 700;
-            font-size: 1.1rem;
-        }
-        .pricing-card .btn-pricing {
+        /* Hero AI illustration canvas */
+        #aiCanvas {
             width: 100%;
-            padding: 14px;
-            border: none;
+            height: 100%;
+            min-height: 400px;
+            border-radius: 24px;
+            background: radial-gradient(ellipse at 30% 50%, rgba(124, 58, 237, 0.12) 0%, transparent 70%);
+        }
+
+        /* Floating cards around the brain (positioned absolutely) */
+        .floating-card {
+            position: absolute;
+            background: rgba(255, 255, 255, 0.06);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
             border-radius: 12px;
-            font-size: 1rem;
-            font-weight: 700;
-            cursor: pointer;
-            background: linear-gradient(135deg, #6366f1, #8b5cf6);
-            color: white;
-            transition: all 0.3s;
-        }
-        .pricing-card .btn-pricing:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 24px rgba(99,102,241,0.3);
-        }
-        .pricing-card .btn-pricing.outline {
-            background: white;
-            color: #6366f1;
-            border: 2px solid #6366f1;
-        }
-        .pricing-card .btn-pricing.outline:hover {
-            background: #f8faff;
+            padding: 8px 16px;
+            font-size: 0.8rem;
+            color: #ccc;
+            white-space: nowrap;
+            box-shadow: 0 0 20px rgba(124, 58, 237, 0.15);
+            animation: float 6s ease-in-out infinite;
         }
 
-        /* ===== CTA BANNER ===== */
-        .cta-banner {
-            background: linear-gradient(135deg, #0b1120 0%, #1a1a3e 100%);
-            padding: 60px 20px;
-            text-align: center;
-            color: white;
-        }
-        .cta-banner h2 {
-            font-size: 2.4rem;
-            font-weight: 700;
-            margin-bottom: 8px;
-        }
-        .cta-banner p {
-            color: #c4b5d4;
-            font-size: 1.1rem;
-            margin-bottom: 24px;
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-8px); }
         }
 
-        /* ===== FOOTER ===== */
-        .footer {
-            background: #0b1120;
-            color: #9ca3af;
-            padding: 40px 20px 20px;
+        /* FAQ accordion */
+        .faq-item .answer {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
         }
-        .footer .inner {
-            max-width: 1100px;
-            margin: 0 auto;
-            display: grid;
-            grid-template-columns: 2fr 1fr 1fr 1fr;
-            gap: 32px;
+        .faq-item.active .answer {
+            max-height: 200px;
         }
-        .footer .inner h4 {
-            color: white;
-            font-size: 1.1rem;
-            margin-bottom: 12px;
+        .faq-item .question-icon {
+            transition: transform 0.3s ease;
         }
-        .footer .inner a {
-            display: block;
-            color: #9ca3af;
-            text-decoration: none;
-            font-size: 0.9rem;
-            padding: 4px 0;
-            transition: color 0.2s;
-            cursor: pointer;
-        }
-        .footer .inner a:hover {
-            color: white;
-        }
-        .footer .inner .social-links {
-            display: flex;
-            gap: 16px;
-            margin-top: 8px;
-        }
-        .footer .inner .social-links a {
-            font-size: 1.2rem;
-            padding: 0;
-        }
-        .footer .bottom {
-            max-width: 1100px;
-            margin: 20px auto 0;
-            border-top: 1px solid #1a1a3e;
-            padding-top: 20px;
-            text-align: center;
-            font-size: 0.85rem;
+        .faq-item.active .question-icon {
+            transform: rotate(180deg);
         }
 
-        /* ===== AUTH OVERLAY (unchanged from previous) ===== */
-        .auth-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); backdrop-filter: blur(8px); justify-content: center; align-items: center; z-index: 1000; padding: 20px; }
-        .auth-overlay.active { display: flex; }
-        .auth-card { background: white; border-radius: 28px; padding: 40px 36px; max-width: 680px; width: 100%; max-height: 95vh; overflow-y: auto; position: relative; }
-        .auth-card .close-btn { position: absolute; top: 16px; right: 20px; background: none; border: none; font-size: 1.5rem; cursor: pointer; color: #9ca3af; }
-        .auth-card .close-btn:hover { color: #0b1120; }
-        .auth-card .logo-sm { text-align: center; margin-bottom: 20px; }
-        .auth-card .logo-sm h2 { font-size: 1.6rem; font-weight: 800; color: #0b1120; }
-        .auth-card .logo-sm h2 span { background: linear-gradient(135deg, #6366f1, #a855f7); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
-        .auth-card .logo-sm p { color: #6b7280; font-size: 0.9rem; }
-        .auth-card h3 { font-size: 1.3rem; font-weight: 700; color: #0b1120; margin-bottom: 4px; }
-        .auth-card .sub { color: #6b7280; font-size: 0.95rem; margin-bottom: 20px; }
-        .field { margin-bottom: 14px; }
-        .field label { display: block; font-weight: 600; font-size: 0.85rem; color: #1f2937; margin-bottom: 4px; }
-        .field input, .field select { width: 100%; padding: 12px 14px; border: 2px solid #e5e7eb; border-radius: 10px; font-size: 1rem; background: #fff; font-family: inherit; }
-        .field input:focus, .field select:focus { outline: none; border-color: #6366f1; }
-        .btn { width: 100%; padding: 14px; border: none; border-radius: 12px; font-size: 1rem; font-weight: 700; cursor: pointer; background: linear-gradient(135deg, #6366f1, #8b5cf6); color: #fff; transition: transform 0.15s; }
-        .btn:hover { transform: translateY(-2px); }
-        .btn:disabled { opacity: 0.6; cursor: not-allowed; }
-        .auth-link { text-align: center; margin-top: 16px; font-size: 0.9rem; color: #6b7280; }
-        .auth-link a { color: #6366f1; text-decoration: none; font-weight: 600; cursor: pointer; }
-        .auth-link a:hover { text-decoration: underline; }
-        .error { color: #ef4444; font-size: 0.85rem; margin-top: 4px; display: none; }
-        .error.show { display: block; }
-        .success { color: #22c55e; font-size: 0.85rem; margin-top: 4px; display: none; }
-        .success.show { display: block; }
-        .spinner { display: inline-block; width: 20px; height: 20px; border: 3px solid rgba(255,255,255,0.25); border-top-color: #fff; border-radius: 50%; animation: spin 0.7s linear infinite; vertical-align: middle; margin-right: 8px; }
-        @keyframes spin { to { transform: rotate(360deg); } }
-        .stepper { display: flex; justify-content: space-between; margin-bottom: 24px; position: relative; }
-        .stepper::before { content: ''; position: absolute; top: 50%; left: 10%; right: 10%; height: 2px; background: #e5e7eb; z-index: 0; }
-        .step-circle { width: 36px; height: 36px; border-radius: 50%; background: #e5e7eb; display: flex; align-items: center; justify-content: center; font-weight: 700; color: #6b7280; position: relative; z-index: 1; transition: all 0.3s; }
-        .step-circle.active { background: #6366f1; color: white; }
-        .step-circle.done { background: #22c55e; color: white; }
-        .subject-grid-check { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px,1fr)); gap: 8px; max-height: 300px; overflow-y: auto; border: 1px solid #e5e7eb; border-radius: 10px; padding: 12px; }
-        .subject-grid-check label { display: flex; align-items: center; gap: 6px; font-size: 0.9rem; cursor: pointer; padding: 4px 6px; border-radius: 4px; transition: background 0.15s; }
-        .subject-grid-check label:hover { background: #f3f4f6; }
-        .subject-grid-check input[type="checkbox"] { width: 16px; height: 16px; accent-color: #6366f1; }
+        /* Fade-in animations */
+        .fade-section {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s ease;
+        }
+        .fade-section.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
 
-        /* ===== DASHBOARD ===== */
-        .dashboard { display: none; max-width: 1200px; margin: 0 auto; padding: 20px; }
-        .dashboard.active { display: block; }
-        .top-nav { background: white; padding: 16px 28px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 12px rgba(0,0,0,0.04); border-radius: 16px; margin-bottom: 24px; flex-wrap: wrap; gap: 12px; }
-        .top-nav .logo { font-size: 1.4rem; font-weight: 800; color: #0b1120; text-decoration: none; }
-        .top-nav .logo span { background: linear-gradient(135deg, #6366f1, #a855f7); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
-        .user-info { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
-        .user-info .name { font-weight: 600; color: #0b1120; font-size: 0.95rem; }
-        .user-info .role { font-size: 0.75rem; color: #6b7280; background: #f3f4f6; padding: 2px 12px; border-radius: 12px; }
-        .user-info .grade-badge { font-size: 0.75rem; color: #6366f1; background: #eef2ff; padding: 2px 12px; border-radius: 12px; font-weight: 600; cursor: default; }
-        .logout-btn { background: none; border: none; color: #9ca3af; font-size: 0.85rem; cursor: pointer; padding: 6px 14px; border-radius: 8px; transition: all 0.2s; font-family: inherit; }
-        .logout-btn:hover { background: #f3f4f6; color: #ef4444; }
-        .sub-badge { font-size: 0.7rem; padding: 3px 12px; border-radius: 12px; font-weight: 600; }
-        .sub-trial { background: #fef3c7; color: #92400e; }
-        .sub-active { background: #d1fae5; color: #065f46; }
-        .sub-expired { background: #fee2e2; color: #991b1b; }
-        .subscribe-btn { background: linear-gradient(135deg, #6366f1, #8b5cf6); color: white; border: none; padding: 6px 16px; border-radius: 20px; font-weight: 600; font-size: 0.8rem; cursor: pointer; font-family: inherit; margin-left: 8px; }
-        .subscribe-btn:hover { transform: scale(1.02); }
-        .dashboard-grid { display: grid; grid-template-columns: 220px 1fr 250px; gap: 20px; }
-        @media (max-width: 900px) { .dashboard-grid { grid-template-columns: 1fr; } }
-        .sidebar-left { background: white; border-radius: 16px; padding: 24px 18px; box-shadow: 0 2px 12px rgba(0,0,0,0.04); height: fit-content; }
-        .sidebar-left .section-title { font-size: 0.7rem; text-transform: uppercase; color: #6b7280; font-weight: 700; letter-spacing: 0.5px; margin: 16px 0 8px; }
-        .sidebar-left .section-title:first-child { margin-top: 0; }
-        .subject-list { list-style: none; }
-        .subject-list li { padding: 10px 14px; border-radius: 10px; cursor: pointer; transition: all 0.2s; font-size: 0.9rem; color: #1f2937; display: flex; align-items: center; gap: 10px; margin-bottom: 2px; }
-        .subject-list li:hover { background: #f3f4f6; }
-        .subject-list li.active { background: #eef2ff; color: #6366f1; font-weight: 600; }
-        .subject-list li .icon { font-size: 1.2rem; width: 24px; text-align: center; }
-        .progress-item { margin: 8px 0; }
-        .progress-item .label { display: flex; justify-content: space-between; font-size: 0.8rem; color: #4b5563; }
-        .progress-item .bar { height: 6px; background: #e5e7eb; border-radius: 4px; margin-top: 4px; overflow: hidden; }
-        .progress-item .bar .fill { height: 100%; border-radius: 4px; background: linear-gradient(90deg, #6366f1, #8b5cf6); transition: width 0.6s ease; }
-        .recent-item { padding: 10px 12px; border-radius: 10px; background: #f8fafc; margin-bottom: 6px; cursor: pointer; font-size: 0.85rem; color: #1f2937; transition: all 0.2s; }
-        .recent-item:hover { background: #eef2ff; }
-        .recent-item .sub { font-size: 0.75rem; color: #6b7280; }
-        .center-panel { background: white; border-radius: 16px; padding: 28px 32px; box-shadow: 0 2px 12px rgba(0,0,0,0.04); min-height: 500px; }
-        .center-panel .welcome { font-size: 1.6rem; font-weight: 700; color: #0b1120; margin-bottom: 4px; }
-        .center-panel .welcome-sub { color: #6b7280; font-size: 0.95rem; margin-bottom: 20px; }
-        .profile-card { background: #f8fafc; border-radius: 12px; padding: 16px 20px; margin-bottom: 20px; border: 1px solid #e5e7eb; }
-        .profile-card .row { display: flex; justify-content: space-between; padding: 4px 0; font-size: 0.9rem; }
-        .profile-card .row .label { color: #6b7280; font-weight: 500; }
-        .profile-card .row .value { font-weight: 600; color: #0b1120; }
-        .subject-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 4px; }
-        .subject-tag { background: #eef2ff; color: #6366f1; padding: 2px 12px; border-radius: 12px; font-size: 0.8rem; font-weight: 600; }
-        .sidebar-right { background: white; border-radius: 16px; padding: 24px 18px; box-shadow: 0 2px 12px rgba(0,0,0,0.04); height: fit-content; }
-        .sidebar-right .section-title { font-size: 0.7rem; text-transform: uppercase; color: #6b7280; font-weight: 700; letter-spacing: 0.5px; margin: 16px 0 8px; }
-        .sidebar-right .section-title:first-child { margin-top: 0; }
-        .flashcard-item { padding: 10px 14px; background: #f8fafc; border-radius: 10px; margin-bottom: 6px; font-size: 0.85rem; cursor: pointer; transition: all 0.2s; }
-        .flashcard-item:hover { background: #eef2ff; }
-        .flashcard-item .term { font-weight: 600; color: #0b1120; }
-        .flashcard-item .def { font-size: 0.8rem; color: #6b7280; margin-top: 2px; }
-        .error-item { padding: 10px 14px; background: #fef2f2; border-radius: 10px; margin-bottom: 6px; font-size: 0.85rem; border-left: 3px solid #ef4444; }
-        .error-item .concept { font-weight: 600; color: #991b1b; }
-        .error-item .hint { font-size: 0.8rem; color: #6b7280; margin-top: 2px; }
-        .subject-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 16px; }
-        .subject-card { background: white; border: 2px solid #e5e7eb; border-radius: 16px; padding: 28px 16px; text-align: center; cursor: pointer; transition: all 0.25s; box-shadow: 0 2px 8px rgba(0,0,0,0.02); }
-        .subject-card:hover { border-color: #6366f1; transform: translateY(-4px); box-shadow: 0 12px 32px rgba(99,102,241,0.12); }
-        .subject-card .icon { font-size: 2.8rem; display: block; margin-bottom: 6px; }
-        .subject-card .name { font-weight: 700; font-size: 0.95rem; color: #0b1120; }
-        .subject-card .progress-badge { display: inline-block; font-size: 0.7rem; color: #6366f1; background: #eef2ff; padding: 2px 10px; border-radius: 12px; margin-top: 6px; }
-        .back-btn { background: none; border: 1px solid #e5e7eb; padding: 10px 20px; border-radius: 12px; cursor: pointer; font-weight: 600; color: #4b5563; transition: all 0.2s; font-family: inherit; display: inline-block; margin-bottom: 16px; }
-        .back-btn:hover { background: #f3f4f6; }
-        .topic-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 16px; margin-top: 12px; }
-        .topic-card { background: white; border: 2px solid #e5e7eb; border-radius: 14px; padding: 20px 18px; transition: all 0.25s; cursor: pointer; position: relative; }
-        .topic-card:hover { border-color: #6366f1; box-shadow: 0 8px 24px rgba(99,102,241,0.08); }
-        .topic-card .title { font-weight: 700; font-size: 1rem; color: #0b1120; }
-        .topic-card .meta { font-size: 0.8rem; color: #6b7280; margin-top: 4px; }
-        .topic-card .resources { margin-top: 10px; display: flex; gap: 6px; flex-wrap: wrap; }
-        .topic-card .resources .tag { background: #eef2ff; color: #6366f1; padding: 2px 12px; border-radius: 12px; font-size: 0.7rem; font-weight: 600; }
-        .topic-card .status-badge { position: absolute; top: 12px; right: 12px; font-size: 0.7rem; font-weight: 600; padding: 2px 10px; border-radius: 12px; background: #e5e7eb; color: #6b7280; }
-
-        /* ===== TUTOR / CHAT ===== */
-        .tutor-container {
-            background: white;
-            border-radius: 20px;
-            padding: 28px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.04);
-            margin-top: 12px;
-            height: auto;
-        }
-        .tutor-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 16px;
-            flex-wrap: wrap;
-            gap: 10px;
-        }
-        .tutor-header h3 {
-            font-size: 1.2rem;
-            font-weight: 700;
-            color: #0b1120;
-        }
-        .tutor-header .context {
-            font-size: 0.9rem;
-            color: #6b7280;
-            background: #f3f4f6;
-            padding: 4px 16px;
-            border-radius: 20px;
-        }
-        .chat-box {
-            background: #f8fafc;
-            border-radius: 16px;
-            padding: 20px;
-            height: auto;
-            min-height: 200px;
-            max-height: 500px;
-            overflow-y: auto;
-            border: 1px solid #e5e7eb;
-            margin-bottom: 16px;
-        }
-        .chat-box .msg {
-            padding: 12px 16px;
-            border-radius: 14px;
-            max-width: 85%;
-            margin-bottom: 10px;
-            font-size: 0.95rem;
-            line-height: 1.6;
-            word-wrap: break-word;
-        }
-        .chat-box .msg.user { background: #6366f1; color: #fff; margin-left: auto; text-align: right; }
-        .chat-box .msg.bot { background: #e5e7eb; color: #0b1120; margin-right: auto; }
-        .chat-box .msg.bot h1, .chat-box .msg.bot h2, .chat-box .msg.bot h3, .chat-box .msg.bot h4 { margin: 8px 0 4px; font-weight: 700; color: #0b1120; }
-        .chat-box .msg.bot ul, .chat-box .msg.bot ol { padding-left: 20px; margin: 4px 0 8px; }
-        .chat-box .msg.bot p { margin: 6px 0; }
-        .chat-box .msg.bot code { background: #e5e7eb; padding: 1px 6px; border-radius: 4px; font-size: 0.9em; }
-        .chat-box .msg.bot pre { background: #e5e7eb; padding: 10px; border-radius: 8px; overflow-x: auto; }
-        .chat-input { display: flex; gap: 10px; margin-bottom: 12px; }
-        .chat-input input { flex: 1; padding: 14px 18px; border: 2px solid #e5e7eb; border-radius: 14px; font-size: 0.95rem; font-family: inherit; transition: border-color 0.25s; }
-        .chat-input input:focus { outline: none; border-color: #6366f1; }
-        .chat-input .btn-send { padding: 0 28px; background: linear-gradient(135deg, #6366f1, #8b5cf6); color: #fff; border: none; border-radius: 14px; font-weight: 700; cursor: pointer; transition: all 0.25s; font-family: inherit; }
-        .chat-input .btn-send:hover { transform: scale(1.02); }
-        .chat-input .btn-send:disabled { opacity: 0.6; cursor: not-allowed; }
-        .chat-options { display: flex; align-items: center; gap: 14px; margin-top: 0px; font-size: 0.85rem; color: #6b7280; }
-        .chat-options input[type="checkbox"] { width: 18px; height: 18px; accent-color: #6366f1; cursor: pointer; }
-        .chat-options label { cursor: pointer; }
-
-        .info-page { display: none; max-width: 800px; margin: 40px auto; padding: 40px 36px; background: white; border-radius: 28px; box-shadow: 0 24px 80px rgba(0,0,0,0.08); line-height: 1.6; color: #0b1120; }
-        .info-page.active { display: block; }
-        .info-page h1 { font-size: 2rem; margin-bottom: 8px; }
-        .info-page .back-link { display: inline-block; margin-top: 24px; font-weight: 600; color: #6366f1; cursor: pointer; }
-        .info-page .back-link:hover { text-decoration: underline; }
-
-        /* ===== RESPONSIVE ===== */
-        @media (max-width: 1024px) {
-            .features-grid { grid-template-columns: repeat(2, 1fr); }
-            .steps-grid { grid-template-columns: repeat(3, 1fr); }
-            .testimonial-grid { grid-template-columns: repeat(2, 1fr); }
-        }
+        /* Responsive floating cards – hide on small screens */
         @media (max-width: 768px) {
-            .header { padding: 12px 20px; flex-wrap: wrap; }
-            .header .nav-links { display: none; width: 100%; flex-direction: column; gap: 16px; padding-top: 16px; }
-            .header .nav-links.open { display: flex; }
-            .mobile-toggle { display: block; }
-            .hero { padding: 120px 16px 60px; }
-            .hero h1 { font-size: 2.2rem; }
-            .hero .hero-subtitle { font-size: 1rem; }
-            .hero .stats { gap: 24px; flex-wrap: wrap; }
-            .hero .stats .stat-number { font-size: 1.6rem; }
-            .features-grid { grid-template-columns: 1fr 1fr; }
-            .steps-grid { grid-template-columns: 1fr 1fr; }
-            .testimonial-grid { grid-template-columns: 1fr; }
-            .pricing-grid { grid-template-columns: 1fr; }
-            .footer .inner { grid-template-columns: 1fr 1fr; }
-            .features-section { margin-top: -10px; }
-            .subjects-grid { gap: 8px; }
-            .subject-tag { padding: 8px 18px; font-size: 0.85rem; }
-        }
-        @media (max-width: 480px) {
-            .hero h1 { font-size: 1.8rem; }
-            .features-grid { grid-template-columns: 1fr; }
-            .steps-grid { grid-template-columns: 1fr; }
-            .footer .inner { grid-template-columns: 1fr; }
-            .pricing-card { padding: 24px 18px; }
-            .hero .cta-group .btn-primary, .hero .cta-group .btn-secondary { padding: 14px 28px; font-size: 0.95rem; }
+            .floating-card { display: none; }
         }
     </style>
 </head>
 <body>
 
-    <!-- ============================================================ -->
-    <!--  HEADER / NAV                                                -->
-    <!-- ============================================================ -->
-    <header class="header" id="mainHeader">
-        <a href="#" class="logo">🧠 <span>Leago</span></a>
-        <button class="mobile-toggle" onclick="toggleMobileNav()">☰</button>
-        <nav class="nav-links" id="navLinks">
-            <a href="#features">Features</a>
-            <a href="#subjects">Subjects</a>
-            <a href="#how-it-works">How It Works</a>
-            <a href="#testimonials">Testimonials</a>
-            <a href="#pricing">Pricing</a>
-            <button class="btn-login" onclick="openAuth('login')">Log In</button>
-            <button class="btn-start" onclick="openAuth('signup')">Start Free</button>
-        </nav>
-    </header>
-
-    <!-- ============================================================ -->
-    <!--  HERO                                                       -->
-    <!-- ============================================================ -->
-    <section class="hero" id="heroSection">
-        <div style="max-width:900px;margin:0 auto;">
-            <div class="badge">✨ Africa's AI Learning Platform</div>
-            <h1>Master Every Subject with <span class="highlight">Your Personal AI Teacher</span></h1>
-            <p class="hero-subtitle">
-                Leago Academy helps African students learn smarter with an intelligent AI tutor. Get step-by-step explanations, practice questions, homework help and exam preparation aligned with your curriculum.
-                <br><br>
-                <span class="curriculum-badge">✅ Supports CAPS, IEB, CBC, WAEC, ZIMSEC and more</span>
-            </p>
-            <div class="cta-group">
-                <a class="btn-primary" onclick="openAuth('signup')">Start Learning →</a>
-                <a class="btn-secondary" onclick="openAuth('login')">Log In</a>
-            </div>
-            <div class="stats">
-                <div class="stat-item">
-                    <div class="stat-number">10,000+</div>
-                    <div class="stat-label">Students across Africa</div>
+    <!-- ===== NAVIGATION ===== -->
+    <nav class="fixed top-0 left-0 w-full z-50 nav-blur transition-all duration-300" id="navbar">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <!-- Logo -->
+                <div class="flex items-center gap-3">
+                    <div class="w-8 h-8 rounded-full bg-gradient-to-br from-purple-500 to-purple-600 flex items-center justify-center">
+                        <span class="text-white text-xl font-bold">🧠</span>
+                    </div>
+                    <div>
+                        <div class="text-white font-bold text-lg leading-none">Leago</div>
+                        <div class="text-[10px] text-purple-400 tracking-widest font-medium">AI EDUCATION PLATFORM</div>
+                    </div>
                 </div>
-                <div class="stat-item">
-                    <div class="stat-number">50+</div>
-                    <div class="stat-label">Subjects</div>
+
+                <!-- Desktop Menu -->
+                <div class="hidden md:flex items-center space-x-8 text-sm text-gray-300">
+                    <a href="#home" class="hover:text-white transition">Home</a>
+                    <a href="#subjects" class="hover:text-white transition">Subjects</a>
+                    <a href="#ai-tutor" class="hover:text-white transition">AI Tutor</a>
+                    <a href="#pricing" class="hover:text-white transition">Pricing</a>
+                    <a href="#contact" class="hover:text-white transition">Contact</a>
                 </div>
-                <div class="stat-item">
-                    <div class="stat-number">24/7</div>
-                    <div class="stat-label">AI Tutor Support</div>
+
+                <!-- Right buttons -->
+                <div class="hidden md:flex items-center gap-4">
+                    <button onclick="openAuth('login')" class="px-5 py-2 rounded-xl border border-gray-600 text-sm font-semibold text-gray-300 hover:bg-white/5 transition">Log In</button>
+                    <button onclick="openAuth('signup')" class="px-5 py-2 rounded-xl bg-gradient-to-r from-purple-500 to-purple-600 text-sm font-semibold text-white shadow-glow hover:shadow-glow-lg transition">Start Free</button>
+                </div>
+
+                <!-- Mobile toggle -->
+                <button id="mobileToggle" class="md:hidden text-gray-300 focus:outline-none">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+                </button>
+            </div>
+
+            <!-- Mobile Menu -->
+            <div id="mobileMenu" class="md:hidden hidden pb-4 space-y-2 text-sm text-gray-300">
+                <a href="#home" class="block hover:text-white transition">Home</a>
+                <a href="#subjects" class="block hover:text-white transition">Subjects</a>
+                <a href="#ai-tutor" class="block hover:text-white transition">AI Tutor</a>
+                <a href="#pricing" class="block hover:text-white transition">Pricing</a>
+                <a href="#contact" class="block hover:text-white transition">Contact</a>
+                <div class="pt-2 flex flex-col gap-2">
+                    <button onclick="openAuth('login')" class="w-full py-2 rounded-xl border border-gray-600 text-sm font-semibold text-gray-300">Log In</button>
+                    <button onclick="openAuth('signup')" class="w-full py-2 rounded-xl bg-gradient-to-r from-purple-500 to-purple-600 text-sm font-semibold text-white shadow-glow">Start Free</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- ===== HERO ===== -->
+    <section id="home" class="pt-28 pb-16 md:pt-36 md:pb-24 px-4 relative overflow-hidden">
+        <div class="max-w-7xl mx-auto flex flex-col lg:flex-row items-center gap-12 lg:gap-20">
+            <!-- Left content -->
+            <div class="flex-1 text-center lg:text-left">
+                <span class="inline-block px-4 py-1.5 rounded-full bg-purple-500/10 text-purple-400 text-xs font-semibold tracking-wider border border-purple-500/20 mb-6">✨ Africa's AI Learning Platform</span>
+                <h1 class="text-4xl sm:text-5xl md:text-6xl font-bold leading-[1.1]">
+                    Master Every Subject<br />
+                    with Your Personal<br />
+                    <span class="bg-gradient-to-r from-purple-400 via-purple-500 to-purple-600 bg-clip-text text-transparent">AI Teacher</span>
+                </h1>
+                <p class="mt-6 text-lg text-gray-400 max-w-2xl mx-auto lg:mx-0">
+                    Personalized AI learning for African students. Learn with step‑by‑step explanations, homework help, quizzes, past papers and exam preparation aligned with CAPS, IEB, CBC, WAEC and ZIMSEC.
+                </p>
+                <div class="mt-8 flex flex-wrap justify-center lg:justify-start gap-4">
+                    <button onclick="openAuth('signup')" class="px-8 py-3.5 rounded-2xl bg-gradient-to-r from-purple-500 to-purple-600 text-white font-semibold shadow-glow hover:shadow-glow-lg transition text-base">Start Free</button>
+                    <button onclick="openAuth('login')" class="px-8 py-3.5 rounded-2xl border border-gray-600 text-gray-300 font-semibold hover:bg-white/5 transition text-base">Log In</button>
+                </div>
+                <p class="mt-4 text-sm text-gray-500">No credit card required • Premium from R49.99/month</p>
+            </div>
+
+            <!-- Right: AI Illustration -->
+            <div class="flex-1 relative flex justify-center items-center">
+                <div class="relative w-full max-w-lg aspect-square">
+                    <!-- Canvas for animated particles & brain -->
+                    <canvas id="aiCanvas" class="w-full h-full rounded-3xl"></canvas>
+
+                    <!-- Floating feature cards (positioned absolutely) -->
+                    <div class="floating-card" style="top: 5%; left: -5%; animation-delay: 0s;">✨ AI Tutor</div>
+                    <div class="floating-card" style="top: 15%; right: -8%; animation-delay: 1s;">📘 Homework Help</div>
+                    <div class="floating-card" style="bottom: 20%; left: -10%; animation-delay: 2s;">🎯 Practice Quizzes</div>
+                    <div class="floating-card" style="bottom: 5%; right: -5%; animation-delay: 0.5s;">📄 Past Papers</div>
+                    <div class="floating-card" style="top: 40%; left: -12%; animation-delay: 1.5s;">📊 Progress Tracking</div>
+                    <div class="floating-card" style="top: 50%; right: -12%; animation-delay: 2.5s;">🛡️ Exam Preparation</div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- ============================================================ -->
-    <!--  FEATURES                                                   -->
-    <!-- ============================================================ -->
-    <section class="features-section" id="features">
-        <div class="features-grid">
-            <div class="feature-card">
-                <span class="icon">🤖</span>
-                <h3>AI Tutor 24/7</h3>
-                <p>Get instant help and step-by-step explanations anytime.</p>
-            </div>
-            <div class="feature-card">
-                <span class="icon">📚</span>
-                <h3>Curriculum Aligned</h3>
-                <p>Lessons aligned with CAPS, IEB, CBC, WAEC, ZIMSEC and more.</p>
-            </div>
-            <div class="feature-card">
-                <span class="icon">📝</span>
-                <h3>Homework Help</h3>
-                <p>Understand your homework with clear, easy explanations.</p>
-            </div>
-            <div class="feature-card">
-                <span class="icon">📊</span>
-                <h3>Practice & Quizzes</h3>
-                <p>Practice questions and quizzes to test your knowledge.</p>
-            </div>
-            <div class="feature-card">
-                <span class="icon">🎯</span>
-                <h3>Exam Preparation</h3>
-                <p>Past papers, mock tests and exam strategies.</p>
-            </div>
-            <div class="feature-card">
-                <span class="icon">📈</span>
-                <h3>Track Progress</h3>
-                <p>Monitor your learning and improve every day.</p>
-            </div>
-        </div>
-    </section>
-
-    <!-- ============================================================ -->
-    <!--  SUBJECTS                                                   -->
-    <!-- ============================================================ -->
-    <section class="subjects-section" id="subjects">
-        <h2>Explore All Subjects</h2>
-        <p class="sub">Choose from our growing list of subjects across multiple curricula</p>
-        <div class="subjects-grid">
-            <span class="subject-tag">📐 Mathematics</span>
-            <span class="subject-tag">⚛️ Physical Sciences</span>
-            <span class="subject-tag">🧬 Life Sciences</span>
-            <span class="subject-tag">💰 Accounting</span>
-            <span class="subject-tag">📈 Economics</span>
-            <span class="subject-tag">📖 English</span>
-            <span class="subject-tag">📊 Business Studies</span>
-            <span class="subject-tag">🌍 Geography</span>
-            <span class="subject-tag">🏛️ History</span>
-            <span class="subject-tag">💻 IT</span>
-            <span class="subject-tag">🔬 Chemistry</span>
-            <span class="subject-tag">➕ More Subjects</span>
-        </div>
-    </section>
-
-    <!-- ============================================================ -->
-    <!--  HOW IT WORKS                                               -->
-    <!-- ============================================================ -->
-    <section class="how-it-works" id="how-it-works">
-        <h2>How Leago Academy Works</h2>
-        <p class="sub">In just 5 simple steps, you'll be learning with your personal AI tutor</p>
-        <div class="steps-grid">
-            <div class="step-item">
-                <div class="step-number">1</div>
-                <h4>Choose a Subject</h4>
-                <p>Select the subject you want to learn.</p>
-            </div>
-            <div class="step-item">
-                <div class="step-number">2</div>
-                <h4>Ask Anything</h4>
-                <p>Ask questions or get help with homework.</p>
-            </div>
-            <div class="step-item">
-                <div class="step-number">3</div>
-                <h4>Get Step-by-Step Help</h4>
-                <p>Our AI Tutor explains clearly and simply.</p>
-            </div>
-            <div class="step-item">
-                <div class="step-number">4</div>
-                <h4>Practice & Improve</h4>
-                <p>Take quizzes and track your progress.</p>
-            </div>
-            <div class="step-item">
-                <div class="step-number">5</div>
-                <h4>Achieve Your Goals</h4>
-                <p>Gain confidence and excel in your exams.</p>
+    <!-- ===== FEATURES ===== -->
+    <section id="features" class="py-20 px-4 fade-section">
+        <div class="max-w-7xl mx-auto">
+            <h2 class="text-3xl md:text-4xl font-bold text-center">Learn Smarter Every Day</h2>
+            <div class="mt-12 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div class="glass p-6 rounded-2xl card-glow text-center">
+                    <div class="text-4xl mb-3">🤖</div>
+                    <h3 class="text-xl font-semibold">AI Tutor</h3>
+                    <p class="text-gray-400 text-sm mt-2">Get instant help with clear step‑by‑step explanations.</p>
+                </div>
+                <div class="glass p-6 rounded-2xl card-glow text-center">
+                    <div class="text-4xl mb-3">📘</div>
+                    <h3 class="text-xl font-semibold">Homework Help</h3>
+                    <p class="text-gray-400 text-sm mt-2">Understand difficult homework without simply getting the answers.</p>
+                </div>
+                <div class="glass p-6 rounded-2xl card-glow text-center">
+                    <div class="text-4xl mb-3">🎯</div>
+                    <h3 class="text-xl font-semibold">Practice &amp; Quizzes</h3>
+                    <p class="text-gray-400 text-sm mt-2">Practice until you're confident with unlimited exercises.</p>
+                </div>
+                <div class="glass p-6 rounded-2xl card-glow text-center">
+                    <div class="text-4xl mb-3">📄</div>
+                    <h3 class="text-xl font-semibold">Past Papers</h3>
+                    <p class="text-gray-400 text-sm mt-2">Prepare using real exam‑style questions.</p>
+                </div>
+                <div class="glass p-6 rounded-2xl card-glow text-center">
+                    <div class="text-4xl mb-3">📊</div>
+                    <h3 class="text-xl font-semibold">Progress Tracking</h3>
+                    <p class="text-gray-400 text-sm mt-2">Track your strengths and identify areas that need improvement.</p>
+                </div>
+                <div class="glass p-6 rounded-2xl card-glow text-center">
+                    <div class="text-4xl mb-3">🛡️</div>
+                    <h3 class="text-xl font-semibold">Exam Preparation</h3>
+                    <p class="text-gray-400 text-sm mt-2">Study smarter with revision plans and exam guidance.</p>
+                </div>
             </div>
         </div>
     </section>
 
-    <!-- ============================================================ -->
-    <!--  TESTIMONIALS                                               -->
-    <!-- ============================================================ -->
-    <section class="testimonials" id="testimonials">
-        <h2>Loved by Students Across Africa</h2>
-        <p class="sub">Real stories from real students using Leago Academy</p>
-        <div class="testimonial-grid">
-            <div class="testimonial-card">
-                <div class="quote">Leago Academy helped me understand Maths concepts I used to struggle with. My marks improved from 52% to 81%!</div>
-                <div class="author">Thabo M.</div>
-                <div class="author-detail">Grade 11 Student, South Africa</div>
-            </div>
-            <div class="testimonial-card">
-                <div class="quote">The AI Tutor explains everything in a way that's so easy to understand. Homework is now stress-free!</div>
-                <div class="author">Tendai K.</div>
-                <div class="author-detail">Grade 10 Student, Zimbabwe</div>
-            </div>
-            <div class="testimonial-card">
-                <div class="quote">I love that it follows our curriculum. The quizzes and past papers really help me prepare for exams.</div>
-                <div class="author">Amina O.</div>
-                <div class="author-detail">Grade 12 Student, Kenya</div>
+    <!-- ===== SUBJECTS ===== -->
+    <section id="subjects" class="py-20 px-4 fade-section">
+        <div class="max-w-7xl mx-auto">
+            <h2 class="text-3xl md:text-4xl font-bold text-center">Explore All Subjects</h2>
+            <div class="mt-12 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+                <div class="subject-card"><span class="text-2xl">📐</span> Mathematics</div>
+                <div class="subject-card"><span class="text-2xl">⚛️</span> Physical Sciences</div>
+                <div class="subject-card"><span class="text-2xl">🧬</span> Life Sciences</div>
+                <div class="subject-card"><span class="text-2xl">💰</span> Accounting</div>
+                <div class="subject-card"><span class="text-2xl">📖</span> English</div>
+                <div class="subject-card"><span class="text-2xl">📈</span> Economics</div>
+                <div class="subject-card"><span class="text-2xl">📊</span> Business Studies</div>
+                <div class="subject-card"><span class="text-2xl">🌍</span> Geography</div>
+                <div class="subject-card col-span-2 sm:col-span-3 lg:col-span-4 justify-center">
+                    <span class="text-2xl">➕</span> More Subjects
+                </div>
             </div>
         </div>
     </section>
 
-    <!-- ============================================================ -->
-    <!--  PRICING                                                    -->
-    <!-- ============================================================ -->
-    <section class="pricing-section" id="pricing">
-        <h2>Choose Your Plan</h2>
-        <p class="sub">Start free and upgrade when you're ready</p>
-        <div class="pricing-grid">
-            <div class="pricing-card">
-                <div class="plan">Student Plan</div>
-                <div class="price">R99.99 <span>/ month</span></div>
-                <div class="description">Perfect for students getting started with AI learning.</div>
-                <ul class="features-list">
-                    <li>Unlimited AI Tutor access</li>
-                    <li>Homework help</li>
-                    <li>Quizzes & practice questions</li>
-                    <li>Track your progress</li>
+    <!-- ===== AI TUTOR PREVIEW ===== -->
+    <section id="ai-tutor" class="py-20 px-4 fade-section">
+        <div class="max-w-6xl mx-auto flex flex-col lg:flex-row items-center gap-12">
+            <div class="flex-1">
+                <h2 class="text-3xl md:text-4xl font-bold">Your Personal AI Tutor</h2>
+                <p class="mt-4 text-gray-400 text-lg">Ask anything. Get clear, step‑by‑step answers in seconds.</p>
+                <div class="mt-8 glass rounded-2xl p-6 max-w-md">
+                    <div class="space-y-3 text-sm">
+                        <div class="flex justify-end">
+                            <div class="bg-purple-600/30 rounded-xl px-4 py-2 max-w-[80%] text-white">Explain Pythagoras' Theorem.</div>
+                        </div>
+                        <div class="flex justify-start">
+                            <div class="bg-white/10 rounded-xl px-4 py-2 max-w-[80%] text-gray-200">
+                                Pythagoras' Theorem states that in a right‑angled triangle:<br/>
+                                <span class="text-purple-300 font-mono">a² + b² = c²</span><br/>
+                                Where <span class="text-purple-300">a</span> and <span class="text-purple-300">b</span> are the shorter sides, and <span class="text-purple-300">c</span> is the hypotenuse. Let's solve one together step by step.
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-2 mt-2">
+                            <input type="text" placeholder="Ask your AI Teacher..." class="flex-1 bg-white/5 border border-white/10 rounded-xl px-4 py-2 text-sm text-gray-200 placeholder-gray-500 focus:outline-none focus:border-purple-500" />
+                            <button class="px-4 py-2 bg-purple-600 rounded-xl text-sm font-semibold hover:bg-purple-500 transition">Send</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="flex-1 flex justify-center">
+                <div class="w-64 h-64 rounded-full bg-gradient-to-br from-purple-600/20 to-transparent flex items-center justify-center">
+                    <span class="text-8xl">🧠</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== PRICING ===== -->
+    <section id="pricing" class="py-20 px-4 fade-section">
+        <div class="max-w-5xl mx-auto">
+            <h2 class="text-3xl md:text-4xl font-bold text-center">Choose Your Plan</h2>
+            <div class="mt-12 grid grid-cols-1 md:grid-cols-2 gap-8">
+                <!-- Free -->
+                <div class="glass rounded-2xl p-8 text-center card-glow">
+                    <h3 class="text-2xl font-semibold">Free</h3>
+                    <div class="mt-2 text-4xl font-bold">R0 <span class="text-base font-normal text-gray-400">/month</span></div>
+                    <ul class="mt-6 space-y-2 text-sm text-gray-300 text-left">
+                        <li class="flex items-center gap-2"><span class="text-purple-400">✓</span> Limited AI learning sessions</li>
+                        <li class="flex items-center gap-2"><span class="text-purple-400">✓</span> Limited daily questions</li>
+                        <li class="flex items-center gap-2"><span class="text-purple-400">✓</span> Interactive quizzes</li>
+                        <li class="flex items-center gap-2"><span class="text-purple-400">✓</span> Access to all school subjects</li>
+                        <li class="flex items-center gap-2"><span class="text-purple-400">✓</span> Progress dashboard</li>
+                        <li class="flex items-center gap-2"><span class="text-purple-400">✓</span> Homework assistance</li>
+                    </ul>
+                    <button onclick="openAuth('signup')" class="mt-8 w-full py-3 rounded-xl border border-gray-600 text-gray-300 font-semibold hover:bg-white/5 transition">Start Free</button>
+                </div>
+
+                <!-- Premium -->
+                <div class="glass rounded-2xl p-8 text-center card-glow border border-purple-500 shadow-glow relative">
+                    <span class="absolute -top-3 left-1/2 -translate-x-1/2 bg-purple-600 text-white text-xs font-bold px-4 py-1 rounded-full">MOST POPULAR</span>
+                    <h3 class="text-2xl font-semibold">Premium</h3>
+                    <div class="mt-2 text-4xl font-bold">R49.99 <span class="text-base font-normal text-gray-400">/month</span></div>
+                    <ul class="mt-6 space-y-2 text-sm text-gray-300 text-left">
+                        <li class="flex items-center gap-2"><span class="text-purple-400">✓</span> Everything in Free</li>
+                        <li class="flex items-center gap-2"><span class="text-purple-400">✓</span> Unlimited AI learning</li>
+                        <li class="flex items-center gap-2"><span class="text-purple-400">✓</span> Unlimited questions</li>
+                        <li class="flex items-center gap-2"><span class="text-purple-400">✓</span> Unlimited homework help</li>
+                        <li class="flex items-center gap-2"><span class="text-purple-400">✓</span> Exam preparation</li>
+                        <li class="flex items-center gap-2"><span class="text-purple-400">✓</span> Past papers</li>
+                        <li class="flex items-center gap-2"><span class="text-purple-400">✓</span> Priority support</li>
+                        <li class="flex items-center gap-2"><span class="text-purple-400">✓</span> Faster AI responses</li>
+                    </ul>
+                    <button onclick="openAuth('signup')" class="mt-8 w-full py-3 rounded-xl bg-gradient-to-r from-purple-500 to-purple-600 text-white font-semibold shadow-glow hover:shadow-glow-lg transition">Go Premium</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== FAQ ===== -->
+    <section id="faq" class="py-20 px-4 fade-section">
+        <div class="max-w-3xl mx-auto">
+            <h2 class="text-3xl md:text-4xl font-bold text-center">Frequently Asked Questions</h2>
+            <div class="mt-12 space-y-4">
+                <div class="faq-item glass rounded-2xl p-5 cursor-pointer" onclick="toggleFAQ(this)">
+                    <div class="flex justify-between items-center">
+                        <span class="font-semibold">Does Leago replace my teacher?</span>
+                        <span class="question-icon text-purple-400">▼</span>
+                    </div>
+                    <div class="answer text-gray-400 text-sm mt-2">No, Leago is a supplement to your teacher. It provides additional practice, explanations, and tutoring to help you understand concepts better.</div>
+                </div>
+                <div class="faq-item glass rounded-2xl p-5 cursor-pointer" onclick="toggleFAQ(this)">
+                    <div class="flex justify-between items-center">
+                        <span class="font-semibold">Which curriculum do you support?</span>
+                        <span class="question-icon text-purple-400">▼</span>
+                    </div>
+                    <div class="answer text-gray-400 text-sm mt-2">We support CAPS, IEB, CBC, WAEC, ZIMSEC, and more. New curricula are added regularly.</div>
+                </div>
+                <div class="faq-item glass rounded-2xl p-5 cursor-pointer" onclick="toggleFAQ(this)">
+                    <div class="flex justify-between items-center">
+                        <span class="font-semibold">Can I use it on my phone?</span>
+                        <span class="question-icon text-purple-400">▼</span>
+                    </div>
+                    <div class="answer text-gray-400 text-sm mt-2">Absolutely! Leago is fully responsive and works on any device, including smartphones and tablets.</div>
+                </div>
+                <div class="faq-item glass rounded-2xl p-5 cursor-pointer" onclick="toggleFAQ(this)">
+                    <div class="flex justify-between items-center">
+                        <span class="font-semibold">Is there a free version?</span>
+                        <span class="question-icon text-purple-400">▼</span>
+                    </div>
+                    <div class="answer text-gray-400 text-sm mt-2">Yes, we offer a free plan with limited daily questions and access to all subjects. You can upgrade to Premium for unlimited features.</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== FINAL CTA ===== -->
+    <section class="py-20 px-4">
+        <div class="max-w-4xl mx-auto text-center glass rounded-3xl p-12 shadow-glow-lg" style="background: linear-gradient(135deg, rgba(124,58,237,0.12) 0%, rgba(139,92,246,0.05) 100%);">
+            <h2 class="text-3xl md:text-5xl font-bold">Start Learning Smarter Today</h2>
+            <p class="mt-4 text-gray-300 text-lg">Join thousands of African students using AI to improve their academic performance.</p>
+            <div class="mt-8 flex flex-wrap justify-center gap-4">
+                <button onclick="openAuth('signup')" class="px-8 py-3.5 rounded-2xl bg-gradient-to-r from-purple-500 to-purple-600 text-white font-semibold shadow-glow hover:shadow-glow-lg transition text-base">Start Free</button>
+                <a href="#pricing" class="px-8 py-3.5 rounded-2xl border border-gray-600 text-gray-300 font-semibold hover:bg-white/5 transition text-base">View Pricing</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== FOOTER ===== -->
+    <footer id="contact" class="py-16 px-4 border-t border-white/5">
+        <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-8 text-sm text-gray-400">
+            <div>
+                <div class="flex items-center gap-3">
+                    <div class="w-8 h-8 rounded-full bg-gradient-to-br from-purple-500 to-purple-600 flex items-center justify-center">
+                        <span class="text-white text-xl font-bold">🧠</span>
+                    </div>
+                    <div>
+                        <div class="text-white font-bold text-lg leading-none">Leago</div>
+                        <div class="text-[10px] text-purple-400 tracking-widest font-medium">AI EDUCATION PLATFORM</div>
+                    </div>
+                </div>
+                <p class="mt-4 max-w-xs">Helping African students learn smarter through AI‑powered education.</p>
+            </div>
+            <div>
+                <h4 class="text-white font-semibold mb-3">Platform</h4>
+                <ul class="space-y-2">
+                    <li><a href="#home" class="hover:text-white transition">Home</a></li>
+                    <li><a href="#subjects" class="hover:text-white transition">Subjects</a></li>
+                    <li><a href="#ai-tutor" class="hover:text-white transition">AI Tutor</a></li>
+                    <li><a href="#pricing" class="hover:text-white transition">Pricing</a></li>
                 </ul>
-                <button class="btn-pricing outline" onclick="openAuth('signup')">Start Free →</button>
             </div>
-            <div class="pricing-card popular">
-                <div class="popular-badge">Most Popular</div>
-                <div class="plan">Premium Plan</div>
-                <div class="price">R99.99 <span>/ month</span></div>
-                <div class="description">Everything you need to excel in your studies.</div>
-                <ul class="features-list">
-                    <li>Everything in Student Plan</li>
-                    <li>Past papers & mock tests</li>
-                    <li>Advanced AI explanations</li>
-                    <li>Priority support</li>
-                </ul>
-                <button class="btn-pricing" onclick="openAuth('signup')">Start Free →</button>
-            </div>
-        </div>
-    </section>
-
-    <!-- ============================================================ -->
-    <!--  CTA BANNER                                                 -->
-    <!-- ============================================================ -->
-    <section class="cta-banner">
-        <h2>Start Learning Smarter Today</h2>
-        <p>Join thousands of African students using AI to improve their academic performance.</p>
-        <a class="btn-primary" onclick="openAuth('signup')">Get Started Now →</a>
-    </section>
-
-    <!-- ============================================================ -->
-    <!--  FOOTER                                                     -->
-    <!-- ============================================================ -->
-    <footer class="footer">
-        <div class="inner">
             <div>
-                <h4>🧠 Leago Academy</h4>
-                <p style="font-size:0.9rem; opacity:0.8; margin-top:4px;">Empowering African Students Through AI-Powered Education.</p>
-                <div class="social-links">
-                    <a href="#">📘</a>
-                    <a href="#">📸</a>
-                    <a href="#">▶️</a>
-                    <a href="#">💼</a>
-                    <a href="#">🐦</a>
+                <h4 class="text-white font-semibold mb-3">Company</h4>
+                <ul class="space-y-2">
+                    <li><a href="#" class="hover:text-white transition">About Us</a></li>
+                    <li><a href="#" class="hover:text-white transition">Contact</a></li>
+                    <li><a href="#" class="hover:text-white transition">Privacy Policy</a></li>
+                    <li><a href="#" class="hover:text-white transition">Terms of Service</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="text-white font-semibold mb-3">Follow Us</h4>
+                <div class="flex gap-4 text-xl">
+                    <a href="#" class="hover:text-white transition" aria-label="Facebook">📘</a>
+                    <a href="#" class="hover:text-white transition" aria-label="Instagram">📸</a>
+                    <a href="#" class="hover:text-white transition" aria-label="LinkedIn">💼</a>
+                    <a href="#" class="hover:text-white transition" aria-label="X">🐦</a>
                 </div>
             </div>
-            <div>
-                <h4>Company</h4>
-                <a onclick="showInfoPage('about')">About Us</a>
-                <a onclick="showInfoPage('contact')">Contact</a>
-                <a href="#pricing">Pricing</a>
-            </div>
-            <div>
-                <h4>Legal</h4>
-                <a onclick="showInfoPage('privacy')">Privacy Policy</a>
-                <a onclick="showInfoPage('tos')">Terms of Service</a>
-            </div>
-            <div>
-                <h4>Support</h4>
-                <a href="mailto:support@leagoacademy.co.za">support@leagoacademy.co.za</a>
-                <a href="https://www.leagoacademy.co.za">www.leagoacademy.co.za</a>
-            </div>
         </div>
-        <div class="bottom">© 2026 Leago Academy. All rights reserved. <span style="color:#818cf8;font-weight:600;">v4.0</span></div>
+        <div class="max-w-7xl mx-auto mt-12 pt-6 border-t border-white/5 text-center text-xs text-gray-500">
+            © 2026 Leago Academy. All rights reserved.
+        </div>
     </footer>
 
-    <!-- ============================================================ -->
-    <!--  INFO PAGES                                                 -->
-    <!-- ============================================================ -->
-    <div class="info-page" id="page-about"><h1>About Leago Academy</h1><p>Empowering Africa Through Intelligent Learning...</p><span class="back-link" onclick="showInfoPage('')">← Back to Leago</span></div>
-    <div class="info-page" id="page-privacy"><h1>Privacy Policy</h1><p>Effective Date: 1 July 2026...</p><span class="back-link" onclick="showInfoPage('')">← Back to Leago</span></div>
-    <div class="info-page" id="page-tos"><h1>Terms of Service</h1><p>Last Updated: 1 July 2026...</p><span class="back-link" onclick="showInfoPage('')">← Back to Leago</span></div>
-    <div class="info-page" id="page-contact"><h1>Contact Leago Academy</h1><p>We are here to help...</p><span class="back-link" onclick="showInfoPage('')">← Back to Leago</span></div>
-
-    <!-- ============================================================ -->
-    <!--  AUTH OVERLAY                                               -->
-    <!-- ============================================================ -->
-    <div class="auth-overlay" id="authOverlay">
-        <div class="auth-card">
-            <button class="close-btn" onclick="closeAuth()">✕</button>
-            <div class="logo-sm"><h2>🧠 <span>Leago</span></h2><p>Your AI Tutor</p></div>
-            <div id="loginPage">
-                <h3>Welcome back</h3>
-                <p class="sub">Log in to continue learning.</p>
-                <div class="field"><label>Email</label><input type="email" id="loginEmail" placeholder="you@example.com" /></div>
-                <div class="field"><label>Password</label><input type="password" id="loginPassword" placeholder="Enter password" /></div>
-                <div class="error" id="loginError"></div><div class="success" id="loginSuccess"></div>
-                <button class="btn" id="loginBtn" onclick="login()">Log In</button>
-                <div class="auth-link">Don't have an account? <a onclick="showSignup()">Sign up</a></div>
+    <!-- ===== AUTH OVERLAY (quick placeholder) ===== -->
+    <div id="authOverlay" class="fixed inset-0 bg-black/60 backdrop-blur-md flex items-center justify-center z-50 hidden">
+        <div class="bg-dark p-8 rounded-3xl max-w-sm w-full border border-white/10">
+            <div class="flex justify-between items-center mb-6">
+                <div class="text-xl font-bold text-white">Leago</div>
+                <button onclick="closeAuth()" class="text-gray-400 hover:text-white text-2xl">&times;</button>
             </div>
-            <div id="signupPage" style="display:none;">
-                <h3>Create your education profile</h3>
-                <p class="sub">We'll personalize your learning experience.</p>
-                <div class="stepper" id="stepper">
-                    <div class="step-circle active" data-step="1">1</div>
-                    <div class="step-circle" data-step="2">2</div>
-                    <div class="step-circle" data-step="3">3</div>
-                    <div class="step-circle" data-step="4">4</div>
-                    <div class="step-circle" data-step="5">5</div>
-                </div>
-                <div class="signup-step" data-step="1">
-                    <div class="field"><label>First Name</label><input type="text" id="signupFirstName" placeholder="First name" /></div>
-                    <div class="field"><label>Last Name</label><input type="text" id="signupLastName" placeholder="Last name" /></div>
-                    <div class="field"><label>Email</label><input type="email" id="signupEmail" placeholder="you@example.com" /></div>
-                    <div class="field"><label>Password</label><input type="password" id="signupPassword" placeholder="Min 6 characters" /></div>
-                    <button class="btn" onclick="nextStep(2)">Next →</button>
-                </div>
-                <div class="signup-step" data-step="2" style="display:none;">
-                    <div class="field">
-                        <label>Country</label>
-                        <select id="signupCountry" onchange="loadProvincesHardcoded()">
-                            <option value="">Select country</option>
-                            <option value="1">🇿🇦 South Africa</option>
-                            <option value="2">🇰🇪 Kenya</option>
-                            <option value="3">🇳🇬 Nigeria</option>
-                            <option value="4">🇿🇼 Zimbabwe</option>
-                            <option value="5">🇧🇼 Botswana</option>
-                            <option value="6">🇳🇦 Namibia</option>
-                            <option value="7">🇬🇭 Ghana</option>
-                            <option value="8">🇪🇬 Egypt</option>
-                            <option value="9">🇺🇬 Uganda</option>
-                            <option value="10">🇹🇿 Tanzania</option>
-                            <option value="11">🇿🇲 Zambia</option>
-                            <option value="12">🇲🇿 Mozambique</option>
-                            <option value="13">🇦🇴 Angola</option>
-                            <option value="14">🇨🇲 Cameroon</option>
-                            <option value="15">🇪🇹 Ethiopia</option>
-                            <option value="16">🇲🇦 Morocco</option>
-                            <option value="17">🇩🇿 Algeria</option>
-                            <option value="18">🇧🇯 Benin</option>
-                            <option value="19">🇧🇫 Burkina Faso</option>
-                            <option value="20">🇧🇮 Burundi</option>
-                            <option value="21">🇨🇻 Cape Verde</option>
-                            <option value="22">🇨🇫 Central African Republic</option>
-                            <option value="23">🇹🇩 Chad</option>
-                            <option value="24">🇰🇲 Comoros</option>
-                            <option value="25">🇨🇬 Congo</option>
-                            <option value="26">🇨🇮 Côte d'Ivoire</option>
-                            <option value="27">🇩🇯 Djibouti</option>
-                            <option value="28">🇬🇶 Equatorial Guinea</option>
-                            <option value="29">🇪🇷 Eritrea</option>
-                            <option value="30">🇸🇿 Eswatini</option>
-                            <option value="31">🇬🇦 Gabon</option>
-                            <option value="32">🇬🇲 Gambia</option>
-                            <option value="33">🇬🇳 Guinea</option>
-                            <option value="34">🇬🇼 Guinea-Bissau</option>
-                            <option value="35">🇱🇸 Lesotho</option>
-                            <option value="36">🇱🇷 Liberia</option>
-                            <option value="37">🇱🇾 Libya</option>
-                            <option value="38">🇲🇬 Madagascar</option>
-                            <option value="39">🇲🇼 Malawi</option>
-                            <option value="40">🇲🇱 Mali</option>
-                            <option value="41">🇲🇷 Mauritania</option>
-                            <option value="42">🇲🇺 Mauritius</option>
-                            <option value="43">🇳🇪 Niger</option>
-                            <option value="44">🇷🇼 Rwanda</option>
-                            <option value="45">🇸🇹 São Tomé and Príncipe</option>
-                            <option value="46">🇸🇳 Senegal</option>
-                            <option value="47">🇸🇨 Seychelles</option>
-                            <option value="48">🇸🇱 Sierra Leone</option>
-                            <option value="49">🇸🇴 Somalia</option>
-                            <option value="50">🇸🇸 South Sudan</option>
-                            <option value="51">🇸🇩 Sudan</option>
-                            <option value="52">🇹🇬 Togo</option>
-                            <option value="53">🇹🇳 Tunisia</option>
-                            <option value="54">🇨🇩 DRC</option>
-                        </select>
-                    </div>
-                    <div class="field"><label>Province / State</label><select id="signupProvince"><option value="">Select province</option></select></div>
-                    <div style="display:flex;gap:12px;margin-top:16px;">
-                        <button class="btn" onclick="prevStep(1)" style="background:#e5e7eb;color:#0b1120;">← Back</button>
-                        <button class="btn" onclick="nextStep(3)">Next →</button>
-                    </div>
-                </div>
-                <div class="signup-step" data-step="3" style="display:none;">
-                    <div class="field"><label>Education Level</label>
-                        <select id="signupLevel" onchange="loadGradesHardcoded()">
-                            <option value="">Select level</option>
-                            <option value="1">High School</option>
-                            <option value="2">TVET College</option>
-                            <option value="3">University</option>
-                            <option value="4">Other</option>
-                        </select>
-                    </div>
-                    <div class="field"><label>Grade / Year</label>
-                        <select id="signupGrade"><option value="">Select grade</option></select>
-                    </div>
-                    <div style="display:flex;gap:12px;margin-top:16px;">
-                        <button class="btn" onclick="prevStep(2)" style="background:#e5e7eb;color:#0b1120;">← Back</button>
-                        <button class="btn" onclick="nextStep(4)">Next →</button>
-                    </div>
-                </div>
-                <div class="signup-step" data-step="4" style="display:none;">
-                    <div class="field"><label>Curriculum</label>
-                        <select id="signupCurriculum" onchange="loadSubjectsHardcoded()">
-                            <option value="">Select curriculum</option>
-                            <option value="1">CAPS</option>
-                            <option value="2">IEB</option>
-                        </select>
-                    </div>
-                    <div style="display:flex;gap:12px;margin-top:16px;">
-                        <button class="btn" onclick="prevStep(3)" style="background:#e5e7eb;color:#0b1120;">← Back</button>
-                        <button class="btn" onclick="nextStep(5)">Next →</button>
-                    </div>
-                </div>
-                <div class="signup-step" data-step="5" style="display:none;">
-                    <p style="margin-bottom:8px;font-weight:600;">Select the subjects you study:</p>
-                    <div id="subjectCheckboxes" class="subject-grid-check"><p style="grid-column:1/-1;color:#6b7280;">Select your subjects</p></div>
-                    <div class="error" id="signupError"></div><div class="success" id="signupSuccess"></div>
-                    <div style="display:flex;gap:12px;margin-top:16px;">
-                        <button class="btn" onclick="prevStep(4)" style="background:#e5e7eb;color:#0b1120;">← Back</button>
-                        <button class="btn" id="signupBtn" onclick="signup()">Create Account</button>
-                    </div>
-                </div>
-            </div>
+            <p class="text-gray-300 text-sm mb-4">Please sign in to continue.</p>
+            <input type="email" placeholder="Email" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-2 text-sm text-gray-200 placeholder-gray-500 focus:outline-none focus:border-purple-500" />
+            <input type="password" placeholder="Password" class="w-full mt-3 bg-white/5 border border-white/10 rounded-xl px-4 py-2 text-sm text-gray-200 placeholder-gray-500 focus:outline-none focus:border-purple-500" />
+            <button class="w-full mt-4 py-3 rounded-xl bg-gradient-to-r from-purple-500 to-purple-600 text-white font-semibold shadow-glow hover:shadow-glow-lg transition">Log In</button>
+            <p class="mt-4 text-xs text-gray-500 text-center">Don't have an account? <a href="#" class="text-purple-400 hover:underline">Sign up</a></p>
         </div>
     </div>
 
-    <!-- ============================================================ -->
-    <!--  DASHBOARD                                                  -->
-    <!-- ============================================================ -->
-    <div class="dashboard" id="dashboard">
-        <nav class="top-nav">
-            <a href="#" class="logo">🧠 <span>Leago</span></a>
-            <div class="user-info">
-                <span class="name" id="userName">User</span>
-                <span class="role" id="userRole">Learner</span>
-                <span class="grade-badge" id="userGrade">Level: Not set</span>
-                <span id="subscriptionBadge"></span>
-                <button class="logout-btn" onclick="logout()">Logout</button>
-            </div>
-        </nav>
-        <div class="dashboard-grid">
-            <aside class="sidebar-left" id="sidebarLeft">
-                <div class="section-title">Subjects</div>
-                <ul class="subject-list" id="subjectList"></ul>
-                <div class="section-title" style="margin-top:20px;">Your Progress</div>
-                <div id="progressContainer"></div>
-                <div class="section-title" style="margin-top:20px;">Recent</div>
-                <div id="recentContainer"></div>
-            </aside>
-            <main class="center-panel" id="centerPanel">
-                <div class="welcome" id="welcomeMessage">Welcome back, Student 👋</div>
-                <div class="welcome-sub" id="welcomeSub">Today's goal: Complete your next lesson.</div>
-                <div id="dynamicContent"></div>
-            </main>
-            <aside class="sidebar-right" id="sidebarRight">
-                <div class="section-title">Key Terms</div>
-                <div id="flashcardContainer"></div>
-                <div class="section-title" style="margin-top:20px;">Weak Spots</div>
-                <div id="errorContainer"></div>
-            </aside>
-        </div>
-    </div>
 
-    <!-- ============================================================ -->
-    <!--  JAVASCRIPT                                                 -->
-    <!-- ============================================================ -->
+    <!-- ===== JAVASCRIPT ===== -->
     <script>
-        // ================================================================
-        //  HARDCODED DATA
-        // ================================================================
-        const HARDCODED_DATA = {
-            provinces: {
-                '1': [{ id: 1, name: 'Eastern Cape' }, { id: 2, name: 'Free State' }, { id: 3, name: 'Gauteng' }, { id: 4, name: 'KwaZulu-Natal' }, { id: 5, name: 'Limpopo' }, { id: 6, name: 'Mpumalanga' }, { id: 7, name: 'Northern Cape' }, { id: 8, name: 'North West' }, { id: 9, name: 'Western Cape' }],
-                '2': [{ id: 10, name: 'Nairobi' }, { id: 11, name: 'Mombasa' }, { id: 12, name: 'Kisumu' }, { id: 13, name: 'Nakuru' }, { id: 14, name: 'Eldoret' }],
-                '3': [{ id: 15, name: 'Lagos' }, { id: 16, name: 'Abuja' }, { id: 17, name: 'Kano' }, { id: 18, name: 'Ibadan' }, { id: 19, name: 'Port Harcourt' }],
-                '4': [{ id: 20, name: 'Harare' }, { id: 21, name: 'Bulawayo' }, { id: 22, name: 'Mutare' }],
-            },
-            grades: {
-                '1': ['Grade 8', 'Grade 9', 'Grade 10', 'Grade 11', 'Grade 12'],
-                '2': ['N1', 'N2', 'N3', 'N4', 'N5', 'N6'],
-                '3': ['First Year', 'Second Year', 'Third Year', 'Fourth Year', 'Postgraduate'],
-                '4': ['Other']
-            },
-            highSchoolSubjects: {
-                '1': [
-                    'Mathematics', 'English Home Language', 'English First Additional Language',
-                    'Afrikaans Home Language', 'Afrikaans First Additional Language',
-                    'isiZulu Home Language', 'isiXhosa Home Language', 'Sepedi Home Language',
-                    'Setswana Home Language', 'Sesotho Home Language', 'Xitsonga Home Language',
-                    'Tshivenda Home Language', 'isiNdebele Home Language', 'South African Sign Language',
-                    'Life Orientation', 'Life Sciences', 'Physical Sciences', 'History', 'Geography',
-                    'Accounting', 'Business Studies', 'Economics', 'Consumer Studies', 'Tourism',
-                    'Hospitality Studies', 'Engineering Graphics and Design', 'Civil Technology',
-                    'Electrical Technology', 'Mechanical Technology', 'Computer Applications Technology',
-                    'Information Technology', 'Agricultural Sciences', 'Agricultural Management Practices',
-                    'Dance Studies', 'Dramatic Arts', 'Visual Arts', 'Music', 'Design',
-                    'Religion Studies', 'Maritime Economics'
-                ],
-                '2': [
-                    'Mathematics', 'English Home Language', 'Afrikaans First Additional Language',
-                    'Life Orientation', 'Life Sciences', 'Physical Sciences', 'History', 'Geography',
-                    'Accounting', 'Business Studies', 'Economics', 'Engineering Graphics and Design',
-                    'Computer Applications Technology', 'Information Technology', 'Consumer Studies',
-                    'Tourism', 'Dramatic Arts', 'Visual Arts', 'Music', 'Design', 'Agricultural Sciences',
-                    'Religion Studies', 'Sepedi First Additional Language', 'Setswana First Additional Language',
-                    'isiXhosa First Additional Language', 'isiZulu First Additional Language'
-                ]
-            },
-            universitySubjects: [
-                'Communication', 'Academic Writing', 'Critical Thinking', 'Research Skills', 'Computer Literacy',
-                'Mathematics for Science', 'Advanced Mathematics', 'Statistics', 'Calculus I', 'Linear Algebra',
-                'Physics', 'Chemistry', 'Biology', 'Biochemistry', 'Microbiology', 'Genetics', 'Ecology',
-                'Environmental Science', 'Geology', 'Oceanography',
-                'Accounting', 'Financial Accounting', 'Management Accounting', 'Economics', 'Microeconomics',
-                'Macroeconomics', 'Business Management', 'Marketing', 'Finance', 'Human Resources',
-                'Entrepreneurship', 'Project Management', 'Supply Chain Management', 'Operations Management',
-                'Information Systems', 'Business Analytics',
-                'English Literature', 'History', 'Philosophy', 'Political Science', 'Psychology',
-                'Sociology', 'Anthropology', 'Social Work', 'Criminology', 'Linguistics',
-                'Commercial Law', 'Criminal Law', 'Contract Law', 'Constitutional Law', 'Legal Research',
-                'Human Rights Law', 'Environmental Law', 'Tax Law',
-                'Civil Engineering', 'Mechanical Engineering', 'Electrical Engineering', 'Chemical Engineering',
-                'Aerospace Engineering', 'Biomedical Engineering', 'Materials Science', 'Fluid Mechanics',
-                'Thermodynamics', 'Structural Analysis', 'Geotechnical Engineering',
-                'Programming Fundamentals', 'Data Structures', 'Database Systems', 'Networking',
-                'Web Development', 'Cybersecurity', 'Artificial Intelligence', 'Machine Learning',
-                'Software Engineering', 'Game Development',
-                'Anatomy', 'Physiology', 'Pharmacology', 'Pathology', 'Public Health', 'Epidemiology',
-                'Nursing', 'Physiotherapy', 'Occupational Therapy', 'Clinical Psychology',
-                'Nutrition', 'Medical Ethics', 'Health Policy',
-                'Education (Foundation Phase)', 'Education (Intermediate Phase)', 'Education (Senior Phase)',
-                'Educational Psychology', 'Curriculum Design', 'Classroom Management', 'Assessment & Evaluation',
-                'Inclusive Education', 'Educational Technology',
-                'Art History', 'Music Theory', 'Musicology', 'Theatre Studies', 'Film Studies',
-                'Graphic Design', 'Animation', 'Fashion Design', 'Architecture', 'Urban Planning',
-                'Hospitality Management', 'Tourism Management', 'Event Planning', 'Agriculture', 'Agribusiness'
-            ]
-        };
+        // ===== Mobile Toggle =====
+        document.getElementById('mobileToggle').addEventListener('click', function() {
+            document.getElementById('mobileMenu').classList.toggle('hidden');
+        });
 
-        // ================================================================
-        //  LOAD FUNCTIONS
-        // ================================================================
-        function loadProvincesHardcoded() {
-            const countryId = document.getElementById('signupCountry').value;
-            const sel = document.getElementById('signupProvince');
-            sel.innerHTML = '<option value="">Select province</option>';
-            if (!countryId) return;
-            const provs = HARDCODED_DATA.provinces[countryId] || [];
-            provs.forEach(p => {
-                const opt = document.createElement('option');
-                opt.value = p.id;
-                opt.textContent = p.name;
-                sel.appendChild(opt);
-            });
+        // ===== FAQ Accordion =====
+        function toggleFAQ(el) {
+            el.classList.toggle('active');
         }
 
-        function loadGradesHardcoded() {
-            const levelId = document.getElementById('signupLevel').value;
-            const sel = document.getElementById('signupGrade');
-            sel.innerHTML = '<option value="">Select grade</option>';
-            if (!levelId) return;
-            const grades = HARDCODED_DATA.grades[levelId] || [];
-            grades.forEach(g => {
-                const opt = document.createElement('option');
-                opt.value = g;
-                opt.textContent = g;
-                sel.appendChild(opt);
-            });
+        // ===== Auth Overlay =====
+        function openAuth(type) {
+            document.getElementById('authOverlay').classList.remove('hidden');
         }
-
-        function loadSubjectsHardcoded() {
-            const educationLevelId = document.getElementById('signupLevel').value;
-            const curriculumId = document.getElementById('signupCurriculum').value;
-            const container = document.getElementById('subjectCheckboxes');
-            container.innerHTML = '<p style="grid-column:1/-1;color:#6b7280;">Loading subjects...</p>';
-
-            if (educationLevelId === '3') {
-                const subjects = HARDCODED_DATA.universitySubjects || [];
-                container.innerHTML = subjects.map(sub => `
-                    <label>
-                        <input type="checkbox" value="${sub}" class="subject-checkbox" />
-                        ${sub}
-                    </label>
-                `).join('');
-                return;
-            }
-
-            if (!curriculumId) { container.innerHTML = '<p style="grid-column:1/-1;color:#6b7280;">Select a curriculum</p>'; return; }
-            const subjects = HARDCODED_DATA.highSchoolSubjects[curriculumId] || ['Mathematics', 'English', 'Life Sciences', 'Physical Sciences', 'History', 'Geography', 'Accounting', 'Business Studies', 'Economics'];
-            container.innerHTML = subjects.map(sub => `
-                <label>
-                    <input type="checkbox" value="${sub}" class="subject-checkbox" />
-                    ${sub}
-                </label>
-            `).join('');
-        }
-
-        // ================================================================
-        //  STEPPER
-        // ================================================================
-        let currentStep = 1;
-        let signupData = {};
-
-        function goToStep(step) {
-            document.querySelectorAll('.signup-step').forEach(el => el.style.display = 'none');
-            const target = document.querySelector(`.signup-step[data-step="${step}"]`);
-            if (target) target.style.display = 'block';
-            document.querySelectorAll('.step-circle').forEach(el => {
-                const s = parseInt(el.dataset.step);
-                el.classList.remove('active', 'done');
-                if (s < step) el.classList.add('done');
-                else if (s === step) el.classList.add('active');
-            });
-            currentStep = step;
-        }
-
-        function nextStep(step) {
-            if (step === 2) {
-                const fname = document.getElementById('signupFirstName').value.trim();
-                const lname = document.getElementById('signupLastName').value.trim();
-                const email = document.getElementById('signupEmail').value.trim();
-                const pass = document.getElementById('signupPassword').value.trim();
-                if (!fname || !lname || !email || !pass) { alert('Please fill in all personal details.'); return; }
-                if (pass.length < 6) { alert('Password must be at least 6 characters.'); return; }
-                signupData.firstName = fname;
-                signupData.lastName = lname;
-                signupData.email = email;
-                signupData.password = pass;
-            }
-            if (step === 3) {
-                const country = document.getElementById('signupCountry').value;
-                const province = document.getElementById('signupProvince').value;
-                if (!country) { alert('Please select your country.'); return; }
-                signupData.countryId = parseInt(country);
-                signupData.province = province;
-            }
-            if (step === 4) {
-                const level = document.getElementById('signupLevel').value;
-                const grade = document.getElementById('signupGrade').value;
-                if (!level || !grade) { alert('Please select education level and grade.'); return; }
-                signupData.educationLevelId = parseInt(level);
-                signupData.grade = grade;
-            }
-            if (step === 5) {
-                const curriculum = document.getElementById('signupCurriculum').value;
-                if (!curriculum) { alert('Please select your curriculum.'); return; }
-                signupData.curriculumId = parseInt(curriculum);
-                loadSubjectsHardcoded();
-            }
-            goToStep(step);
-        }
-
-        function prevStep(step) { goToStep(step); }
-
-        // ================================================================
-        //  AUTH – Signup & Login
-        // ================================================================
-        async function signup() {
-            const subjects = Array.from(document.querySelectorAll('.subject-checkbox:checked')).map(cb => cb.value);
-            if (!subjects.length) {
-                document.getElementById('signupError').textContent = 'Please select at least one subject.';
-                document.getElementById('signupError').classList.add('show');
-                return;
-            }
-            signupData.subjects = subjects;
-            signupData.role = 'learner';
-
-            try {
-                const res = await fetch('/api/auth/signup', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(signupData)
-                });
-                const data = await res.json();
-                if (!res.ok) {
-                    document.getElementById('signupError').textContent = data.error || 'Signup failed';
-                    document.getElementById('signupError').classList.add('show');
-                    return;
-                }
-                document.getElementById('signupSuccess').textContent = 'Account created! Please log in.';
-                document.getElementById('signupSuccess').classList.add('show');
-                setTimeout(() => {
-                    showLogin();
-                    document.getElementById('loginEmail').value = signupData.email;
-                }, 1000);
-            } catch (err) {
-                document.getElementById('signupError').textContent = 'Server error. Please try again.';
-                document.getElementById('signupError').classList.add('show');
-            }
-        }
-
-        async function login() {
-            const email = document.getElementById('loginEmail').value.trim();
-            const password = document.getElementById('loginPassword').value.trim();
-            if (!email || !password) {
-                showError('loginError', 'Please enter email and password');
-                return;
-            }
-            clearErrors();
-            setButtonLoading('loginBtn', true);
-
-            try {
-                const res = await fetch('/api/auth/login', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ email, password })
-                });
-                const data = await res.json();
-                if (!res.ok) {
-                    showError('loginError', data.error || 'Invalid credentials');
-                    setButtonLoading('loginBtn', false);
-                    return;
-                }
-                if (data.success) {
-                    const user = data.user;
-                    localStorage.setItem('synapse_user', JSON.stringify(user));
-                    showSuccess('loginSuccess', 'Login successful!');
-                    setTimeout(() => {
-                        closeAuth();
-                        document.getElementById('landingPage').classList.add('hidden');
-                        document.getElementById('dashboard').classList.add('active');
-                        initDashboard(user);
-                        setButtonLoading('loginBtn', false);
-                    }, 500);
-                }
-            } catch (err) {
-                showError('loginError', 'Network error.');
-                setButtonLoading('loginBtn', false);
-            }
-        }
-
-        // ================================================================
-        //  DASHBOARD
-        // ================================================================
-        let currentUser = null;
-
-        function initDashboard(user) {
-            currentUser = user;
-            console.log('initDashboard user:', user);
-            const fullName = `${user.firstName || ''} ${user.lastName || ''}`.trim() || 'Student';
-            document.getElementById('userName').textContent = fullName;
-            document.getElementById('userRole').textContent = user.role || 'Learner';
-            document.getElementById('userGrade').textContent = user.gradeName || 'Level: Not set';
-
-            document.getElementById('welcomeMessage').textContent = `Welcome back, ${fullName} 👋`;
-
-            const profileHtml = `
-                        <div class="profile-card">
-                            <div class="row"><span class="label">Country</span><span class="value">${user.countryName || 'Not set'}</span></div>
-                            ${user.provinceName ? `<div class="row"><span class="label">Province</span><span class="value">${user.provinceName}</span></div>` : ''}
-                            <div class="row"><span class="label">Education Level</span><span class="value">${user.educationLevelName || 'Not set'}</span></div>
-                            <div class="row"><span class="label">Curriculum</span><span class="value">${user.curriculumName || 'Not set'}</span></div>
-                            <div class="row"><span class="label">Grade/Year</span><span class="value">${user.gradeName || 'Not set'}</span></div>
-                            <div class="row"><span class="label">Subjects</span>
-                                <div class="subject-tags">
-                                    ${(user.subjects || []).map(s => `<span class="subject-tag">${s}</span>`).join('')}
-                                    ${(!user.subjects || user.subjects.length === 0) ? '<span style="color:#6b7280;">None selected</span>' : ''}
-                                </div>
-                            </div>
-                        </div>
-                    `;
-            document.getElementById('dynamicContent').innerHTML = profileHtml;
-
-            const list = document.getElementById('subjectList');
-            list.innerHTML = '';
-            if (user.subjects && user.subjects.length) {
-                user.subjects.forEach(s => {
-                    const li = document.createElement('li');
-                    li.textContent = s;
-                    li.onclick = () => openSubject(s);
-                    list.appendChild(li);
-                });
-            } else {
-                list.innerHTML = '<li style="color:#9ca3af;cursor:default;">No subjects selected</li>';
-            }
-
-            document.getElementById('progressContainer').innerHTML = `
-                        <div class="progress-item"><div class="label"><span>Overall Progress</span><span>0%</span></div><div class="bar"><div class="fill" style="width:0%;"></div></div></div>
-                    `;
-            document.getElementById('recentContainer').innerHTML = `<div style="font-size:0.85rem;color:#6b7280;">No recent activity</div>`;
-
-            fetchSubscriptionStatus(user.id);
-        }
-
-        // ================================================================
-        //  SUBSCRIPTION
-        // ================================================================
-        async function fetchSubscriptionStatus(userId) {
-            try {
-                const res = await fetch(`/api/auth/subscription/${userId}`);
-                if (res.ok) {
-                    const data = await res.json();
-                    if (data.plan) {
-                        updateBadge(data.plan, data.remainingQuestions);
-                        return;
-                    }
-                }
-                updateBadge('free', 10);
-            } catch (err) {
-                console.error('Error fetching subscription:', err);
-                updateBadge('free', 10);
-            }
-        }
-
-        function updateBadge(plan, remainingQuestions) {
-            const badge = document.getElementById('subscriptionBadge');
-            if (!badge) return;
-            if (plan === 'premium') {
-                badge.innerHTML = `<span class="sub-badge sub-active">Premium ✅</span>`;
-            } else {
-                const remaining = remainingQuestions !== undefined ? remainingQuestions : '10';
-                badge.innerHTML = `<span class="sub-badge sub-trial">Free • ${remaining} questions left today</span>
-                                    <button class="subscribe-btn" onclick="subscribe()">Subscribe</button>`;
-            }
-        }
-
-        async function subscribe() {
-            const user = JSON.parse(localStorage.getItem('synapse_user'));
-            if (!user) { alert('Please log in first.'); return; }
-            try {
-                const response = await fetch('/api/payments/create', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ userId: user.id, email: user.email })
-                });
-                const data = await response.json();
-                if (data.authorization_url) {
-                    window.location.href = data.authorization_url;
-                } else {
-                    alert('Error creating payment. Please try again.');
-                }
-            } catch (err) {
-                alert('Payment service unavailable. Please try again later.');
-            }
-        }
-
-        // ================================================================
-        //  SUBJECTS & TOPICS
-        // ================================================================
-        const DEFAULT_TOPICS = {
-            'Mathematics': ['Algebra', 'Trigonometry', 'Calculus', 'Statistics', 'Geometry'],
-            'English Home Language': ['Grammar', 'Literature', 'Writing', 'Comprehension'],
-            'Life Sciences': ['Cell Biology', 'Genetics', 'Ecology', 'Human Anatomy'],
-            'Physical Sciences': ['Mechanics', 'Thermodynamics', 'Electricity', 'Chemical Bonding'],
-            'History': ['Ancient Civilizations', 'Industrial Revolution', 'World Wars', 'Apartheid'],
-            'Geography': ['Map Skills', 'Climate', 'Plate Tectonics', 'Population'],
-            'Accounting': ['Double Entry', 'Financial Statements', 'Budgeting', 'Taxation'],
-            'Business Studies': ['Entrepreneurship', 'Marketing', 'HR', 'Finance'],
-            'Economics': ['Supply & Demand', 'Market Structures', 'Macroeconomics', 'International Trade']
-        };
-
-        function openSubject(subject) {
-            const topics = DEFAULT_TOPICS[subject] || ['Introduction', 'Basics', 'Intermediate', 'Advanced', 'Expert'];
-            document.getElementById('welcomeMessage').textContent = subject;
-            document.getElementById('welcomeSub').textContent = 'Select a topic to start learning.';
-
-            let html = `<button class="back-btn" onclick="showSubjects()">← Back to Subjects</button>`;
-            html += `<div style="margin-bottom:12px;color:#6b7280;font-size:0.9rem;">Showing ${topics.length} topics</div>`;
-            html += `<div class="topic-grid">`;
-            topics.forEach(t => {
-                html += `<div class="topic-card" onclick="openTutor('${subject}', '${t}')">
-                                <div class="title">${t}</div>
-                                <div class="meta">${subject}</div>
-                                <div class="resources"><span class="tag">Lesson</span><span class="tag">Quiz</span><span class="tag">Worksheet</span></div>
-                                <div class="status-badge">Not started</div>
-                            </div>`;
-            });
-            html += `</div>`;
-            document.getElementById('dynamicContent').innerHTML = html;
-        }
-
-        function showSubjects() {
-            const user = JSON.parse(localStorage.getItem('synapse_user'));
-            if (!user || !user.subjects || user.subjects.length === 0) {
-                document.getElementById('dynamicContent').innerHTML = `
-                            <div style="text-align:center;padding:40px;">
-                                <div style="font-size:3rem;">📚</div>
-                                <h3 style="margin:16px 0 8px;color:#0b1120;">No Subjects Yet</h3>
-                                <p style="color:#6b7280;">You haven't selected any subjects. Update your profile to add them.</p>
-                            </div>
-                        `;
-                return;
-            }
-            let html = `<div class="subject-grid">`;
-            user.subjects.forEach(name => {
-                const icon = getSubjectIcon(name);
-                html += `<div class="subject-card" onclick="openSubject('${name}')"><span class="icon">${icon}</span><span class="name">${name}</span><div class="progress-badge">0%</div></div>`;
-            });
-            html += `</div><button class="back-btn" onclick="initDashboard(user)" style="margin-top:16px;">← Back to Dashboard</button>`;
-            document.getElementById('dynamicContent').innerHTML = html;
-            document.getElementById('welcomeMessage').textContent = 'Your Subjects';
-            document.getElementById('welcomeSub').textContent = 'Select a subject to start learning.';
-        }
-
-        function getSubjectIcon(name) {
-            const icons = {
-                'Mathematics': '📐',
-                'English Home Language': '📖',
-                'Life Sciences': '🧬',
-                'Physical Sciences': '⚛️',
-                'History': '🏛️',
-                'Geography': '🌍',
-                'Accounting': '💰',
-                'Business Studies': '📊',
-                'Economics': '📈'
-            };
-            return icons[name] || '📚';
-        }
-
-        // ================================================================
-        //  AI TUTOR
-        // ================================================================
-        function openTutor(subject, topic) {
-            document.getElementById('welcomeMessage').textContent = '💬 AI Tutor';
-            document.getElementById('welcomeSub').textContent = subject + ' — ' + topic;
-            const container = document.getElementById('dynamicContent');
-            container.innerHTML = `
-                        <button class="back-btn" onclick="openSubject('${subject}')">← Back to Topics</button>
-                        <div class="tutor-container">
-                            <div class="tutor-header">
-                                <h3>AI Tutor</h3>
-                                <span class="context">${subject} - ${topic}</span>
-                            </div>
-                            <div class="chat-box" id="chatBox"><div class="msg bot">👋 Welcome! Ask me anything — I'll guide you step by step.</div></div>
-                            <div class="chat-input"><input type="text" id="chatInput" placeholder="Type your message..." onkeypress="if(event.key==='Enter') sendChat()" /><button class="btn-send" id="sendBtn" onclick="sendChat()">Send</button></div>
-                            <div class="chat-options"><input type="checkbox" id="speakToggle" /><label for="speakToggle">🔊 AI reads responses aloud</label></div>
-                        </div>
-                    `;
-            setTimeout(() => {
-                document.getElementById('chatInput').value = 'I\'m learning about "' + topic + '" in ' + subject +
-                    '. Can you teach me step by step?';
-                sendChat();
-            }, 500);
-        }
-
-        async function sendChat() {
-            const input = document.getElementById('chatInput');
-            const message = input.value.trim();
-            if (!message) return;
-            addMessage('user', message);
-            input.value = '';
-            input.disabled = true;
-            const btn = document.getElementById('sendBtn');
-            btn.disabled = true;
-            btn.innerHTML = '<span class="spinner"></span>';
-            const user = JSON.parse(localStorage.getItem('synapse_user'));
-            const context = document.getElementById('welcomeSub').textContent;
-            const parts = context.split(' — ');
-            const subject = parts[0] || 'General';
-            const topic = parts[1] || '';
-
-            try {
-                const res = await fetch('/api/chat', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        userId: user.id,
-                        message: message,
-                        subject: subject,
-                        topic: topic
-                    })
-                });
-                if (res.status === 403) {
-                    const data = await res.json();
-                    if (data.error === 'limit_reached') {
-                        addMessage('bot',
-                            `📚 **You've reached your daily limit of 10 questions.**\n\nUpgrade to Premium for unlimited AI tutoring.\n\nClick the **Subscribe** button above to continue learning without interruptions.`
-                            );
-                        return;
-                    }
-                }
-                const data = await res.json();
-                if (data.reply) {
-                    addMessage('bot', data.reply);
-                } else {
-                    addMessage('bot', '❌ ' + (data.error || 'No response'));
-                }
-            } catch (err) {
-                addMessage('bot', '❌ Server error. Please try again.');
-            } finally {
-                input.disabled = false;
-                input.focus();
-                btn.disabled = false;
-                btn.innerHTML = 'Send';
-            }
-        }
-
-        function addMessage(role, text) {
-            const box = document.getElementById('chatBox');
-            const div = document.createElement('div');
-            div.className = 'msg ' + (role === 'user' ? 'user' : 'bot');
-
-            if (role === 'bot' && typeof marked !== 'undefined') {
-                marked.setOptions({
-                    breaks: true,
-                    gfm: true,
-                    mangle: false,
-                    headerIds: false
-                });
-                div.innerHTML = marked.parse(text);
-                div.innerHTML = div.innerHTML.replace(/\\\[/g, '$$').replace(/\\\]/g, '$$');
-
-                const renderMath = () => {
-                    if (typeof renderMathInElement === 'function') {
-                        try {
-                            renderMathInElement(div, {
-                                delimiters: [
-                                    { left: '$$', right: '$$', display: true },
-                                    { left: '$', right: '$', display: false },
-                                    { left: '\\(', right: '\\)', display: false },
-                                    { left: '\\[', right: '\\]', display: true }
-                                ],
-                                throwOnError: false,
-                                trust: true,
-                                macros: {
-                                    "\\R": "\\mathbb{R}",
-                                    "\\N": "\\mathbb{N}"
-                                }
-                            });
-                            return true;
-                        } catch (e) {
-                            console.warn('KaTeX render error:', e);
-                            return false;
-                        }
-                    }
-                    return false;
-                };
-
-                if (!renderMath()) {
-                    setTimeout(() => renderMath(), 300);
-                }
-                setTimeout(() => renderMath(), 1000);
-            } else {
-                div.textContent = text;
-            }
-
-            box.appendChild(div);
-            box.scrollTop = box.scrollHeight;
-
-            if (role === 'bot' && document.getElementById('speakToggle').checked) {
-                let clean = text.replace(/#{1,6}\s?/g, '').replace(/\*\*/g, '').replace(/\*/g, '').replace(/`/g, '')
-                    .replace(/[\\*\/_\-~#`|]/g, ' ').replace(/[📚🎯✏️🤔💡✅❌]/g, '').replace(/\s+/g, ' ').trim();
-                if (clean.length > 300) clean = clean.substring(0, 300) + '...';
-                window.speechSynthesis.cancel();
-                const u = new SpeechSynthesisUtterance(clean);
-                u.lang = 'en-US';
-                u.rate = 0.9;
-                const voices = window.speechSynthesis.getVoices();
-                const preferred = voices.find(v => v.lang.includes('en') && (v.name.includes('Google') || v.name.includes('Natural')));
-                if (preferred) u.voice = preferred;
-                window.speechSynthesis.speak(u);
-            }
-        }
-
-        // ================================================================
-        //  NAVIGATION HELPERS
-        // ================================================================
-        function toggleMobileNav() {
-            document.getElementById('navLinks').classList.toggle('open');
-        }
-
-        function showInfoPage(page) {
-            document.querySelectorAll('.info-page').forEach(el => el.classList.remove('active'));
-            if (!page) {
-                if (currentUser) {
-                    document.getElementById('landingPage').classList.add('hidden');
-                    document.getElementById('dashboard').classList.add('active');
-                } else {
-                    document.getElementById('landingPage').classList.remove('hidden');
-                    document.getElementById('dashboard').classList.remove('active');
-                }
-                return;
-            }
-            document.getElementById('landingPage').classList.add('hidden');
-            document.getElementById('dashboard').classList.remove('active');
-            const target = document.getElementById('page-' + page);
-            if (target) target.classList.add('active');
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-
-        function openAuth(page) {
-            document.getElementById('authOverlay').classList.add('active');
-            if (page === 'signup') showSignup();
-            else showLogin();
-            document.body.style.overflow = 'hidden';
-        }
-
         function closeAuth() {
-            document.getElementById('authOverlay').classList.remove('active');
-            document.body.style.overflow = '';
-            clearErrors();
+            document.getElementById('authOverlay').classList.add('hidden');
         }
 
-        function showSignup() {
-            document.getElementById('loginPage').style.display = 'none';
-            document.getElementById('signupPage').style.display = 'block';
-            clearErrors();
-            goToStep(1);
-            loadProvincesHardcoded();
-            loadGradesHardcoded();
-            loadSubjectsHardcoded();
-        }
-
-        function showLogin() {
-            document.getElementById('loginPage').style.display = 'block';
-            document.getElementById('signupPage').style.display = 'none';
-            clearErrors();
-        }
-
-        function clearErrors() {
-            document.querySelectorAll('.auth-card .error, .auth-card .success').forEach(el => { el.classList.remove('show');
-                el.textContent = ''; });
-        }
-
-        function showError(id, msg) { const el = document.getElementById(id);
-            el.textContent = msg;
-            el.classList.add('show'); }
-
-        function showSuccess(id, msg) { const el = document.getElementById(id);
-            el.textContent = msg;
-            el.classList.add('show'); }
-
-        function setButtonLoading(id, loading) {
-            const btn = document.getElementById(id);
-            if (loading) { btn.disabled = true;
-                btn.innerHTML = '<span class="spinner"></span> Loading...'; } else { btn.disabled = false;
-                btn.innerHTML = btn.id === 'loginBtn' ? 'Log In' : 'Create Account'; }
-        }
-
-        function logout() {
-            if (confirm('Are you sure you want to logout?')) {
-                localStorage.removeItem('synapse_user');
-                document.getElementById('dashboard').classList.remove('active');
-                document.getElementById('landingPage').classList.remove('hidden');
-                document.getElementById('loginEmail').value = '';
-                document.getElementById('loginPassword').value = '';
-                clearErrors();
-                currentUser = null;
-                window.location.reload();
-            }
-        }
-
-        // ================================================================
-        //  GSAP & INIT
-        // ================================================================
-        document.addEventListener('DOMContentLoaded', function() {
-            if (typeof gsap !== 'undefined') {
-                gsap.from('.hero h1', { duration: 1, y: 50, opacity: 0, ease: 'power2.out' });
-                gsap.from('.hero .badge', { duration: 0.8, scale: 0.8, opacity: 0, delay: 0.3 });
-                gsap.from('.hero .cta-group', { duration: 0.8, y: 30, opacity: 0, delay: 0.6 });
-                gsap.from('.feature-card', { duration: 0.8, y: 40, opacity: 0, stagger: 0.15, delay: 0.8 });
-                gsap.from('.stat-item', { duration: 0.8, y: 30, opacity: 0, stagger: 0.15, delay: 0.9 });
-            }
-
-            if (typeof lucide !== 'undefined') {
-                lucide.createIcons();
-            }
-
-            const stored = localStorage.getItem('synapse_user');
-            if (stored) {
-                try {
-                    const user = JSON.parse(stored);
-                    currentUser = user;
-                    document.getElementById('landingPage').classList.add('hidden');
-                    document.getElementById('dashboard').classList.add('active');
-                    initDashboard(user);
-                } catch (e) { console.error('Error parsing stored user:', e); }
-            }
-
-            document.addEventListener('keydown', function(e) {
-                if (e.key === 'Enter') {
-                    if (document.getElementById('loginPage').style.display !== 'none' && document.getElementById(
-                            'authOverlay').classList.contains('active')) { login(); }
+        // ===== Fade-in on scroll (Intersection Observer) =====
+        const sections = document.querySelectorAll('.fade-section');
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
                 }
-                if (e.key === 'Escape') closeAuth();
             });
-            document.getElementById('authOverlay').addEventListener('click', function(e) { if (e.target === this)
-                closeAuth(); });
+        }, { threshold: 0.1 });
+        sections.forEach(section => observer.observe(section));
+
+        // ===== AI Canvas Illustration (animated particles & brain) =====
+        const canvas = document.getElementById('aiCanvas');
+        const ctx = canvas.getContext('2d');
+        let width, height;
+
+        function resize() {
+            const rect = canvas.parentElement.getBoundingClientRect();
+            const size = Math.min(rect.width, 500);
+            canvas.width = size * (window.devicePixelRatio || 1);
+            canvas.height = size * (window.devicePixelRatio || 1);
+            width = canvas.width;
+            height = canvas.height;
+            ctx.scale(window.devicePixelRatio || 1, window.devicePixelRatio || 1);
+        }
+        resize();
+        window.addEventListener('resize', resize);
+
+        // Particle class
+        class Particle {
+            constructor() {
+                this.reset();
+            }
+            reset() {
+                this.x = Math.random() * width;
+                this.y = Math.random() * height;
+                this.radius = 2 + Math.random() * 4;
+                this.vx = (Math.random() - 0.5) * 0.8;
+                this.vy = (Math.random() - 0.5) * 0.8;
+                this.alpha = 0.3 + Math.random() * 0.5;
+                this.color = `hsla(${270 + Math.random() * 40}, 80%, 60%, ${this.alpha})`;
+            }
+            update() {
+                this.x += this.vx;
+                this.y += this.vy;
+                if (this.x < 0 || this.x > width) this.vx *= -1;
+                if (this.y < 0 || this.y > height) this.vy *= -1;
+            }
+            draw(ctx) {
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+                ctx.fillStyle = this.color;
+                ctx.fill();
+                // glow
+                ctx.shadowColor = 'rgba(124,58,237,0.3)';
+                ctx.shadowBlur = 15;
+                ctx.fill();
+                ctx.shadowBlur = 0;
+            }
+        }
+
+        // Brain shape (simplified as a large glowing circle with lobes)
+        function drawBrain(ctx, x, y, r) {
+            // Glow
+            const grad = ctx.createRadialGradient(x, y, 0, x, y, r * 1.4);
+            grad.addColorStop(0, 'rgba(124,58,237,0.25)');
+            grad.addColorStop(0.5, 'rgba(139,92,246,0.1)');
+            grad.addColorStop(1, 'rgba(168,85,247,0)');
+            ctx.fillStyle = grad;
+            ctx.beginPath();
+            ctx.arc(x, y, r * 1.4, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Brain outline (stylised)
+            ctx.shadowColor = 'rgba(124,58,237,0.6)';
+            ctx.shadowBlur = 40;
+            ctx.beginPath();
+            ctx.arc(x, y, r, 0, Math.PI * 2);
+            ctx.fillStyle = 'rgba(124,58,237,0.15)';
+            ctx.fill();
+            ctx.strokeStyle = 'rgba(168,85,247,0.5)';
+            ctx.lineWidth = 2;
+            ctx.stroke();
+
+            // Inner brain details (simple lines)
+            ctx.shadowBlur = 0;
+            ctx.strokeStyle = 'rgba(168,85,247,0.2)';
+            ctx.lineWidth = 1;
+            for (let i = 0; i < 8; i++) {
+                const angle = (i / 8) * Math.PI * 2;
+                const dx = Math.cos(angle) * r * 0.6;
+                const dy = Math.sin(angle) * r * 0.6;
+                ctx.beginPath();
+                ctx.moveTo(x + dx, y + dy);
+                ctx.lineTo(x + dx * 1.8, y + dy * 1.8);
+                ctx.stroke();
+            }
+            // small circles as neurons
+            for (let i = 0; i < 12; i++) {
+                const angle = Math.random() * Math.PI * 2;
+                const dist = Math.random() * r * 0.8;
+                const cx = x + Math.cos(angle) * dist;
+                const cy = y + Math.sin(angle) * dist;
+                ctx.beginPath();
+                ctx.arc(cx, cy, 2 + Math.random() * 3, 0, Math.PI * 2);
+                ctx.fillStyle = `rgba(168,85,247,${0.3 + Math.random() * 0.4})`;
+                ctx.fill();
+            }
+            ctx.shadowBlur = 0;
+        }
+
+        // Connection lines between nearby particles
+        function drawConnections(ctx, particles, dist) {
+            for (let i = 0; i < particles.length; i++) {
+                for (let j = i + 1; j < particles.length; j++) {
+                    const dx = particles[i].x - particles[j].x;
+                    const dy = particles[i].y - particles[j].y;
+                    const d = Math.sqrt(dx * dx + dy * dy);
+                    if (d < dist) {
+                        ctx.beginPath();
+                        ctx.moveTo(particles[i].x, particles[i].y);
+                        ctx.lineTo(particles[j].x, particles[j].y);
+                        ctx.strokeStyle = `rgba(168,85,247,${0.08 * (1 - d / dist)})`;
+                        ctx.lineWidth = 0.5;
+                        ctx.stroke();
+                    }
+                }
+            }
+        }
+
+        const particles = [];
+        for (let i = 0; i < 90; i++) {
+            particles.push(new Particle());
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, width, height);
+            // center of canvas for brain
+            const cx = width / 2;
+            const cy = height / 2;
+            const r = Math.min(width, height) * 0.25;
+
+            // Update and draw particles
+            particles.forEach(p => p.update());
+            drawConnections(ctx, particles, Math.min(width, height) * 0.3);
+            particles.forEach(p => p.draw(ctx));
+
+            // Draw brain on top
+            drawBrain(ctx, cx, cy, r);
+
+            requestAnimationFrame(animate);
+        }
+        animate();
+
+        // ===== Fix nav on scroll (add blur) =====
+        window.addEventListener('scroll', function() {
+            const nav = document.getElementById('navbar');
+            if (window.scrollY > 10) {
+                nav.classList.add('nav-blur');
+            } else {
+                nav.classList.remove('nav-blur');
+            }
         });
     </script>
 </body>
