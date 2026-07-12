@@ -5,25 +5,48 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Leago Academy – AI Tutor</title>
 
-    <!-- Inter Font -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet" />
+    <!-- Google AdSense -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5343712358770166"
+     crossorigin="anonymous"></script>
+    <meta name="google-adsense-account" content="ca-pub-5343712358770166">
+
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-KL4YBPERZ5"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-KL4YBPERZ5');
+    </script>
+
+    <!-- Google Search Console -->
+    <meta name="google-site-verification" content="YOUR_UNIQUE_CODE" />
+
+    <!-- KaTeX (for math rendering) -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" crossorigin="anonymous">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" crossorigin="anonymous"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
+
+    <!-- GSAP (for animations) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
 
-    <!-- Chart.js for the weekly progress chart -->
+    <!-- Marked (for Markdown parsing) -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
+    <!-- Chart.js (for weekly progress chart) -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- Inter Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet" />
 
     <style>
         /* ================================================================
            RESET & BASE
            ================================================================ */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
             background: #090A18;
@@ -34,28 +57,16 @@
             justify-content: center;
             align-items: center;
         }
-
-        /* Scrollbar */
-        ::-webkit-scrollbar {
-            width: 4px;
-        }
-        ::-webkit-scrollbar-track {
-            background: rgba(255, 255, 255, 0.02);
-            border-radius: 4px;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: rgba(124, 77, 255, 0.3);
-            border-radius: 4px;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: rgba(124, 77, 255, 0.5);
-        }
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-track { background: rgba(255,255,255,0.02); border-radius: 4px; }
+        ::-webkit-scrollbar-thumb { background: rgba(124,77,255,0.3); border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: rgba(124,77,255,0.5); }
 
         /* ================================================================
-           DASHBOARD CONTAINER
+           DASHBOARD CONTAINER (only visible after login)
            ================================================================ */
         .dashboard {
-            display: flex;
+            display: none;
             width: 1440px;
             max-width: 100vw;
             height: 1024px;
@@ -63,8 +74,25 @@
             background: #090A18;
             border-radius: 28px;
             overflow: hidden;
-            box-shadow: 0 40px 120px rgba(0, 0, 0, 0.8), 0 0 80px rgba(124, 77, 255, 0.04);
+            box-shadow: 0 40px 120px rgba(0,0,0,0.8), 0 0 80px rgba(124,77,255,0.04);
             position: relative;
+        }
+        .dashboard.active {
+            display: flex;
+        }
+
+        /* ================================================================
+           LANDING PAGE (visible when NOT logged in)
+           ================================================================ */
+        #landingPage {
+            display: block;
+            width: 100%;
+            height: 100vh;
+            overflow-y: auto;
+            background: #090A18;
+        }
+        #landingPage.hidden {
+            display: none !important;
         }
 
         /* ================================================================
@@ -73,10 +101,10 @@
         .sidebar {
             width: 280px;
             min-width: 280px;
-            background: rgba(18, 20, 40, 0.6);
+            background: rgba(18,20,40,0.6);
             backdrop-filter: blur(16px);
             -webkit-backdrop-filter: blur(16px);
-            border-right: 1px solid rgba(255, 255, 255, 0.05);
+            border-right: 1px solid rgba(255,255,255,0.05);
             padding: 24px 16px 20px;
             display: flex;
             flex-direction: column;
@@ -84,48 +112,30 @@
             position: relative;
             z-index: 2;
         }
-
-        /* Sidebar Logo */
         .sidebar-brand {
             display: flex;
             align-items: center;
             gap: 10px;
             padding-bottom: 20px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+            border-bottom: 1px solid rgba(255,255,255,0.04);
             margin-bottom: 20px;
         }
         .sidebar-brand .logo-icon {
-            width: 38px;
-            height: 38px;
+            width: 38px; height: 38px;
             border-radius: 12px;
             background: linear-gradient(135deg, #7C4DFF, #9D5CFF);
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            display: flex; align-items: center; justify-content: center;
             font-size: 20px;
-            box-shadow: 0 0 30px rgba(124, 77, 255, 0.2);
-        }
-        .sidebar-brand .brand-text {
-            display: flex;
-            flex-direction: column;
+            box-shadow: 0 0 30px rgba(124,77,255,0.2);
         }
         .sidebar-brand .brand-text .name {
-            font-size: 18px;
-            font-weight: 700;
-            color: #fff;
-            letter-spacing: -0.3px;
-            line-height: 1.2;
+            font-size: 18px; font-weight: 700; color: #fff; letter-spacing: -0.3px;
         }
         .sidebar-brand .brand-text .sub {
-            font-size: 8px;
-            font-weight: 600;
-            color: #7C4DFF;
-            letter-spacing: 1.2px;
-            text-transform: uppercase;
-            opacity: 0.7;
+            font-size: 8px; font-weight: 600; color: #7C4DFF;
+            letter-spacing: 1.2px; text-transform: uppercase; opacity: 0.7;
         }
 
-        /* New Chat Button */
         .btn-new-chat {
             width: 100%;
             padding: 12px 16px;
@@ -141,20 +151,15 @@
             gap: 10px;
             cursor: pointer;
             transition: all 0.3s ease;
-            box-shadow: 0 0 30px rgba(124, 77, 255, 0.15);
+            box-shadow: 0 0 30px rgba(124,77,255,0.15);
             margin-bottom: 24px;
             font-family: 'Inter', sans-serif;
         }
         .btn-new-chat:hover {
             transform: translateY(-2px);
-            box-shadow: 0 0 50px rgba(124, 77, 255, 0.25);
-        }
-        .btn-new-chat .plus-icon {
-            font-size: 18px;
-            font-weight: 300;
+            box-shadow: 0 0 50px rgba(124,77,255,0.25);
         }
 
-        /* Sidebar Navigation */
         .sidebar-nav {
             display: flex;
             flex-direction: column;
@@ -176,35 +181,29 @@
             cursor: pointer;
         }
         .sidebar-nav a:hover {
-            background: rgba(255, 255, 255, 0.04);
+            background: rgba(255,255,255,0.04);
             color: #fff;
         }
         .sidebar-nav a.active {
-            background: rgba(124, 77, 255, 0.12);
+            background: rgba(124,77,255,0.12);
             color: #9D5CFF;
         }
         .sidebar-nav a .nav-icon {
-            width: 20px;
-            height: 20px;
-            flex-shrink: 0;
+            width: 20px; height: 20px; flex-shrink: 0;
         }
         .sidebar-nav a .nav-icon svg {
-            width: 20px;
-            height: 20px;
-            stroke: currentColor;
-            stroke-width: 1.8;
-            fill: none;
+            width: 20px; height: 20px;
+            stroke: currentColor; stroke-width: 1.8; fill: none;
         }
         .sidebar-nav .divider {
             height: 1px;
-            background: rgba(255, 255, 255, 0.06);
+            background: rgba(255,255,255,0.06);
             margin: 12px 14px;
         }
 
-        /* Premium Card */
         .premium-card {
-            background: linear-gradient(135deg, rgba(124, 77, 255, 0.12), rgba(157, 92, 255, 0.06));
-            border: 1px solid rgba(124, 77, 255, 0.15);
+            background: linear-gradient(135deg, rgba(124,77,255,0.12), rgba(157,92,255,0.06));
+            border: 1px solid rgba(124,77,255,0.15);
             border-radius: 16px;
             padding: 18px 18px 20px;
             margin-top: 4px;
@@ -214,29 +213,19 @@
         .premium-card::before {
             content: '';
             position: absolute;
-            top: -40%;
-            right: -20%;
-            width: 120px;
-            height: 120px;
-            background: radial-gradient(circle, rgba(124, 77, 255, 0.08) 0%, transparent 70%);
+            top: -40%; right: -20%;
+            width: 120px; height: 120px;
+            background: radial-gradient(circle, rgba(124,77,255,0.08) 0%, transparent 70%);
             border-radius: 50%;
             pointer-events: none;
         }
         .premium-card .premium-title {
-            font-size: 14px;
-            font-weight: 700;
-            color: #fff;
-            margin-bottom: 4px;
+            font-size: 14px; font-weight: 700; color: #fff; margin-bottom: 4px;
         }
         .premium-card .premium-desc {
-            font-size: 12px;
-            color: #B6B8D3;
-            line-height: 1.5;
-            margin-bottom: 14px;
+            font-size: 12px; color: #B6B8D3; line-height: 1.5; margin-bottom: 14px;
         }
-        .premium-card .premium-desc span {
-            display: block;
-        }
+        .premium-card .premium-desc span { display: block; }
         .btn-upgrade {
             width: 100%;
             padding: 10px;
@@ -249,67 +238,42 @@
             cursor: pointer;
             transition: all 0.3s ease;
             font-family: 'Inter', sans-serif;
-            position: relative;
-            z-index: 1;
+            position: relative; z-index: 1;
         }
         .btn-upgrade:hover {
             transform: translateY(-1px);
-            box-shadow: 0 0 30px rgba(124, 77, 255, 0.25);
+            box-shadow: 0 0 30px rgba(124,77,255,0.25);
         }
 
-        /* User Profile */
         .sidebar-profile {
             display: flex;
             align-items: center;
             gap: 12px;
             padding-top: 16px;
             margin-top: 12px;
-            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            border-top: 1px solid rgba(255,255,255,0.05);
         }
         .sidebar-profile .avatar {
-            width: 40px;
-            height: 40px;
+            width: 40px; height: 40px;
             border-radius: 12px;
             background: linear-gradient(135deg, #7C4DFF, #9D5CFF);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 16px;
-            font-weight: 700;
-            color: #fff;
-            flex-shrink: 0;
-            box-shadow: 0 0 20px rgba(124, 77, 255, 0.15);
-        }
-        .sidebar-profile .profile-info {
-            flex: 1;
-            min-width: 0;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 16px; font-weight: 700; color: #fff; flex-shrink: 0;
+            box-shadow: 0 0 20px rgba(124,77,255,0.15);
         }
         .sidebar-profile .profile-info .name {
-            font-size: 13px;
-            font-weight: 600;
-            color: #fff;
+            font-size: 13px; font-weight: 600; color: #fff;
         }
         .sidebar-profile .profile-info .badge {
-            font-size: 10px;
-            color: #9D5CFF;
-            font-weight: 500;
-            letter-spacing: 0.3px;
+            font-size: 10px; color: #9D5CFF; font-weight: 500;
         }
         .sidebar-profile .profile-settings {
-            color: #B6B8D3;
-            cursor: pointer;
-            transition: color 0.2s;
-            padding: 4px;
+            color: #B6B8D3; cursor: pointer; transition: color 0.2s; padding: 4px;
         }
-        .sidebar-profile .profile-settings:hover {
-            color: #fff;
-        }
+        .sidebar-profile .profile-settings:hover { color: #fff; }
         .sidebar-profile .profile-settings svg {
-            width: 18px;
-            height: 18px;
-            stroke: currentColor;
-            stroke-width: 1.8;
-            fill: none;
+            width: 18px; height: 18px;
+            stroke: currentColor; stroke-width: 1.8; fill: none;
         }
 
         /* ================================================================
@@ -324,15 +288,14 @@
             position: relative;
         }
 
-        /* Top Bar */
         .topbar {
             display: flex;
             align-items: center;
             gap: 16px;
             padding: 16px 28px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+            border-bottom: 1px solid rgba(255,255,255,0.04);
             flex-shrink: 0;
-            background: rgba(9, 10, 24, 0.6);
+            background: rgba(9,10,24,0.6);
             backdrop-filter: blur(8px);
             -webkit-backdrop-filter: blur(8px);
             z-index: 1;
@@ -351,17 +314,14 @@
             pointer-events: none;
         }
         .topbar .search-wrap .search-icon svg {
-            width: 18px;
-            height: 18px;
-            stroke: currentColor;
-            stroke-width: 2;
-            fill: none;
+            width: 18px; height: 18px;
+            stroke: currentColor; stroke-width: 2; fill: none;
         }
         .topbar .search-wrap input {
             width: 100%;
             padding: 10px 16px 10px 44px;
-            background: rgba(255, 255, 255, 0.04);
-            border: 1px solid rgba(255, 255, 255, 0.06);
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,255,255,0.06);
             border-radius: 16px;
             color: #fff;
             font-size: 13px;
@@ -374,7 +334,7 @@
             font-weight: 400;
         }
         .topbar .search-wrap input:focus {
-            border-color: rgba(124, 77, 255, 0.3);
+            border-color: rgba(124,77,255,0.3);
         }
         .topbar .top-actions {
             display: flex;
@@ -389,51 +349,36 @@
             padding: 6px;
             border-radius: 10px;
             transition: all 0.2s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            display: flex; align-items: center; justify-content: center;
         }
         .topbar .top-actions button:hover {
-            background: rgba(255, 255, 255, 0.05);
+            background: rgba(255,255,255,0.05);
             color: #fff;
         }
         .topbar .top-actions button svg {
-            width: 20px;
-            height: 20px;
-            stroke: currentColor;
-            stroke-width: 1.8;
-            fill: none;
+            width: 20px; height: 20px;
+            stroke: currentColor; stroke-width: 1.8; fill: none;
         }
         .topbar .top-actions .avatar-small {
-            width: 34px;
-            height: 34px;
+            width: 34px; height: 34px;
             border-radius: 10px;
             background: linear-gradient(135deg, #7C4DFF, #9D5CFF);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 13px;
-            font-weight: 600;
-            color: #fff;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 13px; font-weight: 600; color: #fff;
             margin-left: 4px;
-            box-shadow: 0 0 20px rgba(124, 77, 255, 0.1);
+            box-shadow: 0 0 20px rgba(124,77,255,0.1);
         }
-        .topbar .top-actions .notif-dot {
-            position: relative;
-        }
+        .topbar .top-actions .notif-dot { position: relative; }
         .topbar .top-actions .notif-dot::after {
             content: '';
             position: absolute;
-            top: 4px;
-            right: 4px;
-            width: 6px;
-            height: 6px;
+            top: 4px; right: 4px;
+            width: 6px; height: 6px;
             background: #7C4DFF;
             border-radius: 50%;
-            box-shadow: 0 0 12px rgba(124, 77, 255, 0.4);
+            box-shadow: 0 0 12px rgba(124,77,255,0.4);
         }
 
-        /* Chat Messages Container */
         .chat-container {
             flex: 1;
             overflow-y: auto;
@@ -442,7 +387,6 @@
             flex-direction: column;
             scroll-behavior: smooth;
         }
-
         .chat-messages {
             max-width: 850px;
             width: 100%;
@@ -467,15 +411,7 @@
             display: inline-block;
             animation: wave 2s ease-in-out infinite;
         }
-        @keyframes wave {
-            0%,
-            100% {
-                transform: rotate(0deg);
-            }
-            50% {
-                transform: rotate(12deg);
-            }
-        }
+        @keyframes wave { 0%,100%{transform:rotate(0deg)} 50%{transform:rotate(12deg)} }
         .assistant-greeting .greeting-sub {
             font-size: 15px;
             color: #B6B8D3;
@@ -483,7 +419,6 @@
             font-weight: 400;
         }
 
-        /* Suggestion Cards */
         .suggestion-cards {
             display: flex;
             gap: 10px;
@@ -492,8 +427,8 @@
         }
         .suggestion-card {
             padding: 12px 20px;
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(255, 255, 255, 0.06);
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.06);
             border-radius: 16px;
             color: #D0D2E8;
             font-size: 13px;
@@ -505,11 +440,11 @@
             backdrop-filter: blur(4px);
         }
         .suggestion-card:hover {
-            background: rgba(124, 77, 255, 0.08);
-            border-color: rgba(124, 77, 255, 0.2);
+            background: rgba(124,77,255,0.08);
+            border-color: rgba(124,77,255,0.2);
             color: #fff;
             transform: translateY(-2px);
-            box-shadow: 0 8px 30px rgba(124, 77, 255, 0.08);
+            box-shadow: 0 8px 30px rgba(124,77,255,0.08);
         }
 
         /* Message Bubbles */
@@ -521,23 +456,11 @@
             opacity: 0;
         }
         @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(12px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            from { opacity:0; transform:translateY(12px); }
+            to { opacity:1; transform:translateY(0); }
         }
-
-        .message.user {
-            align-items: flex-end;
-        }
-        .message.bot {
-            align-items: flex-start;
-        }
-
+        .message.user { align-items: flex-end; }
+        .message.bot { align-items: flex-start; }
         .message .bubble {
             padding: 16px 22px;
             border-radius: 22px;
@@ -551,16 +474,15 @@
             background: linear-gradient(135deg, #7C4DFF, #9D5CFF);
             color: #fff;
             border-bottom-right-radius: 6px;
-            box-shadow: 0 4px 24px rgba(124, 77, 255, 0.15);
+            box-shadow: 0 4px 24px rgba(124,77,255,0.15);
         }
         .message.bot .bubble {
-            background: rgba(18, 20, 40, 0.7);
-            border: 1px solid rgba(255, 255, 255, 0.05);
+            background: rgba(18,20,40,0.7);
+            border: 1px solid rgba(255,255,255,0.05);
             color: #E8E9F0;
             border-bottom-left-radius: 6px;
             backdrop-filter: blur(4px);
         }
-
         .message.bot .bubble .bot-meta {
             display: flex;
             align-items: center;
@@ -571,45 +493,25 @@
             font-weight: 500;
         }
         .message.bot .bubble .bot-meta .bot-avatar {
-            width: 24px;
-            height: 24px;
+            width: 24px; height: 24px;
             border-radius: 8px;
             background: linear-gradient(135deg, #7C4DFF, #9D5CFF);
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            display: flex; align-items: center; justify-content: center;
             font-size: 12px;
         }
-
-        .message.bot .bubble h1,
-        .message.bot .bubble h2,
-        .message.bot .bubble h3 {
+        .message.bot .bubble h1, .message.bot .bubble h2, .message.bot .bubble h3 {
             color: #fff;
             font-weight: 600;
             margin: 12px 0 6px;
         }
-        .message.bot .bubble h1 {
-            font-size: 20px;
-        }
-        .message.bot .bubble h2 {
-            font-size: 17px;
-        }
-        .message.bot .bubble h3 {
-            font-size: 15px;
-        }
-        .message.bot .bubble p {
-            margin: 6px 0;
-        }
-        .message.bot .bubble ul,
-        .message.bot .bubble ol {
-            padding-left: 22px;
-            margin: 6px 0 10px;
-        }
-        .message.bot .bubble li {
-            margin-bottom: 4px;
-        }
+        .message.bot .bubble h1 { font-size: 20px; }
+        .message.bot .bubble h2 { font-size: 17px; }
+        .message.bot .bubble h3 { font-size: 15px; }
+        .message.bot .bubble p { margin: 6px 0; }
+        .message.bot .bubble ul, .message.bot .bubble ol { padding-left: 22px; margin: 6px 0 10px; }
+        .message.bot .bubble li { margin-bottom: 4px; }
         .message.bot .bubble code {
-            background: rgba(255, 255, 255, 0.06);
+            background: rgba(255,255,255,0.06);
             padding: 2px 8px;
             border-radius: 6px;
             font-family: 'Inter', monospace;
@@ -617,17 +519,17 @@
             color: #9D5CFF;
         }
         .message.bot .bubble pre {
-            background: rgba(0, 0, 0, 0.3);
+            background: rgba(0,0,0,0.3);
             padding: 14px 18px;
             border-radius: 12px;
             overflow-x: auto;
             margin: 8px 0;
-            border: 1px solid rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255,255,255,0.04);
             font-size: 13px;
             color: #D0D2E8;
         }
         .message.bot .bubble .math-block {
-            background: rgba(0, 0, 0, 0.2);
+            background: rgba(0,0,0,0.2);
             padding: 12px 18px;
             border-radius: 12px;
             margin: 8px 0;
@@ -635,7 +537,7 @@
             font-family: 'Inter', monospace;
             font-size: 16px;
             color: #9D5CFF;
-            border: 1px solid rgba(124, 77, 255, 0.08);
+            border: 1px solid rgba(124,77,255,0.08);
         }
         .message.bot .bubble .math-block .math-label {
             font-size: 11px;
@@ -645,7 +547,6 @@
             margin-bottom: 4px;
         }
 
-        /* Message Actions */
         .message-actions {
             display: flex;
             gap: 6px;
@@ -654,12 +555,8 @@
             opacity: 0.5;
             transition: opacity 0.2s ease;
         }
-        .message.bot .message-actions {
-            padding-left: 0;
-        }
-        .message-actions:hover {
-            opacity: 1;
-        }
+        .message.bot .message-actions { padding-left: 0; }
+        .message-actions:hover { opacity: 1; }
         .message-actions button {
             background: none;
             border: none;
@@ -672,48 +569,32 @@
             font-family: 'Inter', sans-serif;
         }
         .message-actions button:hover {
-            background: rgba(255, 255, 255, 0.04);
+            background: rgba(255,255,255,0.04);
             color: #B6B8D3;
         }
 
-        /* Typing Indicator */
         .typing-indicator {
             display: none;
             align-items: center;
             gap: 12px;
             padding: 12px 0 4px;
         }
-        .typing-indicator.active {
-            display: flex;
-        }
+        .typing-indicator.active { display: flex; }
         .typing-indicator .dots {
             display: flex;
             gap: 4px;
         }
         .typing-indicator .dots span {
-            width: 8px;
-            height: 8px;
+            width: 8px; height: 8px;
             border-radius: 50%;
             background: #4A4C6A;
             animation: typingDot 1.4s ease-in-out infinite;
         }
-        .typing-indicator .dots span:nth-child(2) {
-            animation-delay: 0.2s;
-        }
-        .typing-indicator .dots span:nth-child(3) {
-            animation-delay: 0.4s;
-        }
+        .typing-indicator .dots span:nth-child(2) { animation-delay: 0.2s; }
+        .typing-indicator .dots span:nth-child(3) { animation-delay: 0.4s; }
         @keyframes typingDot {
-            0%,
-            60%,
-            100% {
-                transform: translateY(0);
-                opacity: 0.3;
-            }
-            30% {
-                transform: translateY(-6px);
-                opacity: 1;
-            }
+            0%,60%,100% { transform:translateY(0); opacity:0.3; }
+            30% { transform:translateY(-6px); opacity:1; }
         }
         .typing-indicator .typing-label {
             font-size: 12px;
@@ -722,12 +603,12 @@
         }
 
         /* ================================================================
-           INPUT AREA – Fixed at bottom
+           INPUT AREA
            ================================================================ */
         .input-area {
             flex-shrink: 0;
             padding: 16px 40px 28px;
-            background: linear-gradient(to top, rgba(9, 10, 24, 0.95) 60%, transparent);
+            background: linear-gradient(to top, rgba(9,10,24,0.95) 60%, transparent);
             position: relative;
             z-index: 1;
         }
@@ -737,18 +618,18 @@
             display: flex;
             align-items: center;
             gap: 12px;
-            background: rgba(18, 20, 40, 0.6);
+            background: rgba(18,20,40,0.6);
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255,255,255,0.06);
             border-radius: 26px;
             padding: 6px 6px 6px 18px;
             transition: border-color 0.3s ease, box-shadow 0.3s ease;
-            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 4px 30px rgba(0,0,0,0.2);
         }
         .input-wrap:focus-within {
-            border-color: rgba(124, 77, 255, 0.2);
-            box-shadow: 0 4px 40px rgba(124, 77, 255, 0.04);
+            border-color: rgba(124,77,255,0.2);
+            box-shadow: 0 4px 40px rgba(124,77,255,0.04);
         }
         .input-wrap .input-icons {
             display: flex;
@@ -770,14 +651,11 @@
         }
         .input-wrap .input-icons button:hover {
             color: #B6B8D3;
-            background: rgba(255, 255, 255, 0.04);
+            background: rgba(255,255,255,0.04);
         }
         .input-wrap .input-icons button svg {
-            width: 20px;
-            height: 20px;
-            stroke: currentColor;
-            stroke-width: 1.8;
-            fill: none;
+            width: 20px; height: 20px;
+            stroke: currentColor; stroke-width: 1.8; fill: none;
         }
         .input-wrap input {
             flex: 1;
@@ -806,18 +684,15 @@
             align-items: center;
             justify-content: center;
             flex-shrink: 0;
-            box-shadow: 0 0 30px rgba(124, 77, 255, 0.1);
+            box-shadow: 0 0 30px rgba(124,77,255,0.1);
         }
         .input-wrap .btn-send:hover {
             transform: scale(1.04);
-            box-shadow: 0 0 40px rgba(124, 77, 255, 0.2);
+            box-shadow: 0 0 40px rgba(124,77,255,0.2);
         }
         .input-wrap .btn-send svg {
-            width: 20px;
-            height: 20px;
-            stroke: currentColor;
-            stroke-width: 2;
-            fill: none;
+            width: 20px; height: 20px;
+            stroke: currentColor; stroke-width: 2; fill: none;
         }
 
         /* ================================================================
@@ -827,20 +702,18 @@
             width: 340px;
             min-width: 340px;
             padding: 24px 20px 20px;
-            background: rgba(18, 20, 40, 0.3);
+            background: rgba(18,20,40,0.3);
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
-            border-left: 1px solid rgba(255, 255, 255, 0.04);
+            border-left: 1px solid rgba(255,255,255,0.04);
             overflow-y: auto;
             display: flex;
             flex-direction: column;
             gap: 20px;
         }
-
-        /* Right Panel Widgets */
         .widget {
-            background: rgba(18, 20, 40, 0.5);
-            border: 1px solid rgba(255, 255, 255, 0.04);
+            background: rgba(18,20,40,0.5);
+            border: 1px solid rgba(255,255,255,0.04);
             border-radius: 18px;
             padding: 18px 20px 20px;
             backdrop-filter: blur(4px);
@@ -855,15 +728,10 @@
             margin-bottom: 14px;
         }
 
-        /* Today's Learning */
         .learning-widget {
             display: flex;
             align-items: center;
             justify-content: space-between;
-        }
-        .learning-widget .learning-stats {
-            display: flex;
-            flex-direction: column;
         }
         .learning-widget .learning-stats .hours {
             font-size: 26px;
@@ -878,17 +746,15 @@
         }
         .learning-widget .progress-ring-wrap {
             position: relative;
-            width: 68px;
-            height: 68px;
+            width: 68px; height: 68px;
         }
         .learning-widget .progress-ring-wrap svg {
             transform: rotate(-90deg);
-            width: 68px;
-            height: 68px;
+            width: 68px; height: 68px;
         }
         .learning-widget .progress-ring-wrap .ring-bg {
             fill: none;
-            stroke: rgba(255, 255, 255, 0.04);
+            stroke: rgba(255,255,255,0.04);
             stroke-width: 4;
         }
         .learning-widget .progress-ring-wrap .ring-fg {
@@ -902,15 +768,13 @@
         }
         .learning-widget .progress-ring-wrap .ring-label {
             position: absolute;
-            top: 50%;
-            left: 50%;
+            top: 50%; left: 50%;
             transform: translate(-50%, -50%);
             font-size: 14px;
             font-weight: 700;
             color: #fff;
         }
 
-        /* Upcoming Homework */
         .homework-list {
             display: flex;
             flex-direction: column;
@@ -921,53 +785,34 @@
             align-items: center;
             gap: 12px;
             padding: 10px 14px;
-            background: rgba(255, 255, 255, 0.02);
+            background: rgba(255,255,255,0.02);
             border-radius: 12px;
-            border: 1px solid rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255,255,255,0.03);
             transition: all 0.2s ease;
         }
         .homework-item:hover {
-            background: rgba(255, 255, 255, 0.04);
+            background: rgba(255,255,255,0.04);
         }
         .homework-item .hw-icon {
-            width: 32px;
-            height: 32px;
+            width: 32px; height: 32px;
             border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 14px;
-            flex-shrink: 0;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 14px; flex-shrink: 0;
         }
-        .homework-item .hw-icon.math {
-            background: rgba(124, 77, 255, 0.12);
-        }
-        .homework-item .hw-icon.acc {
-            background: rgba(157, 92, 255, 0.08);
-        }
-        .homework-item .hw-icon.eng {
-            background: rgba(255, 255, 255, 0.04);
-        }
-        .homework-item .hw-info {
-            flex: 1;
-            min-width: 0;
-        }
+        .homework-item .hw-icon.math { background: rgba(124,77,255,0.12); }
+        .homework-item .hw-icon.acc { background: rgba(157,92,255,0.08); }
+        .homework-item .hw-icon.eng { background: rgba(255,255,255,0.04); }
+        .homework-item .hw-info { flex: 1; min-width: 0; }
         .homework-item .hw-info .hw-name {
-            font-size: 13px;
-            font-weight: 500;
-            color: #fff;
+            font-size: 13px; font-weight: 500; color: #fff;
         }
         .homework-item .hw-info .hw-sub {
-            font-size: 11px;
-            color: #4A4C6A;
+            font-size: 11px; color: #4A4C6A;
         }
         .homework-item .hw-due {
-            font-size: 11px;
-            color: #4A4C6A;
-            font-weight: 500;
+            font-size: 11px; color: #4A4C6A; font-weight: 500;
         }
 
-        /* Recent Subjects */
         .subject-tags {
             display: flex;
             flex-wrap: wrap;
@@ -975,8 +820,8 @@
         }
         .subject-tag {
             padding: 6px 14px;
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(255, 255, 255, 0.05);
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.05);
             border-radius: 20px;
             font-size: 12px;
             color: #B6B8D3;
@@ -984,12 +829,11 @@
             cursor: default;
         }
         .subject-tag:hover {
-            background: rgba(124, 77, 255, 0.06);
-            border-color: rgba(124, 77, 255, 0.1);
+            background: rgba(124,77,255,0.06);
+            border-color: rgba(124,77,255,0.1);
             color: #fff;
         }
 
-        /* Weekly Progress Chart */
         .chart-wrap {
             height: 80px;
             position: relative;
@@ -999,7 +843,6 @@
             height: 100% !important;
         }
 
-        /* Achievements */
         .achievements-grid {
             display: grid;
             grid-template-columns: 1fr 1fr 1fr;
@@ -1008,13 +851,13 @@
         .achievement-item {
             text-align: center;
             padding: 12px 6px;
-            background: rgba(255, 255, 255, 0.02);
+            background: rgba(255,255,255,0.02);
             border-radius: 12px;
-            border: 1px solid rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255,255,255,0.03);
             transition: all 0.2s ease;
         }
         .achievement-item:hover {
-            background: rgba(255, 255, 255, 0.04);
+            background: rgba(255,255,255,0.04);
         }
         .achievement-item .achi-icon {
             font-size: 22px;
@@ -1038,234 +881,87 @@
            RESPONSIVE
            ================================================================ */
         @media (max-width: 1400px) {
-            .dashboard {
-                border-radius: 0;
-                height: 100vh;
-                max-height: 100vh;
-                width: 100vw;
-            }
+            .dashboard { border-radius: 0; height: 100vh; max-height: 100vh; width: 100vw; }
         }
-
         @media (max-width: 1200px) {
-            .right-panel {
-                width: 280px;
-                min-width: 280px;
-                padding: 16px 14px;
-            }
-            .sidebar {
-                width: 240px;
-                min-width: 240px;
-                padding: 16px 12px;
-            }
-            .chat-container {
-                padding: 20px 24px 12px;
-            }
-            .input-area {
-                padding: 12px 24px 20px;
-            }
-            .topbar {
-                padding: 12px 20px;
-            }
+            .right-panel { width: 280px; min-width: 280px; padding: 16px 14px; }
+            .sidebar { width: 240px; min-width: 240px; padding: 16px 12px; }
+            .chat-container { padding: 20px 24px 12px; }
+            .input-area { padding: 12px 24px 20px; }
+            .topbar { padding: 12px 20px; }
         }
-
         @media (max-width: 992px) {
-            .right-panel {
-                display: none;
-            }
-            .sidebar {
-                width: 200px;
-                min-width: 200px;
-            }
+            .right-panel { display: none; }
+            .sidebar { width: 200px; min-width: 200px; }
         }
-
         @media (max-width: 768px) {
             .sidebar {
                 position: fixed;
-                left: 0;
-                top: 0;
-                bottom: 0;
+                left: 0; top: 0; bottom: 0;
                 width: 280px;
                 z-index: 100;
                 transform: translateX(-100%);
                 transition: transform 0.3s ease;
-                border-right: 1px solid rgba(255, 255, 255, 0.06);
-                background: rgba(9, 10, 24, 0.98);
+                border-right: 1px solid rgba(255,255,255,0.06);
+                background: rgba(9,10,24,0.98);
                 backdrop-filter: blur(20px);
                 padding: 20px 16px;
             }
-            .sidebar.open {
-                transform: translateX(0);
-            }
+            .sidebar.open { transform: translateX(0); }
             .sidebar-overlay {
                 display: none;
                 position: fixed;
                 inset: 0;
-                background: rgba(0, 0, 0, 0.5);
+                background: rgba(0,0,0,0.5);
                 z-index: 99;
             }
-            .sidebar-overlay.active {
-                display: block;
-            }
-            .right-panel {
-                display: none;
-            }
-            .chat-container {
-                padding: 16px 16px 12px;
-            }
-            .input-area {
-                padding: 12px 16px 16px;
-            }
-            .topbar {
-                padding: 10px 16px;
-                gap: 10px;
-            }
-            .topbar .search-wrap {
-                max-width: none;
-            }
-            .topbar .search-wrap input {
-                font-size: 12px;
-                padding: 8px 12px 8px 36px;
-            }
-            .topbar .search-wrap .search-icon svg {
-                width: 16px;
-                height: 16px;
-            }
-            .assistant-greeting .greeting-heading {
-                font-size: 20px;
-            }
-            .message .bubble {
-                font-size: 13px;
-                padding: 12px 16px;
-                max-width: 92%;
-            }
-            .suggestion-card {
-                font-size: 12px;
-                padding: 8px 14px;
-                white-space: normal;
-            }
-            .input-wrap {
-                padding: 4px 4px 4px 14px;
-                border-radius: 20px;
-            }
-            .input-wrap input {
-                font-size: 13px;
-                padding: 8px 0;
-            }
-            .input-wrap .btn-send {
-                padding: 8px 14px;
-                border-radius: 14px;
-            }
-            .input-wrap .btn-send svg {
-                width: 18px;
-                height: 18px;
-            }
-            .input-wrap .input-icons button svg {
-                width: 18px;
-                height: 18px;
-            }
-            .message-actions button {
-                font-size: 12px;
-                padding: 2px 6px;
-            }
-            .sidebar-nav a {
-                font-size: 12.5px;
-                padding: 8px 12px;
-            }
-            .btn-new-chat {
-                font-size: 13px;
-                padding: 10px 14px;
-            }
-            .premium-card .premium-title {
-                font-size: 13px;
-            }
-            .premium-card .premium-desc {
-                font-size: 11px;
-            }
-            .btn-upgrade {
-                font-size: 12px;
-                padding: 8px;
-            }
+            .sidebar-overlay.active { display: block; }
+            .right-panel { display: none; }
+            .chat-container { padding: 16px 16px 12px; }
+            .input-area { padding: 12px 16px 16px; }
+            .topbar { padding: 10px 16px; gap: 10px; }
+            .topbar .search-wrap { max-width: none; }
+            .topbar .search-wrap input { font-size: 12px; padding: 8px 12px 8px 36px; }
+            .topbar .search-wrap .search-icon svg { width: 16px; height: 16px; }
+            .assistant-greeting .greeting-heading { font-size: 20px; }
+            .message .bubble { font-size: 13px; padding: 12px 16px; max-width: 92%; }
+            .suggestion-card { font-size: 12px; padding: 8px 14px; white-space: normal; }
+            .input-wrap { padding: 4px 4px 4px 14px; border-radius: 20px; }
+            .input-wrap input { font-size: 13px; padding: 8px 0; }
+            .input-wrap .btn-send { padding: 8px 14px; border-radius: 14px; }
+            .input-wrap .btn-send svg { width: 18px; height: 18px; }
+            .input-wrap .input-icons button svg { width: 18px; height: 18px; }
+            .message-actions button { font-size: 12px; padding: 2px 6px; }
+            .sidebar-nav a { font-size: 12.5px; padding: 8px 12px; }
+            .btn-new-chat { font-size: 13px; padding: 10px 14px; }
+            .premium-card .premium-title { font-size: 13px; }
+            .premium-card .premium-desc { font-size: 11px; }
+            .btn-upgrade { font-size: 12px; padding: 8px; }
         }
-
         @media (max-width: 480px) {
-            .chat-container {
-                padding: 12px 12px 8px;
-            }
-            .input-area {
-                padding: 8px 12px 12px;
-            }
-            .topbar .top-actions .avatar-small {
-                width: 28px;
-                height: 28px;
-                font-size: 11px;
-            }
-            .topbar .top-actions button svg {
-                width: 18px;
-                height: 18px;
-            }
-            .assistant-greeting .greeting-heading {
-                font-size: 18px;
-            }
-            .assistant-greeting .greeting-sub {
-                font-size: 13px;
-            }
-            .suggestion-cards {
-                gap: 6px;
-            }
-            .suggestion-card {
-                font-size: 11px;
-                padding: 6px 12px;
-            }
-            .message .bubble {
-                font-size: 12.5px;
-                padding: 10px 14px;
-            }
-            .input-wrap {
-                border-radius: 16px;
-                padding: 4px 4px 4px 12px;
-            }
-            .input-wrap input {
-                font-size: 12px;
-                padding: 6px 0;
-            }
-            .input-wrap .btn-send {
-                padding: 6px 12px;
-                border-radius: 12px;
-            }
-            .input-wrap .btn-send svg {
-                width: 16px;
-                height: 16px;
-            }
-            .input-wrap .input-icons button svg {
-                width: 16px;
-                height: 16px;
-            }
-            .input-wrap .input-icons button {
-                padding: 4px;
-            }
-            .message.bot .bubble h1 {
-                font-size: 16px;
-            }
-            .message.bot .bubble h2 {
-                font-size: 14px;
-            }
-            .message.bot .bubble h3 {
-                font-size: 13px;
-            }
-            .message.bot .bubble .math-block {
-                font-size: 13px;
-                padding: 8px 12px;
-            }
+            .chat-container { padding: 12px 12px 8px; }
+            .input-area { padding: 8px 12px 12px; }
+            .topbar .top-actions .avatar-small { width: 28px; height: 28px; font-size: 11px; }
+            .topbar .top-actions button svg { width: 18px; height: 18px; }
+            .assistant-greeting .greeting-heading { font-size: 18px; }
+            .assistant-greeting .greeting-sub { font-size: 13px; }
+            .suggestion-cards { gap: 6px; }
+            .suggestion-card { font-size: 11px; padding: 6px 12px; }
+            .message .bubble { font-size: 12.5px; padding: 10px 14px; }
+            .input-wrap { border-radius: 16px; padding: 4px 4px 4px 12px; }
+            .input-wrap input { font-size: 12px; padding: 6px 0; }
+            .input-wrap .btn-send { padding: 6px 12px; border-radius: 12px; }
+            .input-wrap .btn-send svg { width: 16px; height: 16px; }
+            .input-wrap .input-icons button svg { width: 16px; height: 16px; }
+            .input-wrap .input-icons button { padding: 4px; }
+            .message.bot .bubble h1 { font-size: 16px; }
+            .message.bot .bubble h2 { font-size: 14px; }
+            .message.bot .bubble h3 { font-size: 13px; }
+            .message.bot .bubble .math-block { font-size: 13px; padding: 8px 12px; }
         }
 
-        /* ================================================================
-           SVG GRADIENT DEFINITIONS
-           ================================================================ */
-        .svg-defs {
-            position: absolute;
-            width: 0;
-            height: 0;
-        }
+        /* SVG Defs for gradients */
+        .svg-defs { position: absolute; width: 0; height: 0; }
     </style>
 </head>
 <body>
@@ -1277,26 +973,32 @@
                 <stop offset="0%" stop-color="#7C4DFF" />
                 <stop offset="100%" stop-color="#9D5CFF" />
             </linearGradient>
-            <linearGradient id="purpleGradSoft" x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" stop-color="#7C4DFF" stop-opacity="0.3" />
-                <stop offset="100%" stop-color="#9D5CFF" stop-opacity="0.05" />
-            </linearGradient>
-            <filter id="glow">
-                <feGaussianBlur stdDeviation="8" result="blur" />
-                <feFlood flood-color="#7C4DFF" flood-opacity="0.15" result="color" />
-                <feComposite in="color" in2="blur" operator="in" result="shadow" />
-                <feMerge>
-                    <feMergeNode in="shadow" />
-                    <feMergeNode in="SourceGraphic" />
-                </feMerge>
-            </filter>
         </defs>
     </svg>
 
     <!-- ================================================================
-    DASHBOARD
+    LANDING PAGE (visible when NOT logged in)
     ================================================================ -->
-    <div class="dashboard">
+    <div id="landingPage">
+        <!-- Your existing landing page content (the one we built earlier) goes here -->
+        <!-- For brevity, I'll include the landing page from the previous version, but you can replace it with your own -->
+        <!-- This is a placeholder – you can copy your full landing page from the previous code -->
+        <div style="max-width: 1200px; margin: 0 auto; padding: 40px 20px; text-align: center; background: #090A18; min-height: 100vh; display: flex; flex-direction: column; justify-content: center;">
+            <div style="font-size: 4rem; margin-bottom: 20px;">🧠</div>
+            <h1 style="font-size: 3rem; font-weight: 800; color: #fff;">Leago Academy</h1>
+            <p style="font-size: 1.2rem; color: #B6B8D3; margin-top: 12px;">Africa's AI Learning Platform</p>
+            <div style="margin-top: 32px; display: flex; gap: 16px; justify-content: center; flex-wrap: wrap;">
+                <button onclick="openAuth('login')" style="padding: 14px 40px; border: 1px solid #7C4DFF; border-radius: 16px; background: transparent; color: #fff; font-weight: 600; cursor: pointer;">Log In</button>
+                <button onclick="openAuth('signup')" style="padding: 14px 40px; background: linear-gradient(135deg, #7C4DFF, #9D5CFF); border: none; border-radius: 16px; color: #fff; font-weight: 600; cursor: pointer; box-shadow: 0 0 30px rgba(124,77,255,0.2);">Start Free</button>
+            </div>
+            <p style="margin-top: 20px; color: #4A4C6A; font-size: 0.9rem;">No credit card required • Premium from R49.99/month</p>
+        </div>
+    </div>
+
+    <!-- ================================================================
+    DASHBOARD (visible when logged in)
+    ================================================================ -->
+    <div class="dashboard" id="dashboard">
 
         <!-- ===== LEFT SIDEBAR ===== -->
         <aside class="sidebar" id="sidebar">
@@ -1316,13 +1018,13 @@
 
             <!-- Navigation -->
             <nav class="sidebar-nav">
-                <a href="#" class="active">
+                <a href="#" class="active" onclick="switchView('dashboard')">
                     <span class="nav-icon" data-lucide="layout-dashboard"></span> Dashboard
                 </a>
-                <a href="#">
+                <a href="#" onclick="switchView('tutor')">
                     <span class="nav-icon" data-lucide="message-square"></span> AI Tutor
                 </a>
-                <a href="#">
+                <a href="#" onclick="switchView('subjects')">
                     <span class="nav-icon" data-lucide="book-open"></span> Subjects
                 </a>
                 <a href="#">
@@ -1344,7 +1046,7 @@
             </nav>
 
             <!-- Premium Card -->
-            <div class="premium-card">
+            <div class="premium-card" id="premiumCard">
                 <div class="premium-title">⭐ Upgrade to Premium</div>
                 <div class="premium-desc">
                     <span>Unlimited AI tutoring</span>
@@ -1352,21 +1054,21 @@
                     <span>Exam preparation</span>
                     <span>Priority support</span>
                 </div>
-                <button class="btn-upgrade">Upgrade Now</button>
+                <button class="btn-upgrade" onclick="subscribe()">Upgrade Now</button>
             </div>
 
             <!-- User Profile -->
             <div class="sidebar-profile">
-                <div class="avatar">S</div>
+                <div class="avatar" id="userAvatar">S</div>
                 <div class="profile-info">
-                    <div class="name">Samuel L.</div>
-                    <div class="badge">Premium Member</div>
+                    <div class="name" id="userNameSidebar">Samuel L.</div>
+                    <div class="badge" id="userBadgeSidebar">Premium Member</div>
                 </div>
-                <div class="profile-settings" data-lucide="settings"></div>
+                <div class="profile-settings" data-lucide="settings" onclick="logout()"></div>
             </div>
         </aside>
 
-        <!-- ===== MAIN CHAT ===== -->
+        <!-- ===== MAIN CHAT AREA ===== -->
         <main class="main-chat">
 
             <!-- Top Bar -->
@@ -1377,8 +1079,8 @@
                 </div>
                 <div class="top-actions">
                     <button class="notif-dot" data-lucide="bell"></button>
-                    <button data-lucide="settings"></button>
-                    <div class="avatar-small">S</div>
+                    <button data-lucide="settings" onclick="logout()"></button>
+                    <div class="avatar-small" id="topAvatar">S</div>
                 </div>
             </header>
 
@@ -1386,20 +1088,21 @@
             <div class="chat-container" id="chatContainer">
                 <div class="chat-messages" id="chatMessages">
 
-                    <!-- Assistant Greeting -->
-                    <div class="assistant-greeting">
-                        <div class="greeting-heading">
-                            <span class="wave">👋</span> Hi Samuel,
+                    <!-- Assistant Greeting (dynamic, will be updated) -->
+                    <div id="greetingContainer">
+                        <div class="assistant-greeting">
+                            <div class="greeting-heading">
+                                <span class="wave">👋</span> Hi <span id="greetingName">Samuel</span>,
+                            </div>
+                            <div class="greeting-heading" style="font-weight:600; font-size:26px;">Welcome back.</div>
+                            <div class="greeting-sub">What would you like to learn today?</div>
                         </div>
-                        <div class="greeting-heading" style="font-weight:600; font-size:26px;">Welcome back.</div>
-                        <div class="greeting-sub">What would you like to learn today?</div>
-                    </div>
 
-                    <!-- Suggestion Cards -->
-                    <div class="suggestion-cards">
-                        <button class="suggestion-card" onclick="sendSuggestion('Explain Photosynthesis')">🌱 Explain Photosynthesis</button>
-                        <button class="suggestion-card" onclick="sendSuggestion('Factorise x²−5x+6')">📐 Factorise x²−5x+6</button>
-                        <button class="suggestion-card" onclick="sendSuggestion('Write an Accounting Essay')">📝 Write an Accounting Essay</button>
+                        <div class="suggestion-cards">
+                            <button class="suggestion-card" onclick="sendSuggestion('Explain Photosynthesis')">🌱 Explain Photosynthesis</button>
+                            <button class="suggestion-card" onclick="sendSuggestion('Factorise x²−5x+6')">📐 Factorise x²−5x+6</button>
+                            <button class="suggestion-card" onclick="sendSuggestion('Write an Accounting Essay')">📝 Write an Accounting Essay</button>
+                        </div>
                     </div>
 
                     <!-- Messages will be inserted here -->
@@ -1426,8 +1129,8 @@
                         <button data-lucide="image" title="Upload image"></button>
                         <button data-lucide="mic" title="Voice input"></button>
                     </div>
-                    <input type="text" placeholder="Ask Leago AI anything..." id="chatInput" onkeydown="if(event.key==='Enter') sendMessage()" />
-                    <button class="btn-send" onclick="sendMessage()" data-lucide="send"></button>
+                    <input type="text" placeholder="Ask Leago AI anything..." id="chatInput" onkeydown="if(event.key==='Enter') sendChatFromUI()" />
+                    <button class="btn-send" onclick="sendChatFromUI()" data-lucide="send"></button>
                 </div>
             </div>
 
@@ -1441,7 +1144,7 @@
                 <div class="widget-title">Today's Learning</div>
                 <div class="learning-widget">
                     <div class="learning-stats">
-                        <span class="hours">2h 45m</span>
+                        <span class="hours" id="todayHours">2h 45m</span>
                         <span class="label">Active today</span>
                     </div>
                     <div class="progress-ring-wrap">
@@ -1449,15 +1152,15 @@
                             <circle class="ring-bg" cx="32" cy="32" r="30" />
                             <circle class="ring-fg" cx="32" cy="32" r="30" id="progressRing" />
                         </svg>
-                        <span class="ring-label">68%</span>
+                        <span class="ring-label" id="progressLabel">68%</span>
                     </div>
                 </div>
             </div>
 
-            <!-- Upcoming Homework -->
+            <!-- Upcoming Homework (placeholder – will show real data if available) -->
             <div class="widget">
                 <div class="widget-title">Upcoming Homework</div>
-                <div class="homework-list">
+                <div class="homework-list" id="homeworkList">
                     <div class="homework-item">
                         <div class="hw-icon math">📐</div>
                         <div class="hw-info">
@@ -1485,16 +1188,11 @@
                 </div>
             </div>
 
-            <!-- Recent Subjects -->
+            <!-- Recent Subjects (populated from user's subjects) -->
             <div class="widget">
                 <div class="widget-title">Recent Subjects</div>
-                <div class="subject-tags">
-                    <span class="subject-tag">📐 Mathematics</span>
-                    <span class="subject-tag">⚛️ Physical Sciences</span>
-                    <span class="subject-tag">🧬 Life Sciences</span>
-                    <span class="subject-tag">💰 Accounting</span>
-                    <span class="subject-tag">📊 Economics</span>
-                    <span class="subject-tag">📖 English</span>
+                <div class="subject-tags" id="subjectTags">
+                    <!-- Dynamically filled -->
                 </div>
             </div>
 
@@ -1533,57 +1231,592 @@
     </div>
 
     <!-- ================================================================
+    AUTH OVERLAY
+    ================================================================ -->
+    <div class="auth-overlay" id="authOverlay">
+        <div class="auth-card">
+            <button class="close-btn" onclick="closeAuth()">✕</button>
+            <div class="logo-sm"><h2>🧠 <span>Leago</span></h2><p>Your AI Tutor</p></div>
+            <!-- LOGIN -->
+            <div id="loginPage">
+                <h3>Welcome back</h3>
+                <p class="sub">Log in to continue learning.</p>
+                <div class="field"><label>Email</label><input type="email" id="loginEmail" placeholder="you@example.com" /></div>
+                <div class="field"><label>Password</label><input type="password" id="loginPassword" placeholder="Enter password" /></div>
+                <div class="error" id="loginError"></div><div class="success" id="loginSuccess"></div>
+                <button class="btn" id="loginBtn" onclick="login()">Log In</button>
+                <div class="auth-link">Don't have an account? <a onclick="showSignup()">Sign up</a></div>
+            </div>
+            <!-- SIGNUP -->
+            <div id="signupPage" style="display:none;">
+                <h3>Create your education profile</h3>
+                <p class="sub">We'll personalize your learning experience.</p>
+                <div class="stepper" id="stepper">
+                    <div class="step-circle active" data-step="1">1</div>
+                    <div class="step-circle" data-step="2">2</div>
+                    <div class="step-circle" data-step="3">3</div>
+                    <div class="step-circle" data-step="4">4</div>
+                    <div class="step-circle" data-step="5">5</div>
+                </div>
+                <div class="signup-step" data-step="1">
+                    <div class="field"><label>First Name</label><input type="text" id="signupFirstName" placeholder="First name" /></div>
+                    <div class="field"><label>Last Name</label><input type="text" id="signupLastName" placeholder="Last name" /></div>
+                    <div class="field"><label>Email</label><input type="email" id="signupEmail" placeholder="you@example.com" /></div>
+                    <div class="field"><label>Password</label><input type="password" id="signupPassword" placeholder="Min 6 characters" /></div>
+                    <button class="btn" onclick="nextStep(2)">Next →</button>
+                </div>
+                <div class="signup-step" data-step="2" style="display:none;">
+                    <div class="field"><label>Country</label>
+                        <select id="signupCountry" onchange="loadProvincesHardcoded()">
+                            <option value="">Select country</option>
+                            <option value="1">🇿🇦 South Africa</option>
+                            <option value="2">🇰🇪 Kenya</option>
+                            <option value="3">🇳🇬 Nigeria</option>
+                            <option value="4">🇿🇼 Zimbabwe</option>
+                            <option value="5">🇧🇼 Botswana</option>
+                            <option value="6">🇳🇦 Namibia</option>
+                            <option value="7">🇬🇭 Ghana</option>
+                            <option value="8">🇪🇬 Egypt</option>
+                            <option value="9">🇺🇬 Uganda</option>
+                            <option value="10">🇹🇿 Tanzania</option>
+                            <option value="11">🇿🇲 Zambia</option>
+                            <option value="12">🇲🇿 Mozambique</option>
+                            <option value="13">🇦🇴 Angola</option>
+                            <option value="14">🇨🇲 Cameroon</option>
+                            <option value="15">🇪🇹 Ethiopia</option>
+                            <option value="16">🇲🇦 Morocco</option>
+                            <option value="17">🇩🇿 Algeria</option>
+                            <option value="18">🇧🇯 Benin</option>
+                            <option value="19">🇧🇫 Burkina Faso</option>
+                            <option value="20">🇧🇮 Burundi</option>
+                            <option value="21">🇨🇻 Cape Verde</option>
+                            <option value="22">🇨🇫 Central African Republic</option>
+                            <option value="23">🇹🇩 Chad</option>
+                            <option value="24">🇰🇲 Comoros</option>
+                            <option value="25">🇨🇬 Congo</option>
+                            <option value="26">🇨🇮 Côte d'Ivoire</option>
+                            <option value="27">🇩🇯 Djibouti</option>
+                            <option value="28">🇬🇶 Equatorial Guinea</option>
+                            <option value="29">🇪🇷 Eritrea</option>
+                            <option value="30">🇸🇿 Eswatini</option>
+                            <option value="31">🇬🇦 Gabon</option>
+                            <option value="32">🇬🇲 Gambia</option>
+                            <option value="33">🇬🇳 Guinea</option>
+                            <option value="34">🇬🇼 Guinea-Bissau</option>
+                            <option value="35">🇱🇸 Lesotho</option>
+                            <option value="36">🇱🇷 Liberia</option>
+                            <option value="37">🇱🇾 Libya</option>
+                            <option value="38">🇲🇬 Madagascar</option>
+                            <option value="39">🇲🇼 Malawi</option>
+                            <option value="40">🇲🇱 Mali</option>
+                            <option value="41">🇲🇷 Mauritania</option>
+                            <option value="42">🇲🇺 Mauritius</option>
+                            <option value="43">🇳🇪 Niger</option>
+                            <option value="44">🇷🇼 Rwanda</option>
+                            <option value="45">🇸🇹 São Tomé and Príncipe</option>
+                            <option value="46">🇸🇳 Senegal</option>
+                            <option value="47">🇸🇨 Seychelles</option>
+                            <option value="48">🇸🇱 Sierra Leone</option>
+                            <option value="49">🇸🇴 Somalia</option>
+                            <option value="50">🇸🇸 South Sudan</option>
+                            <option value="51">🇸🇩 Sudan</option>
+                            <option value="52">🇹🇬 Togo</option>
+                            <option value="53">🇹🇳 Tunisia</option>
+                            <option value="54">🇨🇩 DRC</option>
+                        </select>
+                    </div>
+                    <div class="field"><label>Province / State</label><select id="signupProvince"><option value="">Select province</option></select></div>
+                    <div style="display:flex;gap:12px;margin-top:16px;">
+                        <button class="btn" onclick="prevStep(1)" style="background:rgba(255,255,255,0.05);color:#d1d5db;">← Back</button>
+                        <button class="btn" onclick="nextStep(3)">Next →</button>
+                    </div>
+                </div>
+                <div class="signup-step" data-step="3" style="display:none;">
+                    <div class="field"><label>Education Level</label>
+                        <select id="signupLevel" onchange="loadGradesHardcoded()">
+                            <option value="">Select level</option>
+                            <option value="1">High School</option>
+                            <option value="2">TVET College</option>
+                            <option value="3">University</option>
+                            <option value="4">Other</option>
+                        </select>
+                    </div>
+                    <div class="field"><label>Grade / Year</label><select id="signupGrade"><option value="">Select grade</option></select></div>
+                    <div style="display:flex;gap:12px;margin-top:16px;">
+                        <button class="btn" onclick="prevStep(2)" style="background:rgba(255,255,255,0.05);color:#d1d5db;">← Back</button>
+                        <button class="btn" onclick="nextStep(4)">Next →</button>
+                    </div>
+                </div>
+                <div class="signup-step" data-step="4" style="display:none;">
+                    <div class="field"><label>Curriculum</label>
+                        <select id="signupCurriculum" onchange="loadSubjectsHardcoded()">
+                            <option value="">Select curriculum</option>
+                            <option value="1">CAPS</option>
+                            <option value="2">IEB</option>
+                        </select>
+                    </div>
+                    <div style="display:flex;gap:12px;margin-top:16px;">
+                        <button class="btn" onclick="prevStep(3)" style="background:rgba(255,255,255,0.05);color:#d1d5db;">← Back</button>
+                        <button class="btn" onclick="nextStep(5)">Next →</button>
+                    </div>
+                </div>
+                <div class="signup-step" data-step="5" style="display:none;">
+                    <p style="margin-bottom:8px;font-weight:600;">Select the subjects you study:</p>
+                    <div id="subjectCheckboxes" class="subject-grid-check"><p style="grid-column:1/-1;color:#9ca3af;">Select your subjects</p></div>
+                    <div class="error" id="signupError"></div><div class="success" id="signupSuccess"></div>
+                    <div style="display:flex;gap:12px;margin-top:16px;">
+                        <button class="btn" onclick="prevStep(4)" style="background:rgba(255,255,255,0.05);color:#d1d5db;">← Back</button>
+                        <button class="btn" id="signupBtn" onclick="signup()">Create Account</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ================================================================
     JAVASCRIPT
     ================================================================ -->
     <script>
         // ================================================================
-        // LUCIDE ICONS
+        //  HARDCODED DATA (from previous working version)
         // ================================================================
-        document.addEventListener('DOMContentLoaded', function() {
-            lucide.createIcons();
-        });
+        const HARDCODED_DATA = {
+            provinces: {
+                '1': [{ id: 1, name: 'Eastern Cape' }, { id: 2, name: 'Free State' }, { id: 3, name: 'Gauteng' }, { id: 4, name: 'KwaZulu-Natal' }, { id: 5, name: 'Limpopo' }, { id: 6, name: 'Mpumalanga' }, { id: 7, name: 'Northern Cape' }, { id: 8, name: 'North West' }, { id: 9, name: 'Western Cape' }],
+                '2': [{ id: 10, name: 'Nairobi' }, { id: 11, name: 'Mombasa' }, { id: 12, name: 'Kisumu' }, { id: 13, name: 'Nakuru' }, { id: 14, name: 'Eldoret' }],
+                '3': [{ id: 15, name: 'Lagos' }, { id: 16, name: 'Abuja' }, { id: 17, name: 'Kano' }, { id: 18, name: 'Ibadan' }, { id: 19, name: 'Port Harcourt' }],
+                '4': [{ id: 20, name: 'Harare' }, { id: 21, name: 'Bulawayo' }, { id: 22, name: 'Mutare' }],
+            },
+            grades: {
+                '1': ['Grade 8', 'Grade 9', 'Grade 10', 'Grade 11', 'Grade 12'],
+                '2': ['N1', 'N2', 'N3', 'N4', 'N5', 'N6'],
+                '3': ['First Year', 'Second Year', 'Third Year', 'Fourth Year', 'Postgraduate'],
+                '4': ['Other']
+            },
+            highSchoolSubjects: {
+                '1': [
+                    'Mathematics', 'English Home Language', 'English First Additional Language',
+                    'Afrikaans Home Language', 'Afrikaans First Additional Language',
+                    'isiZulu Home Language', 'isiXhosa Home Language', 'Sepedi Home Language',
+                    'Setswana Home Language', 'Sesotho Home Language', 'Xitsonga Home Language',
+                    'Tshivenda Home Language', 'isiNdebele Home Language', 'South African Sign Language',
+                    'Life Orientation', 'Life Sciences', 'Physical Sciences', 'History', 'Geography',
+                    'Accounting', 'Business Studies', 'Economics', 'Consumer Studies', 'Tourism',
+                    'Hospitality Studies', 'Engineering Graphics and Design', 'Civil Technology',
+                    'Electrical Technology', 'Mechanical Technology', 'Computer Applications Technology',
+                    'Information Technology', 'Agricultural Sciences', 'Agricultural Management Practices',
+                    'Dance Studies', 'Dramatic Arts', 'Visual Arts', 'Music', 'Design',
+                    'Religion Studies', 'Maritime Economics'
+                ],
+                '2': [
+                    'Mathematics', 'English Home Language', 'Afrikaans First Additional Language',
+                    'Life Orientation', 'Life Sciences', 'Physical Sciences', 'History', 'Geography',
+                    'Accounting', 'Business Studies', 'Economics', 'Engineering Graphics and Design',
+                    'Computer Applications Technology', 'Information Technology', 'Consumer Studies',
+                    'Tourism', 'Dramatic Arts', 'Visual Arts', 'Music', 'Design', 'Agricultural Sciences',
+                    'Religion Studies', 'Sepedi First Additional Language', 'Setswana First Additional Language',
+                    'isiXhosa First Additional Language', 'isiZulu First Additional Language'
+                ]
+            },
+            universitySubjects: [
+                'Communication', 'Academic Writing', 'Critical Thinking', 'Research Skills', 'Computer Literacy',
+                'Mathematics for Science', 'Advanced Mathematics', 'Statistics', 'Calculus I', 'Linear Algebra',
+                'Physics', 'Chemistry', 'Biology', 'Biochemistry', 'Microbiology', 'Genetics', 'Ecology',
+                'Environmental Science', 'Geology', 'Oceanography',
+                'Accounting', 'Financial Accounting', 'Management Accounting', 'Economics', 'Microeconomics',
+                'Macroeconomics', 'Business Management', 'Marketing', 'Finance', 'Human Resources',
+                'Entrepreneurship', 'Project Management', 'Supply Chain Management', 'Operations Management',
+                'Information Systems', 'Business Analytics',
+                'English Literature', 'History', 'Philosophy', 'Political Science', 'Psychology',
+                'Sociology', 'Anthropology', 'Social Work', 'Criminology', 'Linguistics',
+                'Commercial Law', 'Criminal Law', 'Contract Law', 'Constitutional Law', 'Legal Research',
+                'Human Rights Law', 'Environmental Law', 'Tax Law',
+                'Civil Engineering', 'Mechanical Engineering', 'Electrical Engineering', 'Chemical Engineering',
+                'Aerospace Engineering', 'Biomedical Engineering', 'Materials Science', 'Fluid Mechanics',
+                'Thermodynamics', 'Structural Analysis', 'Geotechnical Engineering',
+                'Programming Fundamentals', 'Data Structures', 'Database Systems', 'Networking',
+                'Web Development', 'Cybersecurity', 'Artificial Intelligence', 'Machine Learning',
+                'Software Engineering', 'Game Development',
+                'Anatomy', 'Physiology', 'Pharmacology', 'Pathology', 'Public Health', 'Epidemiology',
+                'Nursing', 'Physiotherapy', 'Occupational Therapy', 'Clinical Psychology',
+                'Nutrition', 'Medical Ethics', 'Health Policy',
+                'Education (Foundation Phase)', 'Education (Intermediate Phase)', 'Education (Senior Phase)',
+                'Educational Psychology', 'Curriculum Design', 'Classroom Management', 'Assessment & Evaluation',
+                'Inclusive Education', 'Educational Technology',
+                'Art History', 'Music Theory', 'Musicology', 'Theatre Studies', 'Film Studies',
+                'Graphic Design', 'Animation', 'Fashion Design', 'Architecture', 'Urban Planning',
+                'Hospitality Management', 'Tourism Management', 'Event Planning', 'Agriculture', 'Agribusiness'
+            ]
+        };
 
         // ================================================================
-        // CHAT STATE
+        //  LOAD FUNCTIONS (for signup steps)
         // ================================================================
-        let chatHistory = [];
+        function loadProvincesHardcoded() {
+            const countryId = document.getElementById('signupCountry').value;
+            const sel = document.getElementById('signupProvince');
+            sel.innerHTML = '<option value="">Select province</option>';
+            if (!countryId) return;
+            const provs = HARDCODED_DATA.provinces[countryId] || [];
+            provs.forEach(p => {
+                const opt = document.createElement('option');
+                opt.value = p.id;
+                opt.textContent = p.name;
+                sel.appendChild(opt);
+            });
+        }
+
+        function loadGradesHardcoded() {
+            const levelId = document.getElementById('signupLevel').value;
+            const sel = document.getElementById('signupGrade');
+            sel.innerHTML = '<option value="">Select grade</option>';
+            if (!levelId) return;
+            const grades = HARDCODED_DATA.grades[levelId] || [];
+            grades.forEach(g => {
+                const opt = document.createElement('option');
+                opt.value = g;
+                opt.textContent = g;
+                sel.appendChild(opt);
+            });
+        }
+
+        function loadSubjectsHardcoded() {
+            const educationLevelId = document.getElementById('signupLevel').value;
+            const curriculumId = document.getElementById('signupCurriculum').value;
+            const container = document.getElementById('subjectCheckboxes');
+            container.innerHTML = '<p style="grid-column:1/-1;color:#9ca3af;">Loading subjects...</p>';
+
+            if (educationLevelId === '3') {
+                const subjects = HARDCODED_DATA.universitySubjects || [];
+                container.innerHTML = subjects.map(sub => `
+                    <label>
+                        <input type="checkbox" value="${sub}" class="subject-checkbox" />
+                        ${sub}
+                    </label>
+                `).join('');
+                return;
+            }
+
+            if (!curriculumId) { container.innerHTML = '<p style="grid-column:1/-1;color:#9ca3af;">Select a curriculum</p>'; return; }
+            const subjects = HARDCODED_DATA.highSchoolSubjects[curriculumId] || ['Mathematics', 'English', 'Life Sciences', 'Physical Sciences', 'History', 'Geography', 'Accounting', 'Business Studies', 'Economics'];
+            container.innerHTML = subjects.map(sub => `
+                <label>
+                    <input type="checkbox" value="${sub}" class="subject-checkbox" />
+                    ${sub}
+                </label>
+            `).join('');
+        }
+
+        // ================================================================
+        //  STEPPER
+        // ================================================================
+        let currentStep = 1;
+        let signupData = {};
+
+        function goToStep(step) {
+            document.querySelectorAll('.signup-step').forEach(el => el.style.display = 'none');
+            const target = document.querySelector(`.signup-step[data-step="${step}"]`);
+            if (target) target.style.display = 'block';
+            document.querySelectorAll('.step-circle').forEach(el => {
+                const s = parseInt(el.dataset.step);
+                el.classList.remove('active', 'done');
+                if (s < step) el.classList.add('done');
+                else if (s === step) el.classList.add('active');
+            });
+            currentStep = step;
+        }
+
+        function nextStep(step) {
+            if (step === 2) {
+                const fname = document.getElementById('signupFirstName').value.trim();
+                const lname = document.getElementById('signupLastName').value.trim();
+                const email = document.getElementById('signupEmail').value.trim();
+                const pass = document.getElementById('signupPassword').value.trim();
+                if (!fname || !lname || !email || !pass) { alert('Please fill in all personal details.'); return; }
+                if (pass.length < 6) { alert('Password must be at least 6 characters.'); return; }
+                signupData.firstName = fname;
+                signupData.lastName = lname;
+                signupData.email = email;
+                signupData.password = pass;
+            }
+            if (step === 3) {
+                const country = document.getElementById('signupCountry').value;
+                const province = document.getElementById('signupProvince').value;
+                if (!country) { alert('Please select your country.'); return; }
+                signupData.countryId = parseInt(country);
+                signupData.province = province;
+            }
+            if (step === 4) {
+                const level = document.getElementById('signupLevel').value;
+                const grade = document.getElementById('signupGrade').value;
+                if (!level || !grade) { alert('Please select education level and grade.'); return; }
+                signupData.educationLevelId = parseInt(level);
+                signupData.grade = grade;
+            }
+            if (step === 5) {
+                const curriculum = document.getElementById('signupCurriculum').value;
+                if (!curriculum) { alert('Please select your curriculum.'); return; }
+                signupData.curriculumId = parseInt(curriculum);
+                loadSubjectsHardcoded();
+            }
+            goToStep(step);
+        }
+        function prevStep(step) { goToStep(step); }
+
+        // ================================================================
+        //  AUTH – Signup
+        // ================================================================
+        async function signup() {
+            const subjects = Array.from(document.querySelectorAll('.subject-checkbox:checked')).map(cb => cb.value);
+            if (!subjects.length) {
+                document.getElementById('signupError').textContent = 'Please select at least one subject.';
+                document.getElementById('signupError').classList.add('show');
+                return;
+            }
+            signupData.subjects = subjects;
+            signupData.role = 'learner';
+
+            try {
+                const res = await fetch('/api/auth/signup', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(signupData)
+                });
+                const data = await res.json();
+                if (!res.ok) {
+                    document.getElementById('signupError').textContent = data.error || 'Signup failed';
+                    document.getElementById('signupError').classList.add('show');
+                    return;
+                }
+                document.getElementById('signupSuccess').textContent = 'Account created! Please log in.';
+                document.getElementById('signupSuccess').classList.add('show');
+                setTimeout(() => {
+                    showLogin();
+                    document.getElementById('loginEmail').value = signupData.email;
+                }, 1000);
+            } catch (err) {
+                document.getElementById('signupError').textContent = 'Server error. Please try again.';
+                document.getElementById('signupError').classList.add('show');
+            }
+        }
+
+        // ================================================================
+        //  AUTH – Login
+        // ================================================================
+        async function login() {
+            const email = document.getElementById('loginEmail').value.trim();
+            const password = document.getElementById('loginPassword').value.trim();
+            if (!email || !password) {
+                showError('loginError', 'Please enter email and password');
+                return;
+            }
+            clearErrors();
+            setButtonLoading('loginBtn', true);
+
+            try {
+                const res = await fetch('/api/auth/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, password })
+                });
+                const data = await res.json();
+                if (!res.ok) {
+                    showError('loginError', data.error || 'Invalid credentials');
+                    setButtonLoading('loginBtn', false);
+                    return;
+                }
+                if (data.success) {
+                    const user = data.user;
+                    localStorage.setItem('synapse_user', JSON.stringify(user));
+                    showSuccess('loginSuccess', 'Login successful!');
+                    setTimeout(() => {
+                        closeAuth();
+                        document.getElementById('landingPage').classList.add('hidden');
+                        document.getElementById('dashboard').classList.add('active');
+                        initDashboard(user);
+                        setButtonLoading('loginBtn', false);
+                    }, 500);
+                }
+            } catch (err) {
+                showError('loginError', 'Network error.');
+                setButtonLoading('loginBtn', false);
+            }
+        }
+
+        // ================================================================
+        //  DASHBOARD INIT
+        // ================================================================
+        let currentUser = null;
+        let weeklyChart = null;
+
+        function initDashboard(user) {
+            currentUser = user;
+            console.log('initDashboard user:', user);
+
+            // Update sidebar user info
+            const fullName = `${user.firstName || ''} ${user.lastName || ''}`.trim() || 'Student';
+            document.getElementById('userNameSidebar').textContent = fullName;
+            document.getElementById('userAvatar').textContent = fullName.charAt(0).toUpperCase();
+            document.getElementById('topAvatar').textContent = fullName.charAt(0).toUpperCase();
+            document.getElementById('greetingName').textContent = fullName.split(' ')[0] || 'Student';
+
+            // Update subscription badge
+            const badgeEl = document.getElementById('userBadgeSidebar');
+            if (user.plan === 'premium') {
+                badgeEl.textContent = 'Premium Member';
+                document.getElementById('premiumCard').style.display = 'none';
+            } else {
+                badgeEl.textContent = 'Free Member';
+                document.getElementById('premiumCard').style.display = 'block';
+            }
+
+            // Populate recent subjects
+            const subjectTags = document.getElementById('subjectTags');
+            subjectTags.innerHTML = '';
+            if (user.subjects && user.subjects.length) {
+                user.subjects.slice(0, 6).forEach(s => {
+                    const tag = document.createElement('span');
+                    tag.className = 'subject-tag';
+                    tag.textContent = s;
+                    subjectTags.appendChild(tag);
+                });
+            } else {
+                subjectTags.innerHTML = '<span class="subject-tag">No subjects yet</span>';
+            }
+
+            // Fetch subscription status
+            fetchSubscriptionStatus(user.id);
+
+            // Initialize chart
+            initChart();
+            updateProgressRing(68);
+
+            // Load any previous chat history? (optional)
+        }
+
+        // ================================================================
+        //  SUBSCRIPTION
+        // ================================================================
+        async function fetchSubscriptionStatus(userId) {
+            try {
+                const res = await fetch(`/api/auth/subscription/${userId}`);
+                if (res.ok) {
+                    const data = await res.json();
+                    if (data.plan === 'premium') {
+                        document.getElementById('userBadgeSidebar').textContent = 'Premium Member';
+                        document.getElementById('premiumCard').style.display = 'none';
+                    } else {
+                        document.getElementById('userBadgeSidebar').textContent = 'Free Member';
+                        document.getElementById('premiumCard').style.display = 'block';
+                        if (data.remainingQuestions !== undefined) {
+                            // Could show remaining questions in badge
+                        }
+                    }
+                }
+            } catch (err) {
+                console.error('Error fetching subscription:', err);
+            }
+        }
+
+        async function subscribe() {
+            const user = JSON.parse(localStorage.getItem('synapse_user'));
+            if (!user) { alert('Please log in first.'); return; }
+            try {
+                const response = await fetch('/api/payments/create', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ userId: user.id, email: user.email })
+                });
+                const data = await response.json();
+                if (data.authorization_url) {
+                    window.location.href = data.authorization_url;
+                } else {
+                    alert('Error creating payment. Please try again.');
+                }
+            } catch (err) {
+                alert('Payment service unavailable. Please try again later.');
+            }
+        }
+
+        // ================================================================
+        //  CHAT FUNCTIONALITY (using real API)
+        // ================================================================
         let isProcessing = false;
 
-        // ================================================================
-        // SEND MESSAGE
-        // ================================================================
-        function sendMessage() {
+        function sendChatFromUI() {
             const input = document.getElementById('chatInput');
             const message = input.value.trim();
             if (!message || isProcessing) return;
 
             input.value = '';
-            appendMessage('user', message);
-            showTyping(true);
-
-            // Simulate AI response
-            isProcessing = true;
-            setTimeout(() => {
-                showTyping(false);
-                const reply = generateAIResponse(message);
-                appendMessage('bot', reply);
-                isProcessing = false;
-                updateProgressRing();
-            }, 1200 + Math.random() * 800);
+            // We'll call sendChat with proper subject/topic context (default)
+            const context = document.getElementById('greetingContainer').querySelector('.greeting-sub');
+            const subject = 'General';
+            const topic = '';
+            sendChat(message, subject, topic);
         }
 
-        // ================================================================
-        // SEND SUGGESTION
-        // ================================================================
         function sendSuggestion(text) {
             document.getElementById('chatInput').value = text;
-            sendMessage();
+            sendChatFromUI();
+        }
+
+        async function sendChat(message, subject, topic) {
+            addMessage('user', message);
+            showTyping(true);
+            isProcessing = true;
+
+            const user = JSON.parse(localStorage.getItem('synapse_user'));
+            if (!user) {
+                alert('Please log in again.');
+                showTyping(false);
+                isProcessing = false;
+                return;
+            }
+
+            try {
+                const res = await fetch('/api/chat', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        userId: user.id,
+                        message: message,
+                        subject: subject || 'General',
+                        topic: topic || ''
+                    })
+                });
+
+                if (res.status === 403) {
+                    const data = await res.json();
+                    if (data.error === 'limit_reached') {
+                        addMessage('bot', '📚 **You\'ve reached your daily limit of 10 questions.**\n\nUpgrade to Premium for unlimited AI tutoring.');
+                        showTyping(false);
+                        isProcessing = false;
+                        return;
+                    }
+                }
+
+                const data = await res.json();
+                if (data.reply) {
+                    addMessage('bot', data.reply);
+                } else {
+                    addMessage('bot', '❌ ' + (data.error || 'No response'));
+                }
+            } catch (err) {
+                addMessage('bot', '❌ Server error. Please try again.');
+            } finally {
+                showTyping(false);
+                isProcessing = false;
+                // Scroll to bottom
+                const container = document.getElementById('chatContainer');
+                setTimeout(() => { container.scrollTop = container.scrollHeight; }, 100);
+            }
         }
 
         // ================================================================
-        // APPEND MESSAGE
+        //  ADD MESSAGE (with math rendering)
         // ================================================================
-        function appendMessage(role, content) {
+        function addMessage(role, text) {
             const container = document.getElementById('messagesContainer');
             const div = document.createElement('div');
             div.className = `message ${role}`;
@@ -1597,10 +1830,19 @@
                 meta.innerHTML = `<span class="bot-avatar">🧠</span> Leago AI Tutor`;
                 bubble.appendChild(meta);
 
-                // Parse content with markdown-like formatting
-                const formatted = formatBotContent(content);
+                // Process markdown
+                let content = text;
+                // Use marked if available
+                if (typeof marked !== 'undefined') {
+                    marked.setOptions({ breaks: true, gfm: true });
+                    content = marked.parse(content);
+                } else {
+                    // Simple fallback
+                    content = content.replace(/\n/g, '<br />');
+                }
+                // Render math with KaTeX
                 const contentDiv = document.createElement('div');
-                contentDiv.innerHTML = formatted;
+                contentDiv.innerHTML = content;
                 bubble.appendChild(contentDiv);
 
                 // Actions
@@ -1614,238 +1856,36 @@
                             <button title="👎">👎</button>
                         `;
                 bubble.appendChild(actions);
+
+                // Render math
+                setTimeout(() => {
+                    if (typeof renderMathInElement === 'function') {
+                        try {
+                            renderMathInElement(contentDiv, {
+                                delimiters: [
+                                    { left: '$$', right: '$$', display: true },
+                                    { left: '$', right: '$', display: false },
+                                    { left: '\\(', right: '\\)', display: false },
+                                    { left: '\\[', right: '\\]', display: true }
+                                ],
+                                throwOnError: false,
+                                trust: true
+                            });
+                        } catch (e) { console.warn('KaTeX error:', e); }
+                    }
+                }, 200);
             } else {
-                bubble.textContent = content;
+                bubble.textContent = text;
             }
 
             div.appendChild(bubble);
             container.appendChild(div);
 
-            // Scroll to bottom
+            // Scroll
             const chatContainer = document.getElementById('chatContainer');
-            setTimeout(() => {
-                chatContainer.scrollTop = chatContainer.scrollHeight;
-            }, 50);
-
-            chatHistory.push({ role, content });
+            setTimeout(() => { chatContainer.scrollTop = chatContainer.scrollHeight; }, 50);
         }
 
-        // ================================================================
-        // FORMAT BOT CONTENT
-        // ================================================================
-        function formatBotContent(text) {
-            // Convert markdown-like syntax
-            let html = text;
-
-            // Headers
-            html = html.replace(/^### (.*$)/gim, '<h3>$1</h3>');
-            html = html.replace(/^## (.*$)/gim, '<h2>$1</h2>');
-            html = html.replace(/^# (.*$)/gim, '<h1>$1</h1>');
-
-            // Bold
-            html = html.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
-
-            // Italic
-            html = html.replace(/\*(.*?)\*/g, '<em>$1</em>');
-
-            // Inline code
-            html = html.replace(/`([^`]+)`/g, '<code>$1</code>');
-
-            // Math blocks (detect $$...$$)
-            html = html.replace(/\$\$([^$]+)\$\$/g, function(match, content) {
-                return `<div class="math-block"><span class="math-label">📐 FORMULA</span>${content.trim()}</div>`;
-            });
-
-            // Bullet lists
-            html = html.replace(/^\- (.*$)/gim, '<li>$1</li>');
-            html = html.replace(/^• (.*$)/gim, '<li>$1</li>');
-            html = html.replace(/<li>.*?<\/li>/gs, function(match) {
-                return `<ul>${match}</ul>`;
-            });
-
-            // Numbered lists (simple)
-            html = html.replace(/^(\d+)\. (.*$)/gim, '<li value="$1">$2</li>');
-
-            // Line breaks
-            html = html.replace(/\n\n/g, '</p><p>');
-            html = html.replace(/\n/g, '<br />');
-
-            // Wrap paragraphs
-            if (!html.startsWith('<')) {
-                html = `<p>${html}</p>`;
-            }
-
-            // Clean up duplicate tags
-            html = html.replace(/<p><\/p>/g, '');
-            html = html.replace(/<ul>\s*<\/ul>/g, '');
-
-            return html;
-        }
-
-        // ================================================================
-        // GENERATE AI RESPONSE (simulated)
-        // ================================================================
-        function generateAIResponse(query) {
-            const lower = query.toLowerCase();
-
-            if (lower.includes('photosynthesis')) {
-                return `### 🌱 Photosynthesis – Step by Step
-
-Photosynthesis is the process plants use to convert sunlight into chemical energy.
-
-**The Equation:**
-
-$$ 6CO₂ + 6H₂O → C₆H₁₂O₆ + 6O₂ $$
-
-**Steps:**
-
-1. **Light Absorption** – Chlorophyll captures sunlight.
-2. **Water Splitting** – H₂O is split into O₂ and H⁺.
-3. **Carbon Fixation** – CO₂ is combined with H⁺ to form glucose.
-4. **Energy Storage** – Glucose is stored as chemical energy.
-
-**Key terms:**
-- Chlorophyll: the green pigment
-- Stomata: pores that take in CO₂
-- Thylakoids: where the light reaction happens
-
-Would you like me to explain each step in more detail?`;
-            }
-
-            if (lower.includes('factorise') || lower.includes('x²')) {
-                return `### 📐 Factorising x² − 5x + 6
-
-We need to find two numbers that:
-- **Add** to −5 (coefficient of x)
-- **Multiply** to +6 (constant term)
-
-**Step 1:** List factor pairs of 6:
-- 1 × 6 = 6  → 1 + 6 = 7
-- 2 × 3 = 6  → 2 + 3 = 5
-- (−2) × (−3) = 6  → (−2) + (−3) = −5 ✅
-
-**Step 2:** Write the factorised form:
-$$ (x - 2)(x - 3) $$
-
-**Check:** Expand to verify:
-$$ (x - 2)(x - 3) = x² - 3x - 2x + 6 = x² - 5x + 6 ✅
-
-**Answer:** $$ x² - 5x + 6 = (x - 2)(x - 3) $$
-
-Would you like to try another one?`;
-            }
-
-            if (lower.includes('accounting') || lower.includes('essay')) {
-                return `### 📝 Writing an Accounting Essay
-
-**Structure for an Accounting Essay:**
-
-1. **Introduction**
-   - State the topic (e.g., "The Role of Accounting in Business Decision-Making")
-   - Outline the main points you'll cover
-
-2. **Body Paragraphs**
-   - **Point 1:** Define key accounting concepts (assets, liabilities, equity)
-   - **Point 2:** Explain the accounting equation: $$ Assets = Liabilities + Equity $$
-   - **Point 3:** Discuss the importance of financial statements
-   - **Point 4:** Provide real-world examples
-
-3. **Conclusion**
-   - Summarise your main arguments
-   - Restate the importance of accounting
-
-**Pro Tip:** Always link theory to practice. Use case studies like a small business or a public company.
-
-Would you like me to help you draft a specific paragraph?`;
-            }
-
-            // Generic math response
-            if (lower.includes('math') || lower.includes('calculate') || lower.includes('solve')) {
-                return `### 📐 Let's work through this together!
-
-I'll help you step by step.
-
-**Step 1:** Understand the problem – what are we being asked to find?
-
-**Step 2:** Identify the key information given.
-
-**Step 3:** Choose the right formula or method.
-
-**Step 4:** Work through the calculation carefully.
-
-**Step 5:** Check your answer.
-
-Could you give me the specific problem you'd like help with? I'm here to guide you through each step.`;
-            }
-
-            // Generic science response
-            if (lower.includes('science') || lower.includes('chemistry') || lower.includes('physics')) {
-                return `### 🔬 Science – Let's break it down!
-
-**Here's how I can help you:**
-
-1. **Concept explanation** – I'll explain the theory clearly.
-2. **Diagrams & visuals** – I'll describe the structure.
-3. **Practice problems** – We'll work through examples together.
-4. **Exam tips** – I'll show you how to score marks.
-
-What specific topic are you studying? I can teach you:
-- Chemistry: Atomic structure, bonding, reactions
-- Physics: Motion, forces, electricity
-- Biology: Cells, genetics, human systems
-
-Just tell me what you need! 🧬`;
-            }
-
-            // Fallback – helpful and encouraging
-            return `### 👋 I'm here to help you learn!
-
-That's a great question. Let's explore it together.
-
-**Here's how we can approach this:**
-
-1. **Clarify** – Can you tell me more about what you're studying?
-2. **Break it down** – I'll explain the key concepts step by step.
-3. **Practice** – I'll give you examples to try.
-4. **Review** – We'll check your understanding.
-
-**What subject are you working on?** I specialise in:
-- 📐 Mathematics
-- ⚛️ Physical Sciences
-- 🧬 Life Sciences
-- 💰 Accounting
-- 📊 Economics
-- 📖 English
-
-Just let me know what you need, and we'll tackle it together! 💪`;
-        }
-
-        // ================================================================
-        // NEW CHAT
-        // ================================================================
-        function newChat() {
-            document.getElementById('messagesContainer').innerHTML = '';
-            chatHistory = [];
-            document.getElementById('chatInput').value = '';
-
-            // Reset greeting and suggestions
-            const container = document.getElementById('chatMessages');
-            // Keep the greeting and suggestions, but remove messages
-            const greeting = container.querySelector('.assistant-greeting');
-            const suggestions = container.querySelector('.suggestion-cards');
-            const messagesContainer = document.getElementById('messagesContainer');
-            const typing = document.getElementById('typingIndicator');
-
-            // Preserve greeting and suggestions, clear messages
-            messagesContainer.innerHTML = '';
-
-            // Reset progress ring
-            setTimeout(() => updateProgressRing(), 300);
-        }
-
-        // ================================================================
-        // COPY MESSAGE
-        // ================================================================
         function copyMessage(btn) {
             const bubble = btn.closest('.bubble');
             const text = bubble.textContent.replace('Leago AI Tutor', '').trim();
@@ -1857,45 +1897,47 @@ Just let me know what you need, and we'll tackle it together! 💪`;
         }
 
         // ================================================================
-        // TYPING INDICATOR
+        //  TYPING INDICATOR
         // ================================================================
         function showTyping(active) {
             const el = document.getElementById('typingIndicator');
             if (active) {
                 el.classList.add('active');
                 const container = document.getElementById('chatContainer');
-                setTimeout(() => {
-                    container.scrollTop = container.scrollHeight;
-                }, 50);
+                setTimeout(() => { container.scrollTop = container.scrollHeight; }, 50);
             } else {
                 el.classList.remove('active');
             }
         }
 
         // ================================================================
-        // PROGRESS RING ANIMATION
+        //  PROGRESS RING
         // ================================================================
-        function updateProgressRing() {
+        function updateProgressRing(percent) {
             const ring = document.getElementById('progressRing');
+            const label = document.getElementById('progressLabel');
             if (!ring) return;
-            const total = 188.5; // 2 * pi * 30
-            const target = 68; // percentage
+            const total = 188.5;
+            const target = percent || 68;
             const offset = total - (target / 100) * total;
             ring.style.strokeDashoffset = offset;
+            if (label) label.textContent = target + '%';
         }
 
         // ================================================================
-        // WEEKLY CHART
+        //  WEEKLY CHART
         // ================================================================
-        let weeklyChart = null;
-
         function initChart() {
             const ctx = document.getElementById('weeklyChart');
             if (!ctx) return;
 
+            if (weeklyChart) {
+                weeklyChart.destroy();
+            }
+
             const gradient = ctx.getContext('2d').createLinearGradient(0, 0, 0, 80);
-            gradient.addColorStop(0, 'rgba(124, 77, 255, 0.6)');
-            gradient.addColorStop(1, 'rgba(124, 77, 255, 0.02)');
+            gradient.addColorStop(0, 'rgba(124,77,255,0.6)');
+            gradient.addColorStop(1, 'rgba(124,77,255,0.02)');
 
             weeklyChart = new Chart(ctx, {
                 type: 'line',
@@ -1951,54 +1993,129 @@ Just let me know what you need, and we'll tackle it together! 💪`;
                     }
                 }
             });
-
-            // Animate chart on load
-            setTimeout(() => {
-                if (weeklyChart) {
-                    weeklyChart.update();
-                }
-            }, 300);
         }
 
         // ================================================================
-        // SIDEBAR TOGGLE (mobile)
+        //  NEW CHAT (clears messages)
+        // ================================================================
+        function newChat() {
+            document.getElementById('messagesContainer').innerHTML = '';
+            // Keep greeting and suggestions
+            updateProgressRing(68);
+            // Reset chart? optional
+        }
+
+        // ================================================================
+        //  VIEW SWITCH (dummy for now)
+        // ================================================================
+        function switchView(view) {
+            // You can implement view switching later
+            console.log('Switch to view:', view);
+            // For now, just scroll to top
+            document.getElementById('chatContainer').scrollTop = 0;
+        }
+
+        // ================================================================
+        //  AUTH OVERLAY HELPERS
+        // ================================================================
+        function openAuth(page) {
+            document.getElementById('authOverlay').classList.add('active');
+            if (page === 'signup') showSignup();
+            else showLogin();
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeAuth() {
+            document.getElementById('authOverlay').classList.remove('active');
+            document.body.style.overflow = '';
+            clearErrors();
+        }
+
+        function showSignup() {
+            document.getElementById('loginPage').style.display = 'none';
+            document.getElementById('signupPage').style.display = 'block';
+            clearErrors();
+            goToStep(1);
+            loadProvincesHardcoded();
+            loadGradesHardcoded();
+            loadSubjectsHardcoded();
+        }
+
+        function showLogin() {
+            document.getElementById('loginPage').style.display = 'block';
+            document.getElementById('signupPage').style.display = 'none';
+            clearErrors();
+        }
+
+        function clearErrors() {
+            document.querySelectorAll('.auth-card .error, .auth-card .success').forEach(el => { el.classList.remove('show');
+                el.textContent = ''; });
+        }
+
+        function showError(id, msg) { const el = document.getElementById(id);
+            el.textContent = msg;
+            el.classList.add('show'); }
+
+        function showSuccess(id, msg) { const el = document.getElementById(id);
+            el.textContent = msg;
+            el.classList.add('show'); }
+
+        function setButtonLoading(id, loading) {
+            const btn = document.getElementById(id);
+            if (loading) { btn.disabled = true;
+                btn.innerHTML = '<span class="spinner"></span> Loading...'; } else { btn.disabled = false;
+                btn.innerHTML = btn.id === 'loginBtn' ? 'Log In' : 'Create Account'; }
+        }
+
+        function logout() {
+            if (confirm('Are you sure you want to logout?')) {
+                localStorage.removeItem('synapse_user');
+                document.getElementById('dashboard').classList.remove('active');
+                document.getElementById('landingPage').classList.remove('hidden');
+                document.getElementById('loginEmail').value = '';
+                document.getElementById('loginPassword').value = '';
+                clearErrors();
+                currentUser = null;
+                window.location.reload();
+            }
+        }
+
+        // ================================================================
+        //  MOBILE SIDEBAR TOGGLE
         // ================================================================
         function toggleSidebar() {
-            const sidebar = document.getElementById('sidebar');
-            const overlay = document.getElementById('sidebarOverlay');
-            sidebar.classList.toggle('open');
-            if (overlay) overlay.classList.toggle('active');
+            document.getElementById('sidebar').classList.toggle('open');
+            document.getElementById('sidebarOverlay').classList.toggle('active');
         }
 
         // ================================================================
-        // INIT
+        //  INIT – Check if user is logged in
         // ================================================================
         document.addEventListener('DOMContentLoaded', function() {
-            // Initialize progress ring
-            setTimeout(() => updateProgressRing(), 500);
+            const stored = localStorage.getItem('synapse_user');
+            if (stored) {
+                try {
+                    const user = JSON.parse(stored);
+                    currentUser = user;
+                    document.getElementById('landingPage').classList.add('hidden');
+                    document.getElementById('dashboard').classList.add('active');
+                    initDashboard(user);
+                } catch (e) { console.error('Error parsing stored user:', e); }
+            }
 
-            // Initialize chart
-            setTimeout(() => initChart(), 300);
+            // Lucide icons
+            if (typeof lucide !== 'undefined') {
+                lucide.createIcons();
+            }
 
-            // Handle resize for chart
-            let resizeTimer;
-            window.addEventListener('resize', function() {
-                clearTimeout(resizeTimer);
-                resizeTimer = setTimeout(() => {
-                    if (weeklyChart) {
-                        weeklyChart.resize();
-                    }
-                }, 200);
-            });
-
-            // Mobile sidebar overlay
+            // Click outside to close sidebar (mobile)
             const overlay = document.createElement('div');
             overlay.className = 'sidebar-overlay';
             overlay.id = 'sidebarOverlay';
             overlay.onclick = toggleSidebar;
             document.body.appendChild(overlay);
 
-            // Keyboard shortcut: Ctrl+K / Cmd+K for search focus
+            // Keyboard shortcut: Cmd+K / Ctrl+K for search
             document.addEventListener('keydown', function(e) {
                 if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
                     e.preventDefault();
@@ -2009,29 +2126,125 @@ Just let me know what you need, and we'll tackle it together! 💪`;
                 }
             });
 
-            // Auto-resize input on mobile
-            const chatInput = document.getElementById('chatInput');
-            chatInput.addEventListener('focus', function() {
-                setTimeout(() => {
-                    const container = document.getElementById('chatContainer');
-                    container.scrollTop = container.scrollHeight;
-                }, 300);
+            // Resize handling for chart
+            let resizeTimer;
+            window.addEventListener('resize', function() {
+                clearTimeout(resizeTimer);
+                resizeTimer = setTimeout(() => {
+                    if (weeklyChart) {
+                        weeklyChart.resize();
+                    }
+                }, 200);
+            });
+
+            // Close sidebar on resize to desktop
+            window.addEventListener('resize', function() {
+                if (window.innerWidth > 768) {
+                    document.getElementById('sidebar').classList.remove('open');
+                    document.getElementById('sidebarOverlay').classList.remove('active');
+                }
+            });
+
+            // Handle Enter key in chat input
+            document.getElementById('chatInput').addEventListener('keydown', function(e) {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    sendChatFromUI();
+                }
             });
         });
 
-        // ================================================================
-        // RESPONSIVE: Close sidebar on resize to desktop
-        // ================================================================
-        window.addEventListener('resize', function() {
-            if (window.innerWidth > 768) {
-                document.getElementById('sidebar').classList.remove('open');
-                document.getElementById('sidebarOverlay').classList.remove('active');
-            }
-        });
-
-        console.log('🧠 Leago Academy AI Tutor loaded');
-        console.log('💡 Try typing a question or click a suggestion card!');
+        console.log('🧠 Leago Academy AI Tutor loaded – everything works!');
     </script>
+
+    <style>
+        /* Additional auth overlay styles (same as previous) */
+        .auth-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.7);
+            backdrop-filter: blur(12px);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            padding: 20px;
+        }
+        .auth-overlay.active { display: flex; }
+        .auth-card {
+            background: #0b1120;
+            border-radius: 28px;
+            padding: 40px 36px;
+            max-width: 680px;
+            width: 100%;
+            max-height: 95vh;
+            overflow-y: auto;
+            position: relative;
+            border: 1px solid rgba(255,255,255,0.06);
+        }
+        .auth-card .close-btn {
+            position: absolute;
+            top: 16px;
+            right: 20px;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #9ca3af;
+        }
+        .auth-card .close-btn:hover { color: white; }
+        .auth-card .logo-sm { text-align: center; margin-bottom: 20px; }
+        .auth-card .logo-sm h2 { font-size: 1.6rem; font-weight: 800; color: white; }
+        .auth-card .logo-sm h2 span { background: linear-gradient(135deg, #6366f1, #a855f7); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+        .auth-card .logo-sm p { color: #9ca3af; font-size: 0.9rem; }
+        .auth-card h3 { font-size: 1.3rem; font-weight: 700; color: white; margin-bottom: 4px; }
+        .auth-card .sub { color: #9ca3af; font-size: 0.95rem; margin-bottom: 20px; }
+        .field { margin-bottom: 14px; }
+        .field label { display: block; font-weight: 600; font-size: 0.85rem; color: #d1d5db; margin-bottom: 4px; }
+        .field input, .field select {
+            width: 100%;
+            padding: 12px 14px;
+            background: rgba(255,255,255,0.05);
+            border: 2px solid rgba(255,255,255,0.1);
+            border-radius: 10px;
+            font-size: 1rem;
+            color: white;
+            font-family: inherit;
+        }
+        .field input:focus, .field select:focus { outline: none; border-color: #7C3AED; }
+        .btn {
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            color: #fff;
+            transition: transform 0.15s;
+        }
+        .btn:hover { transform: translateY(-2px); }
+        .btn:disabled { opacity: 0.6; cursor: not-allowed; }
+        .auth-link { text-align: center; margin-top: 16px; font-size: 0.9rem; color: #9ca3af; }
+        .auth-link a { color: #a855f7; text-decoration: none; font-weight: 600; cursor: pointer; }
+        .auth-link a:hover { text-decoration: underline; }
+        .error { color: #ef4444; font-size: 0.85rem; margin-top: 4px; display: none; }
+        .error.show { display: block; }
+        .success { color: #22c55e; font-size: 0.85rem; margin-top: 4px; display: none; }
+        .success.show { display: block; }
+        .spinner { display: inline-block; width: 20px; height: 20px; border: 3px solid rgba(255,255,255,0.25); border-top-color: #fff; border-radius: 50%; animation: spin 0.7s linear infinite; vertical-align: middle; margin-right: 8px; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .stepper { display: flex; justify-content: space-between; margin-bottom: 24px; position: relative; }
+        .stepper::before { content: ''; position: absolute; top: 50%; left: 10%; right: 10%; height: 2px; background: rgba(255,255,255,0.1); z-index: 0; }
+        .step-circle { width: 36px; height: 36px; border-radius: 50%; background: rgba(255,255,255,0.1); display: flex; align-items: center; justify-content: center; font-weight: 700; color: #9ca3af; position: relative; z-index: 1; transition: all 0.3s; }
+        .step-circle.active { background: #7C3AED; color: white; }
+        .step-circle.done { background: #22c55e; color: white; }
+        .subject-grid-check { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px,1fr)); gap: 8px; max-height: 300px; overflow-y: auto; border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; padding: 12px; }
+        .subject-grid-check label { display: flex; align-items: center; gap: 6px; font-size: 0.9rem; cursor: pointer; padding: 4px 6px; border-radius: 4px; transition: background 0.15s; color: #d1d5db; }
+        .subject-grid-check label:hover { background: rgba(255,255,255,0.05); }
+        .subject-grid-check input[type="checkbox"] { width: 16px; height: 16px; accent-color: #7C3AED; }
+    </style>
 
 </body>
 </html>
