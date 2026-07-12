@@ -3,11 +3,12 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Leago Academy</title>
+    <title>Leago Academy – AI Learning Platform</title>
 
     <!-- ===== GOOGLE ADSENSE ===== -->
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5343712358770166"
      crossorigin="anonymous"></script>
+    <meta name="google-adsense-account" content="ca-pub-5343712358770166">
 
     <!-- Google tag (gtag.js) -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-KL4YBPERZ5"></script>
@@ -18,7 +19,7 @@
       gtag('config', 'G-KL4YBPERZ5');
     </script>
 
-    <!-- Google Search Console verification -->
+    <!-- Google Search Console -->
     <meta name="google-site-verification" content="YOUR_UNIQUE_CODE" />
 
     <!-- KaTeX -->
@@ -38,13 +39,143 @@
     <style>
         /* ===== RESET & BASE ===== */
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: 'Segoe UI', system-ui, sans-serif; background: #f8fafc; min-height: 100vh; }
+        body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; background: #f8fafc; min-height: 100vh; color: #0b1120; }
         .hidden { display: none !important; }
 
-        /* ===== LANDING PAGE ===== */
+        /* ===== BUTTONS ===== */
+        .btn-primary {
+            display: inline-block;
+            padding: 16px 40px;
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            color: white;
+            border: none;
+            border-radius: 14px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.3s;
+            box-shadow: 0 8px 30px rgba(99, 102, 241, 0.3);
+        }
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 40px rgba(99, 102, 241, 0.4);
+        }
+        .btn-secondary {
+            display: inline-block;
+            padding: 16px 40px;
+            background: transparent;
+            color: white;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-radius: 14px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+        .btn-secondary:hover {
+            border-color: white;
+            background: rgba(255,255,255,0.05);
+        }
+        .btn-outline {
+            display: inline-block;
+            padding: 14px 36px;
+            background: transparent;
+            color: #6366f1;
+            border: 2px solid #6366f1;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            text-decoration: none;
+            transition: all 0.3s;
+        }
+        .btn-outline:hover {
+            background: #6366f1;
+            color: white;
+        }
+
+        /* ===== HEADER / NAV ===== */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            background: rgba(11, 17, 32, 0.92);
+            backdrop-filter: blur(12px);
+            padding: 16px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(255,255,255,0.06);
+        }
+        .header .logo {
+            font-size: 1.6rem;
+            font-weight: 800;
+            color: white;
+            text-decoration: none;
+        }
+        .header .logo span {
+            background: linear-gradient(135deg, #818cf8, #a855f7);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .header .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 32px;
+        }
+        .header .nav-links a {
+            color: #c4b5d4;
+            text-decoration: none;
+            font-size: 0.95rem;
+            transition: color 0.2s;
+        }
+        .header .nav-links a:hover {
+            color: white;
+        }
+        .header .nav-links .btn-login {
+            background: rgba(255,255,255,0.08);
+            padding: 10px 24px;
+            border-radius: 10px;
+            border: 1px solid rgba(255,255,255,0.1);
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .header .nav-links .btn-login:hover {
+            background: rgba(255,255,255,0.15);
+        }
+        .header .nav-links .btn-start {
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            padding: 10px 28px;
+            border-radius: 10px;
+            color: white;
+            font-weight: 700;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .header .nav-links .btn-start:hover {
+            transform: scale(1.04);
+        }
+        .mobile-toggle {
+            display: none;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.8rem;
+            cursor: pointer;
+        }
+
+        /* ===== HERO ===== */
         .hero {
             background: linear-gradient(135deg, #0b1120 0%, #1a1a3e 100%);
-            padding: 80px 20px 80px;
+            padding: 140px 20px 80px;
             text-align: center;
             color: white;
             position: relative;
@@ -53,77 +184,500 @@
         .hero::before {
             content: '';
             position: absolute;
-            top: -50%;
-            right: -20%;
+            top: -30%;
+            right: -10%;
             width: 600px;
             height: 600px;
-            background: radial-gradient(circle, rgba(99, 102, 241, 0.1) 0%, transparent 70%);
+            background: radial-gradient(circle, rgba(99, 102, 241, 0.12) 0%, transparent 70%);
             border-radius: 50%;
         }
-        .hero .logo { font-size: 2.8rem; font-weight: 800; position: relative; z-index: 1; }
-        .hero .logo span { background: linear-gradient(135deg, #818cf8, #a855f7); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
-        .hero .logo-sub { font-size: 0.9rem; color: #9ca3af; display: block; margin-top: -6px; font-weight: 400; letter-spacing: 1px; text-transform: uppercase; }
-        .hero .badge { display: inline-block; background: rgba(99,102,241,0.15); border: 1px solid rgba(99,102,241,0.3); padding: 6px 20px; border-radius: 30px; font-size: 0.85rem; color: #818cf8; margin-bottom: 20px; position: relative; z-index: 1; }
-        .hero h1 { font-size: 3.5rem; font-weight: 700; max-width: 800px; margin: 0 auto 16px; line-height: 1.2; position: relative; z-index: 1; }
-        .hero h1 .highlight { background: linear-gradient(135deg, #818cf8, #a855f7); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
-        .hero .hero-subtitle { font-size: 1.1rem; color: #c4b5d4; max-width: 700px; margin: 0 auto 24px; line-height: 1.6; position: relative; z-index: 1; }
-        .hero .cta-group { display: flex; flex-direction: row; flex-wrap: wrap; justify-content: center; align-items: center; gap: 12px; position: relative; z-index: 1; }
-        .hero .cta-group .btn-primary { padding: 16px 48px; background: linear-gradient(135deg, #6366f1, #8b5cf6); color: white; border: none; border-radius: 14px; font-size: 1.1rem; font-weight: 700; cursor: pointer; text-decoration: none; display: inline-block; transition: all 0.3s; box-shadow: 0 8px 30px rgba(99,102,241,0.3); }
-        .hero .cta-group .btn-primary:hover { transform: translateY(-3px); box-shadow: 0 12px 40px rgba(99,102,241,0.4); }
-        .hero .cta-group .btn-secondary { padding: 16px 48px; background: transparent; color: white; border: 2px solid rgba(255,255,255,0.3); border-radius: 14px; font-size: 1.1rem; font-weight: 700; cursor: pointer; text-decoration: none; display: inline-block; transition: all 0.3s; }
-        .hero .cta-group .btn-secondary:hover { border-color: white; background: rgba(255,255,255,0.05); }
-        .hero .cta-group .cta-note { font-size: 0.85rem; color: #9ca3af; width: 100%; }
+        .hero::after {
+            content: '';
+            position: absolute;
+            bottom: -20%;
+            left: -10%;
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(168, 85, 247, 0.08) 0%, transparent 70%);
+            border-radius: 50%;
+        }
+        .hero .badge {
+            display: inline-block;
+            background: rgba(99,102,241,0.15);
+            border: 1px solid rgba(99,102,241,0.3);
+            padding: 8px 24px;
+            border-radius: 30px;
+            font-size: 0.85rem;
+            color: #818cf8;
+            margin-bottom: 24px;
+            position: relative;
+            z-index: 1;
+        }
+        .hero h1 {
+            font-size: 4rem;
+            font-weight: 800;
+            max-width: 850px;
+            margin: 0 auto 16px;
+            line-height: 1.15;
+            position: relative;
+            z-index: 1;
+        }
+        .hero h1 .highlight {
+            background: linear-gradient(135deg, #818cf8, #a855f7);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .hero .hero-subtitle {
+            font-size: 1.2rem;
+            color: #c4b5d4;
+            max-width: 700px;
+            margin: 0 auto 20px;
+            line-height: 1.7;
+            position: relative;
+            z-index: 1;
+        }
+        .hero .hero-subtitle .curriculum-badge {
+            display: inline-block;
+            background: rgba(255,255,255,0.06);
+            padding: 4px 16px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            color: #a855f7;
+        }
+        .hero .cta-group {
+            display: flex;
+            flex-direction: row;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+            gap: 14px;
+            position: relative;
+            z-index: 1;
+            margin-top: 8px;
+        }
+        .hero .stats {
+            display: flex;
+            justify-content: center;
+            gap: 48px;
+            margin-top: 40px;
+            position: relative;
+            z-index: 1;
+        }
+        .hero .stats .stat-item {
+            text-align: center;
+        }
+        .hero .stats .stat-number {
+            font-size: 2.2rem;
+            font-weight: 800;
+            color: white;
+        }
+        .hero .stats .stat-label {
+            font-size: 0.9rem;
+            color: #9ca3af;
+        }
 
         /* ===== FEATURES ===== */
-        .features {
+        .features-section {
             max-width: 1100px;
-            margin: 0 auto 0 !important;
-            padding: 20px 20px 0 20px;
+            margin: -30px auto 0;
+            padding: 0 20px 40px;
+            position: relative;
+            z-index: 2;
         }
-        .features .section-title { text-align: center; margin-bottom: 32px; }
-        .features .section-title h2 { font-size: 2rem; font-weight: 700; color: #0b1120; }
         .features-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 16px;
-            margin-bottom: 0;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
         }
-        .feature-card { background: white; padding: 28px 20px; border-radius: 16px; box-shadow: 0 4px 16px rgba(0,0,0,0.04); text-align: center; border: 1px solid rgba(0,0,0,0.04); transition: all 0.3s; }
-        .feature-card:hover { transform: translateY(-4px); box-shadow: 0 12px 40px rgba(0,0,0,0.08); }
-        .feature-card .icon { font-size: 2.4rem; display: block; margin-bottom: 8px; }
-        .feature-card h3 { font-size: 1rem; font-weight: 700; color: #0b1120; }
-        .feature-card p { font-size: 0.9rem; color: #6b7280; margin-top: 4px; line-height: 1.4; }
+        .feature-card {
+            background: white;
+            padding: 28px 24px;
+            border-radius: 16px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.04);
+            text-align: center;
+            border: 1px solid rgba(0,0,0,0.04);
+            transition: all 0.3s;
+        }
+        .feature-card:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 16px 48px rgba(0,0,0,0.08);
+        }
+        .feature-card .icon {
+            font-size: 2.6rem;
+            display: block;
+            margin-bottom: 10px;
+        }
+        .feature-card h3 {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #0b1120;
+            margin-bottom: 4px;
+        }
+        .feature-card p {
+            font-size: 0.9rem;
+            color: #6b7280;
+            line-height: 1.5;
+        }
+
+        /* ===== SUBJECTS ===== */
+        .subjects-section {
+            max-width: 1100px;
+            margin: 40px auto;
+            padding: 0 20px;
+            text-align: center;
+        }
+        .subjects-section h2 {
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: #0b1120;
+            margin-bottom: 8px;
+        }
+        .subjects-section .sub {
+            color: #6b7280;
+            font-size: 1.05rem;
+            margin-bottom: 28px;
+        }
+        .subjects-grid {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 12px;
+        }
+        .subject-tag {
+            background: white;
+            padding: 12px 28px;
+            border-radius: 40px;
+            border: 1px solid #e5e7eb;
+            font-weight: 600;
+            font-size: 0.95rem;
+            color: #0b1120;
+            transition: all 0.3s;
+            cursor: default;
+        }
+        .subject-tag:hover {
+            border-color: #6366f1;
+            background: #eef2ff;
+            transform: translateY(-2px);
+        }
+
+        /* ===== HOW IT WORKS ===== */
+        .how-it-works {
+            max-width: 1100px;
+            margin: 60px auto;
+            padding: 0 20px;
+            text-align: center;
+        }
+        .how-it-works h2 {
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: #0b1120;
+            margin-bottom: 8px;
+        }
+        .how-it-works .sub {
+            color: #6b7280;
+            font-size: 1.05rem;
+            margin-bottom: 36px;
+        }
+        .steps-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 16px;
+        }
+        .step-item {
+            background: white;
+            padding: 24px 16px;
+            border-radius: 16px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.04);
+            border: 1px solid #f1f3f5;
+            transition: all 0.3s;
+        }
+        .step-item:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 32px rgba(0,0,0,0.06);
+        }
+        .step-item .step-number {
+            display: inline-block;
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            color: white;
+            border-radius: 50%;
+            line-height: 40px;
+            font-weight: 800;
+            font-size: 1.1rem;
+            margin-bottom: 12px;
+        }
+        .step-item h4 {
+            font-size: 1rem;
+            font-weight: 700;
+            color: #0b1120;
+            margin-bottom: 4px;
+        }
+        .step-item p {
+            font-size: 0.85rem;
+            color: #6b7280;
+            line-height: 1.5;
+        }
+
+        /* ===== TESTIMONIALS ===== */
+        .testimonials {
+            max-width: 1100px;
+            margin: 60px auto;
+            padding: 0 20px;
+            text-align: center;
+        }
+        .testimonials h2 {
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: #0b1120;
+            margin-bottom: 8px;
+        }
+        .testimonials .sub {
+            color: #6b7280;
+            font-size: 1.05rem;
+            margin-bottom: 28px;
+        }
+        .testimonial-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 24px;
+        }
+        .testimonial-card {
+            background: white;
+            padding: 28px 24px;
+            border-radius: 16px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.04);
+            border: 1px solid #f1f3f5;
+            text-align: left;
+            transition: all 0.3s;
+        }
+        .testimonial-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 32px rgba(0,0,0,0.06);
+        }
+        .testimonial-card .quote {
+            font-size: 0.95rem;
+            color: #1f2937;
+            line-height: 1.6;
+            margin-bottom: 12px;
+        }
+        .testimonial-card .quote::before {
+            content: '"';
+            font-size: 2rem;
+            color: #6366f1;
+            font-weight: 700;
+            opacity: 0.3;
+            margin-right: 2px;
+        }
+        .testimonial-card .quote::after {
+            content: '"';
+            font-size: 2rem;
+            color: #6366f1;
+            font-weight: 700;
+            opacity: 0.3;
+            margin-left: 2px;
+        }
+        .testimonial-card .author {
+            font-weight: 700;
+            color: #0b1120;
+        }
+        .testimonial-card .author-detail {
+            font-size: 0.85rem;
+            color: #6b7280;
+        }
 
         /* ===== PRICING ===== */
-        .pricing { max-width: 1100px; margin: 0 auto 60px; padding: 0 20px; }
-        .pricing .section-title { text-align: center; margin-bottom: 32px; }
-        .pricing .section-title h2 { font-size: 2rem; font-weight: 700; color: #0b1120; }
-        .pricing .section-title p { color: #6b7280; font-size: 1.05rem; }
-        .pricing-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 24px; }
-        .pricing-card { background: white; padding: 36px 28px; border-radius: 20px; box-shadow: 0 4px 16px rgba(0,0,0,0.04); text-align: center; border: 2px solid transparent; transition: all 0.3s; }
-        .pricing-card:hover { border-color: #6366f1; }
-        .pricing-card.popular { border-color: #6366f1; background: linear-gradient(135deg, #ffffff, #f8faff); }
-        .pricing-card .plan { font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px; font-weight: 600; color: #6b7280; }
-        .pricing-card .price { font-size: 2.8rem; font-weight: 800; color: #0b1120; margin: 8px 0 4px; }
-        .pricing-card .price span { font-size: 1rem; font-weight: 400; color: #6b7280; }
-        .pricing-card .description { color: #6b7280; font-size: 0.95rem; margin-bottom: 16px; }
-        .pricing-card .features-list { list-style: none; text-align: left; margin: 16px 0 24px; }
-        .pricing-card .features-list li { padding: 6px 0; font-size: 0.95rem; color: #1f2937; display: flex; align-items: center; gap: 10px; }
-        .pricing-card .features-list li::before { content: '✓'; color: #22c55e; font-weight: 700; }
-        .pricing-card .btn-pricing { width: 100%; padding: 14px; border: none; border-radius: 12px; font-size: 1rem; font-weight: 700; cursor: pointer; background: linear-gradient(135deg, #6366f1, #8b5cf6); color: white; transition: all 0.3s; }
-        .pricing-card .btn-pricing:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(99,102,241,0.3); }
-        .pricing-card .btn-pricing.outline { background: white; color: #6366f1; border: 2px solid #6366f1; }
-        .pricing-card .btn-pricing.outline:hover { background: #f8faff; }
+        .pricing-section {
+            max-width: 1100px;
+            margin: 40px auto 60px;
+            padding: 0 20px;
+            text-align: center;
+        }
+        .pricing-section h2 {
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: #0b1120;
+            margin-bottom: 8px;
+        }
+        .pricing-section .sub {
+            color: #6b7280;
+            font-size: 1.05rem;
+            margin-bottom: 32px;
+        }
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 24px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .pricing-card {
+            background: white;
+            padding: 36px 28px;
+            border-radius: 20px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.04);
+            text-align: center;
+            border: 2px solid transparent;
+            transition: all 0.3s;
+            position: relative;
+        }
+        .pricing-card:hover {
+            border-color: #6366f1;
+        }
+        .pricing-card.popular {
+            border-color: #6366f1;
+            background: linear-gradient(135deg, #ffffff, #f8faff);
+        }
+        .pricing-card .popular-badge {
+            position: absolute;
+            top: -12px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            color: white;
+            padding: 4px 20px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .pricing-card .plan {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 600;
+            color: #6b7280;
+            margin-top: 8px;
+        }
+        .pricing-card .price {
+            font-size: 3rem;
+            font-weight: 800;
+            color: #0b1120;
+            margin: 8px 0 4px;
+        }
+        .pricing-card .price span {
+            font-size: 1rem;
+            font-weight: 400;
+            color: #6b7280;
+        }
+        .pricing-card .description {
+            color: #6b7280;
+            font-size: 0.95rem;
+            margin-bottom: 16px;
+        }
+        .pricing-card .features-list {
+            list-style: none;
+            text-align: left;
+            margin: 16px 0 24px;
+        }
+        .pricing-card .features-list li {
+            padding: 6px 0;
+            font-size: 0.95rem;
+            color: #1f2937;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .pricing-card .features-list li::before {
+            content: '✓';
+            color: #22c55e;
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+        .pricing-card .btn-pricing {
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            color: white;
+            transition: all 0.3s;
+        }
+        .pricing-card .btn-pricing:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(99,102,241,0.3);
+        }
+        .pricing-card .btn-pricing.outline {
+            background: white;
+            color: #6366f1;
+            border: 2px solid #6366f1;
+        }
+        .pricing-card .btn-pricing.outline:hover {
+            background: #f8faff;
+        }
 
-        /* ===== FAQ ===== */
-        .faq { max-width: 800px; margin: 0 auto 60px; padding: 0 20px; }
-        .faq .section-title { text-align: center; margin-bottom: 28px; }
-        .faq .section-title h2 { font-size: 2rem; font-weight: 700; color: #0b1120; }
-        .faq-item { background: white; border-radius: 14px; padding: 18px 22px; margin-bottom: 10px; border: 1px solid #e5e7eb; }
-        .faq-item .question { font-weight: 600; color: #0b1120; font-size: 1rem; }
-        .faq-item .answer { color: #4b5563; margin-top: 4px; line-height: 1.5; font-size: 0.95rem; }
+        /* ===== CTA BANNER ===== */
+        .cta-banner {
+            background: linear-gradient(135deg, #0b1120 0%, #1a1a3e 100%);
+            padding: 60px 20px;
+            text-align: center;
+            color: white;
+        }
+        .cta-banner h2 {
+            font-size: 2.4rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+        .cta-banner p {
+            color: #c4b5d4;
+            font-size: 1.1rem;
+            margin-bottom: 24px;
+        }
 
-        /* ===== AUTH OVERLAY ===== */
+        /* ===== FOOTER ===== */
+        .footer {
+            background: #0b1120;
+            color: #9ca3af;
+            padding: 40px 20px 20px;
+        }
+        .footer .inner {
+            max-width: 1100px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            gap: 32px;
+        }
+        .footer .inner h4 {
+            color: white;
+            font-size: 1.1rem;
+            margin-bottom: 12px;
+        }
+        .footer .inner a {
+            display: block;
+            color: #9ca3af;
+            text-decoration: none;
+            font-size: 0.9rem;
+            padding: 4px 0;
+            transition: color 0.2s;
+            cursor: pointer;
+        }
+        .footer .inner a:hover {
+            color: white;
+        }
+        .footer .inner .social-links {
+            display: flex;
+            gap: 16px;
+            margin-top: 8px;
+        }
+        .footer .inner .social-links a {
+            font-size: 1.2rem;
+            padding: 0;
+        }
+        .footer .bottom {
+            max-width: 1100px;
+            margin: 20px auto 0;
+            border-top: 1px solid #1a1a3e;
+            padding-top: 20px;
+            text-align: center;
+            font-size: 0.85rem;
+        }
+
+        /* ===== AUTH OVERLAY (unchanged from previous) ===== */
         .auth-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); backdrop-filter: blur(8px); justify-content: center; align-items: center; z-index: 1000; padding: 20px; }
         .auth-overlay.active { display: flex; }
         .auth-card { background: white; border-radius: 28px; padding: 40px 36px; max-width: 680px; width: 100%; max-height: 95vh; overflow-y: auto; position: relative; }
@@ -151,15 +705,11 @@
         .success.show { display: block; }
         .spinner { display: inline-block; width: 20px; height: 20px; border: 3px solid rgba(255,255,255,0.25); border-top-color: #fff; border-radius: 50%; animation: spin 0.7s linear infinite; vertical-align: middle; margin-right: 8px; }
         @keyframes spin { to { transform: rotate(360deg); } }
-
-        /* ===== STEPPER ===== */
         .stepper { display: flex; justify-content: space-between; margin-bottom: 24px; position: relative; }
         .stepper::before { content: ''; position: absolute; top: 50%; left: 10%; right: 10%; height: 2px; background: #e5e7eb; z-index: 0; }
         .step-circle { width: 36px; height: 36px; border-radius: 50%; background: #e5e7eb; display: flex; align-items: center; justify-content: center; font-weight: 700; color: #6b7280; position: relative; z-index: 1; transition: all 0.3s; }
         .step-circle.active { background: #6366f1; color: white; }
         .step-circle.done { background: #22c55e; color: white; }
-
-        /* ===== SUBJECT CHECKBOXES ===== */
         .subject-grid-check { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px,1fr)); gap: 8px; max-height: 300px; overflow-y: auto; border: 1px solid #e5e7eb; border-radius: 10px; padding: 12px; }
         .subject-grid-check label { display: flex; align-items: center; gap: 6px; font-size: 0.9rem; cursor: pointer; padding: 4px 6px; border-radius: 4px; transition: background 0.15s; }
         .subject-grid-check label:hover { background: #f3f4f6; }
@@ -177,17 +727,14 @@
         .user-info .grade-badge { font-size: 0.75rem; color: #6366f1; background: #eef2ff; padding: 2px 12px; border-radius: 12px; font-weight: 600; cursor: default; }
         .logout-btn { background: none; border: none; color: #9ca3af; font-size: 0.85rem; cursor: pointer; padding: 6px 14px; border-radius: 8px; transition: all 0.2s; font-family: inherit; }
         .logout-btn:hover { background: #f3f4f6; color: #ef4444; }
-
         .sub-badge { font-size: 0.7rem; padding: 3px 12px; border-radius: 12px; font-weight: 600; }
         .sub-trial { background: #fef3c7; color: #92400e; }
         .sub-active { background: #d1fae5; color: #065f46; }
         .sub-expired { background: #fee2e2; color: #991b1b; }
         .subscribe-btn { background: linear-gradient(135deg, #6366f1, #8b5cf6); color: white; border: none; padding: 6px 16px; border-radius: 20px; font-weight: 600; font-size: 0.8rem; cursor: pointer; font-family: inherit; margin-left: 8px; }
         .subscribe-btn:hover { transform: scale(1.02); }
-
         .dashboard-grid { display: grid; grid-template-columns: 220px 1fr 250px; gap: 20px; }
         @media (max-width: 900px) { .dashboard-grid { grid-template-columns: 1fr; } }
-
         .sidebar-left { background: white; border-radius: 16px; padding: 24px 18px; box-shadow: 0 2px 12px rgba(0,0,0,0.04); height: fit-content; }
         .sidebar-left .section-title { font-size: 0.7rem; text-transform: uppercase; color: #6b7280; font-weight: 700; letter-spacing: 0.5px; margin: 16px 0 8px; }
         .sidebar-left .section-title:first-child { margin-top: 0; }
@@ -203,7 +750,6 @@
         .recent-item { padding: 10px 12px; border-radius: 10px; background: #f8fafc; margin-bottom: 6px; cursor: pointer; font-size: 0.85rem; color: #1f2937; transition: all 0.2s; }
         .recent-item:hover { background: #eef2ff; }
         .recent-item .sub { font-size: 0.75rem; color: #6b7280; }
-
         .center-panel { background: white; border-radius: 16px; padding: 28px 32px; box-shadow: 0 2px 12px rgba(0,0,0,0.04); min-height: 500px; }
         .center-panel .welcome { font-size: 1.6rem; font-weight: 700; color: #0b1120; margin-bottom: 4px; }
         .center-panel .welcome-sub { color: #6b7280; font-size: 0.95rem; margin-bottom: 20px; }
@@ -213,7 +759,6 @@
         .profile-card .row .value { font-weight: 600; color: #0b1120; }
         .subject-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 4px; }
         .subject-tag { background: #eef2ff; color: #6366f1; padding: 2px 12px; border-radius: 12px; font-size: 0.8rem; font-weight: 600; }
-
         .sidebar-right { background: white; border-radius: 16px; padding: 24px 18px; box-shadow: 0 2px 12px rgba(0,0,0,0.04); height: fit-content; }
         .sidebar-right .section-title { font-size: 0.7rem; text-transform: uppercase; color: #6b7280; font-weight: 700; letter-spacing: 0.5px; margin: 16px 0 8px; }
         .sidebar-right .section-title:first-child { margin-top: 0; }
@@ -224,18 +769,14 @@
         .error-item { padding: 10px 14px; background: #fef2f2; border-radius: 10px; margin-bottom: 6px; font-size: 0.85rem; border-left: 3px solid #ef4444; }
         .error-item .concept { font-weight: 600; color: #991b1b; }
         .error-item .hint { font-size: 0.8rem; color: #6b7280; margin-top: 2px; }
-
-        /* ===== SUBJECT GRID (dashboard) ===== */
         .subject-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 16px; }
         .subject-card { background: white; border: 2px solid #e5e7eb; border-radius: 16px; padding: 28px 16px; text-align: center; cursor: pointer; transition: all 0.25s; box-shadow: 0 2px 8px rgba(0,0,0,0.02); }
         .subject-card:hover { border-color: #6366f1; transform: translateY(-4px); box-shadow: 0 12px 32px rgba(99,102,241,0.12); }
         .subject-card .icon { font-size: 2.8rem; display: block; margin-bottom: 6px; }
         .subject-card .name { font-weight: 700; font-size: 0.95rem; color: #0b1120; }
         .subject-card .progress-badge { display: inline-block; font-size: 0.7rem; color: #6366f1; background: #eef2ff; padding: 2px 10px; border-radius: 12px; margin-top: 6px; }
-
         .back-btn { background: none; border: 1px solid #e5e7eb; padding: 10px 20px; border-radius: 12px; cursor: pointer; font-weight: 600; color: #4b5563; transition: all 0.2s; font-family: inherit; display: inline-block; margin-bottom: 16px; }
         .back-btn:hover { background: #f3f4f6; }
-
         .topic-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 16px; margin-top: 12px; }
         .topic-card { background: white; border: 2px solid #e5e7eb; border-radius: 14px; padding: 20px 18px; transition: all 0.25s; cursor: pointer; position: relative; }
         .topic-card:hover { border-color: #6366f1; box-shadow: 0 8px 24px rgba(99,102,241,0.08); }
@@ -274,7 +815,6 @@
             padding: 4px 16px;
             border-radius: 20px;
         }
-
         .chat-box {
             background: #f8fafc;
             border-radius: 16px;
@@ -295,256 +835,318 @@
             line-height: 1.6;
             word-wrap: break-word;
         }
-        .chat-box .msg.user {
-            background: #6366f1;
-            color: #fff;
-            margin-left: auto;
-            text-align: right;
-        }
-        .chat-box .msg.bot {
-            background: #e5e7eb;
-            color: #0b1120;
-            margin-right: auto;
-        }
-        .chat-box .msg.bot h1,
-        .chat-box .msg.bot h2,
-        .chat-box .msg.bot h3,
-        .chat-box .msg.bot h4,
-        .chat-box .msg.bot h5,
-        .chat-box .msg.bot h6 {
-            margin: 8px 0 4px;
-            font-weight: 700;
-            color: #0b1120;
-        }
-        .chat-box .msg.bot ul,
-        .chat-box .msg.bot ol {
-            padding-left: 20px;
-            margin: 4px 0 8px;
-        }
-        .chat-box .msg.bot p {
-            margin: 6px 0;
-        }
-        .chat-box .msg.bot code {
-            background: #e5e7eb;
-            padding: 1px 6px;
-            border-radius: 4px;
-            font-size: 0.9em;
-        }
-        .chat-box .msg.bot pre {
-            background: #e5e7eb;
-            padding: 10px;
-            border-radius: 8px;
-            overflow-x: auto;
-        }
+        .chat-box .msg.user { background: #6366f1; color: #fff; margin-left: auto; text-align: right; }
+        .chat-box .msg.bot { background: #e5e7eb; color: #0b1120; margin-right: auto; }
+        .chat-box .msg.bot h1, .chat-box .msg.bot h2, .chat-box .msg.bot h3, .chat-box .msg.bot h4 { margin: 8px 0 4px; font-weight: 700; color: #0b1120; }
+        .chat-box .msg.bot ul, .chat-box .msg.bot ol { padding-left: 20px; margin: 4px 0 8px; }
+        .chat-box .msg.bot p { margin: 6px 0; }
+        .chat-box .msg.bot code { background: #e5e7eb; padding: 1px 6px; border-radius: 4px; font-size: 0.9em; }
+        .chat-box .msg.bot pre { background: #e5e7eb; padding: 10px; border-radius: 8px; overflow-x: auto; }
+        .chat-input { display: flex; gap: 10px; margin-bottom: 12px; }
+        .chat-input input { flex: 1; padding: 14px 18px; border: 2px solid #e5e7eb; border-radius: 14px; font-size: 0.95rem; font-family: inherit; transition: border-color 0.25s; }
+        .chat-input input:focus { outline: none; border-color: #6366f1; }
+        .chat-input .btn-send { padding: 0 28px; background: linear-gradient(135deg, #6366f1, #8b5cf6); color: #fff; border: none; border-radius: 14px; font-weight: 700; cursor: pointer; transition: all 0.25s; font-family: inherit; }
+        .chat-input .btn-send:hover { transform: scale(1.02); }
+        .chat-input .btn-send:disabled { opacity: 0.6; cursor: not-allowed; }
+        .chat-options { display: flex; align-items: center; gap: 14px; margin-top: 0px; font-size: 0.85rem; color: #6b7280; }
+        .chat-options input[type="checkbox"] { width: 18px; height: 18px; accent-color: #6366f1; cursor: pointer; }
+        .chat-options label { cursor: pointer; }
 
-        .chat-input {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 12px;
-        }
-        .chat-input input {
-            flex: 1;
-            padding: 14px 18px;
-            border: 2px solid #e5e7eb;
-            border-radius: 14px;
-            font-size: 0.95rem;
-            font-family: inherit;
-            transition: border-color 0.25s;
-        }
-        .chat-input input:focus {
-            outline: none;
-            border-color: #6366f1;
-        }
-        .chat-input .btn-send {
-            padding: 0 28px;
-            background: linear-gradient(135deg, #6366f1, #8b5cf6);
-            color: #fff;
-            border: none;
-            border-radius: 14px;
-            font-weight: 700;
-            cursor: pointer;
-            transition: all 0.25s;
-            font-family: inherit;
-        }
-        .chat-input .btn-send:hover {
-            transform: scale(1.02);
-        }
-        .chat-input .btn-send:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-        }
-
-        .chat-options {
-            display: flex;
-            align-items: center;
-            gap: 14px;
-            margin-top: 0px;
-            font-size: 0.85rem;
-            color: #6b7280;
-        }
-        .chat-options input[type="checkbox"] {
-            width: 18px;
-            height: 18px;
-            accent-color: #6366f1;
-            cursor: pointer;
-        }
-        .chat-options label {
-            cursor: pointer;
-        }
-
-        /* ===== LEGAL PAGES ===== */
         .info-page { display: none; max-width: 800px; margin: 40px auto; padding: 40px 36px; background: white; border-radius: 28px; box-shadow: 0 24px 80px rgba(0,0,0,0.08); line-height: 1.6; color: #0b1120; }
         .info-page.active { display: block; }
         .info-page h1 { font-size: 2rem; margin-bottom: 8px; }
         .info-page .back-link { display: inline-block; margin-top: 24px; font-weight: 600; color: #6366f1; cursor: pointer; }
         .info-page .back-link:hover { text-decoration: underline; }
 
-        /* ===== FOOTER ===== */
-        .site-footer { background: #0b1120; color: #9ca3af; padding: 40px 20px; margin-top: 60px; }
-        .site-footer .inner { max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 32px; }
-        .site-footer .inner h4 { color: white; font-size: 1.1rem; margin-bottom: 12px; }
-        .site-footer .inner a { display: block; color: #9ca3af; text-decoration: none; font-size: 0.9rem; padding: 4px 0; transition: color 0.2s; cursor: pointer; }
-        .site-footer .inner a:hover { color: white; }
-        .site-footer .bottom { max-width: 1100px; margin: 20px auto 0; border-top: 1px solid #1a1a3e; padding-top: 20px; text-align: center; font-size: 0.85rem; }
-
-        /* ===== DASHBOARD PREVIEW (landing) ===== */
-        .dashboard-preview { max-width: 1100px; margin: -40px auto 40px; padding: 0 20px; position: relative; z-index: 2; }
-        .dashboard-preview .mockup { background: white; border-radius: 20px; padding: 24px 28px; box-shadow: 0 20px 60px rgba(0,0,0,0.12); text-align: center; min-height: 180px; display: flex; flex-direction: column; justify-content: center; align-items: center; }
-
         /* ===== RESPONSIVE ===== */
-        @media (max-width:768px) {
+        @media (max-width: 1024px) {
+            .features-grid { grid-template-columns: repeat(2, 1fr); }
+            .steps-grid { grid-template-columns: repeat(3, 1fr); }
+            .testimonial-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+        @media (max-width: 768px) {
+            .header { padding: 12px 20px; flex-wrap: wrap; }
+            .header .nav-links { display: none; width: 100%; flex-direction: column; gap: 16px; padding-top: 16px; }
+            .header .nav-links.open { display: flex; }
+            .mobile-toggle { display: block; }
+            .hero { padding: 120px 16px 60px; }
             .hero h1 { font-size: 2.2rem; }
             .hero .hero-subtitle { font-size: 1rem; }
+            .hero .stats { gap: 24px; flex-wrap: wrap; }
+            .hero .stats .stat-number { font-size: 1.6rem; }
             .features-grid { grid-template-columns: 1fr 1fr; }
+            .steps-grid { grid-template-columns: 1fr 1fr; }
+            .testimonial-grid { grid-template-columns: 1fr; }
             .pricing-grid { grid-template-columns: 1fr; }
-            .auth-card { padding: 28px 20px; max-width: 100%; }
-            .top-nav { padding: 12px 16px; flex-direction: column; align-items: stretch; }
-            .top-nav .logo { text-align: center; }
-            .top-nav .user-info { justify-content: center; }
-            .dashboard-grid { grid-template-columns: 1fr; }
-            .subject-grid { grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); }
-            .topic-grid { grid-template-columns: 1fr; }
-            .center-panel { padding: 16px; }
-            .center-panel .welcome { font-size: 1.2rem; }
-            .tutor-container { padding: 16px; }
-            .chat-input { flex-wrap: wrap; }
-            .chat-input .btn-send { flex: 1; padding: 14px; }
-            .info-page { padding: 24px 20px; margin: 20px 16px; }
-            .info-page h1 { font-size: 1.6rem; }
-            .subject-grid-check { grid-template-columns: 1fr 1fr; }
+            .footer .inner { grid-template-columns: 1fr 1fr; }
+            .features-section { margin-top: -10px; }
+            .subjects-grid { gap: 8px; }
+            .subject-tag { padding: 8px 18px; font-size: 0.85rem; }
         }
-        @media (max-width:480px) {
+        @media (max-width: 480px) {
             .hero h1 { font-size: 1.8rem; }
             .features-grid { grid-template-columns: 1fr; }
-            .subject-grid-check { grid-template-columns: 1fr; }
+            .steps-grid { grid-template-columns: 1fr; }
+            .footer .inner { grid-template-columns: 1fr; }
+            .pricing-card { padding: 24px 18px; }
+            .hero .cta-group .btn-primary, .hero .cta-group .btn-secondary { padding: 14px 28px; font-size: 0.95rem; }
         }
     </style>
 </head>
 <body>
 
     <!-- ============================================================ -->
-    <!--  LANDING PAGE (visible when NOT logged in)                    -->
+    <!--  HEADER / NAV                                                -->
     <!-- ============================================================ -->
-    <div id="landingPage">
-        <section class="hero" id="heroSection">
-            <div style="max-width:900px;margin:0 auto;">
-                <div class="logo">🧠 <span>Leago</span></div>
-                <span class="logo-sub">AI Education Platform</span>
-                <div class="badge">✨ Africa's AI Learning Platform</div>
-                <h1>Master Every Subject with <span class="highlight">Your Personal AI Teacher</span></h1>
-                <p class="hero-subtitle">Personalized AI learning for African students. Follow your official curriculum — CAPS, IEB, CBC, WAEC, ZIMSEC, and more.</p>
-                <div class="cta-group">
-                    <a class="btn-primary" onclick="openAuth('signup')">Start Free</a>
-                    <a class="btn-secondary" onclick="openAuth('login')">Log In</a>
-                    <span class="cta-note">No credit card required · Premium from R49.99/month</span>
-                </div>
-            </div>
-        </section>
+    <header class="header" id="mainHeader">
+        <a href="#" class="logo">🧠 <span>Leago</span></a>
+        <button class="mobile-toggle" onclick="toggleMobileNav()">☰</button>
+        <nav class="nav-links" id="navLinks">
+            <a href="#features">Features</a>
+            <a href="#subjects">Subjects</a>
+            <a href="#how-it-works">How It Works</a>
+            <a href="#testimonials">Testimonials</a>
+            <a href="#pricing">Pricing</a>
+            <button class="btn-login" onclick="openAuth('login')">Log In</button>
+            <button class="btn-start" onclick="openAuth('signup')">Start Free</button>
+        </nav>
+    </header>
 
-        <!-- Dashboard Preview -->
-        <div class="dashboard-preview">
-            <div class="mockup">
-                <div style="font-size:3rem;">📊</div>
-                <strong>Dashboard Preview</strong>
-                <p style="margin-top:4px;font-size:0.85rem;color:#9ca3af;">Your personalised learning dashboard</p>
+    <!-- ============================================================ -->
+    <!--  HERO                                                       -->
+    <!-- ============================================================ -->
+    <section class="hero" id="heroSection">
+        <div style="max-width:900px;margin:0 auto;">
+            <div class="badge">✨ Africa's AI Learning Platform</div>
+            <h1>Master Every Subject with <span class="highlight">Your Personal AI Teacher</span></h1>
+            <p class="hero-subtitle">
+                Leago Academy helps African students learn smarter with an intelligent AI tutor. Get step-by-step explanations, practice questions, homework help and exam preparation aligned with your curriculum.
+                <br><br>
+                <span class="curriculum-badge">✅ Supports CAPS, IEB, CBC, WAEC, ZIMSEC and more</span>
+            </p>
+            <div class="cta-group">
+                <a class="btn-primary" onclick="openAuth('signup')">Start Learning →</a>
+                <a class="btn-secondary" onclick="openAuth('login')">Log In</a>
+            </div>
+            <div class="stats">
+                <div class="stat-item">
+                    <div class="stat-number">10,000+</div>
+                    <div class="stat-label">Students across Africa</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">50+</div>
+                    <div class="stat-label">Subjects</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">24/7</div>
+                    <div class="stat-label">AI Tutor Support</div>
+                </div>
             </div>
         </div>
-
-        <!-- Features -->
-        <section class="features" id="features">
-            <div class="section-title"><h2>Why Choose Leago Academy</h2></div>
-            <div class="features-grid">
-                <div class="feature-card"><span class="icon">🧠</span><h3>AI Teacher</h3><p>Personalised step-by-step explanations that adapt to your curriculum.</p></div>
-                <div class="feature-card"><span class="icon">📚</span><h3>Curriculum‑Aligned</h3><p>Follows CAPS, IEB, CBC, WAEC, ZIMSEC, and more.</p></div>
-                <div class="feature-card"><span class="icon">📝</span><h3>Homework &amp; Quizzes</h3><p>Practice what you learn with interactive exercises.</p></div>
-                <div class="feature-card"><span class="icon">📊</span><h3>Progress Tracking</h3><p>Monitor your improvement over time.</p></div>
-            </div>
-        </section>
-
-        <!-- Pricing -->
-        <section class="pricing" id="pricing">
-            <div class="section-title"><h2>Choose Your Learning Plan</h2><p>Whether you're exploring or preparing for exams, there's a plan designed for you.</p></div>
-            <div class="pricing-grid">
-                <div class="pricing-card">
-                    <div class="plan">Free Plan</div>
-                    <div class="price">R0 <span>/ month</span></div>
-                    <div class="description">Perfect for students getting started.</div>
-                    <ul class="features-list">
-                        <li>Limited AI learning sessions</li>
-                        <li>Limited daily questions</li>
-                        <li>Interactive quizzes</li>
-                        <li>Access to all available subjects</li>
-                        <li>Personal learning dashboard</li>
-                        <li>Progress tracking</li>
-                    </ul>
-                    <button class="btn-pricing outline" onclick="openAuth('signup')">Start Free</button>
-                    <p style="font-size:0.8rem;color:#6b7280;margin-top:8px;">No payment details required.</p>
-                </div>
-                <div class="pricing-card popular">
-                    <div style="font-size:0.75rem;color:#6366f1;font-weight:700;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;">Most Popular</div>
-                    <div class="plan">Premium</div>
-                    <div class="price">R49.99 <span>/ month</span></div>
-                    <div class="description">Unlock the complete Leago Academy experience.</div>
-                    <ul class="features-list">
-                        <li>Everything in Free, plus:</li>
-                        <li>Unlimited AI Teacher</li>
-                        <li>Unlimited learning sessions</li>
-                        <li>Homework assistance</li>
-                        <li>Exam preparation</li>
-                        <li>Personalized study plans</li>
-                        <li>Detailed learning analytics</li>
-                        <li>Priority support</li>
-                        <li>Early access to new features</li>
-                    </ul>
-                    <button class="btn-pricing" onclick="openAuth('login')">Upgrade to Premium</button>
-                    <p style="font-size:0.8rem;color:#6b7280;margin-top:8px;">Cancel anytime. Payments secured by Paystack.</p>
-                </div>
-            </div>
-        </section>
-
-        <!-- FAQ -->
-        <section class="faq" id="faq">
-            <div class="section-title"><h2>Frequently Asked Questions</h2></div>
-            <div class="faq-item"><div class="question">Can I use Leago Academy for free?</div><div class="answer">Yes. Our Free Plan allows you to explore the platform with selected features at no cost.</div></div>
-            <div class="faq-item"><div class="question">Can I cancel Premium?</div><div class="answer">Yes. You may cancel your subscription at any time. Your Premium access will remain active until the end of your current billing period.</div></div>
-            <div class="faq-item"><div class="question">Which payment methods are accepted?</div><div class="answer">Payments are securely processed through Paystack using the payment methods available in your region.</div></div>
-            <div class="faq-item"><div class="question">Will the price change?</div><div class="answer">If pricing changes in the future, existing subscribers will be notified in advance.</div></div>
-        </section>
-
-        <!-- Footer (landing) -->
-        <footer class="site-footer" id="siteFooter">
-            <div class="inner">
-                <div><h4>🧠 Leago Academy</h4><p style="font-size:0.9rem; opacity:0.8;">Empowering African Students Through AI-Powered Education.</p></div>
-                <div><h4>Company</h4><a onclick="showInfoPage('about')">About Us</a><a href="#pricing" onclick="document.getElementById('pricing').scrollIntoView({behavior:'smooth'})">Pricing</a><a onclick="showInfoPage('contact')">Contact</a></div>
-                <div><h4>Legal</h4><a onclick="showInfoPage('privacy')">Privacy Policy</a><a onclick="showInfoPage('tos')">Terms of Service</a></div>
-                <div><h4>Support</h4><a href="mailto:support@leagoacademy.co.za">support@leagoacademy.co.za</a><a href="https://www.leagoacademy.co.za">www.leagoacademy.co.za</a></div>
-            </div>
-            <div class="bottom">© 2026 Leago Academy. All rights reserved. <span style="color:#818cf8;font-weight:600;">v4.0</span></div>
-        </footer>
-    </div>
+    </section>
 
     <!-- ============================================================ -->
-    <!--  LEGAL PAGES                                                  -->
+    <!--  FEATURES                                                   -->
+    <!-- ============================================================ -->
+    <section class="features-section" id="features">
+        <div class="features-grid">
+            <div class="feature-card">
+                <span class="icon">🤖</span>
+                <h3>AI Tutor 24/7</h3>
+                <p>Get instant help and step-by-step explanations anytime.</p>
+            </div>
+            <div class="feature-card">
+                <span class="icon">📚</span>
+                <h3>Curriculum Aligned</h3>
+                <p>Lessons aligned with CAPS, IEB, CBC, WAEC, ZIMSEC and more.</p>
+            </div>
+            <div class="feature-card">
+                <span class="icon">📝</span>
+                <h3>Homework Help</h3>
+                <p>Understand your homework with clear, easy explanations.</p>
+            </div>
+            <div class="feature-card">
+                <span class="icon">📊</span>
+                <h3>Practice & Quizzes</h3>
+                <p>Practice questions and quizzes to test your knowledge.</p>
+            </div>
+            <div class="feature-card">
+                <span class="icon">🎯</span>
+                <h3>Exam Preparation</h3>
+                <p>Past papers, mock tests and exam strategies.</p>
+            </div>
+            <div class="feature-card">
+                <span class="icon">📈</span>
+                <h3>Track Progress</h3>
+                <p>Monitor your learning and improve every day.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================================ -->
+    <!--  SUBJECTS                                                   -->
+    <!-- ============================================================ -->
+    <section class="subjects-section" id="subjects">
+        <h2>Explore All Subjects</h2>
+        <p class="sub">Choose from our growing list of subjects across multiple curricula</p>
+        <div class="subjects-grid">
+            <span class="subject-tag">📐 Mathematics</span>
+            <span class="subject-tag">⚛️ Physical Sciences</span>
+            <span class="subject-tag">🧬 Life Sciences</span>
+            <span class="subject-tag">💰 Accounting</span>
+            <span class="subject-tag">📈 Economics</span>
+            <span class="subject-tag">📖 English</span>
+            <span class="subject-tag">📊 Business Studies</span>
+            <span class="subject-tag">🌍 Geography</span>
+            <span class="subject-tag">🏛️ History</span>
+            <span class="subject-tag">💻 IT</span>
+            <span class="subject-tag">🔬 Chemistry</span>
+            <span class="subject-tag">➕ More Subjects</span>
+        </div>
+    </section>
+
+    <!-- ============================================================ -->
+    <!--  HOW IT WORKS                                               -->
+    <!-- ============================================================ -->
+    <section class="how-it-works" id="how-it-works">
+        <h2>How Leago Academy Works</h2>
+        <p class="sub">In just 5 simple steps, you'll be learning with your personal AI tutor</p>
+        <div class="steps-grid">
+            <div class="step-item">
+                <div class="step-number">1</div>
+                <h4>Choose a Subject</h4>
+                <p>Select the subject you want to learn.</p>
+            </div>
+            <div class="step-item">
+                <div class="step-number">2</div>
+                <h4>Ask Anything</h4>
+                <p>Ask questions or get help with homework.</p>
+            </div>
+            <div class="step-item">
+                <div class="step-number">3</div>
+                <h4>Get Step-by-Step Help</h4>
+                <p>Our AI Tutor explains clearly and simply.</p>
+            </div>
+            <div class="step-item">
+                <div class="step-number">4</div>
+                <h4>Practice & Improve</h4>
+                <p>Take quizzes and track your progress.</p>
+            </div>
+            <div class="step-item">
+                <div class="step-number">5</div>
+                <h4>Achieve Your Goals</h4>
+                <p>Gain confidence and excel in your exams.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================================ -->
+    <!--  TESTIMONIALS                                               -->
+    <!-- ============================================================ -->
+    <section class="testimonials" id="testimonials">
+        <h2>Loved by Students Across Africa</h2>
+        <p class="sub">Real stories from real students using Leago Academy</p>
+        <div class="testimonial-grid">
+            <div class="testimonial-card">
+                <div class="quote">Leago Academy helped me understand Maths concepts I used to struggle with. My marks improved from 52% to 81%!</div>
+                <div class="author">Thabo M.</div>
+                <div class="author-detail">Grade 11 Student, South Africa</div>
+            </div>
+            <div class="testimonial-card">
+                <div class="quote">The AI Tutor explains everything in a way that's so easy to understand. Homework is now stress-free!</div>
+                <div class="author">Tendai K.</div>
+                <div class="author-detail">Grade 10 Student, Zimbabwe</div>
+            </div>
+            <div class="testimonial-card">
+                <div class="quote">I love that it follows our curriculum. The quizzes and past papers really help me prepare for exams.</div>
+                <div class="author">Amina O.</div>
+                <div class="author-detail">Grade 12 Student, Kenya</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================================ -->
+    <!--  PRICING                                                    -->
+    <!-- ============================================================ -->
+    <section class="pricing-section" id="pricing">
+        <h2>Choose Your Plan</h2>
+        <p class="sub">Start free and upgrade when you're ready</p>
+        <div class="pricing-grid">
+            <div class="pricing-card">
+                <div class="plan">Student Plan</div>
+                <div class="price">R99.99 <span>/ month</span></div>
+                <div class="description">Perfect for students getting started with AI learning.</div>
+                <ul class="features-list">
+                    <li>Unlimited AI Tutor access</li>
+                    <li>Homework help</li>
+                    <li>Quizzes & practice questions</li>
+                    <li>Track your progress</li>
+                </ul>
+                <button class="btn-pricing outline" onclick="openAuth('signup')">Start Free →</button>
+            </div>
+            <div class="pricing-card popular">
+                <div class="popular-badge">Most Popular</div>
+                <div class="plan">Premium Plan</div>
+                <div class="price">R99.99 <span>/ month</span></div>
+                <div class="description">Everything you need to excel in your studies.</div>
+                <ul class="features-list">
+                    <li>Everything in Student Plan</li>
+                    <li>Past papers & mock tests</li>
+                    <li>Advanced AI explanations</li>
+                    <li>Priority support</li>
+                </ul>
+                <button class="btn-pricing" onclick="openAuth('signup')">Start Free →</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================================ -->
+    <!--  CTA BANNER                                                 -->
+    <!-- ============================================================ -->
+    <section class="cta-banner">
+        <h2>Start Learning Smarter Today</h2>
+        <p>Join thousands of African students using AI to improve their academic performance.</p>
+        <a class="btn-primary" onclick="openAuth('signup')">Get Started Now →</a>
+    </section>
+
+    <!-- ============================================================ -->
+    <!--  FOOTER                                                     -->
+    <!-- ============================================================ -->
+    <footer class="footer">
+        <div class="inner">
+            <div>
+                <h4>🧠 Leago Academy</h4>
+                <p style="font-size:0.9rem; opacity:0.8; margin-top:4px;">Empowering African Students Through AI-Powered Education.</p>
+                <div class="social-links">
+                    <a href="#">📘</a>
+                    <a href="#">📸</a>
+                    <a href="#">▶️</a>
+                    <a href="#">💼</a>
+                    <a href="#">🐦</a>
+                </div>
+            </div>
+            <div>
+                <h4>Company</h4>
+                <a onclick="showInfoPage('about')">About Us</a>
+                <a onclick="showInfoPage('contact')">Contact</a>
+                <a href="#pricing">Pricing</a>
+            </div>
+            <div>
+                <h4>Legal</h4>
+                <a onclick="showInfoPage('privacy')">Privacy Policy</a>
+                <a onclick="showInfoPage('tos')">Terms of Service</a>
+            </div>
+            <div>
+                <h4>Support</h4>
+                <a href="mailto:support@leagoacademy.co.za">support@leagoacademy.co.za</a>
+                <a href="https://www.leagoacademy.co.za">www.leagoacademy.co.za</a>
+            </div>
+        </div>
+        <div class="bottom">© 2026 Leago Academy. All rights reserved. <span style="color:#818cf8;font-weight:600;">v4.0</span></div>
+    </footer>
+
+    <!-- ============================================================ -->
+    <!--  INFO PAGES                                                 -->
     <!-- ============================================================ -->
     <div class="info-page" id="page-about"><h1>About Leago Academy</h1><p>Empowering Africa Through Intelligent Learning...</p><span class="back-link" onclick="showInfoPage('')">← Back to Leago</span></div>
     <div class="info-page" id="page-privacy"><h1>Privacy Policy</h1><p>Effective Date: 1 July 2026...</p><span class="back-link" onclick="showInfoPage('')">← Back to Leago</span></div>
@@ -552,14 +1154,12 @@
     <div class="info-page" id="page-contact"><h1>Contact Leago Academy</h1><p>We are here to help...</p><span class="back-link" onclick="showInfoPage('')">← Back to Leago</span></div>
 
     <!-- ============================================================ -->
-    <!--  AUTH OVERLAY                                                -->
+    <!--  AUTH OVERLAY                                               -->
     <!-- ============================================================ -->
     <div class="auth-overlay" id="authOverlay">
         <div class="auth-card">
             <button class="close-btn" onclick="closeAuth()">✕</button>
             <div class="logo-sm"><h2>🧠 <span>Leago</span></h2><p>Your AI Tutor</p></div>
-
-            <!-- LOGIN -->
             <div id="loginPage">
                 <h3>Welcome back</h3>
                 <p class="sub">Log in to continue learning.</p>
@@ -569,12 +1169,9 @@
                 <button class="btn" id="loginBtn" onclick="login()">Log In</button>
                 <div class="auth-link">Don't have an account? <a onclick="showSignup()">Sign up</a></div>
             </div>
-
-            <!-- SIGNUP -->
             <div id="signupPage" style="display:none;">
                 <h3>Create your education profile</h3>
                 <p class="sub">We'll personalize your learning experience.</p>
-
                 <div class="stepper" id="stepper">
                     <div class="step-circle active" data-step="1">1</div>
                     <div class="step-circle" data-step="2">2</div>
@@ -582,7 +1179,6 @@
                     <div class="step-circle" data-step="4">4</div>
                     <div class="step-circle" data-step="5">5</div>
                 </div>
-
                 <div class="signup-step" data-step="1">
                     <div class="field"><label>First Name</label><input type="text" id="signupFirstName" placeholder="First name" /></div>
                     <div class="field"><label>Last Name</label><input type="text" id="signupLastName" placeholder="Last name" /></div>
@@ -590,7 +1186,6 @@
                     <div class="field"><label>Password</label><input type="password" id="signupPassword" placeholder="Min 6 characters" /></div>
                     <button class="btn" onclick="nextStep(2)">Next →</button>
                 </div>
-
                 <div class="signup-step" data-step="2" style="display:none;">
                     <div class="field">
                         <label>Country</label>
@@ -652,15 +1247,12 @@
                             <option value="54">🇨🇩 DRC</option>
                         </select>
                     </div>
-                    <div class="field"><label>Province / State</label>
-                        <select id="signupProvince"><option value="">Select province</option></select>
-                    </div>
+                    <div class="field"><label>Province / State</label><select id="signupProvince"><option value="">Select province</option></select></div>
                     <div style="display:flex;gap:12px;margin-top:16px;">
                         <button class="btn" onclick="prevStep(1)" style="background:#e5e7eb;color:#0b1120;">← Back</button>
                         <button class="btn" onclick="nextStep(3)">Next →</button>
                     </div>
                 </div>
-
                 <div class="signup-step" data-step="3" style="display:none;">
                     <div class="field"><label>Education Level</label>
                         <select id="signupLevel" onchange="loadGradesHardcoded()">
@@ -679,7 +1271,6 @@
                         <button class="btn" onclick="nextStep(4)">Next →</button>
                     </div>
                 </div>
-
                 <div class="signup-step" data-step="4" style="display:none;">
                     <div class="field"><label>Curriculum</label>
                         <select id="signupCurriculum" onchange="loadSubjectsHardcoded()">
@@ -693,7 +1284,6 @@
                         <button class="btn" onclick="nextStep(5)">Next →</button>
                     </div>
                 </div>
-
                 <div class="signup-step" data-step="5" style="display:none;">
                     <p style="margin-bottom:8px;font-weight:600;">Select the subjects you study:</p>
                     <div id="subjectCheckboxes" class="subject-grid-check"><p style="grid-column:1/-1;color:#6b7280;">Select your subjects</p></div>
@@ -708,7 +1298,7 @@
     </div>
 
     <!-- ============================================================ -->
-    <!--  DASHBOARD (visible when logged in)                          -->
+    <!--  DASHBOARD                                                  -->
     <!-- ============================================================ -->
     <div class="dashboard" id="dashboard">
         <nav class="top-nav">
@@ -721,7 +1311,6 @@
                 <button class="logout-btn" onclick="logout()">Logout</button>
             </div>
         </nav>
-
         <div class="dashboard-grid">
             <aside class="sidebar-left" id="sidebarLeft">
                 <div class="section-title">Subjects</div>
@@ -731,13 +1320,11 @@
                 <div class="section-title" style="margin-top:20px;">Recent</div>
                 <div id="recentContainer"></div>
             </aside>
-
             <main class="center-panel" id="centerPanel">
                 <div class="welcome" id="welcomeMessage">Welcome back, Student 👋</div>
                 <div class="welcome-sub" id="welcomeSub">Today's goal: Complete your next lesson.</div>
                 <div id="dynamicContent"></div>
             </main>
-
             <aside class="sidebar-right" id="sidebarRight">
                 <div class="section-title">Key Terms</div>
                 <div id="flashcardContainer"></div>
@@ -747,9 +1334,12 @@
         </div>
     </div>
 
+    <!-- ============================================================ -->
+    <!--  JAVASCRIPT                                                 -->
+    <!-- ============================================================ -->
     <script>
         // ================================================================
-        //  HARDCODED DATA – ALL AFRICAN COUNTRIES, ALL SUBJECTS
+        //  HARDCODED DATA
         // ================================================================
         const HARDCODED_DATA = {
             provinces: {
@@ -821,7 +1411,7 @@
         };
 
         // ================================================================
-        //  LOAD FUNCTIONS – USING HARDCODED DATA
+        //  LOAD FUNCTIONS
         // ================================================================
         function loadProvincesHardcoded() {
             const countryId = document.getElementById('signupCountry').value;
@@ -936,7 +1526,7 @@
         function prevStep(step) { goToStep(step); }
 
         // ================================================================
-        //  AUTH – Signup
+        //  AUTH – Signup & Login
         // ================================================================
         async function signup() {
             const subjects = Array.from(document.querySelectorAll('.subject-checkbox:checked')).map(cb => cb.value);
@@ -972,9 +1562,6 @@
             }
         }
 
-        // ================================================================
-        //  AUTH – Login
-        // ================================================================
         async function login() {
             const email = document.getElementById('loginEmail').value.trim();
             const password = document.getElementById('loginPassword').value.trim();
@@ -1069,7 +1656,7 @@
         }
 
         // ================================================================
-        //  SUBSCRIPTION & DAILY LIMIT
+        //  SUBSCRIPTION
         // ================================================================
         async function fetchSubscriptionStatus(userId) {
             try {
@@ -1271,7 +1858,6 @@
             }
         }
 
-        // ===== IMPROVED addMessage – robust math rendering =====
         function addMessage(role, text) {
             const box = document.getElementById('chatBox');
             const div = document.createElement('div');
@@ -1285,8 +1871,6 @@
                     headerIds: false
                 });
                 div.innerHTML = marked.parse(text);
-
-                // PREPROCESS: replace \[ and \] with $$ (just in case)
                 div.innerHTML = div.innerHTML.replace(/\\\[/g, '$$').replace(/\\\]/g, '$$');
 
                 const renderMath = () => {
@@ -1344,6 +1928,10 @@
         // ================================================================
         //  NAVIGATION HELPERS
         // ================================================================
+        function toggleMobileNav() {
+            document.getElementById('navLinks').classList.toggle('open');
+        }
+
         function showInfoPage(page) {
             document.querySelectorAll('.info-page').forEach(el => el.classList.remove('active'));
             if (!page) {
@@ -1434,6 +2022,7 @@
                 gsap.from('.hero .badge', { duration: 0.8, scale: 0.8, opacity: 0, delay: 0.3 });
                 gsap.from('.hero .cta-group', { duration: 0.8, y: 30, opacity: 0, delay: 0.6 });
                 gsap.from('.feature-card', { duration: 0.8, y: 40, opacity: 0, stagger: 0.15, delay: 0.8 });
+                gsap.from('.stat-item', { duration: 0.8, y: 30, opacity: 0, stagger: 0.15, delay: 0.9 });
             }
 
             if (typeof lucide !== 'undefined') {
