@@ -1,65 +1,66 @@
-// server/routes/admin.js
 const express = require('express');
-const { pool } = require('../db');
 const router = express.Router();
+const { pool } = require('../db');
+const jwt = require('jsonwebtoken');
+const bcrypt = require('bcrypt'); // optional – if you use bcrypt, adjust
 
-async function requireAdmin(req, res, next) {
-  const userId = req.body.userId || req.query.userId;
-  if (!userId) return res.status(401).json({ error: 'Unauthorized' });
-  try {
-    const result = await pool.query('SELECT role FROM users WHERE id = $1', [userId]);
-    if (result.rows.length === 0) return res.status(401).json({ error: 'User not found' });
-    if (result.rows[0].role !== 'admin') return res.status(403).json({ error: 'Admin access required' });
-    next();
-  } catch (err) {
-    res.status(500).json({ error: 'Database error' });
+// SIGNUP
+router.post('/signup', async (req, res) => {
+  const { firstName, lastName, email, password, countryId, province, educationLevelId, grade, curriculumId, subjects, role } = req.body;
+  if (!firstName || !lastName || !email || !password || !countryId || !educationLevelId || !grade || !curriculumId || !subjects) {
+    return res.status(400).json({ error: 'Missing required fields' });
   }
-}
 
-router.get('/users', requireAdmin, async (req, res) => {
   try {
-    const result = await pool.query(`
-      SELECT u.id, u.email, u.first_name, u.last_name, u.role, u.created_at, u.subjects,
-             s.status, s.end_date
-      FROM users u
-      LEFT JOIN subscriptions s ON u.id = s.user_id
-      ORDER BY u.created_at DESC
-    `);
-    res.json(result.rows);
-  } catch (err) {
-    res.status(500).json({ error: 'Database error' });
-  }
-});
+    const existing = await pool.query('SELECT id FROM users WHERE email = $1', [email]);
+    if (existing.rows.length > 0) return res.status(400).json({ error: 'Email already registered' });
 
-router.get('/stats', requireAdmin, async (req, res) => {
-  try {
-    const users = await pool.query('SELECT COUNT(*) FROM users');
-    const subscriptions = await pool.query('SELECT COUNT(*) FROM subscriptions WHERE status = $1', ['active']);
-    const trials = await pool.query('SELECT COUNT(*) FROM subscriptions WHERE status = $1', ['trial']);
-    const progress = await pool.query('SELECT COUNT(*) FROM progress');
-    res.json({
-      totalUsers: parseInt(users.rows[0].count),
-      activeSubscriptions: parseInt(subscriptions.rows[0].count),
-      trialUsers: parseInt(trials.rows[0].count),
-      totalProgress: parseInt(progress.rows[0].count)
-    });
+    // Hash password (if using bcrypt)
+    // const hashed = await bcrypt.hash(password, 10);
+    const result = await pool.query(
+      `INSERT INTO users (first_name, last_name, email, password_hash, country_id, province, education_level_id, grade, curriculum_id, subjects, role)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)
+       RETURNING id, first_name, last_name, email, role`,
+      [firstName, lastName, email, password, countryId, province, educationLevelId, grade, curriculumId, subjects, role || 'learner']
+    );
+    res.status(201).json({ success: true, user: result.rows[0] });
   } catch (err) {
-    res.status(500).json({ error: 'Database error' });
+    console.error('Signup error:', err);
+    res.status(500).json({ error: 'Server error' });
   }
 });
 
-router.get('/subscriptions', requireAdmin, async (req, res) => {
+// LOGIN – with JWT
+router.post('/login', async (req, res) => {
+  const { email, password } = req.body;
+  if (!email || !password) return res.status(400).json({ error: 'Email and password required' });
+
   try {
-    const result = await pool.query(`
-      SELECT u.id, u.email, u.first_name, u.last_name,
-             s.status, s.start_date, s.end_date
-      FROM users u
-      JOIN subscriptions s ON u.id = s.user_id
-      ORDER BY s.end_date DESC
-    `);
-    res.json(result.rows);
+    const result = await pool.query(
+      `SELECT id, first_name, last_name, email, role, grade, subjects, country_id, province, education_level_id, curriculum_id,
+              (SELECT name FROM countries WHERE id = users.country_id) AS country_name,
+              (SELECT name FROM curricula WHERE id = users.curriculum_id) AS curriculum_name,
+              (SELECT name FROM education_levels WHERE id = users.education_level_id) AS education_level_name,
+              grade AS grade_name
+       FROM users WHERE email = $1 AND password_hash = $2`,
+      [email, password]
+    );
+    if (result.rows.length === 0) return res.status(401).json({ error: 'Invalid credentials' });
+
+    const user = result.rows[0];
+    if (typeof user.subjects === 'string') user.subjects = JSON.parse(user.subjects);
+
+    // Generate JWT token
+    const token = jwt.sign(
+      { userId: user.id, role: user.role || 'learner' },
+      process.env.JWT_SECRET,
+      { expiresIn: '7d' }
+    );
+
+    res.json({ success: true, user, token });
   } catch (err) {
-    res.status(500).json({ error: 'Database error' });
+    console.error('Login error:', err);
+    res.status(500).json({ error: 'Server error' });
   }
 });
 

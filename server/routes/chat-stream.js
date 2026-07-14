@@ -5,25 +5,22 @@ const { getAIResponseStream } = require('../utils/ai');
 const auth = require('../middleware/auth');
 
 router.post('/', auth, async (req, res) => {
-  const { userId } = req; // from auth middleware
+  const { userId } = req;
   const { message, subject, topic } = req.body;
   if (!message) return res.status(400).json({ error: 'Message is required' });
 
   try {
-    // Get user context
     const userResult = await pool.query(
       'SELECT grade, curriculum_id FROM users WHERE id = $1',
       [userId]
     );
     const user = userResult.rows[0] || {};
 
-    // Save user message
     await pool.query(
       'INSERT INTO chat_messages (user_id, role, content, subject, topic) VALUES ($1, $2, $3, $4, $5)',
       [userId, 'user', message, subject || 'General', topic || '']
     );
 
-    // Get recent conversation history (last 6 messages)
     const historyResult = await pool.query(
       `SELECT role, content FROM chat_messages 
        WHERE user_id = $1 ORDER BY created_at DESC LIMIT 6`,
@@ -31,7 +28,6 @@ router.post('/', auth, async (req, res) => {
     );
     const history = historyResult.rows.reverse();
 
-    // Build prompt
     let prompt = `You are Leago AI Tutor, a teacher for South African students.
 You follow the ${user.curriculum_id === 1 ? 'CAPS' : 'IEB'} curriculum.
 The student is in grade ${user.grade || 'unknown'}.
@@ -42,7 +38,6 @@ The student is in grade ${user.grade || 'unknown'}.
     });
     prompt += `Student: ${message}\nTeacher:`;
 
-    // Set SSE headers
     res.setHeader('Content-Type', 'text/event-stream');
     res.setHeader('Cache-Control', 'no-cache');
     res.setHeader('Connection', 'keep-alive');
@@ -69,13 +64,11 @@ The student is in grade ${user.grade || 'unknown'}.
       }
     }
 
-    // Save assistant message
     await pool.query(
       'INSERT INTO chat_messages (user_id, role, content, subject, topic) VALUES ($1, $2, $3, $4, $5)',
       [userId, 'assistant', fullResponse, subject || 'General', topic || '']
     );
 
-    // Update daily question count
     await pool.query(
       `UPDATE users SET daily_question_count = daily_question_count + 1 WHERE id = $1`,
       [userId]
