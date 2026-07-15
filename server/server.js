@@ -1,4 +1,4 @@
-cat > server/server.js << 'EOF'
+// server/server.js
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
@@ -16,7 +16,7 @@ const authRoutes = require('./routes/auth');
 const adminRoutes = require('./routes/admin');
 const subjectRoutes = require('./routes/subjects');
 const paymentRoutes = require('./routes/payments');
-const chatRoutes = require('./routes/chat');
+const chatRoutes = require('./routes/chat')
 const progressRoutes = require('./routes/progress');
 
 app.use('/api/auth', authRoutes);
@@ -41,4 +41,3 @@ initDB().then(() => {
   console.error('❌ Failed to start:', err.message);
   process.exit(1);
 });
-EOF
