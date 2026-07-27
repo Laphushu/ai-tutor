@@ -1,4 +1,3 @@
-// server/server.js
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
@@ -9,14 +8,18 @@ const app = express();
 const PORT = process.env.PORT || 10000;
 
 app.use(cors());
-app.use(express.json());
+
+// ⚠️ MUST come BEFORE express.json() so webhooks get the raw unparsed body
 app.use('/api/payments/webhook', express.raw({ type: 'application/json' }));
 
+app.use(express.json());
+
+// Routes
 const authRoutes = require('./routes/auth');
 const adminRoutes = require('./routes/admin');
 const subjectRoutes = require('./routes/subjects');
 const paymentRoutes = require('./routes/payments');
-const chatRoutes = require('./routes/chat')
+const chatRoutes = require('./routes/chat');
 const progressRoutes = require('./routes/progress');
 
 app.use('/api/auth', authRoutes);
@@ -34,7 +37,7 @@ app.get('*', (req, res) => {
 
 initDB().then(() => {
   app.listen(PORT, () => {
-    console.log(`✅ Leago Academy v2 running on port ${PORT}`);
+    console.log(`✅ Leago Academy running on port ${PORT}`);
     console.log(`🌍 Environment: ${process.env.NODE_ENV || 'development'}`);
   });
 }).catch(err => {
