@@ -1,195 +1,178 @@
 const express = require('express');
-const { pool } = require('../db');
-const { create, all } = require('mathjs');
 const router = express.Router();
+const { pool } = require('../db');
+const math = require('mathjs');
+const authenticateToken = require('../middleware/auth');
 
-// Create a restricted, sandboxed mathjs instance to prevent Code Injection
-const math = create(all);
-const limitedEvaluate = math.evaluate;
-
-// Middleware to check daily limit and increment count safely in SQL
-async function checkSubscription(req, res, next) {
-  const userId = req.body.userId || req.query.userId;
-  if (!userId) return res.status(401).json({ error: 'Unauthorized' });
-
-  try {
-    // Rely on PostgreSQL CURRENT_DATE to eliminate timezone mismatch bugs
-    const userRes = await pool.query(
-      `SELECT plan, daily_question_count, 
-              (last_question_date = CURRENT_DATE) AS is_today 
-       FROM users WHERE id = $1`,
-      [userId]
-    );
-
-    if (userRes.rows.length === 0) {
-      return res.status(404).json({ error: 'User not found' });
-    }
-
-    const user = userRes.rows[0];
-
-    // Premium users bypass checks entirely
-    if (user.plan === 'premium') {
-      req.user = user;
-      return next();
-    }
-
-    const isToday = user.is_today;
-    const currentCount = isToday ? (user.daily_question_count || 0) : 0;
-
-    if (currentCount >= 10) {
-      return res.status(403).json({
-        error: 'limit_reached',
-        message: 'You have reached your daily limit of 10 questions. Upgrade to Premium for unlimited access.'
-      });
-    }
-
-    // Atomically reset or increment count
-    const updatedCount = isToday ? currentCount + 1 : 1;
-    await pool.query(
-      `UPDATE users 
-       SET daily_question_count = $1, last_question_date = CURRENT_DATE 
-       WHERE id = $2`,
-      [updatedCount, userId]
-    );
-
-    req.user = { ...user, daily_question_count: updatedCount };
-    next();
-  } catch (err) {
-    console.error('Subscription check error:', err.message);
-    // Safe fallback for connection hiccup
-    return next();
-  }
+// Helper to get user context
+async function getUserContext(userId) {
+  const result = await pool.query(
+    `SELECT grade, curriculum_id FROM users WHERE id = $1`,
+    [userId]
+  );
+  return result.rows[0] || {};
 }
 
-router.post('/', checkSubscription, async (req, res) => {
-  const { userId, message, subject, topic } = req.body;
-  if (!userId || !message) return res.status(400).json({ error: 'Missing data' });
+router.post('/', authenticateToken, async (req, res) => {
+  const userId = req.user.userId;
+  const { message, subject, topic } = req.body;
+  if (!message) return res.status(400).json({ error: 'Message is required' });
 
-  console.log('📨 Chat request:', { userId, subject, topic, messageLength: message.length });
+  console.log('📨 Chat request (user:', userId, 'subject:', subject, 'topic:', topic, 'message:', message.slice(0,50));
 
-  // ---- Safe Math Solver ----
-  let mathResult = null;
-  
-  // Strict regex test: only allow digits, operators, standard variables, and spaces
-  const isPureMath = /^[0-9+\-*/().^=\s]+$/.test(message.trim()) && /\d/.test(message);
-
-  if (isPureMath) {
-    try {
+  // ---- Math solver ----
+  try {
+    const isMath = /[0-9+\-*/().^]/.test(message) && !message.toLowerCase().includes('what is') && !message.toLowerCase().includes('teach');
+    if (isMath) {
+      let mathResult;
       if (message.includes('=')) {
         const sides = message.split('=');
-        if (sides.length === 2) {
-          const left = sides[0].trim();
-          const right = sides[1].trim();
-          const leftResult = limitedEvaluate(left);
-          const rightResult = limitedEvaluate(right);
-
-          if (leftResult === rightResult) {
-            mathResult = `✅ **True:** $${left} = ${right}$`;
-          } else {
-            mathResult = `❌ **False:** $${left} = ${right}$ (Evaluates to ${leftResult} ≠ ${rightResult})`;
-          }
-        }
+        const left = sides[0].trim();
+        const right = sides[1].trim();
+        const leftResult = math.evaluate(left);
+        const rightResult = math.evaluate(right);
+        mathResult = leftResult === rightResult ? `✅ True: ${left} = ${right}` : `❌ False: ${left} = ${right} (${leftResult} ≠ ${rightResult})`;
       } else {
-        const evaluated = limitedEvaluate(message);
-        mathResult = `$$${message} = ${evaluated}$$`;
+        const evaluated = math.evaluate(message);
+        mathResult = `${message} = ${evaluated}`;
       }
-    } catch (e) {
-      console.log('Math evaluation skipped/failed, routing to AI...');
+      // Save history
+      await pool.query(
+        `INSERT INTO chat_history (user_id, role, content, subject, topic) VALUES ($1, $2, $3, $4, $5)`,
+        [userId, 'user', message, subject || 'General', topic || '']
+      );
+      await pool.query(
+        `INSERT INTO chat_history (user_id, role, content, subject, topic) VALUES ($1, $2, $3, $4, $5)`,
+        [userId, 'assistant', mathResult, subject || 'General', topic || '']
+      );
+      return res.json({ reply: mathResult });
     }
+  } catch (e) {
+    console.log('Math evaluation failed, falling back to AI');
   }
 
-  if (mathResult) {
-    return res.json({ reply: mathResult });
-  }
+  // ---- Save user message ----
+  await pool.query(
+    `INSERT INTO chat_history (user_id, role, content, subject, topic) VALUES ($1, $2, $3, $4, $5)`,
+    [userId, 'user', message, subject || 'General', topic || '']
+  );
 
-  // ---- AI APIs ----
+  // ---- Get user context ----
+  const user = await getUserContext(userId);
+  const curriculumName = user.curriculum_id === 1 ? 'CAPS' : 'IEB';
+
+  // ---- Build prompt ----
+  const prompt = `You are Leago AI Tutor, a friendly and encouraging teacher for African students. The student is in grade ${user.grade || 'unknown'}, following the ${curriculumName} curriculum. Subject: ${subject || 'General'}. Topic: ${topic || 'general'}. 
+
+Teach step by step. Never give the answer directly. Ask guiding questions. Use LaTeX for equations with $...$ for inline and $$...$$ for display. Use Markdown for formatting.
+
+Student's question: ${message}`;
+
+  // ---- DeepSeek API (streaming) ----
   const DEEPSEEK_API_KEY = process.env.DEEPSEEK_API_KEY;
-  const HF_API_TOKEN = process.env.HF_API_TOKEN;
+  let fullResponse = '';
 
-  const prompt = `The student is learning "${topic || 'General Topics'}" in "${subject || 'General Studies'}". 
-Their question is: "${message}"
-
-Provide a clear, step-by-step explanation. 
-Use LaTeX for math formatting ($...$ for inline and $$...$$ for display equations).
-Be encouraging and thorough.`;
-
-  // 1. Try DeepSeek
   if (DEEPSEEK_API_KEY) {
     try {
-      console.log('🚀 Trying DeepSeek...');
+      console.log('🚀 Trying DeepSeek streaming...');
       const response = await fetch('https://api.deepseek.com/v1/chat/completions', {
         method: 'POST',
-        headers: { 
-          'Authorization': `Bearer ${DEEPSEEK_API_KEY}`, 
-          'Content-Type': 'application/json' 
+        headers: {
+          'Authorization': `Bearer ${DEEPSEEK_API_KEY}`,
+          'Content-Type': 'application/json'
         },
         body: JSON.stringify({
           model: 'deepseek-chat',
-          messages: [
-            { 
-              role: 'system', 
-              content: 'You are a patient AI tutor for African students. Use LaTeX for equations ($...$ for inline, $$...$$ for display math). Show clear step-by-step reasoning.' 
-            }, 
-            { role: 'user', content: prompt }
-          ],
-          max_tokens: 2048,
-          temperature: 0.7
+          messages: [{ role: 'user', content: prompt }],
+          max_tokens: 4096,
+          temperature: 0.7,
+          stream: true
         })
       });
 
-      if (response.ok) {
-        const data = await response.json();
-        const reply = data.choices?.[0]?.message?.content;
-        if (reply) {
-          console.log('✅ DeepSeek response received');
-          return res.json({ reply });
+      if (!response.ok) throw new Error(`DeepSeek error: ${response.status}`);
+
+      // Set SSE headers
+      res.setHeader('Content-Type', 'text/event-stream');
+      res.setHeader('Cache-Control', 'no-cache');
+      res.setHeader('Connection', 'keep-alive');
+
+      const reader = response.body.getReader();
+      const decoder = new TextDecoder();
+
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        const chunk = decoder.decode(value);
+        const lines = chunk.split('\n');
+        for (const line of lines) {
+          if (line.startsWith('data: ')) {
+            const data = line.slice(6);
+            if (data === '[DONE]') continue;
+            try {
+              const parsed = JSON.parse(data);
+              const content = parsed.choices?.[0]?.delta?.content || '';
+              if (content) {
+                fullResponse += content;
+                res.write(`data: ${JSON.stringify({ content })}\n\n`);
+              }
+            } catch (e) {}
+          }
         }
-      } else {
-        const errorText = await response.text();
-        console.warn('⚠️ DeepSeek error:', response.status, errorText);
       }
-    } catch (e) {
-      console.warn('⚠️ DeepSeek exception:', e.message);
+
+      // Save assistant message
+      await pool.query(
+        `INSERT INTO chat_history (user_id, role, content, subject, topic) VALUES ($1, $2, $3, $4, $5)`,
+        [userId, 'assistant', fullResponse, subject || 'General', topic || '']
+      );
+
+      // Update question count
+      await pool.query(
+        `UPDATE users SET daily_question_count = daily_question_count + 1 WHERE id = $1`,
+        [userId]
+      );
+
+      res.write('data: [DONE]\n\n');
+      res.end();
+      return;
+    } catch (err) {
+      console.error('DeepSeek streaming error:', err);
+      // fallback to non-streaming
     }
   }
 
-  // 2. Fallback to Hugging Face
-  if (HF_API_TOKEN) {
-    try {
-      console.log('🤖 Trying Hugging Face...');
-      const response = await fetch('https://api-inference.huggingface.co/models/google/flan-t5-large', {
-        method: 'POST',
-        headers: { 
-          'Authorization': `Bearer ${HF_API_TOKEN}`, 
-          'Content-Type': 'application/json' 
-        },
-        body: JSON.stringify({
-          inputs: prompt,
-          parameters: { max_new_tokens: 500, temperature: 0.6, do_sample: true, return_full_text: false }
-        })
-      });
+  // ---- Fallback ----
+  const fallbackReply = `📚 I'm here to help you with "${topic || subject}". Let's work through this together step by step. Could you tell me what you already know about this topic?`;
+  fullResponse = fallbackReply;
+  await pool.query(
+    `INSERT INTO chat_history (user_id, role, content, subject, topic) VALUES ($1, $2, $3, $4, $5)`,
+    [userId, 'assistant', fallbackReply, subject || 'General', topic || '']
+  );
+  await pool.query(
+    `UPDATE users SET daily_question_count = daily_question_count + 1 WHERE id = $1`,
+    [userId]
+  );
 
-      if (response.ok) {
-        const data = await response.json();
-        let reply = data[0]?.generated_text || '';
-        reply = reply.replace(/^[\s\S]*?(\n|$)/, '').trim();
-        if (reply) {
-          console.log('✅ Hugging Face response received');
-          return res.json({ reply });
-        }
-      } else if (response.status === 503) {
-        return res.json({ reply: '⏳ The AI model is warming up. Please try sending your message again in a few seconds.' });
-      }
-    } catch (e) {
-      console.error('❌ Hugging Face exception:', e.message);
-    }
-  }
+  res.json({ reply: fallbackReply });
+});
 
-  // 3. Ultimate Fallback
-  console.log('📝 Using fallback response');
-  return res.json({
-    reply: `📚 **Step-by-step approach for ${topic || subject || 'this topic'}:**\n\n1. Review the key terms and core formulas in your notes.\n2. Break the question into smaller steps.\n3. Work out each step carefully.\n4. Verify your final answer against similar example problems.`
-  });
+// ---- Get chat history ----
+router.get('/history', authenticateToken, async (req, res) => {
+  const userId = req.user.userId;
+  const result = await pool.query(
+    `SELECT id, role, content, subject, topic, created_at FROM chat_history
+     WHERE user_id = $1 ORDER BY created_at DESC LIMIT 50`,
+    [userId]
+  );
+  res.json(result.rows.reverse());
+});
+
+// ---- Clear chat history ----
+router.delete('/history', authenticateToken, async (req, res) => {
+  const userId = req.user.userId;
+  await pool.query(`DELETE FROM chat_history WHERE user_id = $1`, [userId]);
+  res.json({ success: true });
 });
 
 module.exports = router;
