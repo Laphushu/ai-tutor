@@ -1,0 +1,426 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes" />
+    <title>Leago Academy – Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz@14..32&display=swap" rel="stylesheet" />
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" crossorigin="anonymous">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" crossorigin="anonymous"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: #090A18; color: #fff; height: 100vh; overflow: hidden; }
+        :root { --sidebar-width: 260px; --bottom-nav-height: 60px; --purple: #7C3AED; --purple-light: #9D5CFF; --glass-bg: rgba(255,255,255,0.04); --glass-border: rgba(255,255,255,0.06); --text-secondary: #B6B8D3; }
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: rgba(124,58,237,0.3); border-radius: 4px; }
+        .app { display: flex; height: 100vh; overflow: hidden; }
+        .sidebar { width: var(--sidebar-width); min-width: var(--sidebar-width); background: rgba(18,20,40,0.6); backdrop-filter: blur(16px); border-right: 1px solid var(--glass-border); display: flex; flex-direction: column; padding: 20px 14px 16px; height: 100vh; overflow-y: auto; z-index: 10; transition: transform 0.3s ease; }
+        .sidebar-brand { display: flex; align-items: center; gap: 10px; padding-bottom: 16px; border-bottom: 1px solid var(--glass-border); margin-bottom: 16px; }
+        .sidebar-brand .logo-icon { width: 36px; height: 36px; border-radius: 10px; background: linear-gradient(135deg, var(--purple), var(--purple-light)); display: flex; align-items: center; justify-content: center; font-size: 18px; }
+        .sidebar-brand .brand-text .name { font-size: 17px; font-weight: 700; color: #fff; letter-spacing: -0.3px; }
+        .sidebar-brand .brand-text .sub { font-size: 8px; font-weight: 600; color: var(--purple-light); letter-spacing: 1.2px; text-transform: uppercase; opacity: 0.7; }
+        .btn-new-chat { width: 100%; padding: 10px 14px; background: linear-gradient(135deg, var(--purple), var(--purple-light)); border: none; border-radius: 14px; color: #fff; font-size: 13px; font-weight: 600; display: flex; align-items: center; justify-content: center; gap: 8px; cursor: pointer; transition: all 0.3s ease; margin-bottom: 16px; font-family: 'Inter', sans-serif; box-shadow: 0 0 30px rgba(124,58,237,0.15); }
+        .btn-new-chat:hover { transform: translateY(-2px); box-shadow: 0 0 50px rgba(124,58,237,0.25); }
+        .sidebar-nav { flex: 1; display: flex; flex-direction: column; gap: 2px; }
+        .sidebar-nav a { display: flex; align-items: center; gap: 12px; padding: 9px 12px; border-radius: 10px; color: var(--text-secondary); text-decoration: none; font-size: 13px; font-weight: 500; transition: all 0.2s ease; cursor: pointer; }
+        .sidebar-nav a:hover { background: rgba(255,255,255,0.04); color: #fff; }
+        .sidebar-nav a.active { background: rgba(124,58,237,0.12); color: var(--purple-light); }
+        .sidebar-nav a .nav-icon { width: 18px; height: 18px; flex-shrink: 0; }
+        .sidebar-nav a .nav-icon svg { width: 18px; height: 18px; stroke: currentColor; stroke-width: 1.8; fill: none; }
+        .sidebar-nav .divider { height: 1px; background: var(--glass-border); margin: 10px 12px; }
+        .premium-card { background: linear-gradient(135deg, rgba(124,58,237,0.12), rgba(157,92,255,0.06)); border: 1px solid rgba(124,58,237,0.15); border-radius: 14px; padding: 14px 14px 16px; margin-top: 4px; }
+        .premium-card .premium-title { font-size: 13px; font-weight: 700; color: #fff; margin-bottom: 2px; }
+        .premium-card .premium-desc { font-size: 11px; color: var(--text-secondary); line-height: 1.5; margin-bottom: 12px; }
+        .premium-card .premium-desc span { display: block; }
+        .btn-upgrade { width: 100%; padding: 8px; background: linear-gradient(135deg, var(--purple), var(--purple-light)); border: none; border-radius: 10px; color: #fff; font-size: 12px; font-weight: 600; cursor: pointer; transition: all 0.3s ease; font-family: 'Inter', sans-serif; }
+        .btn-upgrade:hover { transform: translateY(-1px); box-shadow: 0 0 30px rgba(124,58,237,0.25); }
+        .sidebar-profile { display: flex; align-items: center; gap: 10px; padding-top: 12px; margin-top: 10px; border-top: 1px solid var(--glass-border); }
+        .sidebar-profile .avatar { width: 36px; height: 36px; border-radius: 10px; background: linear-gradient(135deg, var(--purple), var(--purple-light)); display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 700; color: #fff; flex-shrink: 0; }
+        .sidebar-profile .profile-info .name { font-size: 12px; font-weight: 600; color: #fff; }
+        .sidebar-profile .profile-info .badge { font-size: 9px; color: var(--purple-light); font-weight: 500; }
+        .sidebar-profile .profile-settings { color: var(--text-secondary); cursor: pointer; padding: 4px; }
+        .sidebar-profile .profile-settings svg { width: 16px; height: 16px; stroke: currentColor; stroke-width: 1.8; fill: none; }
+        .main-chat { flex: 1; display: flex; flex-direction: column; background: transparent; min-width: 0; position: relative; }
+        .topbar { display: flex; align-items: center; gap: 12px; padding: 12px 24px; border-bottom: 1px solid var(--glass-border); flex-shrink: 0; background: rgba(9,10,24,0.6); backdrop-filter: blur(8px); z-index: 5; }
+        .topbar .menu-toggle { display: none; background: none; border: none; color: #fff; font-size: 22px; cursor: pointer; padding: 4px; }
+        .topbar .search-wrap { flex: 1; max-width: 400px; position: relative; }
+        .topbar .search-wrap input { width: 100%; padding: 7px 12px 7px 34px; background: rgba(255,255,255,0.04); border: 1px solid var(--glass-border); border-radius: 12px; color: #fff; font-size: 12px; font-family: 'Inter', sans-serif; outline: none; transition: border-color 0.3s; }
+        .topbar .search-wrap input::placeholder { color: #4A4C6A; }
+        .topbar .search-wrap input:focus { border-color: rgba(124,58,237,0.3); }
+        .topbar .search-wrap .search-icon { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); color: #4A4C6A; }
+        .topbar .top-actions { display: flex; align-items: center; gap: 8px; }
+        .topbar .top-actions button { background: none; border: none; color: var(--text-secondary); cursor: pointer; padding: 4px; border-radius: 8px; transition: all 0.2s; }
+        .topbar .top-actions button:hover { background: rgba(255,255,255,0.04); color: #fff; }
+        .topbar .top-actions button svg { width: 18px; height: 18px; stroke: currentColor; stroke-width: 1.8; fill: none; }
+        .topbar .top-actions .avatar-small { width: 30px; height: 30px; border-radius: 8px; background: linear-gradient(135deg, var(--purple), var(--purple-light)); display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 600; margin-left: 4px; }
+        .page-container { flex: 1; overflow-y: auto; padding: 16px 24px 80px; }
+        .page { display: none; animation: fadeIn 0.3s ease; }
+        .page.active { display: block; }
+        @keyframes fadeIn { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:translateY(0); } }
+        .chat-messages { max-width: 100%; margin: 0 auto; display: flex; flex-direction: column; gap: 16px; padding-bottom: 16px; }
+        .chat-greeting .greeting-heading { font-size: 24px; font-weight: 700; letter-spacing: -0.5px; line-height: 1.2; }
+        .chat-greeting .greeting-sub { font-size: 14px; color: var(--text-secondary); margin-top: 4px; }
+        .suggestion-cards { display: flex; gap: 8px; flex-wrap: wrap; margin: 10px 0 6px; }
+        .suggestion-card { padding: 8px 14px; background: rgba(255,255,255,0.03); border: 1px solid var(--glass-border); border-radius: 12px; color: #D0D2E8; font-size: 12px; font-weight: 500; cursor: pointer; transition: all 0.25s ease; font-family: 'Inter', sans-serif; }
+        .suggestion-card:hover { background: rgba(124,58,237,0.08); border-color: rgba(124,58,237,0.2); color: #fff; transform: translateY(-2px); }
+        .message { display: flex; flex-direction: column; max-width: 100%; animation: fadeIn 0.4s ease; opacity: 0; }
+        .message.user { align-items: flex-end; }
+        .message.bot { align-items: flex-start; }
+        .message .bubble { padding: 12px 18px; border-radius: 18px; max-width: 85%; word-wrap: break-word; line-height: 1.6; font-size: 14px; position: relative; }
+        .message.user .bubble { background: linear-gradient(135deg, var(--purple), var(--purple-light)); color: #fff; border-bottom-right-radius: 4px; box-shadow: 0 4px 20px rgba(124,58,237,0.15); }
+        .message.bot .bubble { background: rgba(18,20,40,0.7); border: 1px solid var(--glass-border); color: #E8E9F0; border-bottom-left-radius: 4px; backdrop-filter: blur(4px); }
+        .message.bot .bubble .bot-meta { display: flex; align-items: center; gap: 6px; margin-bottom: 6px; font-size: 11px; color: var(--purple-light); font-weight: 500; }
+        .message.bot .bubble .bot-meta .bot-avatar { width: 20px; height: 20px; border-radius: 6px; background: linear-gradient(135deg, var(--purple), var(--purple-light)); display: flex; align-items: center; justify-content: center; font-size: 10px; }
+        .message.bot .bubble h1, .message.bot .bubble h2, .message.bot .bubble h3 { color: #fff; font-weight: 600; margin: 8px 0 4px; }
+        .message.bot .bubble h1 { font-size: 18px; }
+        .message.bot .bubble h2 { font-size: 16px; }
+        .message.bot .bubble h3 { font-size: 14px; }
+        .message.bot .bubble p { margin: 4px 0; }
+        .message.bot .bubble ul, .message.bot .bubble ol { padding-left: 20px; margin: 4px 0 8px; }
+        .message.bot .bubble li { margin-bottom: 2px; }
+        .message.bot .bubble code { background: rgba(255,255,255,0.06); padding: 1px 6px; border-radius: 4px; font-size: 12px; color: var(--purple-light); }
+        .message.bot .bubble pre { background: rgba(0,0,0,0.3); padding: 10px 14px; border-radius: 8px; overflow-x: auto; margin: 6px 0; font-size: 12px; color: #D0D2E8; }
+        .message.bot .bubble .math-block { background: rgba(0,0,0,0.2); padding: 8px 14px; border-radius: 8px; margin: 6px 0; text-align: center; font-size: 15px; color: var(--purple-light); border: 1px solid rgba(124,58,237,0.08); }
+        .message.bot .bubble .math-block .math-label { font-size: 10px; color: #4A4C6A; font-weight: 500; display: block; margin-bottom: 2px; }
+        .message-actions { display: flex; gap: 4px; margin-top: 4px; opacity: 0.4; transition: opacity 0.2s ease; }
+        .message-actions:hover { opacity: 1; }
+        .message-actions button { background: none; border: none; color: #4A4C6A; cursor: pointer; padding: 2px 6px; border-radius: 6px; font-size: 12px; transition: all 0.2s ease; font-family: 'Inter', sans-serif; }
+        .message-actions button:hover { background: rgba(255,255,255,0.04); color: var(--text-secondary); }
+        .typing-indicator { display: none; align-items: center; gap: 10px; padding: 8px 0 2px; }
+        .typing-indicator.active { display: flex; }
+        .typing-indicator .dots span { width: 6px; height: 6px; border-radius: 50%; background: #4A4C6A; display: inline-block; animation: typingDot 1.4s infinite ease-in-out both; }
+        .typing-indicator .dots span:nth-child(2) { animation-delay: 0.2s; }
+        .typing-indicator .dots span:nth-child(3) { animation-delay: 0.4s; }
+        @keyframes typingDot { 0%,60%,100% { transform:translateY(0); opacity:0.3; } 30% { transform:translateY(-6px); opacity:1; } }
+        .typing-indicator .label { font-size: 11px; color: #4A4C6A; font-weight: 500; }
+        .input-area { position: fixed; bottom: 0; left: var(--sidebar-width); right: 0; padding: 10px 24px 16px; background: linear-gradient(to top, rgba(9,10,24,0.95) 60%, transparent); z-index: 5; display: none; }
+        .input-area.active { display: block; }
+        .input-wrap { max-width: 100%; margin: 0 auto; display: flex; align-items: center; gap: 8px; background: rgba(18,20,40,0.6); backdrop-filter: blur(12px); border: 1px solid var(--glass-border); border-radius: 20px; padding: 4px 4px 4px 14px; transition: border-color 0.3s; box-shadow: 0 4px 20px rgba(0,0,0,0.2); }
+        .input-wrap:focus-within { border-color: rgba(124,58,237,0.2); }
+        .input-wrap .input-icons { display: flex; gap: 2px; }
+        .input-wrap .input-icons button { background: none; border: none; color: #4A4C6A; cursor: pointer; padding: 4px; border-radius: 8px; transition: all 0.2s; }
+        .input-wrap .input-icons button:hover { color: var(--text-secondary); background: rgba(255,255,255,0.04); }
+        .input-wrap .input-icons button svg { width: 18px; height: 18px; stroke: currentColor; stroke-width: 1.8; fill: none; }
+        .input-wrap input { flex: 1; background: none; border: none; color: #fff; font-size: 13px; font-family: 'Inter', sans-serif; padding: 8px 0; outline: none; min-width: 0; }
+        .input-wrap input::placeholder { color: #4A4C6A; }
+        .input-wrap .btn-send { padding: 8px 14px; background: linear-gradient(135deg, var(--purple), var(--purple-light)); border: none; border-radius: 16px; color: #fff; cursor: pointer; transition: all 0.3s ease; display: flex; align-items: center; justify-content: center; flex-shrink: 0; box-shadow: 0 0 20px rgba(124,58,237,0.1); }
+        .input-wrap .btn-send:hover { transform: scale(1.04); box-shadow: 0 0 30px rgba(124,58,237,0.2); }
+        .input-wrap .btn-send svg { width: 18px; height: 18px; stroke: currentColor; stroke-width: 2; fill: none; }
+        .subjects-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 12px; margin-top: 12px; }
+        .subject-card { background: rgba(255,255,255,0.03); border: 1px solid var(--glass-border); border-radius: 14px; padding: 20px 14px; text-align: center; cursor: pointer; transition: all 0.25s ease; backdrop-filter: blur(4px); }
+        .subject-card:hover { background: rgba(124,58,237,0.08); border-color: rgba(124,58,237,0.2); transform: translateY(-3px); box-shadow: 0 8px 24px rgba(0,0,0,0.2); }
+        .subject-card .icon { font-size: 24px; display: block; margin-bottom: 4px; }
+        .subject-card .name { font-size: 13px; font-weight: 600; }
+        .topics-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 10px; margin-top: 12px; }
+        .topic-card { background: rgba(255,255,255,0.02); border: 1px solid var(--glass-border); border-radius: 12px; padding: 14px 16px; cursor: pointer; transition: all 0.25s ease; }
+        .topic-card:hover { background: rgba(124,58,237,0.06); border-color: rgba(124,58,237,0.15); }
+        .topic-card .title { font-weight: 600; font-size: 13px; }
+        .topic-card .desc { font-size: 11px; color: var(--text-secondary); margin-top: 2px; }
+        .back-btn { display: inline-block; padding: 6px 16px; border: 1px solid var(--glass-border); border-radius: 10px; color: var(--text-secondary); font-size: 12px; font-weight: 500; cursor: pointer; transition: all 0.2s; background: none; margin-bottom: 12px; font-family: 'Inter', sans-serif; }
+        .back-btn:hover { background: rgba(255,255,255,0.04); color: #fff; }
+        .filter-row { display: flex; flex-wrap: wrap; gap: 10px; margin: 12px 0 16px; }
+        .filter-row select { padding: 8px 14px; background: rgba(255,255,255,0.04); border: 1px solid var(--glass-border); border-radius: 10px; color: #fff; font-size: 12px; font-family: 'Inter', sans-serif; outline: none; min-width: 120px; }
+        .filter-row select:focus { border-color: rgba(124,58,237,0.3); }
+        .filter-row select option { background: #090B1D; }
+        .paper-list { display: flex; flex-direction: column; gap: 10px; }
+        .paper-item { background: rgba(255,255,255,0.02); border: 1px solid var(--glass-border); border-radius: 12px; padding: 14px 18px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px; }
+        .paper-item .info .title { font-weight: 600; font-size: 14px; }
+        .paper-item .info .meta { font-size: 12px; color: var(--text-secondary); }
+        .paper-item .actions { display: flex; gap: 6px; }
+        .paper-item .actions a { padding: 4px 12px; border-radius: 8px; background: rgba(124,58,237,0.12); color: var(--purple-light); text-decoration: none; font-size: 12px; font-weight: 500; transition: all 0.2s; }
+        .paper-item .actions a:hover { background: rgba(124,58,237,0.2); }
+        .upload-area { border: 2px dashed var(--glass-border); border-radius: 16px; padding: 30px 16px; text-align: center; transition: all 0.3s; cursor: pointer; }
+        .upload-area:hover { border-color: rgba(124,58,237,0.3); background: rgba(255,255,255,0.02); }
+        .upload-area .icon { font-size: 36px; display: block; margin-bottom: 6px; }
+        .upload-area p { color: var(--text-secondary); font-size: 13px; }
+        .upload-area input { display: none; }
+        .quiz-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 12px; margin-top: 12px; }
+        .quiz-card { background: rgba(255,255,255,0.02); border: 1px solid var(--glass-border); border-radius: 14px; padding: 16px 14px; text-align: center; cursor: pointer; transition: all 0.25s ease; }
+        .quiz-card:hover { background: rgba(124,58,237,0.06); border-color: rgba(124,58,237,0.15); transform: translateY(-2px); }
+        .quiz-card .icon { font-size: 24px; display: block; margin-bottom: 2px; }
+        .quiz-card .name { font-weight: 600; font-size: 13px; }
+        .planner-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(170px, 1fr)); gap: 12px; margin-top: 12px; }
+        .planner-card { background: rgba(255,255,255,0.02); border: 1px solid var(--glass-border); border-radius: 14px; padding: 16px 14px; text-align: center; transition: all 0.25s ease; }
+        .planner-card:hover { background: rgba(255,255,255,0.04); }
+        .planner-card .icon { font-size: 28px; display: block; margin-bottom: 2px; }
+        .planner-card .name { font-weight: 600; font-size: 13px; }
+        .planner-card .desc { font-size: 11px; color: var(--text-secondary); }
+        .sidebar-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 9; }
+        .sidebar-overlay.active { display: block; }
+        .right-panel { width: 280px; min-width: 280px; padding: 20px 16px 16px; background: rgba(18,20,40,0.3); backdrop-filter: blur(12px); border-left: 1px solid var(--glass-border); overflow-y: auto; display: flex; flex-direction: column; gap: 16px; }
+        .widget { background: rgba(18,20,40,0.5); border: 1px solid var(--glass-border); border-radius: 14px; padding: 14px 16px 16px; backdrop-filter: blur(4px); }
+        .widget .widget-title { font-size: 10px; font-weight: 600; color: #4A4C6A; text-transform: uppercase; letter-spacing: 0.6px; margin-bottom: 10px; }
+        .learning-widget { display: flex; align-items: center; justify-content: space-between; }
+        .learning-widget .learning-stats .hours { font-size: 22px; font-weight: 700; color: #fff; }
+        .learning-widget .learning-stats .label { font-size: 12px; color: var(--text-secondary); margin-top: 2px; }
+        .learning-widget .progress-ring-wrap { position: relative; width: 56px; height: 56px; }
+        .learning-widget .progress-ring-wrap svg { transform: rotate(-90deg); width: 56px; height: 56px; }
+        .learning-widget .progress-ring-wrap .ring-bg { fill: none; stroke: rgba(255,255,255,0.04); stroke-width: 4; }
+        .learning-widget .progress-ring-wrap .ring-fg { fill: none; stroke: url(#purpleGrad); stroke-width: 4; stroke-linecap: round; stroke-dasharray: 166.5; stroke-dashoffset: 166.5; transition: stroke-dashoffset 1.2s ease; }
+        .learning-widget .progress-ring-wrap .ring-label { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 12px; font-weight: 700; color: #fff; }
+        .homework-list { display: flex; flex-direction: column; gap: 6px; }
+        .homework-item { display: flex; align-items: center; gap: 10px; padding: 8px 12px; background: rgba(255,255,255,0.02); border-radius: 10px; border: 1px solid rgba(255,255,255,0.03); transition: all 0.2s ease; }
+        .homework-item:hover { background: rgba(255,255,255,0.04); }
+        .homework-item .hw-icon { width: 28px; height: 28px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 12px; flex-shrink: 0; }
+        .homework-item .hw-icon.math { background: rgba(124,77,255,0.12); }
+        .homework-item .hw-icon.acc { background: rgba(157,92,255,0.08); }
+        .homework-item .hw-icon.eng { background: rgba(255,255,255,0.04); }
+        .homework-item .hw-info { flex: 1; min-width: 0; }
+        .homework-item .hw-info .hw-name { font-size: 12px; font-weight: 500; color: #fff; }
+        .homework-item .hw-info .hw-sub { font-size: 10px; color: #4A4C6A; }
+        .homework-item .hw-due { font-size: 10px; color: #4A4C6A; font-weight: 500; }
+        .subject-tags { display: flex; flex-wrap: wrap; gap: 4px; }
+        .subject-tag { padding: 4px 10px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.05); border-radius: 16px; font-size: 11px; color: var(--text-secondary); transition: all 0.2s ease; cursor: default; }
+        .subject-tag:hover { background: rgba(124,58,237,0.06); border-color: rgba(124,58,237,0.1); color: #fff; }
+        .chart-wrap { height: 70px; position: relative; }
+        .chart-wrap canvas { width: 100% !important; height: 100% !important; }
+        .achievements-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 6px; }
+        .achievement-item { text-align: center; padding: 10px 4px; background: rgba(255,255,255,0.02); border-radius: 10px; border: 1px solid rgba(255,255,255,0.03); transition: all 0.2s ease; }
+        .achievement-item:hover { background: rgba(255,255,255,0.04); }
+        .achievement-item .achi-icon { font-size: 18px; display: block; margin-bottom: 2px; }
+        .achievement-item .achi-value { font-size: 14px; font-weight: 700; color: #fff; }
+        .achievement-item .achi-label { font-size: 8px; color: #4A4C6A; text-transform: uppercase; letter-spacing: 0.4px; font-weight: 500; }
+        .svg-defs { position: absolute; width: 0; height: 0; }
+        @media (max-width: 1100px) { .right-panel { display: none; } }
+        @media (max-width: 992px) { .sidebar { width: 220px; min-width: 220px; padding: 16px 12px; } .page-container { padding: 12px 16px 70px; } .input-area { padding: 8px 16px 12px; } .topbar { padding: 10px 16px; } }
+        @media (max-width: 768px) {
+            .sidebar { position: fixed; left: 0; top: 0; bottom: 0; width: 260px; z-index: 15; transform: translateX(-100%); transition: transform 0.3s ease; background: rgba(9,10,24,0.98); backdrop-filter: blur(20px); padding: 16px 14px; }
+            .sidebar.open { transform: translateX(0); }
+            .sidebar-overlay.active { display: block; }
+            .topbar .menu-toggle { display: block; }
+            .input-area { left: 0; padding: 8px 12px 12px; }
+            .page-container { padding: 10px 12px 70px; }
+            .subjects-grid { grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); }
+            .topics-grid { grid-template-columns: 1fr; }
+            .filter-row select { min-width: 80px; font-size: 11px; padding: 6px 10px; }
+            .paper-item { flex-direction: column; align-items: stretch; gap: 6px; }
+            .chat-greeting .greeting-heading { font-size: 20px; }
+            .message .bubble { font-size: 13px; padding: 10px 14px; max-width: 92%; }
+            .input-wrap { border-radius: 16px; padding: 4px 4px 4px 10px; }
+            .input-wrap input { font-size: 12px; padding: 6px 0; }
+            .input-wrap .btn-send { padding: 6px 12px; border-radius: 12px; }
+            .input-wrap .btn-send svg { width: 16px; height: 16px; }
+            .input-wrap .input-icons button svg { width: 16px; height: 16px; }
+            .suggestion-card { font-size: 11px; padding: 6px 12px; }
+            .quiz-grid { grid-template-columns: 1fr 1fr; }
+            .planner-grid { grid-template-columns: 1fr 1fr; }
+        }
+        @media (max-width: 480px) {
+            .page-container { padding: 8px 10px 60px; }
+            .input-area { padding: 6px 8px 10px; }
+            .subjects-grid { grid-template-columns: repeat(auto-fill, minmax(90px, 1fr)); }
+            .subject-card { padding: 14px 8px; }
+            .subject-card .icon { font-size: 20px; }
+            .subject-card .name { font-size: 11px; }
+            .topics-grid { grid-template-columns: 1fr; }
+            .message.bot .bubble h1 { font-size: 16px; }
+            .message.bot .bubble h2 { font-size: 14px; }
+            .message.bot .bubble h3 { font-size: 13px; }
+            .message.bot .bubble .math-block { font-size: 13px; padding: 6px 10px; }
+            .topbar .search-wrap { max-width: none; }
+            .topbar .search-wrap input { font-size: 11px; padding: 5px 8px 5px 28px; }
+            .topbar .search-wrap .search-icon svg { width: 14px; height: 14px; }
+            .topbar .top-actions button svg { width: 16px; height: 16px; }
+            .topbar .top-actions .avatar-small { width: 26px; height: 26px; font-size: 11px; }
+            .quiz-grid { grid-template-columns: 1fr; }
+            .planner-grid { grid-template-columns: 1fr; }
+        }
+        .bottom-nav { display: none; position: fixed; bottom: 0; left: 0; right: 0; background: rgba(9,10,24,0.95); backdrop-filter: blur(12px); border-top: 1px solid var(--glass-border); height: var(--bottom-nav-height); z-index: 20; justify-content: space-around; align-items: center; padding: 0 6px; }
+        .bottom-nav a { display: flex; flex-direction: column; align-items: center; gap: 1px; color: var(--text-secondary); text-decoration: none; font-size: 9px; font-weight: 500; padding: 2px 8px; border-radius: 6px; transition: all 0.2s; cursor: pointer; }
+        .bottom-nav a.active { color: var(--purple-light); }
+        .bottom-nav a svg { width: 22px; height: 22px; stroke: currentColor; stroke-width: 1.8; fill: none; }
+        @media (max-width: 768px) { .bottom-nav { display: flex; } .input-area { padding-bottom: 70px; } .page-container { padding-bottom: 80px; } }
+    </style>
+</head>
+<body>
+    <svg class="svg-defs" aria-hidden="true"><defs><linearGradient id="purpleGrad" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#7C4DFF" /><stop offset="100%" stop-color="#9D5CFF" /></linearGradient></defs></svg>
+    <div class="app" id="app">
+        <div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-brand">
+                <div class="logo-icon">🧠</div>
+                <div class="brand-text">
+                    <span class="name">Leago</span>
+                    <span class="sub">AI EDUCATION PLATFORM</span>
+                </div>
+            </div>
+            <button class="btn-new-chat" onclick="navigateTo('chat')"><span class="plus-icon">+</span> New Chat</button>
+            <nav class="sidebar-nav">
+                <a class="active" data-page="overview" onclick="navigateTo('overview')"><span class="nav-icon" data-lucide="layout-dashboard"></span> Dashboard</a>
+                <a data-page="chat" onclick="navigateTo('chat')"><span class="nav-icon" data-lucide="message-square"></span> AI Tutor</a>
+                <a data-page="subjects" onclick="navigateTo('subjects')"><span class="nav-icon" data-lucide="book-open"></span> Subjects</a>
+                <a data-page="homework" onclick="navigateTo('homework')"><span class="nav-icon" data-lucide="clipboard"></span> Homework Help</a>
+                <a data-page="quizzes" onclick="navigateTo('quizzes')"><span class="nav-icon" data-lucide="layers"></span> Practice &amp; Quizzes</a>
+                <a data-page="pastpapers" onclick="navigateTo('pastpapers')"><span class="nav-icon" data-lucide="file-text"></span> Past Papers</a>
+                <a data-page="planner" onclick="navigateTo('planner')"><span class="nav-icon" data-lucide="calendar"></span> Study Planner</a>
+                <div class="divider"></div>
+            </nav>
+            <div class="premium-card" id="premiumCard">
+                <div class="premium-title">⭐ Upgrade to Premium</div>
+                <div class="premium-desc"><span>Unlimited AI tutoring</span><span>Past papers</span><span>Exam preparation</span><span>Priority support</span></div>
+                <button class="btn-upgrade" onclick="handleUpgrade()">Upgrade Now</button>
+            </div>
+            <div class="sidebar-profile">
+                <div class="avatar" id="userAvatar">S</div>
+                <div class="profile-info">
+                    <div class="name" id="userNameSidebar">Student</div>
+                    <div class="badge" id="userBadgeSidebar">Free</div>
+                </div>
+                <div class="profile-settings" data-lucide="settings" onclick="handleLogout()"></div>
+            </div>
+        </aside>
+        <main class="main-chat">
+            <header class="topbar">
+                <button class="menu-toggle" onclick="toggleSidebar()">☰</button>
+                <div class="search-wrap"><span class="search-icon" data-lucide="search"></span><input type="text" placeholder="Search lessons, homework or topics..." id="globalSearch" oninput="globalSearch(this.value)" /></div>
+                <div class="top-actions">
+                    <button data-lucide="bell"></button>
+                    <button data-lucide="settings" onclick="handleLogout()"></button>
+                    <div class="avatar-small" id="topAvatar">S</div>
+                </div>
+            </header>
+            <div class="page-container" id="pageContainer">
+                <div class="page active" id="page-overview">
+                    <div class="welcome" id="welcomeMessage">Welcome back, Student 👋</div>
+                    <div class="welcome-sub" id="welcomeSub">Choose a subject or start an AI tutoring session below.</div>
+                    <div class="subjects-grid mt-6" id="overviewSubjects"></div>
+                </div>
+                <div class="page" id="page-chat">
+                    <div class="chat-messages">
+                        <div class="chat-greeting">
+                            <div class="greeting-heading">👋 Hi <span id="greetingName">Student</span>,</div>
+                            <div class="greeting-heading" style="font-weight:600; font-size:22px;">Welcome back.</div>
+                            <div class="greeting-sub">What would you like to learn today?</div>
+                        </div>
+                        <div class="suggestion-cards">
+                            <button class="suggestion-card" onclick="sendSuggestion('Explain Photosynthesis')">🌱 Explain Photosynthesis</button>
+                            <button class="suggestion-card" onclick="sendSuggestion('Factorise x²−5x+6')">📐 Factorise x²−5x+6</button>
+                            <button class="suggestion-card" onclick="sendSuggestion('Write an Accounting Essay')">📝 Write an Accounting Essay</button>
+                        </div>
+                        <div id="chatMessages"></div>
+                        <div class="typing-indicator" id="typingIndicator"><div class="dots"><span></span><span></span><span></span></div><span class="label">Leago is thinking...</span></div>
+                    </div>
+                </div>
+                <div class="page" id="page-subjects">
+                    <h2 style="font-size:20px; font-weight:700;">Your Subjects</h2>
+                    <p style="color:var(--text-secondary); margin-top:4px; font-size:14px;">Click a subject to view all topics.</p>
+                    <div class="subjects-grid" id="subjectsGrid"></div>
+                    <div id="subjectDetail" style="display:none; margin-top:16px;">
+                        <button class="back-btn" onclick="closeSubjectDetail()">← Back to Subjects</button>
+                        <h3 id="subjectTitle" style="font-size:18px; font-weight:700;"></h3>
+                        <div class="topics-grid" id="topicsGrid"></div>
+                    </div>
+                </div>
+                <div class="page" id="page-homework">
+                    <h2 style="font-size:20px; font-weight:700;">Homework Help</h2>
+                    <p style="color:var(--text-secondary); margin-top:4px; font-size:14px;">Upload your homework and get AI feedback.</p>
+                    <div class="upload-area" onclick="document.getElementById('fileInput').click()">
+                        <span class="icon">📤</span>
+                        <p>Click to upload an image, PDF, or Word document</p>
+                        <p style="font-size:11px; color:#4A4C6A;">Or drag and drop</p>
+                        <input type="file" id="fileInput" accept=".pdf,.doc,.docx,.png,.jpg,.jpeg" />
+                    </div>
+                    <div id="homeworkResult" style="margin-top:16px;"></div>
+                </div>
+                <div class="page" id="page-quizzes">
+                    <h2 style="font-size:20px; font-weight:700;">Practice &amp; Quizzes</h2>
+                    <p style="color:var(--text-secondary); margin-top:4px; font-size:14px;">Test your knowledge with quizzes and exercises.</p>
+                    <div class="quiz-grid">
+                        <div class="quiz-card" onclick="alert('Daily Quiz – coming soon!')"><span class="icon">📝</span><span class="name">Daily Quiz</span></div>
+                        <div class="quiz-card" onclick="alert('Weekly Quiz – coming soon!')"><span class="icon">📊</span><span class="name">Weekly Quiz</span></div>
+                        <div class="quiz-card" onclick="alert('Topic Quiz – coming soon!')"><span class="icon">🎯</span><span class="name">Topic Quiz</span></div>
+                        <div class="quiz-card" onclick="alert('Mock Exams – coming soon!')"><span class="icon">📋</span><span class="name">Mock Exams</span></div>
+                        <div class="quiz-card" onclick="alert('Timed Tests – coming soon!')"><span class="icon">⏱️</span><span class="name">Timed Tests</span></div>
+                        <div class="quiz-card" onclick="alert('Leaderboard – coming soon!')"><span class="icon">🏆</span><span class="name">Leaderboard</span></div>
+                        <div class="quiz-card" onclick="alert('Results – coming soon!')"><span class="icon">📈</span><span class="name">Results</span></div>
+                    </div>
+                </div>
+                <div class="page" id="page-pastpapers">
+                    <h2 style="font-size:20px; font-weight:700;">Past Papers</h2>
+                    <p style="color:var(--text-secondary); margin-top:4px; font-size:14px;">Find and download past exam papers.</p>
+                    <div class="filter-row">
+                        <select id="ppGrade"><option value="">All Grades</option><option>Grade 10</option><option>Grade 11</option><option>Grade 12</option></select>
+                        <select id="ppSubject"><option value="">All Subjects</option></select>
+                        <select id="ppYear"><option value="">All Years</option><option>2024</option><option>2023</option><option>2022</option></select>
+                        <button onclick="loadPastPapers()" style="padding:8px 20px; background:var(--purple); border:none; border-radius:10px; color:#fff; font-weight:600; cursor:pointer; font-family:'Inter', sans-serif;">Search</button>
+                    </div>
+                    <div class="paper-list" id="paperList"><p style="color:var(--text-secondary);">No papers found. Use the filters above.</p></div>
+                </div>
+                <div class="page" id="page-planner">
+                    <h2 style="font-size:20px; font-weight:700;">Study Planner</h2>
+                    <p style="color:var(--text-secondary); margin-top:4px; font-size:14px;">Plan your study sessions and track progress.</p>
+                    <div class="planner-grid">
+                        <div class="planner-card" onclick="alert('Today\'s Plan – coming soon!')"><span class="icon">📅</span><span class="name">Today's Plan</span><span class="desc">4 tasks due</span></div>
+                        <div class="planner-card" onclick="alert('Weekly Plan – coming soon!')"><span class="icon">📆</span><span class="name">Weekly Plan</span><span class="desc">12 hours left</span></div>
+                        <div class="planner-card" onclick="alert('Exam Countdown – coming soon!')"><span class="icon">⏳</span><span class="name">Exam Countdown</span><span class="desc">42 days left</span></div>
+                        <div class="planner-card" onclick="alert('Study Goals – coming soon!')"><span class="icon">🎯</span><span class="name">Study Goals</span><span class="desc">3/5 completed</span></div>
+                        <div class="planner-card" onclick="alert('Completed Lessons – coming soon!')"><span class="icon">✅</span><span class="name">Completed Lessons</span><span class="desc">18 lessons</span></div>
+                        <div class="planner-card" onclick="alert('Progress – coming soon!')"><span class="icon">📊</span><span class="name">Progress</span><span class="desc">68% overall</span></div>
+                        <div class="planner-card" onclick="alert('Achievements – coming soon!')"><span class="icon">🏅</span><span class="name">Achievements</span><span class="desc">12 badges</span></div>
+                    </div>
+                </div>
+            </div>
+        </main>
+        <aside class="right-panel" id="rightPanel">
+            <div class="widget">
+                <div class="widget-title">Today's Learning</div>
+                <div class="learning-widget">
+                    <div class="learning-stats"><span class="hours" id="todayHours">2h 45m</span><span class="label">Active today</span></div>
+                    <div class="progress-ring-wrap">
+                        <svg viewBox="0 0 56 56"><circle class="ring-bg" cx="28" cy="28" r="26.5"/><circle class="ring-fg" cx="28" cy="28" r="26.5" id="progressRing"/></svg>
+                        <span class="ring-label" id="progressLabel">68%</span>
+                    </div>
+                </div>
+            </div>
+            <div class="widget">
+                <div class="widget-title">Upcoming Homework</div>
+                <div class="homework-list" id="homeworkList">
+                    <div class="homework-item"><div class="hw-icon math">📐</div><div class="hw-info"><div class="hw-name">Quadratic Equations</div><div class="hw-sub">Mathematics</div></div><span class="hw-due">Due: Fri</span></div>
+                    <div class="homework-item"><div class="hw-icon acc">💰</div><div class="hw-info"><div class="hw-name">Balance Sheet</div><div class="hw-sub">Accounting</div></div><span class="hw-due">Due: Mon</span></div>
+                    <div class="homework-item"><div class="hw-icon eng">📖</div><div class="hw-info"><div class="hw-name">Essay Draft</div><div class="hw-sub">English</div></div><span class="hw-due">Due: Wed</span></div>
+                </div>
+            </div>
+            <div class="widget">
+                <div class="widget-title">Recent Subjects</div>
+                <div class="subject-tags" id="subjectTags"></div>
+            </div>
+            <div class="widget">
+                <div class="widget-title">Weekly Progress</div>
+                <div class="chart-wrap"><canvas id="weeklyChart"></canvas></div>
+            </div>
+            <div class="widget">
+                <div class="widget-title">Achievements</div>
+                <div class="achievements-grid">
+                    <div class="achievement-item"><span class="achi-icon">🏆</span><span class="achi-value">7</span><span class="achi-label">Day Streak</span></div>
+                    <div class="achievement-item"><span class="achi-icon">⭐</span><span class="achi-value">95%</span><span class="achi-label">Completion</span></div>
+                    <div class="achievement-item"><span class="achi-icon">📚</span><span class="achi-value">42</span><span class="achi-label">Lessons</span></div>
+                </div>
+            </div>
+        </aside>
+    </div>
+    <div class="input-area" id="inputArea">
+        <div class="input-wrap">
+            <div class="input-icons">
+                <button data-lucide="paperclip" title="Attach file" onclick="document.getElementById('fileUploadInput').click()"></button>
+                <button data-lucide="image" title="Upload image" onclick="document.getElementById('fileUploadInput').click()"></button>
+                <button data-lucide="mic" title="Voice input"></button>
+            </div>
+            <input type="file" id="fileUploadInput" accept=".pdf,.png,.jpg,.jpeg,.doc,.docx" style="display:none;" />
+            <input type="text" placeholder="Ask Leago AI anything..." id="chatInput" onkeydown="if(event.key==='Enter') sendChatMessage()" />
+            <button class="btn-send" id="sendBtn" onclick="sendChatMessage()" data-lucide="send"></button>
+        </div>
+    </div>
+    <nav class="bottom-nav" id="bottomNav">
+        <a class="active" data-page="overview" onclick="navigateTo('overview')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg><span>Home</span></a>
+        <a data-page="chat" onclick="navigateTo('chat')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg><span>Chat</span></a>
+        <a data-page="subjects" onclick="navigateTo('subjects')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg><span>Subjects</span></a>
+        <a data-page="quizzes" onclick="navigateTo('quizzes')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg><span>Quizzes</span></a>
+        <a data-page="profile" onclick="navigateTo('profile')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg><span>Profile</span></a>
+    </nav>
+    <script src="/js/dashboard.js"></script>
+</body>
+</html>
