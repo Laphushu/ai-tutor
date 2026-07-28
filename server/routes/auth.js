@@ -10,6 +10,7 @@ router.post('/signup', async (req, res) => {
     return res.status(400).json({ error: 'Missing required fields' });
   }
   try {
+    // CHECK EMAIL UNIQUENESS
     const existing = await pool.query('SELECT id FROM users WHERE email = $1', [email]);
     if (existing.rows.length > 0) {
       return res.status(400).json({ error: 'This email already has an account. Please log in.' });

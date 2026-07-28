@@ -1,4 +1,6 @@
 ﻿require('dotenv').config();
+console.log('🚀 SERVER VERSION: 2.0.2 (Phase 2 - Final)');
+
 const express = require('express');
 const cors = require('cors');
 const path = require('path');
