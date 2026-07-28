@@ -9,7 +9,7 @@ router.post('/create', async (req, res) => {
     const paystackResponse = await fetch('https://api.paystack.co/transaction/initialize', {
       method: 'POST',
       headers: {
-        'Authorization': Bearer ,
+        'Authorization': `Bearer ${process.env.PAYSTACK_SECRET_KEY}`,
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
@@ -41,14 +41,14 @@ router.post('/webhook', express.raw({ type: 'application/json' }), async (req, r
     const transactionRef = event.data.reference;
     try {
       await pool.query(
-        INSERT INTO subscriptions (user_id, plan, remaining_questions, expires_at, transaction_ref)
-         VALUES (, 'premium', -1, NOW() + INTERVAL '1 month', )
+        `INSERT INTO subscriptions (user_id, plan, remaining_questions, expires_at, transaction_ref)
+         VALUES ($1, 'premium', -1, NOW() + INTERVAL '1 month', $2)
          ON CONFLICT (user_id) DO UPDATE
          SET plan = 'premium', remaining_questions = -1, expires_at = NOW() + INTERVAL '1 month',
-             transaction_ref = , updated_at = NOW(),
+             transaction_ref = $2, updated_at = NOW()`,
         [userId, transactionRef]
       );
-      console.log(✅ User  upgraded to premium);
+      console.log(`✅ User ${userId} upgraded to premium`);
     } catch(err) {
       console.error('Webhook DB error:', err);
       return res.status(500).send('DB error');

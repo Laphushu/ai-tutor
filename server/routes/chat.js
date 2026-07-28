@@ -10,7 +10,7 @@ async function checkSubscription(req, res, next) {
   if (!userId) return res.status(401).json({ error: 'Unauthorized' });
   try {
     const result = await pool.query(
-      'SELECT plan, daily_question_count, last_question_date FROM users WHERE id = ',
+      'SELECT plan, daily_question_count, last_question_date FROM users WHERE id = $1',
       [userId]
     );
     if (result.rows.length === 0) return res.status(404).json({ error: 'User not found' });
@@ -21,12 +21,12 @@ async function checkSubscription(req, res, next) {
     let count = user.daily_question_count || 0;
     if (lastDate !== today) {
       count = 0;
-      await pool.query('UPDATE users SET daily_question_count = 0, last_question_date =  WHERE id = ', [today, userId]);
+      await pool.query('UPDATE users SET daily_question_count = 0, last_question_date = $1 WHERE id = $2', [today, userId]);
     }
     if (count >= 10) {
       return res.status(403).json({ error: 'limit_reached', message: 'You have reached your daily limit of 10 questions. Upgrade to Premium.' });
     }
-    await pool.query('UPDATE users SET daily_question_count = , last_question_date =  WHERE id = ', [count + 1, today, userId]);
+    await pool.query('UPDATE users SET daily_question_count = $1, last_question_date = $2 WHERE id = $3', [count + 1, today, userId]);
     req.user = { ...user, daily_question_count: count + 1 };
     next();
   } catch(err) {
@@ -51,10 +51,10 @@ router.post('/', auth, checkSubscription, async (req, res) => {
         const right = sides[1].trim();
         const leftResult = math.evaluate(left);
         const rightResult = math.evaluate(right);
-        mathResult = leftResult === rightResult ? ✅ True:  =  : ❌ False:  =  ( ≠ );
+        mathResult = leftResult === rightResult ? `✅ True: ${left} = ${right}` : `❌ False: ${left} = ${right} (${leftResult} ≠ ${rightResult})`;
       } else {
         const evaluated = math.evaluate(message);
-        mathResult = ${message} = ;
+        mathResult = `${message} = ${evaluated}`;
       }
       return res.json({ reply: mathResult });
     }
@@ -65,7 +65,7 @@ router.post('/', auth, checkSubscription, async (req, res) => {
   let convId = conversationId;
   if (convId) {
     const histResult = await pool.query(
-      SELECT role, content FROM chat_messages WHERE conversation_id =  AND user_id =  ORDER BY created_at ASC LIMIT 10,
+      `SELECT role, content FROM chat_messages WHERE conversation_id = $1 AND user_id = $2 ORDER BY created_at ASC LIMIT 10`,
       [convId, userId]
     );
     history = histResult.rows;
@@ -75,8 +75,8 @@ router.post('/', auth, checkSubscription, async (req, res) => {
 
   // Save user message
   await pool.query(
-    INSERT INTO chat_messages (user_id, role, content, subject, topic, conversation_id)
-     VALUES (, 'user', , , , ),
+    `INSERT INTO chat_messages (user_id, role, content, subject, topic, conversation_id)
+     VALUES ($1, 'user', $2, $3, $4, $5)`,
     [userId, message, subject || 'General', topic || '', convId]
   );
 
@@ -93,7 +93,7 @@ router.post('/', auth, checkSubscription, async (req, res) => {
     try {
       const response = await fetch('https://api.deepseek.com/v1/chat/completions', {
         method: 'POST',
-        headers: { 'Authorization': Bearer , 'Content-Type': 'application/json' },
+        headers: { 'Authorization': `Bearer ${DEEPSEEK_API_KEY}`, 'Content-Type': 'application/json' },
         body: JSON.stringify({
           model: 'deepseek-chat',
           messages: [{ role: 'user', content: prompt }],
@@ -108,12 +108,12 @@ router.post('/', auth, checkSubscription, async (req, res) => {
     } catch(e) {}
   }
   if (!fullResponse) {
-    fullResponse = 📚 I'm here to help you with "". Let's work through this together step by step. Could you tell me what you already know about this topic?;
+    fullResponse = `📚 I'm here to help you with "${topic || subject}". Let's work through this together step by step. Could you tell me what you already know about this topic?`;
   }
 
   await pool.query(
-    INSERT INTO chat_messages (user_id, role, content, subject, topic, conversation_id)
-     VALUES (, 'assistant', , , , ),
+    `INSERT INTO chat_messages (user_id, role, content, subject, topic, conversation_id)
+     VALUES ($1, 'assistant', $2, $3, $4, $5)`,
     [userId, fullResponse, subject || 'General', topic || '', convId]
   );
 
@@ -125,17 +125,17 @@ router.get('/history', auth, async (req, res) => {
   const { conversationId } = req.query;
   if (!conversationId) {
     const result = await pool.query(
-      SELECT DISTINCT conversation_id, MAX(created_at) as last_activity
-       FROM chat_messages WHERE user_id = 
-       GROUP BY conversation_id ORDER BY last_activity DESC LIMIT 20,
+      `SELECT DISTINCT conversation_id, MAX(created_at) as last_activity
+       FROM chat_messages WHERE user_id = $1
+       GROUP BY conversation_id ORDER BY last_activity DESC LIMIT 20`,
       [userId]
     );
     return res.json(result.rows);
   }
   const result = await pool.query(
-    SELECT role, content, created_at FROM chat_messages
-     WHERE user_id =  AND conversation_id = 
-     ORDER BY created_at ASC LIMIT 50,
+    `SELECT role, content, created_at FROM chat_messages
+     WHERE user_id = $1 AND conversation_id = $2
+     ORDER BY created_at ASC LIMIT 50`,
     [userId, conversationId]
   );
   res.json(result.rows);

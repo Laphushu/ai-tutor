@@ -39,8 +39,8 @@ app.get('*', (req, res) => {
 
 initDB().then(() => {
   app.listen(PORT, () => {
-    console.log(✅ Leago Academy v2 running on port );
-    console.log(🌍 Environment: );
+    console.log(`✅ Leago Academy v2 running on port ${PORT}`);
+    console.log(`🌍 Environment: ${process.env.NODE_ENV || 'development'}`);
   });
 }).catch(err => {
   console.error('❌ Failed to start:', err.message);

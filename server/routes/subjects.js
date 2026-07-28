@@ -1,68 +1,38 @@
-// server/routes/subjects.js
 const express = require('express');
-const { pool } = require('../db');
 const router = express.Router();
+const { pool } = require('../db');
+const auth = require('../middleware/auth');
 
-router.get('/countries', async (req, res) => {
+router.get('/', auth, async (req, res) => {
+  const userId = req.user.userId;
   try {
-    const result = await pool.query('SELECT * FROM countries ORDER BY name');
-    res.json(result.rows);
-  } catch (err) {
-    res.status(500).json({ error: 'Database error' });
-  }
+    const result = await pool.query('SELECT subjects FROM users WHERE id = $1', [userId]);
+    if (result.rows.length === 0) return res.json([]);
+    const subjects = result.rows[0].subjects;
+    if (typeof subjects === 'string') {
+      try { return res.json(JSON.parse(subjects)); } catch(e) { return res.json([]); }
+    }
+    res.json(subjects || []);
+  } catch(err) { res.json([]); }
 });
 
-router.get('/provinces/:countryId', async (req, res) => {
-  const countryId = parseInt(req.params.countryId);
-  try {
-    const result = await pool.query('SELECT * FROM provinces WHERE country_id = $1 ORDER BY name', [countryId]);
-    res.json(result.rows);
-  } catch (err) {
-    res.status(500).json({ error: 'Database error' });
-  }
-});
-
-router.get('/education-levels', async (req, res) => {
-  try {
-    const result = await pool.query('SELECT * FROM education_levels ORDER BY sort_order');
-    res.json(result.rows);
-  } catch (err) {
-    res.status(500).json({ error: 'Database error' });
-  }
-});
-
-router.get('/grades/:levelId', async (req, res) => {
-  const levelId = parseInt(req.params.levelId);
-  try {
-    const result = await pool.query('SELECT * FROM grades WHERE education_level_id = $1 ORDER BY sort_order', [levelId]);
-    res.json(result.rows);
-  } catch (err) {
-    res.status(500).json({ error: 'Database error' });
-  }
-});
-
-router.get('/curricula/:countryId', async (req, res) => {
-  const countryId = parseInt(req.params.countryId);
-  try {
-    const result = await pool.query('SELECT * FROM curricula WHERE country_id = $1 ORDER BY name', [countryId]);
-    res.json(result.rows);
-  } catch (err) {
-    res.status(500).json({ error: 'Database error' });
-  }
-});
-
-router.get('/subjects/:curriculumId/:gradeId', async (req, res) => {
-  const curriculumId = parseInt(req.params.curriculumId);
-  const gradeId = parseInt(req.params.gradeId);
-  try {
-    const result = await pool.query(
-      'SELECT name FROM subjects WHERE curriculum_id = $1 AND grade_id = $2 ORDER BY name',
-      [curriculumId, gradeId]
-    );
-    res.json(result.rows.map(r => r.name));
-  } catch (err) {
-    res.status(500).json({ error: 'Database error' });
-  }
+router.get('/topics', auth, async (req, res) => {
+  const { subject, grade, curriculum } = req.query;
+  if (!subject) return res.json([]);
+  const topicMap = {
+    'Mathematics': ['Algebra', 'Functions', 'Trigonometry', 'Calculus', 'Probability', 'Statistics', 'Geometry', 'Financial Maths'],
+    'Physical Sciences': ['Mechanics', 'Thermodynamics', 'Electricity', 'Waves', 'Chemical Bonding', 'Organic Chemistry'],
+    'Life Sciences': ['Cell Biology', 'Genetics', 'Ecology', 'Human Anatomy', 'Plant Physiology', 'Evolution'],
+    'Accounting': ['Bookkeeping', 'Financial Statements', 'Budgeting', 'Taxation', 'Auditing'],
+    'English': ['Grammar', 'Essay Writing', 'Comprehension', 'Literature', 'Poetry', 'Language'],
+    'Geography': ['Climate', 'Maps', 'Geomorphology', 'Settlement', 'GIS', 'Population'],
+    'History': ['Ancient Civilizations', 'Industrial Revolution', 'World Wars', 'Apartheid', 'African History'],
+    'Information Technology': ['Programming', 'Networks', 'Cybersecurity', 'Databases', 'Web Development'],
+    'Business Studies': ['Entrepreneurship', 'Marketing', 'HR', 'Finance', 'Business Ethics'],
+    'Economics': ['Microeconomics', 'Macroeconomics', 'International Trade', 'Economic Development']
+  };
+  const topics = topicMap[subject] || ['Introduction', 'Basics', 'Intermediate', 'Advanced'];
+  res.json(topics.map(t => ({ name: t })));
 });
 
 module.exports = router;
