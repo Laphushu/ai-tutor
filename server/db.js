@@ -1,3 +1,6 @@
+require('dotenv').config();
+console.log("DATABASE_URL:", process.env.DATABASE_URL);
+
 const { Pool } = require('pg');
 
 // Automatically detect if running against localhost or a cloud database
@@ -115,11 +118,10 @@ async function initDB() {
     console.log('✅ Database tables and schema migrations initialized');
   } catch (err) {
     await client.query('ROLLBACK');
-    // ===== IMPROVED ERROR LOGGING =====
     console.error('❌ DATABASE ERROR');
     console.error(err);
     console.error(err.stack);
-    throw err; // Propagate error so server startup aborts cleanly if DB fails
+    throw err;
   } finally {
     client.release();
   }
