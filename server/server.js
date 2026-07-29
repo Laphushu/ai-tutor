@@ -45,6 +45,8 @@ initDB().then(() => {
     console.log(`🌍 Environment: ${process.env.NODE_ENV || 'development'}`);
   });
 }).catch(err => {
-  console.error('❌ Failed to start:', err.message);
+  console.error('❌ SERVER FAILED TO START');
+  console.error(err);
+  console.error(err.stack);
   process.exit(1);
 });

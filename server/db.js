@@ -75,7 +75,7 @@ async function initDB() {
       );
     `);
 
-    // 2. Dynamic Column Migrations (Clean, Native Postgres Syntax)
+    // 2. Dynamic Column Migrations
     await client.query(`
       ALTER TABLE users ADD COLUMN IF NOT EXISTS plan VARCHAR(20) DEFAULT 'free';
       ALTER TABLE users ADD COLUMN IF NOT EXISTS daily_question_count INTEGER DEFAULT 0;
@@ -115,7 +115,10 @@ async function initDB() {
     console.log('✅ Database tables and schema migrations initialized');
   } catch (err) {
     await client.query('ROLLBACK');
-    console.error('❌ DB init error:', err.message);
+    // ===== IMPROVED ERROR LOGGING =====
+    console.error('❌ DATABASE ERROR');
+    console.error(err);
+    console.error(err.stack);
     throw err; // Propagate error so server startup aborts cleanly if DB fails
   } finally {
     client.release();
