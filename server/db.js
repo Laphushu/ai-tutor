@@ -1,6 +1,5 @@
 const { Pool } = require('pg');
 
-// Automatically detect if running against localhost or a cloud database
 const isLocalhost = process.env.DATABASE_URL?.includes('localhost') || process.env.DATABASE_URL?.includes('127.0.0.1');
 
 const pool = new Pool({
@@ -13,7 +12,7 @@ async function initDB() {
   try {
     await client.query('BEGIN');
 
-    // 1. Core Lookup & User Tables
+    // Create tables (if not exist)
     await client.query(`
       CREATE TABLE IF NOT EXISTS countries (
         id SERIAL PRIMARY KEY,
@@ -41,14 +40,15 @@ async function initDB() {
         UNIQUE(country_id, name)
       );
 
-      -- SUBJECTS table with all columns
       CREATE TABLE IF NOT EXISTS subjects (
         id SERIAL PRIMARY KEY,
-        name VARCHAR(100) NOT NULL,
-        icon VARCHAR(50),
-        color VARCHAR(20),
-        description TEXT
+        name VARCHAR(100) NOT NULL
       );
+
+      -- Add missing columns if they don't exist
+      ALTER TABLE subjects ADD COLUMN IF NOT EXISTS icon VARCHAR(50);
+      ALTER TABLE subjects ADD COLUMN IF NOT EXISTS color VARCHAR(20);
+      ALTER TABLE subjects ADD COLUMN IF NOT EXISTS description TEXT;
 
       CREATE TABLE IF NOT EXISTS topics (
         id SERIAL PRIMARY KEY,
@@ -143,14 +143,14 @@ async function initDB() {
       );
     `);
 
-    // 2. Dynamic Column Migrations (just in case)
+    // Additional user column migrations
     await client.query(`
       ALTER TABLE users ADD COLUMN IF NOT EXISTS plan VARCHAR(20) DEFAULT 'free';
       ALTER TABLE users ADD COLUMN IF NOT EXISTS daily_question_count INTEGER DEFAULT 0;
       ALTER TABLE users ADD COLUMN IF NOT EXISTS last_question_date DATE;
     `);
 
-    // 3. Seed subjects if empty
+    // Seed subjects if empty
     const subjectsCheck = await client.query('SELECT COUNT(*) FROM subjects');
     if (parseInt(subjectsCheck.rows[0].count) === 0) {
       await client.query(`

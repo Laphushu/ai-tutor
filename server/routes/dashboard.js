@@ -22,14 +22,30 @@ router.get('/', authenticateToken, async (req, res) => {
     const curriculumRes = await pool.query('SELECT id, name FROM curricula WHERE id = $1', [user.curriculum_id]);
     const levelRes = await pool.query('SELECT id, name FROM education_levels WHERE id = $1', [user.education_level_id]);
 
-    const subjectsRes = await pool.query(
-      `SELECT s.id, s.name, s.icon, s.color, s.description
-       FROM subjects s
-       JOIN user_subjects us ON us.subject_id = s.id
-       WHERE us.user_id = $1
-       ORDER BY s.name`,
-      [userId]
-    );
+    // Get subjects – if columns are missing, fallback to id and name only
+    let subjects = [];
+    try {
+      const subjectsRes = await pool.query(
+        `SELECT s.id, s.name, s.icon, s.color, s.description
+         FROM subjects s
+         JOIN user_subjects us ON us.subject_id = s.id
+         WHERE us.user_id = $1
+         ORDER BY s.name`,
+        [userId]
+      );
+      subjects = subjectsRes.rows;
+    } catch (err) {
+      // If columns missing, fetch only id and name
+      const subjectsRes = await pool.query(
+        `SELECT s.id, s.name
+         FROM subjects s
+         JOIN user_subjects us ON us.subject_id = s.id
+         WHERE us.user_id = $1
+         ORDER BY s.name`,
+        [userId]
+      );
+      subjects = subjectsRes.rows.map(row => ({ ...row, icon: '📘', color: '#7C3AED', description: '' }));
+    }
 
     const subRes = await pool.query(
       `SELECT plan, status, start_date, expires_at FROM subscriptions WHERE user_id = $1`,
@@ -88,7 +104,7 @@ router.get('/', authenticateToken, async (req, res) => {
         curriculum: curriculumRes.rows[0] || null,
         educationLevel: levelRes.rows[0] || null
       },
-      subjects: subjectsRes.rows,
+      subjects: subjects,
       subscription: {
         plan: subscription.plan || 'free',
         status: subscription.status || 'active',
