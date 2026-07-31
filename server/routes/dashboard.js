@@ -23,7 +23,7 @@ router.get('/', authenticateToken, async (req, res) => {
     const levelRes = await pool.query('SELECT id, name FROM education_levels WHERE id = $1', [user.education_level_id]);
 
     const subjectsRes = await pool.query(
-      `SELECT s.id, s.name, s.icon, s.color 
+      `SELECT s.id, s.name, s.icon, s.color, s.description
        FROM subjects s
        JOIN user_subjects us ON us.subject_id = s.id
        WHERE us.user_id = $1

@@ -43,11 +43,15 @@ async function initDB() {
 
       CREATE TABLE IF NOT EXISTS subjects (
         id SERIAL PRIMARY KEY,
-        name VARCHAR(100) NOT NULL,
-        icon VARCHAR(50),
-        color VARCHAR(20),
-        description TEXT
+        name VARCHAR(100) NOT NULL
       );
+
+      -- ADD MISSING COLUMNS (if they don't exist)
+      await client.query(`
+        ALTER TABLE subjects ADD COLUMN IF NOT EXISTS icon VARCHAR(50);
+        ALTER TABLE subjects ADD COLUMN IF NOT EXISTS color VARCHAR(20);
+        ALTER TABLE subjects ADD COLUMN IF NOT EXISTS description TEXT;
+      `);
 
       CREATE TABLE IF NOT EXISTS topics (
         id SERIAL PRIMARY KEY,
