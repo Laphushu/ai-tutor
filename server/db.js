@@ -1,6 +1,3 @@
-require('dotenv').config();
-console.log("DATABASE_URL:", process.env.DATABASE_URL);
-
 const { Pool } = require('pg');
 
 // Automatically detect if running against localhost or a cloud database
@@ -44,21 +41,23 @@ async function initDB() {
         UNIQUE(country_id, name)
       );
 
-      CREATE TABLE IF NOT EXISTS grades (
-        id SERIAL PRIMARY KEY,
-        education_level_id INTEGER REFERENCES education_levels(id) ON DELETE CASCADE,
-        name VARCHAR(50) NOT NULL,
-        display_name VARCHAR(50) NOT NULL,
-        sort_order INTEGER DEFAULT 0,
-        UNIQUE(education_level_id, name)
-      );
-
       CREATE TABLE IF NOT EXISTS subjects (
         id SERIAL PRIMARY KEY,
-        curriculum_id INTEGER REFERENCES curricula(id) ON DELETE CASCADE,
-        grade_id INTEGER REFERENCES grades(id) ON DELETE CASCADE,
         name VARCHAR(100) NOT NULL,
-        UNIQUE(curriculum_id, grade_id, name)
+        icon VARCHAR(50),
+        color VARCHAR(20),
+        description TEXT
+      );
+
+      CREATE TABLE IF NOT EXISTS topics (
+        id SERIAL PRIMARY KEY,
+        subject_id INTEGER REFERENCES subjects(id) ON DELETE CASCADE,
+        curriculum_id INTEGER REFERENCES curricula(id),
+        grade VARCHAR(20),
+        title VARCHAR(200) NOT NULL,
+        description TEXT,
+        order_number INTEGER DEFAULT 0,
+        UNIQUE(subject_id, title)
       );
 
       CREATE TABLE IF NOT EXISTS users (
@@ -71,48 +70,102 @@ async function initDB() {
         province_id INTEGER REFERENCES provinces(id),
         education_level_id INTEGER REFERENCES education_levels(id),
         curriculum_id INTEGER REFERENCES curricula(id),
-        grade_id INTEGER REFERENCES grades(id),
+        grade VARCHAR(20),
         role VARCHAR(20) DEFAULT 'learner',
-        subjects JSONB DEFAULT '[]'::jsonb,
+        plan VARCHAR(20) DEFAULT 'free',
+        daily_question_count INTEGER DEFAULT 0,
+        last_question_date DATE,
+        created_at TIMESTAMP DEFAULT NOW(),
+        updated_at TIMESTAMP DEFAULT NOW()
+      );
+
+      CREATE TABLE IF NOT EXISTS user_subjects (
+        id SERIAL PRIMARY KEY,
+        user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
+        subject_id INTEGER REFERENCES subjects(id) ON DELETE CASCADE,
+        UNIQUE(user_id, subject_id)
+      );
+
+      CREATE TABLE IF NOT EXISTS subscriptions (
+        user_id INTEGER PRIMARY KEY REFERENCES users(id) ON DELETE CASCADE,
+        plan VARCHAR(20) DEFAULT 'free',
+        status VARCHAR(20) DEFAULT 'active',
+        start_date TIMESTAMP DEFAULT NOW(),
+        expires_at TIMESTAMP,
+        transaction_ref VARCHAR(100),
+        updated_at TIMESTAMP DEFAULT NOW()
+      );
+
+      CREATE TABLE IF NOT EXISTS conversations (
+        id SERIAL PRIMARY KEY,
+        user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
+        subject_id INTEGER REFERENCES subjects(id),
+        topic_id INTEGER REFERENCES topics(id),
+        title VARCHAR(255) DEFAULT 'New Conversation',
+        created_at TIMESTAMP DEFAULT NOW(),
+        updated_at TIMESTAMP DEFAULT NOW()
+      );
+
+      CREATE TABLE IF NOT EXISTS chat_messages (
+        id SERIAL PRIMARY KEY,
+        conversation_id INTEGER REFERENCES conversations(id) ON DELETE CASCADE,
+        role VARCHAR(10) NOT NULL,
+        content TEXT NOT NULL,
+        created_at TIMESTAMP DEFAULT NOW()
+      );
+
+      CREATE TABLE IF NOT EXISTS student_progress (
+        id SERIAL PRIMARY KEY,
+        user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
+        subject_id INTEGER REFERENCES subjects(id),
+        topic_id INTEGER REFERENCES topics(id),
+        status VARCHAR(20) DEFAULT 'not_started',
+        completion_percentage INTEGER DEFAULT 0,
+        last_opened TIMESTAMP DEFAULT NOW(),
+        time_spent INTEGER DEFAULT 0,
+        questions_answered INTEGER DEFAULT 0,
+        correct_answers INTEGER DEFAULT 0,
+        created_at TIMESTAMP DEFAULT NOW(),
+        updated_at TIMESTAMP DEFAULT NOW(),
+        UNIQUE(user_id, topic_id)
+      );
+
+      CREATE TABLE IF NOT EXISTS uploads (
+        id SERIAL PRIMARY KEY,
+        user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
+        conversation_id INTEGER REFERENCES conversations(id) ON DELETE SET NULL,
+        type VARCHAR(20) NOT NULL,
+        filename VARCHAR(255) NOT NULL,
+        file_url TEXT NOT NULL,
+        file_size INTEGER,
         created_at TIMESTAMP DEFAULT NOW()
       );
     `);
 
-    // 2. Dynamic Column Migrations
+    // 2. Dynamic Column Migrations (just in case)
     await client.query(`
       ALTER TABLE users ADD COLUMN IF NOT EXISTS plan VARCHAR(20) DEFAULT 'free';
       ALTER TABLE users ADD COLUMN IF NOT EXISTS daily_question_count INTEGER DEFAULT 0;
       ALTER TABLE users ADD COLUMN IF NOT EXISTS last_question_date DATE;
     `);
 
-    // 3. Activity & Subscription Tables
-    await client.query(`
-      CREATE TABLE IF NOT EXISTS subscriptions (
-        user_id INTEGER PRIMARY KEY REFERENCES users(id) ON DELETE CASCADE,
-        status VARCHAR(20) DEFAULT 'free',
-        start_date TIMESTAMP DEFAULT NOW(),
-        end_date TIMESTAMP
-      );
-
-      CREATE TABLE IF NOT EXISTS progress (
-        id SERIAL PRIMARY KEY,
-        user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
-        subject_id INTEGER REFERENCES subjects(id) ON DELETE CASCADE,
-        topic_name VARCHAR(255),
-        completed_at TIMESTAMP DEFAULT NOW(),
-        UNIQUE(user_id, subject_id, topic_name)
-      );
-
-      CREATE TABLE IF NOT EXISTS payments (
-        id SERIAL PRIMARY KEY,
-        user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
-        reference VARCHAR(100) UNIQUE,
-        amount INTEGER,
-        currency VARCHAR(10),
-        status VARCHAR(20),
-        created_at TIMESTAMP DEFAULT NOW()
-      );
-    `);
+    // 3. Seed subjects if empty
+    const subjectsCheck = await client.query('SELECT COUNT(*) FROM subjects');
+    if (parseInt(subjectsCheck.rows[0].count) === 0) {
+      await client.query(`
+        INSERT INTO subjects (name, icon, color, description) VALUES
+        ('Mathematics', '📐', '#7C3AED', 'Numbers, algebra, calculus, and beyond'),
+        ('Physical Sciences', '⚛️', '#3B82F6', 'Physics and chemistry fundamentals'),
+        ('Life Sciences', '🧬', '#10B981', 'Biology, genetics, and ecology'),
+        ('Accounting', '💰', '#F59E0B', 'Financial and managerial accounting'),
+        ('English', '📖', '#EF4444', 'Language, literature, and writing'),
+        ('Geography', '🌍', '#06B6D4', 'Physical and human geography'),
+        ('History', '🏛️', '#8B5CF6', 'African and world history'),
+        ('Information Technology', '💻', '#6366F1', 'Programming, networks, and cybersecurity'),
+        ('Business Studies', '📊', '#F97316', 'Entrepreneurship, marketing, and finance'),
+        ('Economics', '📈', '#14B8A6', 'Micro and macroeconomics')
+      `);
+    }
 
     await client.query('COMMIT');
     console.log('✅ Database tables and schema migrations initialized');

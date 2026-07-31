@@ -2,98 +2,124 @@
 const router = express.Router();
 const { pool } = require('../db');
 const math = require('mathjs');
-const auth = require('../middleware/auth');
+const authenticateToken = require('../middleware/auth');
 const { buildAIPrompt } = require('../utils/ai');
 
-async function checkSubscription(req, res, next) {
-  const userId = req.user.userId;
-  if (!userId) return res.status(401).json({ error: 'Unauthorized' });
-  try {
-    const result = await pool.query(
-      'SELECT plan, daily_question_count, last_question_date FROM users WHERE id = $1',
-      [userId]
-    );
-    if (result.rows.length === 0) return res.status(404).json({ error: 'User not found' });
-    const user = result.rows[0];
-    if (user.plan === 'premium') return next();
-    const today = new Date().toISOString().split('T')[0];
-    const lastDate = user.last_question_date ? user.last_question_date.toISOString().split('T')[0] : null;
-    let count = user.daily_question_count || 0;
-    if (lastDate !== today) {
-      count = 0;
-      await pool.query('UPDATE users SET daily_question_count = 0, last_question_date = $1 WHERE id = $2', [today, userId]);
-    }
-    if (count >= 10) {
-      return res.status(403).json({ error: 'limit_reached', message: 'You have reached your daily limit of 10 questions. Upgrade to Premium.' });
-    }
-    await pool.query('UPDATE users SET daily_question_count = $1, last_question_date = $2 WHERE id = $3', [count + 1, today, userId]);
-    req.user = { ...user, daily_question_count: count + 1 };
-    next();
-  } catch(err) {
-    console.error('Subscription check error:', err.message);
-    return next();
+// ===== HELPERS =====
+async function checkAndIncrementDailyQuestion(userId) {
+  const result = await pool.query(
+    'SELECT plan, daily_question_count, last_question_date FROM users WHERE id = $1',
+    [userId]
+  );
+  if (result.rows.length === 0) throw new Error('User not found');
+  const user = result.rows[0];
+  const today = new Date().toISOString().split('T')[0];
+  const lastDate = user.last_question_date ? user.last_question_date.toISOString().split('T')[0] : null;
+  let count = user.daily_question_count || 0;
+  if (lastDate !== today) {
+    count = 0;
+    await pool.query('UPDATE users SET daily_question_count = 0, last_question_date = $1 WHERE id = $2', [today, userId]);
   }
+  const limit = user.plan === 'premium' ? -1 : 20;
+  if (limit !== -1 && count >= limit) {
+    return { allowed: false, limit, used: count };
+  }
+  // increment
+  await pool.query('UPDATE users SET daily_question_count = $1, last_question_date = $2 WHERE id = $3', [count + 1, today, userId]);
+  return { allowed: true, limit, used: count + 1 };
 }
 
-router.post('/', auth, checkSubscription, async (req, res) => {
+// ===== POST /api/chat =====
+router.post('/', authenticateToken, async (req, res) => {
   const userId = req.user.userId;
-  const { message, subject, topic, conversationId, grade, curriculum } = req.body;
+  const { message, subject_id, topic_id, conversation_id } = req.body;
   if (!message) return res.status(400).json({ error: 'Message is required' });
 
-  // Math solver
-  try {
-    const isMath = /[0-9+\-*/().^]/.test(message) && !message.toLowerCase().includes('what is') && !message.toLowerCase().includes('teach');
-    if (isMath) {
-      let mathResult;
-      if (message.includes('=')) {
-        const sides = message.split('=');
-        const left = sides[0].trim();
-        const right = sides[1].trim();
-        const leftResult = math.evaluate(left);
-        const rightResult = math.evaluate(right);
-        mathResult = leftResult === rightResult ? `✅ True: ${left} = ${right}` : `❌ False: ${left} = ${right} (${leftResult} ≠ ${rightResult})`;
-      } else {
-        const evaluated = math.evaluate(message);
-        mathResult = `${message} = ${evaluated}`;
-      }
-      return res.json({ reply: mathResult });
-    }
-  } catch(e) {}
+  // Check daily limit
+  const daily = await checkAndIncrementDailyQuestion(userId);
+  if (!daily.allowed) {
+    return res.status(403).json({ error: 'limit_reached', message: 'Daily question limit reached.' });
+  }
 
-  // Get history
-  let history = [];
-  let convId = conversationId;
-  if (convId) {
-    const histResult = await pool.query(
-      `SELECT role, content FROM chat_messages WHERE conversation_id = $1 AND user_id = $2 ORDER BY created_at ASC LIMIT 10`,
-      [convId, userId]
+  // Get subject and topic info if provided
+  let subjectName = null;
+  let topicName = null;
+  let grade = null;
+  let curriculum = null;
+  if (subject_id) {
+    const subRes = await pool.query('SELECT name FROM subjects WHERE id = $1', [subject_id]);
+    if (subRes.rows.length > 0) subjectName = subRes.rows[0].name;
+  }
+  if (topic_id) {
+    const topRes = await pool.query('SELECT title, grade FROM topics WHERE id = $1', [topic_id]);
+    if (topRes.rows.length > 0) {
+      topicName = topRes.rows[0].title;
+      grade = topRes.rows[0].grade || grade;
+    }
+  }
+  // Get user curriculum
+  if (!curriculum) {
+    const curRes = await pool.query('SELECT curriculum_id FROM users WHERE id = $1', [userId]);
+    if (curRes.rows.length > 0 && curRes.rows[0].curriculum_id) {
+      const curNameRes = await pool.query('SELECT name FROM curricula WHERE id = $1', [curRes.rows[0].curriculum_id]);
+      if (curNameRes.rows.length > 0) curriculum = curNameRes.rows[0].name;
+    }
+  }
+
+  // Get or create conversation
+  let convId = conversation_id;
+  if (!convId) {
+    const title = subjectName ? `${subjectName} - ${topicName || 'General'}` : 'New Conversation';
+    const result = await pool.query(
+      `INSERT INTO conversations (user_id, subject_id, topic_id, title)
+       VALUES ($1, $2, $3, $4)
+       RETURNING id`,
+      [userId, subject_id, topic_id, title]
     );
-    history = histResult.rows;
+    convId = result.rows[0].id;
   } else {
-    convId = 'conv_' + Date.now() + '_' + userId;
+    // Update conversation timestamp
+    await pool.query('UPDATE conversations SET updated_at = NOW() WHERE id = $1', [convId]);
   }
 
   // Save user message
   await pool.query(
-    `INSERT INTO chat_messages (user_id, role, content, subject, topic, conversation_id)
-     VALUES ($1, 'user', $2, $3, $4, $5)`,
-    [userId, message, subject || 'General', topic || '', convId]
+    `INSERT INTO chat_messages (conversation_id, role, content)
+     VALUES ($1, 'user', $2)`,
+    [convId, message]
   );
 
+  // Get conversation history (last 6 messages)
+  const historyRes = await pool.query(
+    `SELECT role, content FROM chat_messages
+     WHERE conversation_id = $1
+     ORDER BY created_at ASC
+     LIMIT 6`,
+    [convId]
+  );
+  const history = historyRes.rows;
+
+  // Build prompt using util
   const prompt = buildAIPrompt({
-    message, subject: subject || 'General', topic: topic || '',
-    grade: grade || req.user?.grade || 'unknown',
-    curriculum: curriculum || req.user?.curriculum_id || 'CAPS',
-    history
+    message,
+    subject: subjectName || 'General',
+    topic: topicName || '',
+    grade: grade || 'unknown',
+    curriculum: curriculum || 'CAPS',
+    history: history.slice(0, -1) // exclude current user message? Actually we already added it, but we'll include all history
   });
 
+  // Call AI
   const DEEPSEEK_API_KEY = process.env.DEEPSEEK_API_KEY;
-  let fullResponse = '';
+  let aiReply = '';
   if (DEEPSEEK_API_KEY) {
     try {
       const response = await fetch('https://api.deepseek.com/v1/chat/completions', {
         method: 'POST',
-        headers: { 'Authorization': `Bearer ${DEEPSEEK_API_KEY}`, 'Content-Type': 'application/json' },
+        headers: {
+          'Authorization': `Bearer ${DEEPSEEK_API_KEY}`,
+          'Content-Type': 'application/json'
+        },
         body: JSON.stringify({
           model: 'deepseek-chat',
           messages: [{ role: 'user', content: prompt }],
@@ -103,40 +129,61 @@ router.post('/', auth, checkSubscription, async (req, res) => {
       });
       if (response.ok) {
         const data = await response.json();
-        fullResponse = data.choices?.[0]?.message?.content || '';
+        aiReply = data.choices?.[0]?.message?.content || '';
       }
     } catch(e) {}
   }
-  if (!fullResponse) {
-    fullResponse = `📚 I'm here to help you with "${topic || subject}". Let's work through this together step by step. Could you tell me what you already know about this topic?`;
+
+  if (!aiReply) {
+    aiReply = `I'm here to help you with ${subjectName || 'this topic'}. Could you tell me more about what you need?`;
   }
 
+  // Save AI reply
   await pool.query(
-    `INSERT INTO chat_messages (user_id, role, content, subject, topic, conversation_id)
-     VALUES ($1, 'assistant', $2, $3, $4, $5)`,
-    [userId, fullResponse, subject || 'General', topic || '', convId]
+    `INSERT INTO chat_messages (conversation_id, role, content)
+     VALUES ($1, 'assistant', $2)`,
+    [convId, aiReply]
   );
 
-  res.json({ reply: fullResponse, conversationId: convId });
+  // Update progress if topic is known
+  if (topic_id) {
+    await pool.query(
+      `INSERT INTO student_progress (user_id, subject_id, topic_id, status, last_opened)
+       VALUES ($1, $2, $3, 'in_progress', NOW())
+       ON CONFLICT (user_id, topic_id)
+       DO UPDATE SET last_opened = NOW(), updated_at = NOW()`,
+      [userId, subject_id, topic_id]
+    );
+  }
+
+  res.json({ reply: aiReply, conversation_id: convId });
 });
 
-router.get('/history', auth, async (req, res) => {
+// ===== GET /api/chat/history =====
+router.get('/history', authenticateToken, async (req, res) => {
   const userId = req.user.userId;
-  const { conversationId } = req.query;
-  if (!conversationId) {
+  const { conversation_id } = req.query;
+  if (!conversation_id) {
+    // List conversations
     const result = await pool.query(
-      `SELECT DISTINCT conversation_id, MAX(created_at) as last_activity
-       FROM chat_messages WHERE user_id = $1
-       GROUP BY conversation_id ORDER BY last_activity DESC LIMIT 20`,
+      `SELECT c.id, c.title, c.created_at, c.updated_at,
+              (SELECT COUNT(*) FROM chat_messages WHERE conversation_id = c.id) as message_count,
+              s.name as subject_name
+       FROM conversations c
+       LEFT JOIN subjects s ON s.id = c.subject_id
+       WHERE c.user_id = $1
+       ORDER BY c.updated_at DESC
+       LIMIT 20`,
       [userId]
     );
     return res.json(result.rows);
   }
+  // Get messages for a conversation
   const result = await pool.query(
     `SELECT role, content, created_at FROM chat_messages
-     WHERE user_id = $1 AND conversation_id = $2
-     ORDER BY created_at ASC LIMIT 50`,
-    [userId, conversationId]
+     WHERE conversation_id = $1
+     ORDER BY created_at ASC`,
+    [conversation_id]
   );
   res.json(result.rows);
 });

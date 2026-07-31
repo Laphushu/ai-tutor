@@ -173,7 +173,58 @@
         .subscribe-btn { background: linear-gradient(135deg, #6366f1, #8b5cf6); color: white; border: none; padding: 6px 16px; border-radius: 20px; font-weight: 600; font-size: 0.8rem; cursor: pointer; font-family: inherit; margin-left: 8px; }
         .subscribe-btn:hover { transform: scale(1.02); }
         .dashboard-grid { display: grid; grid-template-columns: 220px 1fr 250px; gap: 20px; }
-        @media (max-width: 900px) { .dashboard-grid { grid-template-columns: 1fr; } }
+        @media (max-width: 1024px) {
+            .dashboard-grid { grid-template-columns: 1fr; }
+            .sidebar-left, .sidebar-right { display: none; }
+            .sidebar-left.mobile-open, .sidebar-right.mobile-open { display: block; position: fixed; top: 60px; left: 0; bottom: 0; width: 280px; background: #090A18; z-index: 100; overflow-y: auto; padding: 16px; }
+        }
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 2.2rem; }
+            .hero .hero-subtitle { font-size: 1rem; }
+            .features-grid { grid-template-columns: 1fr 1fr; }
+            .pricing-grid { grid-template-columns: 1fr; }
+            .auth-card { padding: 28px 20px; max-width: 100%; }
+            .dashboard-grid { grid-template-columns: 1fr; }
+            .subject-grid { grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); }
+            .topic-grid { grid-template-columns: 1fr; }
+            .center-panel { padding: 16px; }
+            .tutor-container { padding: 16px; }
+            .chat-input { flex-wrap: wrap; }
+            .chat-input .btn-send { flex: 1; padding: 14px; }
+            .subject-grid-check { grid-template-columns: 1fr 1fr; }
+        }
+        @media (max-width: 480px) {
+            .hero h1 { font-size: 1.8rem; }
+            .features-grid { grid-template-columns: 1fr; }
+            .subject-grid-check { grid-template-columns: 1fr; }
+            .pricing-grid { grid-template-columns: 1fr; }
+        }
+
+        /* ===== Chat Box ===== */
+        .chat-box {
+            background: rgba(0,0,0,0.2);
+            border-radius: 16px;
+            padding: 20px;
+            height: auto;
+            min-height: 300px;
+            max-height: 60vh;
+            overflow-y: auto;
+            border: 1px solid rgba(255,255,255,0.06);
+            margin-bottom: 16px;
+            width: 100%;
+        }
+
+        /* ===== Input Area ===== */
+        .input-area {
+            position: sticky;
+            bottom: 0;
+            background: rgba(9,10,24,0.95);
+            padding: 12px 0 16px;
+            z-index: 10;
+        }
+
+        /* ==== Rest of styles (keeping original) ==== */
+
         .sidebar-left, .sidebar-right { background: rgba(255,255,255,0.04); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.06); border-radius: 16px; padding: 24px 18px; height: fit-content; }
         .sidebar-left .section-title, .sidebar-right .section-title { font-size: 0.7rem; text-transform: uppercase; color: #9ca3af; font-weight: 700; letter-spacing: 0.5px; margin: 16px 0 8px; }
         .sidebar-left .section-title:first-child { margin-top: 0; }
@@ -206,6 +257,7 @@
         .topic-card .resources { margin-top: 10px; display: flex; gap: 6px; flex-wrap: wrap; }
         .topic-card .resources .tag { background: rgba(124,58,237,0.15); color: #a855f7; padding: 2px 12px; border-radius: 12px; font-size: 0.7rem; font-weight: 600; }
         .topic-card .status-badge { position: absolute; top: 12px; right: 12px; font-size: 0.7rem; font-weight: 600; padding: 2px 10px; border-radius: 12px; background: rgba(255,255,255,0.05); color: #9ca3af; }
+
         .flashcard-item { padding: 10px 14px; background: rgba(255,255,255,0.04); border-radius: 10px; margin-bottom: 6px; font-size: 0.85rem; cursor: pointer; transition: all 0.2s; color: #d1d5db; }
         .flashcard-item:hover { background: rgba(255,255,255,0.08); }
         .flashcard-item .term { font-weight: 600; color: white; }
@@ -239,33 +291,6 @@
         }
         .tutor-header h3 { font-size: 1.2rem; font-weight: 700; color: white; }
         .tutor-header .context { font-size: 0.9rem; color: #9ca3af; background: rgba(255,255,255,0.05); padding: 4px 16px; border-radius: 20px; }
-        .chat-box {
-            background: rgba(0,0,0,0.2);
-            border-radius: 16px;
-            padding: 20px;
-            height: auto;
-            min-height: 200px;
-            max-height: 500px;
-            overflow-y: auto;
-            border: 1px solid rgba(255,255,255,0.06);
-            margin-bottom: 16px;
-        }
-        .chat-box .msg {
-            padding: 12px 16px;
-            border-radius: 14px;
-            max-width: 85%;
-            margin-bottom: 10px;
-            font-size: 0.95rem;
-            line-height: 1.6;
-            word-wrap: break-word;
-        }
-        .chat-box .msg.user { background: #7C3AED; color: #fff; margin-left: auto; text-align: right; }
-        .chat-box .msg.bot { background: rgba(255,255,255,0.08); color: #e5e7eb; margin-right: auto; }
-        .chat-box .msg.bot h1, .chat-box .msg.bot h2, .chat-box .msg.bot h3 { margin: 8px 0 4px; font-weight: 700; color: white; }
-        .chat-box .msg.bot ul, .chat-box .msg.bot ol { padding-left: 20px; margin: 4px 0 8px; }
-        .chat-box .msg.bot p { margin: 6px 0; }
-        .chat-box .msg.bot code { background: rgba(255,255,255,0.1); padding: 1px 6px; border-radius: 4px; font-size: 0.9em; }
-        .chat-box .msg.bot pre { background: rgba(255,255,255,0.05); padding: 10px; border-radius: 8px; overflow-x: auto; }
         .chat-input { display: flex; gap: 10px; margin-bottom: 12px; }
         .chat-input input { flex: 1; padding: 14px 18px; background: rgba(255,255,255,0.05); border: 2px solid rgba(255,255,255,0.1); border-radius: 14px; font-size: 0.95rem; color: white; font-family: inherit; transition: border-color 0.25s; }
         .chat-input input:focus { outline: none; border-color: #7C3AED; }
@@ -320,28 +345,6 @@
         .subject-grid-check label { display: flex; align-items: center; gap: 6px; font-size: 0.9rem; cursor: pointer; padding: 4px 6px; border-radius: 4px; transition: background 0.15s; color: #d1d5db; }
         .subject-grid-check label:hover { background: rgba(255,255,255,0.05); }
         .subject-grid-check input[type="checkbox"] { width: 16px; height: 16px; accent-color: #7C3AED; }
-
-        @media (max-width: 768px) {
-            .hero h1 { font-size: 2.2rem; }
-            .hero .hero-subtitle { font-size: 1rem; }
-            .features-grid { grid-template-columns: 1fr 1fr; }
-            .pricing-grid { grid-template-columns: 1fr; }
-            .auth-card { padding: 28px 20px; max-width: 100%; }
-            .dashboard-grid { grid-template-columns: 1fr; }
-            .subject-grid { grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); }
-            .topic-grid { grid-template-columns: 1fr; }
-            .center-panel { padding: 16px; }
-            .tutor-container { padding: 16px; }
-            .chat-input { flex-wrap: wrap; }
-            .chat-input .btn-send { flex: 1; padding: 14px; }
-            .subject-grid-check { grid-template-columns: 1fr 1fr; }
-        }
-        @media (max-width: 480px) {
-            .hero h1 { font-size: 1.8rem; }
-            .features-grid { grid-template-columns: 1fr; }
-            .subject-grid-check { grid-template-columns: 1fr; }
-            .pricing-grid { grid-template-columns: 1fr; }
-        }
     </style>
 </head>
 <body>
@@ -663,7 +666,7 @@
                 <p>AI Education Platform</p>
             </div>
 
-            <!-- Login Form (unchanged) -->
+            <!-- Login Form -->
             <div id="loginFormContainer">
                 <h3>Welcome Back</h3>
                 <p class="sub">Log in to continue your learning journey.</p>
@@ -682,7 +685,7 @@
                 </div>
             </div>
 
-            <!-- ===== NEW 5-STEP SIGNUP ===== -->
+            <!-- 5-STEP SIGNUP -->
             <div id="signupFormContainer" style="display: none;">
                 <div class="stepper" id="signupStepper">
                     <div class="step-circle active" id="stepIndicator1">1</div>
@@ -737,7 +740,6 @@
                         <label>Province / State</label>
                         <select id="signupProvince">
                             <option value="">Select province</option>
-                            <!-- Populated dynamically -->
                         </select>
                     </div>
                     <div class="error" id="signupError2"></div>
@@ -786,7 +788,6 @@
                         <label>Grade</label>
                         <select id="signupGrade">
                             <option value="">Select grade</option>
-                            <!-- Populated dynamically -->
                         </select>
                     </div>
                     <div class="error" id="signupError4"></div>
@@ -800,9 +801,7 @@
                 <div id="signupStep5" style="display: none;">
                     <h3>Select Your Subjects</h3>
                     <p class="sub">Choose the subjects you want to study (optional).</p>
-                    <div class="subject-grid-check" id="signupSubjectsCheck">
-                        <!-- Populated dynamically by updateSubjects() -->
-                    </div>
+                    <div class="subject-grid-check" id="signupSubjectsCheck"></div>
                     <div class="error" id="signupError5"></div>
                     <div class="flex gap-3 mt-4">
                         <button class="btn" style="background: rgba(255,255,255,0.1);" onclick="prevSignupStep(4)">Back</button>
@@ -829,6 +828,7 @@
                     <div class="flex items-center gap-2 mt-1">
                         <span class="role" id="dashUserRole">Grade 12 CAPS</span>
                         <span id="dashSubBadge" class="sub-badge sub-trial">Free Trial</span>
+                        <span id="dailyQuestionCount" class="text-xs text-gray-400 ml-2">Questions: 0/20</span>
                     </div>
                 </div>
                 <button id="dashUpgradeBtn" class="subscribe-btn" onclick="openUpgradeModal()">Upgrade Premium</button>
@@ -964,7 +964,9 @@
         }
 
         // --- Auth & State Management ---
-        let currentUser = JSON.parse(localStorage.getItem('leago_user')) || null;
+        let currentUser = null;
+        let currentConversationId = null;
+        let isProcessing = false;
 
         function openAuth(mode) {
             document.getElementById('authOverlay').classList.add('active');
@@ -1003,7 +1005,6 @@
                     circle.className = 'step-circle' + (i < step ? ' done' : i === step ? ' active' : '');
                 }
             }
-            // Hide errors when moving steps
             document.querySelectorAll('#signupFormContainer .error').forEach(e => e.classList.remove('show'));
         }
 
@@ -1064,7 +1065,6 @@
 
         // ---- Subjects ----
         function getSubjectList(curriculum, level) {
-            // Base subjects common to all curricula
             const common = ['Mathematics', 'English', 'Life Orientation'];
             let extras = [];
             if (curriculum === 'CAPS' || curriculum === 'IEB') {
@@ -1079,7 +1079,6 @@
             if (level === 'University') {
                 extras = ['Computer Science', 'Engineering', 'Law', 'Medicine', 'Business Administration', 'Psychology'];
             }
-            // Remove duplicates and sort
             let all = [...common, ...extras];
             return [...new Set(all)].sort();
         }
@@ -1125,17 +1124,46 @@
             const grade = document.getElementById('signupGrade').value;
             const checkedSubs = Array.from(document.querySelectorAll('#signupSubjectsCheck input:checked')).map(cb => cb.value);
 
-            const user = {
-                name, email,
-                country, province,
-                curriculum, level, grade,
-                subjects: checkedSubs.length ? checkedSubs : getSubjectList(curriculum, level),
-                isPremium: false
+            // For API: need to map country, curriculum, educationLevel to IDs. We'll use placeholder IDs for now.
+            // In a real app you'd fetch IDs from DB.
+            // For demo, we'll send names.
+            const payload = {
+                firstName: name,
+                lastName: name,
+                email,
+                password: pass,
+                countryId: 1, // placeholder
+                province: province,
+                educationLevelId: 1, // placeholder
+                grade,
+                curriculumId: 1, // placeholder
+                subjects: checkedSubs.length ? checkedSubs : ['Mathematics', 'English'],
+                role: 'learner'
             };
-            localStorage.setItem('leago_user', JSON.stringify(user));
-            currentUser = user;
-            closeAuth();
-            initDashboard();
+
+            fetch('/api/auth/signup', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (!data.success) {
+                    err.textContent = data.error || 'Signup failed';
+                    err.classList.add('show');
+                    return;
+                }
+                document.getElementById('signupSuccess').textContent = 'Account created! Please log in.';
+                document.getElementById('signupSuccess').classList.add('show');
+                setTimeout(() => {
+                    switchAuthMode('login');
+                    document.getElementById('loginEmail').value = email;
+                }, 1000);
+            })
+            .catch(() => {
+                err.textContent = 'Server error. Please try again.';
+                err.classList.add('show');
+            });
         }
 
         // ---- Login ----
@@ -1149,80 +1177,219 @@
                 return;
             }
             err.classList.remove('show');
-            // Simulate login – in production, call your backend
-            currentUser = {
-                name: email.split('@')[0],
-                email: email,
-                curriculum: 'CAPS',
-                grade: 'Grade 12',
-                subjects: ['Mathematics', 'Physical Sciences', 'Life Sciences', 'English'],
-                isPremium: false
-            };
-            localStorage.setItem('leago_user', JSON.stringify(currentUser));
-            closeAuth();
-            initDashboard();
+
+            fetch('/api/auth/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email, password: pass })
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (!data.success) {
+                    err.textContent = data.error || 'Login failed';
+                    err.classList.add('show');
+                    return;
+                }
+                localStorage.setItem('token', data.token);
+                localStorage.setItem('leago_user', JSON.stringify(data.user));
+                closeAuth();
+                initDashboard();
+            })
+            .catch(() => {
+                err.textContent = 'Network error. Please try again.';
+                err.classList.add('show');
+            });
         }
 
         // ---- Logout ----
         function handleLogout() {
-            localStorage.removeItem('leago_user');
-            currentUser = null;
-            document.getElementById('dashboard').classList.remove('active');
-            document.getElementById('landingPage').classList.remove('hidden');
+            if (confirm('Are you sure you want to logout?')) {
+                localStorage.removeItem('token');
+                localStorage.removeItem('leago_user');
+                currentUser = null;
+                document.getElementById('dashboard').classList.remove('active');
+                document.getElementById('landingPage').classList.remove('hidden');
+            }
         }
 
-        // ---- Init Dashboard ----
+        // ---- Init Dashboard (using /api/dashboard) ----
         function initDashboard() {
-            if (!currentUser) return;
-            document.getElementById('landingPage').classList.add('hidden');
-            document.getElementById('dashboard').classList.add('active');
-
-            document.getElementById('dashUserName').textContent = currentUser.name;
-            document.getElementById('dashUserRole').textContent = `${currentUser.grade} • ${currentUser.curriculum}`;
-
-            const badge = document.getElementById('dashSubBadge');
-            if (currentUser.isPremium) {
-                badge.textContent = 'Premium Scholar';
-                badge.className = 'sub-badge sub-active';
-                document.getElementById('dashUpgradeBtn').style.display = 'none';
-            } else {
-                badge.textContent = 'Free Trial';
-                badge.className = 'sub-badge sub-trial';
+            const token = localStorage.getItem('token');
+            if (!token) {
+                window.location.href = '/';
+                return;
             }
 
-            renderSubjectList();
-            switchDashboardTab('overview');
+            fetch('/api/dashboard', {
+                headers: { 'Authorization': 'Bearer ' + token }
+            })
+            .then(res => {
+                if (!res.ok) throw new Error('Failed to load dashboard');
+                return res.json();
+            })
+            .then(data => {
+                currentUser = data.profile;
+                currentUser.subjects = data.subjects;
+                currentUser.subscription = data.subscription;
+                currentUser.dailyQuestions = data.dailyQuestions;
+                currentUser.progress = data.progress;
+                currentUser.recentConversations = data.recentConversations;
+
+                document.getElementById('landingPage').classList.add('hidden');
+                document.getElementById('dashboard').classList.add('active');
+
+                const fullName = `${data.profile.first_name || ''} ${data.profile.last_name || ''}`.trim() || 'Student';
+                document.getElementById('dashUserName').textContent = fullName;
+                document.getElementById('dashUserRole').textContent = `${data.profile.grade || ''} • ${data.profile.curriculum?.name || 'CAPS'}`;
+
+                const badge = document.getElementById('dashSubBadge');
+                const upgradeBtn = document.getElementById('dashUpgradeBtn');
+                if (data.subscription.plan === 'premium') {
+                    badge.textContent = 'Premium Scholar';
+                    badge.className = 'sub-badge sub-active';
+                    upgradeBtn.style.display = 'none';
+                } else {
+                    badge.textContent = 'Free Trial';
+                    badge.className = 'sub-badge sub-trial';
+                    upgradeBtn.style.display = 'inline-block';
+                }
+
+                updateDailyQuestionCount();
+                renderSubjectList();
+                switchDashboardTab('overview');
+            })
+            .catch(err => {
+                console.error('❌ Dashboard error:', err);
+                localStorage.removeItem('token');
+                window.location.href = '/';
+            });
         }
 
+        // ---- Daily Question Counter ----
+        function updateDailyQuestionCount() {
+            const el = document.getElementById('dailyQuestionCount');
+            if (!el) return;
+            const data = currentUser?.dailyQuestions || { used: 0, limit: 20 };
+            if (data.limit === -1) {
+                el.textContent = '♾️ Unlimited';
+            } else {
+                el.textContent = `Questions: ${data.used}/${data.limit}`;
+            }
+        }
+
+        // ---- Render Subjects ----
         function renderSubjectList() {
             const list = document.getElementById('dashSubjectList');
-            list.innerHTML = currentUser.subjects.map(sub => `
-                <li onclick="loadSubject('${sub}')">📖 ${sub}</li>
+            const subjects = currentUser.subjects || [];
+
+            if (subjects.length === 0) {
+                list.innerHTML = '<li style="color:#9ca3af;cursor:default;">No subjects. Update your profile.</li>';
+                return;
+            }
+
+            list.innerHTML = subjects.map(sub => `
+                <li onclick="loadSubject(${sub.id})">
+                    ${sub.icon || '📖'} ${sub.name}
+                </li>
             `).join('');
+
+            renderOverviewSubjects(subjects);
+        }
+
+        function renderOverviewSubjects(subjects) {
+            const container = document.getElementById('overviewSubjects');
+            if (!container) return;
+            if (!subjects || subjects.length === 0) {
+                container.innerHTML = '<p style="color:var(--text-secondary);">No subjects selected. Update your profile.</p>';
+                return;
+            }
+            container.innerHTML = subjects.map(sub => `
+                <div class="subject-card" onclick="loadSubject(${sub.id})">
+                    <span class="icon">${sub.icon || '📘'}</span>
+                    <span class="name">${sub.name}</span>
+                    <span class="progress-badge">In Progress</span>
+                </div>
+            `).join('');
+        }
+
+        // ---- Load Subject & Topics ----
+        function loadSubject(subjectId) {
+            const token = localStorage.getItem('token');
+            const subject = currentUser.subjects.find(s => s.id === subjectId);
+            if (!subject) {
+                alert('Subject not found');
+                return;
+            }
+
+            const panel = document.getElementById('centerPanel');
+            panel.innerHTML = `
+                <button class="back-btn" onclick="switchDashboardTab('overview')">← Back to Overview</button>
+                <div class="welcome">${subject.icon || '📘'} ${subject.name}</div>
+                <div class="welcome-sub">Select a topic to start learning.</div>
+                <div id="topicList" class="topic-grid mt-4"></div>
+            `;
+
+            fetch(`/api/topics?subject_id=${subjectId}&grade=${encodeURIComponent(currentUser.grade || '')}`, {
+                headers: { 'Authorization': 'Bearer ' + token }
+            })
+            .then(res => res.json())
+            .then(topics => {
+                const container = document.getElementById('topicList');
+                if (!topics || topics.length === 0) {
+                    container.innerHTML = '<p style="color:#9ca3af;">No topics available for this subject.</p>';
+                    return;
+                }
+                container.innerHTML = topics.map(t => {
+                    // Check progress (we don't have topic-level progress from dashboard yet, but we can compute from currentUser.progress if needed)
+                    const progress = currentUser.progress?.topics?.find(p => p.topic_id === t.id);
+                    const status = progress?.status || 'not_started';
+                    const badge = status === 'completed' ? '✅' : status === 'in_progress' ? '🔄' : '📝';
+                    return `
+                        <div class="topic-card" onclick="openTopic(${subject.id}, ${t.id})">
+                            <div class="title">${badge} ${t.title}</div>
+                            <div class="meta">${t.description || 'Click to explore'}</div>
+                            ${progress ? `<div class="text-xs text-gray-500 mt-2">${progress.completion_percentage || 0}% complete</div>` : ''}
+                        </div>
+                    `;
+                }).join('');
+            })
+            .catch(() => {
+                document.getElementById('topicList').innerHTML = '<p style="color:#9ca3af;">Could not load topics.</p>';
+            });
+        }
+
+        // ---- Open Topic ----
+        function openTopic(subjectId, topicId) {
+            const subject = currentUser.subjects.find(s => s.id === subjectId);
+            if (!subject) return;
+            currentUser.currentSubjectId = subjectId;
+            currentUser.currentTopicId = topicId;
+            document.getElementById('chatInput').value = `Explain this topic step by step.`;
+            switchDashboardTab('tutor', subject.name);
+            setTimeout(sendChatMessage, 500);
         }
 
         // ---- Dashboard Tabs ----
         function switchDashboardTab(tab, param) {
-            // Update active state in nav
             document.querySelectorAll('.sidebar-left .subject-list li').forEach(el => el.classList.remove('active'));
 
             const panel = document.getElementById('centerPanel');
             if (tab === 'overview') {
                 panel.innerHTML = `
-                    <div class="welcome">Welcome back, ${currentUser.name} 👋</div>
+                    <div class="welcome">Welcome back, ${currentUser.first_name || 'Student'} 👋</div>
                     <div class="welcome-sub">Choose a subject or start an AI tutoring session below.</div>
-                    <div class="subject-grid mt-6">
-                        ${currentUser.subjects.map(sub => `
-                            <div class="subject-card" onclick="loadSubject('${sub}')">
-                                <span class="icon">📘</span>
-                                <div class="name">${sub}</div>
+                    <div class="subject-grid mt-6" id="overviewSubjects">
+                        ${(currentUser.subjects || []).map(sub => `
+                            <div class="subject-card" onclick="loadSubject(${sub.id})">
+                                <span class="icon">${sub.icon || '📘'}</span>
+                                <div class="name">${sub.name}</div>
                                 <span class="progress-badge">In Progress</span>
                             </div>
                         `).join('')}
                     </div>
                 `;
             } else if (tab === 'tutor') {
-                renderAiTutorPanel(panel, param || currentUser.subjects[0]);
+                renderAiTutorPanel(panel, param || 'General');
             } else if (tab === 'papers') {
                 panel.innerHTML = `
                     <button class="back-btn" onclick="switchDashboardTab('overview')">← Back to Overview</button>
@@ -1266,30 +1433,7 @@
             }
         }
 
-        function loadSubject(subjectName) {
-            const panel = document.getElementById('centerPanel');
-            panel.innerHTML = `
-                <button class="back-btn" onclick="switchDashboardTab('overview')">← Back to Overview</button>
-                <div class="welcome">${subjectName}</div>
-                <div class="welcome-sub">Select a topic or launch the AI Tutor for guided assistance.</div>
-                <div class="flex gap-3 mb-6">
-                    <button class="btn" style="width:auto; padding: 10px 20px;" onclick="switchDashboardTab('tutor', '${subjectName}')">🤖 Ask AI Tutor</button>
-                </div>
-                <div class="topic-grid">
-                    <div class="topic-card" onclick="switchDashboardTab('tutor', '${subjectName}')">
-                        <span class="status-badge">Active</span>
-                        <div class="title">Core Concepts &amp; Theory</div>
-                        <div class="meta">Comprehensive chapter breakdown</div>
-                    </div>
-                    <div class="topic-card" onclick="switchDashboardTab('tutor', '${subjectName}')">
-                        <span class="status-badge">Practice</span>
-                        <div class="title">Exam Preparation &amp; Quiz</div>
-                        <div class="meta">Test your understanding</div>
-                    </div>
-                </div>
-            `;
-        }
-
+        // ---- AI Tutor Panel ----
         function renderAiTutorPanel(panel, subject) {
             panel.innerHTML = `
                 <button class="back-btn" onclick="switchDashboardTab('overview')">← Back to Overview</button>
@@ -1299,7 +1443,7 @@
                         <div class="context">Subject: ${subject || 'General'}</div>
                     </div>
                     <div class="chat-box" id="chatBox">
-                        <div class="msg bot">Hello ${currentUser.name}! I am your personal AI teacher for ${subject || 'all subjects'}. How can I help you master your studies today?</div>
+                        <div class="msg bot">Hello ${currentUser.first_name || 'Student'}! I am your personal AI teacher for ${subject || 'all subjects'}. How can I help you master your studies today?</div>
                     </div>
                     <div class="chat-input">
                         <input type="text" id="chatInput" placeholder="Ask a question or paste a homework problem..." onkeydown="if(event.key==='Enter') sendChatMessage()" />
@@ -1313,52 +1457,116 @@
             `;
         }
 
+        // ---- Send Chat Message ----
         async function sendChatMessage() {
             const input = document.getElementById('chatInput');
-            const box = document.getElementById('chatBox');
-            const text = input.value.trim();
-            if (!text) return;
-
-            // Append user message
-            box.innerHTML += `<div class="msg user">${escapeHtml(text)}</div>`;
+            const message = input.value.trim();
+            if (!message || isProcessing) return;
             input.value = '';
-            box.scrollTop = box.scrollHeight;
+            addMessage('user', message);
+            showTyping(true);
+            isProcessing = true;
 
-            // Append loading bot message
-            const botMsgId = 'bot-msg-' + Date.now();
-            box.innerHTML += `<div class="msg bot" id="${botMsgId}"><span class="spinner"></span> Thinking...</div>`;
-            box.scrollTop = box.scrollHeight;
+            const payload = {
+                message: message,
+                subject_id: currentUser.currentSubjectId || null,
+                topic_id: currentUser.currentTopicId || null,
+                conversation_id: currentConversationId || null
+            };
 
-            // Simulate intelligent AI tutoring response
-            setTimeout(() => {
-                const botEl = document.getElementById(botMsgId);
-                if (botEl) {
-                    const sampleReply = `That is a great question regarding this topic! Let's break it down into simple steps:\n\n1. First, identify the given variables and what formula applies here.\n2. Substitute the values carefully into the equation.\n\nWould you like to try calculating the first step yourself?`;
-                    botEl.innerHTML = marked.parse(sampleReply);
-                    box.scrollTop = box.scrollHeight;
-                    // Render KaTeX if any math exists
-                    if (window.renderMathInElement) {
-                        renderMathInElement(botEl, { delimiters: [{left: "$", right: "$", display: false}] });
-                    }
+            try {
+                const res = await fetch('/api/chat', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer ' + localStorage.getItem('token')
+                    },
+                    body: JSON.stringify(payload)
+                });
+                const data = await res.json();
+                if (res.status === 403 && data.error === 'limit_reached') {
+                    addMessage('bot', '📚 You\'ve reached your daily limit. Upgrade to Premium.');
+                } else if (data.reply) {
+                    addMessage('bot', data.reply);
+                    if (data.conversation_id) currentConversationId = data.conversation_id;
+                } else {
+                    addMessage('bot', '❌ ' + (data.error || 'No response'));
                 }
-            }, 1000);
+                // Refresh daily counter
+                updateDailyQuestionCount();
+            } catch(err) {
+                addMessage('bot', '❌ Server error. Please try again.');
+            }
+            showTyping(false);
+            isProcessing = false;
         }
 
-        function openUpgradeModal() {
-            alert('Redirecting to secure payment gateway (R49.99/month)...');
-            currentUser.isPremium = true;
-            localStorage.setItem('leago_user', JSON.stringify(currentUser));
-            initDashboard();
+        function addMessage(role, text) {
+            const box = document.getElementById('chatBox');
+            const div = document.createElement('div');
+            div.className = `msg ${role}`;
+            if (role === 'bot') {
+                // Render markdown and math
+                let content = text;
+                if (typeof marked !== 'undefined') {
+                    marked.setOptions({ breaks: true, gfm: true });
+                    content = marked.parse(content);
+                }
+                div.innerHTML = content;
+                // Render KaTeX if available
+                setTimeout(() => {
+                    if (typeof renderMathInElement === 'function') {
+                        try {
+                            renderMathInElement(div, {
+                                delimiters: [
+                                    { left: '$$', right: '$$', display: true },
+                                    { left: '$', right: '$', display: false }
+                                ]
+                            });
+                        } catch(e) {}
+                    }
+                }, 100);
+            } else {
+                div.textContent = text;
+            }
+            box.appendChild(div);
+            box.scrollTop = box.scrollHeight;
+        }
+
+        function showTyping(active) {
+            // We don't have a typing indicator element in the current HTML; we'll add a simple one if needed.
+            // For now, we just skip.
+        }
+
+        // ---- Upgrade Modal ----
+        async function openUpgradeModal() {
+            try {
+                const res = await fetch('/api/payments/create', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ userId: currentUser.id, email: currentUser.email })
+                });
+                const data = await res.json();
+                if (data.authorization_url) {
+                    window.location.href = data.authorization_url;
+                } else {
+                    alert('Payment initialization failed. Please try again.');
+                }
+            } catch(err) {
+                alert('Payment service unavailable. Please try again later.');
+            }
         }
 
         function escapeHtml(str) {
             return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
         }
 
-        // Auto-initialize if user stored
-        if (currentUser) {
+        // ---- Auto-initialize if user stored ----
+        const storedToken = localStorage.getItem('token');
+        if (storedToken) {
             initDashboard();
         }
     </script>
+
 </body>
 </html>

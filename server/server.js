@@ -16,18 +16,22 @@ app.use('/api/payments/webhook', express.raw({ type: 'application/json' }));
 const authRoutes = require('./routes/auth');
 const adminRoutes = require('./routes/admin');
 const subjectRoutes = require('./routes/subjects');
+const topicsRoutes = require('./routes/topics');
 const paymentRoutes = require('./routes/payments');
 const chatRoutes = require('./routes/chat');
 const chatUploadRoutes = require('./routes/chat-upload');
 const progressRoutes = require('./routes/progress');
+const dashboardRoutes = require('./routes/dashboard');
 
 app.use('/api/auth', authRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api/subjects', subjectRoutes);
+app.use('/api/topics', topicsRoutes);
 app.use('/api/payments', paymentRoutes);
 app.use('/api/chat', chatRoutes);
 app.use('/api/chat/upload', chatUploadRoutes);
 app.use('/api/progress', progressRoutes);
+app.use('/api/dashboard', dashboardRoutes);
 
 app.get('/dashboard', (req, res) => {
   res.sendFile(path.join(__dirname, '../client/dashboard.html'));
