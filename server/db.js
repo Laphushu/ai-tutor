@@ -41,9 +41,13 @@ async function initDB() {
         UNIQUE(country_id, name)
       );
 
+      -- SUBJECTS table with all columns
       CREATE TABLE IF NOT EXISTS subjects (
         id SERIAL PRIMARY KEY,
-        name VARCHAR(100) NOT NULL
+        name VARCHAR(100) NOT NULL,
+        icon VARCHAR(50),
+        color VARCHAR(20),
+        description TEXT
       );
 
       CREATE TABLE IF NOT EXISTS topics (
@@ -139,21 +143,14 @@ async function initDB() {
       );
     `);
 
-    // 2. Add missing columns to subjects table (if not exist)
-    await client.query(`
-      ALTER TABLE subjects ADD COLUMN IF NOT EXISTS icon VARCHAR(50);
-      ALTER TABLE subjects ADD COLUMN IF NOT EXISTS color VARCHAR(20);
-      ALTER TABLE subjects ADD COLUMN IF NOT EXISTS description TEXT;
-    `);
-
-    // 3. Dynamic Column Migrations for users
+    // 2. Dynamic Column Migrations (just in case)
     await client.query(`
       ALTER TABLE users ADD COLUMN IF NOT EXISTS plan VARCHAR(20) DEFAULT 'free';
       ALTER TABLE users ADD COLUMN IF NOT EXISTS daily_question_count INTEGER DEFAULT 0;
       ALTER TABLE users ADD COLUMN IF NOT EXISTS last_question_date DATE;
     `);
 
-    // 4. Seed subjects if empty
+    // 3. Seed subjects if empty
     const subjectsCheck = await client.query('SELECT COUNT(*) FROM subjects');
     if (parseInt(subjectsCheck.rows[0].count) === 0) {
       await client.query(`
