@@ -233,9 +233,49 @@
             .center-panel { padding: 16px 12px; }
             .subject-grid { grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); }
             .topic-grid { grid-template-columns: 1fr; }
-            .tutor-container { padding: 16px; }
-            .chat-input { flex-wrap: wrap; }
-            .chat-input .btn-send { flex: 1; padding: 14px; }
+            .tutor-container { 
+                padding: 16px; 
+                width: 100% !important; 
+                max-width: 100% !important;
+            }
+            .tutor-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 8px;
+            }
+            .tutor-header .context {
+                max-width: 100%;
+                white-space: normal;
+                word-wrap: break-word;
+            }
+            .chat-box {
+                width: 100% !important;
+                max-width: 100% !important;
+                min-width: 0 !important;
+                padding: 12px !important;
+            }
+            .chat-box .msg {
+                max-width: 90% !important;
+            }
+            .chat-input {
+                flex-direction: column;
+                gap: 8px;
+                width: 100% !important;
+            }
+            .chat-input input {
+                width: 100% !important;
+                flex: 1 1 auto !important;
+                min-width: 0 !important;
+            }
+            .chat-input .btn-send {
+                width: 100% !important;
+                padding: 12px !important;
+                white-space: normal;
+            }
+            .chat-options {
+                flex-wrap: wrap;
+                gap: 8px;
+            }
             .subject-grid-check { grid-template-columns: 1fr 1fr; }
             .top-nav { padding: 12px 16px; }
         }
