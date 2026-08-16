@@ -7,12 +7,11 @@ const authenticateToken = require('../middleware/auth');
 
 // ===== SIGNUP =====
 router.post('/signup', async (req, res) => {
-  const { firstName, lastName, email, password, countryId, province, educationLevelId, grade, curriculumId, subjects, role } = req.body;
+  const { firstName, lastName, email, password, countryId, provinceId, educationLevelId, grade, curriculumId, subjects, role } = req.body;
   if (!firstName || !lastName || !email || !password || !countryId || !educationLevelId || !grade || !curriculumId || !subjects) {
     return res.status(400).json({ error: 'Missing required fields' });
   }
   try {
-    // Email uniqueness
     const existing = await pool.query('SELECT id FROM users WHERE email = $1', [email]);
     if (existing.rows.length > 0) {
       return res.status(400).json({ error: 'This email already has an account. Please log in.' });
@@ -20,19 +19,16 @@ router.post('/signup', async (req, res) => {
     const salt = await bcrypt.genSalt(10);
     const passwordHash = await bcrypt.hash(password, salt);
 
-    // Insert user
     const result = await pool.query(
-      `INSERT INTO users (first_name, last_name, email, password_hash, country_id, province, education_level_id, grade, curriculum_id, role)
+      `INSERT INTO users (first_name, last_name, email, password_hash, country_id, province_id, education_level_id, grade, curriculum_id, role)
        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
        RETURNING id, first_name, last_name, email, role`,
-      [firstName, lastName, email, passwordHash, countryId, province, educationLevelId, grade, curriculumId, role || 'learner']
+      [firstName, lastName, email, passwordHash, countryId, provinceId, educationLevelId, grade, curriculumId, role || 'learner']
     );
     const user = result.rows[0];
 
-    // Insert subjects (if provided)
     if (subjects && subjects.length > 0) {
       for (const subName of subjects) {
-        // Find subject id by name (or insert? For now assume exists)
         const subRes = await pool.query('SELECT id FROM subjects WHERE name = $1', [subName]);
         if (subRes.rows.length > 0) {
           await pool.query(
@@ -56,7 +52,7 @@ router.post('/login', async (req, res) => {
   if (!email || !password) return res.status(400).json({ error: 'Email and password required' });
   try {
     const result = await pool.query(
-      `SELECT id, first_name, last_name, email, password_hash, role, grade, country_id, province, education_level_id, curriculum_id, plan
+      `SELECT id, first_name, last_name, email, password_hash, role, grade, country_id, province_id, education_level_id, curriculum_id, plan
        FROM users WHERE email = $1`,
       [email]
     );

@@ -1217,7 +1217,7 @@
             const firstName = name.split(' ')[0] || name;
             const lastName = name.split(' ').slice(1).join(' ') || '';
             const countryId = parseInt(document.getElementById('signupCountry').value) || null;
-            const province = document.getElementById('signupProvince').value || null;
+            const provinceId = parseInt(document.getElementById('signupProvince').value) || null; // ← now sends provinceId
             const educationLevelId = parseInt(document.getElementById('signupLevel').value) || null;
             const grade = document.getElementById('signupGrade').value || '';
             const curriculumId = parseInt(document.getElementById('signupCurriculum').value) || null;
@@ -1233,7 +1233,7 @@
                         email,
                         password: pass,
                         countryId,
-                        province,
+                        provinceId,
                         educationLevelId,
                         grade,
                         curriculumId,
