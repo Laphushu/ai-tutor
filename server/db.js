@@ -155,13 +155,72 @@ async function initDB() {
       ALTER TABLE users ADD COLUMN IF NOT EXISTS daily_question_count INTEGER DEFAULT 0;
       ALTER TABLE users ADD COLUMN IF NOT EXISTS last_question_date DATE;
 
-      -- Ensure subscriptions has all required columns
       ALTER TABLE subscriptions ADD COLUMN IF NOT EXISTS plan VARCHAR(20) DEFAULT 'free';
       ALTER TABLE subscriptions ADD COLUMN IF NOT EXISTS status VARCHAR(20) DEFAULT 'active';
       ALTER TABLE subscriptions ADD COLUMN IF NOT EXISTS start_date TIMESTAMP DEFAULT NOW();
       ALTER TABLE subscriptions ADD COLUMN IF NOT EXISTS expires_at TIMESTAMP;
       ALTER TABLE subscriptions ADD COLUMN IF NOT EXISTS transaction_ref VARCHAR(100);
       ALTER TABLE subscriptions ADD COLUMN IF NOT EXISTS updated_at TIMESTAMP DEFAULT NOW();
+    `);
+
+    // ===== MIGRATE TOPICS UNIQUE CONSTRAINT =====
+    await client.query(`
+      DO $$
+      DECLARE
+        old_constraint_name TEXT;
+        dup_count INTEGER;
+        rec RECORD;
+      BEGIN
+        -- Check if the new constraint already exists
+        IF NOT EXISTS (
+          SELECT 1 FROM pg_constraint
+          WHERE conrelid = 'topics'::regclass
+            AND conname = 'topics_subject_id_curriculum_id_grade_title_key'
+        ) THEN
+          -- Find the old unique constraint (subject_id, title) if it exists
+          SELECT conname INTO old_constraint_name
+          FROM pg_constraint
+          WHERE conrelid = 'topics'::regclass
+            AND contype = 'u'
+            AND conkey = (
+              SELECT array_agg(attnum)
+              FROM pg_attribute
+              WHERE attrelid = 'topics'::regclass
+                AND attname IN ('subject_id', 'title')
+            )
+            AND array_length(conkey, 1) = 2;
+
+          -- Check for duplicates that would violate the new constraint
+          SELECT COUNT(*) INTO dup_count FROM (
+            SELECT subject_id, curriculum_id, grade, title, COUNT(*)
+            FROM topics
+            GROUP BY subject_id, curriculum_id, grade, title
+            HAVING COUNT(*) > 1
+          ) AS duplicates;
+
+          IF dup_count > 0 THEN
+            RAISE NOTICE '⚠️ Duplicate topics found that would violate new unique constraint. Skipping migration.';
+            FOR rec IN SELECT subject_id, curriculum_id, grade, title, COUNT(*) FROM topics
+                       GROUP BY subject_id, curriculum_id, grade, title HAVING COUNT(*) > 1 LOOP
+              RAISE NOTICE '   Duplicate: subject_id=%, curriculum_id=%, grade=%, title=% (% rows)',
+                rec.subject_id, rec.curriculum_id, rec.grade, rec.title, rec.count;
+            END LOOP;
+          ELSE
+            -- Safe to migrate: drop old constraint if it exists
+            IF old_constraint_name IS NOT NULL THEN
+              EXECUTE format('ALTER TABLE topics DROP CONSTRAINT %I', old_constraint_name);
+              RAISE NOTICE '✅ Dropped old constraint: %', old_constraint_name;
+            END IF;
+
+            -- Add new constraint
+            ALTER TABLE topics ADD CONSTRAINT topics_subject_id_curriculum_id_grade_title_key
+              UNIQUE (subject_id, curriculum_id, grade, title);
+            RAISE NOTICE '✅ New unique constraint added.';
+          END IF;
+        ELSE
+          RAISE NOTICE '✅ New topics unique constraint already exists.';
+        END IF;
+      END $$;
     `);
 
     // ===== SEED DATA (idempotent) =====
@@ -306,7 +365,172 @@ async function initDB() {
       console.warn('⚠️ CAPS or IEB curriculum not found, skipping subject linking.');
     }
 
-    // Handle duplicate subject names (log only)
+    // ===== SEED CAPS TOPICS (Grade 10, 11, 12) =====
+    await client.query(`
+      DO $$
+      DECLARE
+        caps_id INTEGER;
+        math_id INTEGER;
+        phys_id INTEGER;
+        life_id INTEGER;
+        acc_id INTEGER;
+        subject_record RECORD;
+        grade_text TEXT;
+        topic_record RECORD;
+      BEGIN
+        -- Get CAPS curriculum ID (South Africa)
+        SELECT id INTO caps_id FROM curricula WHERE name = 'CAPS' AND country_id = (SELECT id FROM countries WHERE code = 'ZA');
+
+        IF caps_id IS NULL THEN
+          RAISE NOTICE 'CAPS curriculum not found, skipping topic seed.';
+          RETURN;
+        END IF;
+
+        -- Get subject IDs
+        SELECT id INTO math_id FROM subjects WHERE name = 'Mathematics';
+        SELECT id INTO phys_id FROM subjects WHERE name = 'Physical Sciences';
+        SELECT id INTO life_id FROM subjects WHERE name = 'Life Sciences';
+        SELECT id INTO acc_id FROM subjects WHERE name = 'Accounting';
+
+        -- Safety check: ensure all required subjects exist
+        IF math_id IS NULL OR phys_id IS NULL OR life_id IS NULL OR acc_id IS NULL THEN
+          RAISE NOTICE 'One or more required CAPS subjects were not found. Skipping topic seed.';
+          RETURN;
+        END IF;
+
+        -- Use a temporary table to batch insert
+        CREATE TEMP TABLE temp_topics (
+          subject_id INTEGER,
+          grade VARCHAR(20),
+          title VARCHAR(200),
+          description TEXT,
+          order_number INTEGER
+        );
+
+        -- ===== Mathematics =====
+        INSERT INTO temp_topics VALUES
+        (math_id, 'Grade 10', 'Algebra – Expressions and Equations', 'Simplifying expressions, solving linear and quadratic equations', 1),
+        (math_id, 'Grade 10', 'Algebra – Exponents and Surds', 'Laws of exponents, simplification of surds', 2),
+        (math_id, 'Grade 10', 'Algebra – Inequalities', 'Solving linear and quadratic inequalities', 3),
+        (math_id, 'Grade 10', 'Number Patterns', 'Arithmetic and geometric sequences', 4),
+        (math_id, 'Grade 10', 'Functions – Linear, Quadratic, Hyperbolic', 'Graphing and interpreting functions', 5),
+        (math_id, 'Grade 10', 'Trigonometry – Basics', 'Trig ratios, special angles, and solving triangles', 6),
+        (math_id, 'Grade 10', 'Euclidean Geometry – Lines and Angles', 'Parallel lines, triangles, and quadrilaterals', 7),
+        (math_id, 'Grade 10', 'Statistics – Measures of Centre and Spread', 'Mean, median, mode, range, standard deviation', 8),
+        (math_id, 'Grade 10', 'Probability – Basics', 'Theoretical and experimental probability', 9),
+
+        (math_id, 'Grade 11', 'Algebra – Quadratic and Exponential', 'Solving quadratics, exponential equations, and logarithms', 1),
+        (math_id, 'Grade 11', 'Algebra – Sequences and Series', 'Arithmetic, geometric, and sum to infinity', 2),
+        (math_id, 'Grade 11', 'Trigonometry – Identities and Equations', 'Proving identities, solving trigonometric equations', 3),
+        (math_id, 'Grade 11', 'Trigonometry – Sine, Cosine, Area Rules', 'Application of sine, cosine, and area rules', 4),
+        (math_id, 'Grade 11', 'Functions – Advanced', 'Inverse functions, composite functions, and transformations', 5),
+        (math_id, 'Grade 11', 'Euclidean Geometry – Advanced', 'Proofs in circle geometry and similar triangles', 6),
+        (math_id, 'Grade 11', 'Statistics – Correlation and Regression', 'Scatter plots, least‑squares regression, and interpretation', 7),
+        (math_id, 'Grade 11', 'Finance – Simple and Compound Interest', 'Interest calculations and loan amortisation', 8),
+        (math_id, 'Grade 11', 'Probability – Counting Principles', 'Permutations, combinations, and probability theorems', 9),
+
+        (math_id, 'Grade 12', 'Calculus – Limits and Continuity', 'Concept of limits, continuity, and derivative definition', 1),
+        (math_id, 'Grade 12', 'Calculus – Differentiation', 'Rules of differentiation, tangents, and optimisation', 2),
+        (math_id, 'Grade 12', 'Calculus – Integration', 'Indefinite and definite integrals, area under curve', 3),
+        (math_id, 'Grade 12', 'Algebra – Sequences and Series (Application)', 'Application of sequences and series in finance', 4),
+        (math_id, 'Grade 12', 'Trigonometry – Compound Angles', 'Compound angle identities and application', 5),
+        (math_id, 'Grade 12', 'Analytical Geometry', 'Lines, circles, and conic sections', 6),
+        (math_id, 'Grade 12', 'Finance – Annuities and Loans', 'Compound interest, annuities, and loan calculations', 7),
+        (math_id, 'Grade 12', 'Probability – Advanced', 'Contingency tables, tree diagrams, and conditional probability', 8),
+        (math_id, 'Grade 12', 'Statistics – Distribution and Regression', 'Normal distribution, sampling, and confidence intervals', 9);
+
+        -- ===== Physical Sciences =====
+        INSERT INTO temp_topics VALUES
+        (phys_id, 'Grade 10', 'Mechanics – Motion', 'Position, displacement, velocity, acceleration, and graphs', 1),
+        (phys_id, 'Grade 10', 'Mechanics – Forces', 'Newton''s laws, friction, and equilibrium', 2),
+        (phys_id, 'Grade 10', 'Waves – Sound and Light', 'Wave properties, reflection, refraction, and diffraction', 3),
+        (phys_id, 'Grade 10', 'Electricity – Circuits', 'Ohm''s law, series/parallel circuits, and resistance', 4),
+        (phys_id, 'Grade 10', 'Matter – Atomic Structure', 'Atoms, elements, periodic table, and chemical bonding', 5),
+        (phys_id, 'Grade 10', 'Matter – Stoichiometry', 'Mole concept, molar mass, and calculations', 6),
+        (phys_id, 'Grade 10', 'Energy – Forms and Conservation', 'Kinetic, potential, and conservation of energy', 7),
+
+        (phys_id, 'Grade 11', 'Mechanics – Newton''s Laws', 'Applying Newton''s laws, momentum, and impulse', 1),
+        (phys_id, 'Grade 11', 'Mechanics – Work, Energy, Power', 'Work, energy conservation, power, and efficiency', 2),
+        (phys_id, 'Grade 11', 'Waves – Sound and Light', 'Doppler effect, electromagnetic spectrum', 3),
+        (phys_id, 'Grade 11', 'Electricity – Circuits', 'Kirchhoff''s laws, internal resistance, and power', 4),
+        (phys_id, 'Grade 11', 'Matter – Chemical Bonding', 'Ionic, covalent, and metallic bonding', 5),
+        (phys_id, 'Grade 11', 'Matter – Stoichiometry', 'Molar concentration, limiting reagents, and yield', 6),
+        (phys_id, 'Grade 11', 'Thermodynamics – Heat and Temperature', 'Heat capacity, latent heat, and phase changes', 7),
+
+        (phys_id, 'Grade 12', 'Mechanics – Projectile Motion', '2‑D motion, independence of horizontal/vertical motion', 1),
+        (phys_id, 'Grade 12', 'Mechanics – Work‑Energy Theorem', 'Application of work‑energy and conservation', 2),
+        (phys_id, 'Grade 12', 'Waves – Doppler Effect', 'Doppler effect with sound and light, applications', 3),
+        (phys_id, 'Grade 12', 'Electricity – AC Circuits', 'Alternating current, impedance, and power factor', 4),
+        (phys_id, 'Grade 12', 'Matter – Organic Chemistry', 'Functional groups, isomerism, and reactions', 5),
+        (phys_id, 'Grade 12', 'Matter – Equilibrium', 'Chemical equilibrium, Le Chatelier''s principle', 6),
+        (phys_id, 'Grade 12', 'Nuclear Physics – Radioactivity', 'Radioactive decay, half‑life, and nuclear reactions', 7);
+
+        -- ===== Life Sciences =====
+        INSERT INTO temp_topics VALUES
+        (life_id, 'Grade 10', 'Cell Biology – Structure and Function', 'Cell organelles, cell theory, and cell transport', 1),
+        (life_id, 'Grade 10', 'DNA and Genetics', 'DNA structure, replication, and protein synthesis', 2),
+        (life_id, 'Grade 10', 'Human Systems – Digestive and Respiratory', 'Anatomy and physiology of digestion and respiration', 3),
+        (life_id, 'Grade 10', 'Ecology – Introduction', 'Ecosystems, energy flow, and nutrient cycling', 4),
+        (life_id, 'Grade 10', 'Plant Anatomy and Function', 'Structure of roots, stems, leaves, and transpiration', 5),
+        (life_id, 'Grade 10', 'Biodiversity', 'Classification, kingdoms, and importance of biodiversity', 6),
+
+        (life_id, 'Grade 11', 'Cell Division – Mitosis and Meiosis', 'Stages, differences, and significance of division', 1),
+        (life_id, 'Grade 11', 'Genetics – Inheritance', 'Mendelian genetics, Punnett squares, and pedigree analysis', 2),
+        (life_id, 'Grade 11', 'Human Systems – Excretion', 'Kidney structure, urine formation, and regulation', 3),
+        (life_id, 'Grade 11', 'Human Systems – Nervous System', 'Neurons, reflex arcs, brain structure, and disorders', 4),
+        (life_id, 'Grade 11', 'Biodiversity – Diversity of Life', 'Diversity of animals, plants, and ecological importance', 5),
+        (life_id, 'Grade 11', 'Microorganisms', 'Bacteria, viruses, fungi, and their roles', 6),
+
+        (life_id, 'Grade 12', 'Evolution – Natural Selection', 'Darwin, evidence for evolution, and speciation', 1),
+        (life_id, 'Grade 12', 'Human Reproduction', 'Male and female reproductive systems, gametogenesis, and cycles', 2),
+        (life_id, 'Grade 12', 'Human Systems – Endocrine', 'Hormones, glands, and feedback control', 3),
+        (life_id, 'Grade 12', 'Human Systems – Respiratory and Homeostasis', 'Gas exchange, acid‑base balance, and regulation', 4),
+        (life_id, 'Grade 12', 'Ecology and Environment', 'Population ecology, community dynamics, and conservation', 5),
+        (life_id, 'Grade 12', 'Genetics – DNA and Technology', 'DNA profiling, genetic engineering, and biotechnology', 6);
+
+        -- ===== Accounting =====
+        INSERT INTO temp_topics VALUES
+        (acc_id, 'Grade 10', 'Accounting Concepts', 'Accounting equation, double‑entry system, and basic terminology', 1),
+        (acc_id, 'Grade 10', 'Journals and Ledgers', 'Recording transactions in journals and posting to ledgers', 2),
+        (acc_id, 'Grade 10', 'Financial Statements – Income Statement', 'Preparing income statement for sole trader', 3),
+        (acc_id, 'Grade 10', 'Financial Statements – Balance Sheet', 'Preparing balance sheet for sole trader', 4),
+        (acc_id, 'Grade 10', 'VAT – Value Added Tax', 'VAT calculation, recording, and returns', 5),
+        (acc_id, 'Grade 10', 'Bank Reconciliation', 'Bank statements, cash books, and reconciliation', 6),
+
+        (acc_id, 'Grade 11', 'Adjustments and Closing Entries', 'Accruals, prepayments, depreciation, and closing entries', 1),
+        (acc_id, 'Grade 11', 'Fixed Assets – Depreciation', 'Methods of depreciation and disposal of assets', 2),
+        (acc_id, 'Grade 11', 'Partnerships – Accounting', 'Partnership agreements, capital, and current accounts', 3),
+        (acc_id, 'Grade 11', 'Budgets', 'Cash budgets, projected income statements, and variance analysis', 4),
+        (acc_id, 'Grade 11', 'Financial Analysis – Ratios', 'Liquidity, profitability, and solvency ratios', 5),
+        (acc_id, 'Grade 11', 'Manufacturing Accounts', 'Cost accounting for manufacturing businesses', 6),
+
+        (acc_id, 'Grade 12', 'Companies – Financial Statements', 'Company structure, financial statements, and notes', 1),
+        (acc_id, 'Grade 12', 'Cash Flow Statements', 'Preparation and interpretation of cash flow statements', 2),
+        (acc_id, 'Grade 12', 'Financial Analysis – Interpretation', 'Advanced ratio analysis, trend analysis, and limitations', 3),
+        (acc_id, 'Grade 12', 'Consolidation', 'Basic consolidation concepts, inter‑company transactions', 4),
+        (acc_id, 'Grade 12', 'Budgeting and Planning', 'Advanced budgeting, including capital budgeting', 5),
+        (acc_id, 'Grade 12', 'Ethics in Accounting', 'Ethical issues, professional conduct, and corporate governance', 6);
+
+        -- Insert topics from temp table into real topics table using ON CONFLICT
+        FOR topic_record IN SELECT * FROM temp_topics LOOP
+          INSERT INTO topics (subject_id, curriculum_id, grade, title, description, order_number)
+          VALUES (
+            topic_record.subject_id,
+            caps_id,
+            topic_record.grade,
+            topic_record.title,
+            topic_record.description,
+            topic_record.order_number
+          )
+          ON CONFLICT (subject_id, curriculum_id, grade, title) DO NOTHING;
+        END LOOP;
+
+        DROP TABLE temp_topics;
+        RAISE NOTICE '✅ CAPS topics seeded for Mathematics, Physical Sciences, Life Sciences, Accounting (Grade 10, 11, 12).';
+      END $$;
+    `);
+
+    // ===== HANDLE DUPLICATE SUBJECT NAMES (log only, do not abort) =====
     const dupCheck = await client.query(`
       SELECT name, COUNT(*) FROM subjects GROUP BY name HAVING COUNT(*) > 1
     `);
@@ -317,6 +541,7 @@ async function initDB() {
       });
       console.warn('⚠️ Unique constraint on subjects.name will not be added.');
     } else {
+      // No duplicates – add unique constraint if missing
       await client.query(`
         DO $$
         BEGIN
@@ -333,6 +558,7 @@ async function initDB() {
     await client.query('COMMIT');
     console.log('✅ Database tables and schema migrations initialized');
     console.log('✅ Stage 2: Subject catalogue expanded and linked to CAPS/IEB');
+    console.log('✅ Stage 3: Topics unique constraint migrated (if applicable) and CAPS topics seeded.');
   } catch (err) {
     await client.query('ROLLBACK');
     console.error('❌ DATABASE ERROR');
