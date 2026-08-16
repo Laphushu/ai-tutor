@@ -957,6 +957,8 @@
         let currentUser = null;
         let currentConversationId = null;
         let isProcessing = false;
+        let currentTopicId = null;
+        let currentTopicTitle = '';
 
         // ================================================================
         //  AUTH & UI FUNCTIONS (unchanged from original)
@@ -1174,7 +1176,7 @@
             }
         }
 
-        // ---- updateSubjects (replaced with Stage 2 version) ----
+        // ---- updateSubjects (Stage 2) ----
         async function updateSubjects() {
             const curriculumSelect = document.getElementById('signupCurriculum');
             const curriculumId = curriculumSelect.value;
@@ -1195,13 +1197,11 @@
                     container.innerHTML = '<p style="color:#9ca3af;">No subjects available for this curriculum.</p>';
                     return;
                 }
-                // Important: checkboxes are NOT checked by default
                 container.innerHTML = subjects.map(sub => `
                     <label><input type="checkbox" value="${sub.name}"> ${sub.icon || '📘'} ${sub.name}</label>
                 `).join('');
             } catch (err) {
                 console.error('Failed to load subjects:', err);
-                // Fallback to hardcoded list (also unchecked)
                 const curriculumText = curriculumSelect.options[curriculumSelect.selectedIndex]?.text || '';
                 const levelSelect = document.getElementById('signupLevel');
                 const levelText = levelSelect.options[levelSelect.selectedIndex]?.text || '';
@@ -1322,7 +1322,6 @@
                     err.classList.add('show');
                     return;
                 }
-                // /me returns the user object directly
                 const user = await meRes.json();
                 currentUser = user;
                 localStorage.setItem('leago_user', JSON.stringify(currentUser));
@@ -1335,7 +1334,7 @@
         }
 
         // ================================================================
-        //  SESSION RESTORATION (ADDED)
+        //  SESSION RESTORATION
         // ================================================================
         async function restoreSession() {
             const token = localStorage.getItem('token');
@@ -1366,10 +1365,9 @@
         }
 
         // ================================================================
-        //  DASHBOARD FUNCTIONS (MOCKED – unchanged)
+        //  DASHBOARD FUNCTIONS
         // ================================================================
         function initDashboard() {
-            // --- This is the existing mock dashboard init, kept as-is ---
             if (!currentUser) {
                 alert('Please log in first.');
                 return;
@@ -1441,13 +1439,78 @@
             `).join('');
         }
 
-        function loadSubject(subjectId) {
-            // Placeholder – will be replaced in Stage 3
-            alert('Dashboard topics will be connected in Stage 3.');
+        // ================================================================
+        //  STAGE 3: TOPICS FUNCTIONS (replaces placeholder loadSubject)
+        // ================================================================
+        async function loadSubject(subjectId) {
+            const panel = document.getElementById('centerPanel');
+            panel.innerHTML = `
+                <button class="back-btn" onclick="switchDashboardTab('overview')">← Back to Overview</button>
+                <div class="welcome">📚 ${getSubjectName(subjectId)}</div>
+                <div class="welcome-sub">Select a topic to start learning.</div>
+                <div id="topicList" class="topic-grid mt-4">
+                    <div style="grid-column:1/-1; text-align:center; color:#9ca3af; padding:40px 0;">Loading topics...</div>
+                </div>
+            `;
+
+            try {
+                const token = localStorage.getItem('token');
+                const res = await fetch(`/api/topics?subject_id=${subjectId}`, {
+                    headers: { 'Authorization': 'Bearer ' + token }
+                });
+                if (!res.ok) {
+                    const errData = await res.json();
+                    throw new Error(errData.error || 'Failed to fetch topics');
+                }
+                const topics = await res.json();
+                const container = document.getElementById('topicList');
+                if (!topics || topics.length === 0) {
+                    container.innerHTML = `
+                        <div style="grid-column:1/-1; text-align:center; color:#9ca3af; padding:40px 0;">
+                            No topics available for this subject in your grade/curriculum.
+                        </div>
+                    `;
+                    return;
+                }
+                container.innerHTML = topics.map(t => `
+                    <div class="topic-card" data-topic-id="${t.id}" data-topic-title="${t.title}">
+                        <div class="title">📖 ${t.title}</div>
+                        <div class="meta">${t.description || 'Click to start learning'}</div>
+                    </div>
+                `).join('');
+
+                container.querySelectorAll('.topic-card').forEach(card => {
+                    card.addEventListener('click', function() {
+                        const id = parseInt(this.dataset.topicId);
+                        const title = this.dataset.topicTitle;
+                        openTopic(id, title);
+                    });
+                });
+            } catch (err) {
+                console.error('Failed to load topics:', err);
+                document.getElementById('topicList').innerHTML = `
+                    <div style="grid-column:1/-1; text-align:center; color:#ef4444; padding:40px 0;">
+                        ⚠️ Could not load topics. Please try again.
+                    </div>
+                `;
+            }
         }
 
+        function getSubjectName(subjectId) {
+            const subject = currentUser.subjects.find(s => s.id === subjectId);
+            return subject ? subject.name : 'Subject';
+        }
+
+        function openTopic(topicId, topicTitle) {
+            currentTopicId = topicId;
+            currentTopicTitle = topicTitle;
+            switchDashboardTab('tutor', topicTitle);
+        }
+
+        // ================================================================
+        //  DASHBOARD TAB SWITCHING (with tutor placeholder)
+        // ================================================================
         function switchDashboardTab(tab, param) {
-            // Placeholder – will be replaced in Stage 3
             const panel = document.getElementById('centerPanel');
             if (tab === 'overview') {
                 const name = currentUser?.first_name || 'Student';
@@ -1464,6 +1527,8 @@
                         `).join('')}
                     </div>
                 `;
+            } else if (tab === 'tutor') {
+                renderAiTutorPanel(panel, param || 'General');
             } else {
                 panel.innerHTML = `
                     <button class="back-btn" onclick="switchDashboardTab('overview')">← Back to Overview</button>
@@ -1473,26 +1538,9 @@
             }
         }
 
-        function openTopic(subjectId, topicId) {
-            alert('Topics will be connected in Stage 3.');
-        }
-
-        function openUpgradeModal() {
-            alert('🚀 Upgrade to Premium for unlimited AI access, past papers, and advanced features! (Payment integration coming in Stage 3.)');
-        }
-
-        function handleLogout() {
-            if (confirm('Are you sure you want to logout?')) {
-                localStorage.removeItem('token');
-                localStorage.removeItem('leago_user');
-                currentUser = null;
-                document.getElementById('dashboard').classList.remove('active');
-                document.getElementById('landingPage').classList.remove('hidden');
-                document.getElementById('landingPage').style.display = 'block';
-            }
-        }
-
-        // ---- chat functions (mocked, unchanged) ----
+        // ================================================================
+        //  TUTOR / CHAT (placeholder)
+        // ================================================================
         function renderAiTutorPanel(panel, subject) {
             panel.innerHTML = `
                 <button class="back-btn" onclick="switchDashboardTab('overview')">← Back to Overview</button>
@@ -1521,7 +1569,7 @@
         }
 
         async function sendChatMessage() {
-            // Mock chat – will be replaced in Stage 3
+            // Placeholder – will be replaced when AI is integrated
             const input = document.getElementById('chatInput');
             const message = input.value.trim();
             if (!message || isProcessing) return;
@@ -1582,9 +1630,26 @@
         }
 
         // ================================================================
-        //  STAGE 1: PAGE INITIALISATION (added at bottom)
+        //  UPGRADE / LOGOUT
         // ================================================================
-        // Override openAuth to preload lookup data when signup is opened
+        function openUpgradeModal() {
+            alert('🚀 Upgrade to Premium for unlimited AI access, past papers, and advanced features! (Payment integration coming soon.)');
+        }
+
+        function handleLogout() {
+            if (confirm('Are you sure you want to logout?')) {
+                localStorage.removeItem('token');
+                localStorage.removeItem('leago_user');
+                currentUser = null;
+                document.getElementById('dashboard').classList.remove('active');
+                document.getElementById('landingPage').classList.remove('hidden');
+                document.getElementById('landingPage').style.display = 'block';
+            }
+        }
+
+        // ================================================================
+        //  PAGE INITIALISATION
+        // ================================================================
         const originalOpenAuth = openAuth;
         openAuth = function(mode) {
             if (mode === 'signup') {
@@ -1596,12 +1661,10 @@
             originalOpenAuth(mode);
         };
 
-        // Preload lookup data on page load (so dropdowns are ready when user clicks signup)
         if (!localStorage.getItem('token')) {
             loadLookupData().catch(e => console.error('Lookup preload failed', e));
         }
 
-        // Restore session if token exists
         restoreSession();
     </script>
 
