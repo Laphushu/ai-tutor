@@ -12,7 +12,7 @@ async function initDB() {
   try {
     await client.query('BEGIN');
 
-    // ===== 1. CREATE TABLES =====
+    // ===== CREATE TABLES =====
     await client.query(`
       CREATE TABLE IF NOT EXISTS countries (
         id SERIAL PRIMARY KEY,
@@ -149,13 +149,24 @@ async function initDB() {
       );
     `);
 
+    // ===== ALTER EXISTING TABLES (safe) =====
     await client.query(`
       ALTER TABLE users ADD COLUMN IF NOT EXISTS plan VARCHAR(20) DEFAULT 'free';
       ALTER TABLE users ADD COLUMN IF NOT EXISTS daily_question_count INTEGER DEFAULT 0;
       ALTER TABLE users ADD COLUMN IF NOT EXISTS last_question_date DATE;
+
+      -- Ensure subscriptions has all required columns
+      ALTER TABLE subscriptions ADD COLUMN IF NOT EXISTS plan VARCHAR(20) DEFAULT 'free';
+      ALTER TABLE subscriptions ADD COLUMN IF NOT EXISTS status VARCHAR(20) DEFAULT 'active';
+      ALTER TABLE subscriptions ADD COLUMN IF NOT EXISTS start_date TIMESTAMP DEFAULT NOW();
+      ALTER TABLE subscriptions ADD COLUMN IF NOT EXISTS expires_at TIMESTAMP;
+      ALTER TABLE subscriptions ADD COLUMN IF NOT EXISTS transaction_ref VARCHAR(100);
+      ALTER TABLE subscriptions ADD COLUMN IF NOT EXISTS updated_at TIMESTAMP DEFAULT NOW();
     `);
 
-    // ===== 2. SEED COUNTRIES (idempotent) =====
+    // ===== SEED DATA (idempotent) =====
+
+    // Countries
     await client.query(`
       INSERT INTO countries (name, code) VALUES
       ('South Africa', 'ZA'),
@@ -167,7 +178,7 @@ async function initDB() {
       ON CONFLICT (code) DO NOTHING;
     `);
 
-    // ===== 3. SEED PROVINCES (idempotent) =====
+    // Provinces
     await client.query(`
       INSERT INTO provinces (country_id, name) VALUES
       ((SELECT id FROM countries WHERE code = 'ZA'), 'Gauteng'),
@@ -182,7 +193,7 @@ async function initDB() {
       ON CONFLICT (country_id, name) DO NOTHING;
     `);
 
-    // ===== 4. SEED EDUCATION LEVELS (idempotent) =====
+    // Education levels
     await client.query(`
       INSERT INTO education_levels (name, sort_order) VALUES
       ('High School', 1),
@@ -192,7 +203,7 @@ async function initDB() {
       ON CONFLICT (name) DO NOTHING;
     `);
 
-    // ===== 5. SEED CURRICULA (now countries exist) =====
+    // Curricula
     await client.query(`
       INSERT INTO curricula (country_id, name) VALUES
       ((SELECT id FROM countries WHERE code = 'ZA'), 'CAPS'),
@@ -203,7 +214,7 @@ async function initDB() {
       ON CONFLICT (country_id, name) DO NOTHING;
     `);
 
-    // ===== 6. SEED SUBJECTS (master list) – idempotent =====
+    // Subjects – master list
     const subjectList = [
       { name: 'Mathematics', icon: '📐', color: '#7C3AED', desc: 'Pure Mathematics – algebra, calculus, geometry' },
       { name: 'Physical Sciences', icon: '⚛️', color: '#3B82F6', desc: 'Physics and chemistry fundamentals' },
@@ -242,7 +253,6 @@ async function initDB() {
     ];
 
     for (const sub of subjectList) {
-      // Insert only if not exists
       const exists = await client.query('SELECT 1 FROM subjects WHERE name = $1', [sub.name]);
       if (exists.rows.length === 0) {
         await client.query(
@@ -252,8 +262,7 @@ async function initDB() {
       }
     }
 
-    // ===== 7. LINK SUBJECTS TO CAPS AND IEB =====
-    // Get CAPS and IEB IDs (they now exist)
+    // Link subjects to CAPS/IEB
     const curRes = await client.query(`
       SELECT c.id, c.name
       FROM curricula c
@@ -280,13 +289,11 @@ async function initDB() {
         const subRes = await client.query('SELECT id FROM subjects WHERE name = $1', [subName]);
         if (subRes.rows.length > 0) {
           const subId = subRes.rows[0].id;
-          // Link to CAPS
           await client.query(`
             INSERT INTO curriculum_subjects (curriculum_id, subject_id)
             VALUES ($1, $2)
             ON CONFLICT (curriculum_id, subject_id) DO NOTHING
           `, [capsId, subId]);
-          // Link to IEB
           await client.query(`
             INSERT INTO curriculum_subjects (curriculum_id, subject_id)
             VALUES ($1, $2)
@@ -299,7 +306,7 @@ async function initDB() {
       console.warn('⚠️ CAPS or IEB curriculum not found, skipping subject linking.');
     }
 
-    // ===== 8. HANDLE DUPLICATE SUBJECT NAMES (log only, do not abort) =====
+    // Handle duplicate subject names (log only)
     const dupCheck = await client.query(`
       SELECT name, COUNT(*) FROM subjects GROUP BY name HAVING COUNT(*) > 1
     `);
@@ -310,7 +317,6 @@ async function initDB() {
       });
       console.warn('⚠️ Unique constraint on subjects.name will not be added.');
     } else {
-      // No duplicates – add unique constraint if missing
       await client.query(`
         DO $$
         BEGIN
