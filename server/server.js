@@ -22,6 +22,7 @@ const chatRoutes = require('./routes/chat');
 const chatUploadRoutes = require('./routes/chat-upload');
 const progressRoutes = require('./routes/progress');
 const dashboardRoutes = require('./routes/dashboard');
+const lookupRoutes = require('./routes/lookup');   // ← new
 
 app.use('/api/auth', authRoutes);
 app.use('/api/admin', adminRoutes);
@@ -32,6 +33,7 @@ app.use('/api/chat', chatRoutes);
 app.use('/api/chat/upload', chatUploadRoutes);
 app.use('/api/progress', progressRoutes);
 app.use('/api/dashboard', dashboardRoutes);
+app.use('/api/lookup', lookupRoutes);             // ← new
 
 app.get('/dashboard', (req, res) => {
   res.sendFile(path.join(__dirname, '../client/dashboard.html'));
