@@ -21,7 +21,7 @@ router.post('/signup', async (req, res) => {
     role
   } = req.body;
 
-  // --- 1. Validate required fields ---
+  // Validate required fields
   if (!firstName || !lastName || !email || !password) {
     return res.status(400).json({ error: 'First name, last name, email, and password are required.' });
   }
@@ -32,7 +32,7 @@ router.post('/signup', async (req, res) => {
     return res.status(400).json({ error: 'At least one subject must be selected.' });
   }
 
-  // --- 2. Validate IDs are integers ---
+  // Validate IDs are integers
   const parsedCountryId = parseInt(countryId, 10);
   const parsedProvinceId = parseInt(provinceId, 10);
   const parsedEducationLevelId = parseInt(educationLevelId, 10);
@@ -42,22 +42,21 @@ router.post('/signup', async (req, res) => {
     return res.status(400).json({ error: 'Invalid ID provided for country, province, education level, or curriculum.' });
   }
 
-  // --- 3. Normalize email ---
+  // Normalize email
   const normalizedEmail = email.trim().toLowerCase();
 
-  // --- 4. Get a client and begin transaction ---
   const client = await pool.connect();
   try {
     await client.query('BEGIN');
 
-    // --- 5. Check duplicate email ---
+    // Check duplicate email
     const existing = await client.query('SELECT id FROM users WHERE email = $1', [normalizedEmail]);
     if (existing.rows.length > 0) {
       await client.query('ROLLBACK');
       return res.status(400).json({ error: 'This email already has an account. Please log in.' });
     }
 
-    // --- 6. Validate that province belongs to the selected country ---
+    // Validate province belongs to country
     const provinceCheck = await client.query(
       'SELECT id FROM provinces WHERE id = $1 AND country_id = $2',
       [parsedProvinceId, parsedCountryId]
@@ -67,7 +66,7 @@ router.post('/signup', async (req, res) => {
       return res.status(400).json({ error: 'Selected province does not belong to the selected country.' });
     }
 
-    // --- 7. Validate that curriculum belongs to the selected country ---
+    // Validate curriculum belongs to country
     const curriculumCheck = await client.query(
       'SELECT id FROM curricula WHERE id = $1 AND country_id = $2',
       [parsedCurriculumId, parsedCountryId]
@@ -77,11 +76,11 @@ router.post('/signup', async (req, res) => {
       return res.status(400).json({ error: 'Selected curriculum does not belong to the selected country.' });
     }
 
-    // --- 8. Hash password ---
+    // Hash password
     const salt = await bcrypt.genSalt(10);
     const passwordHash = await bcrypt.hash(password, salt);
 
-    // --- 9. Insert user ---
+    // Insert user
     const userResult = await client.query(
       `INSERT INTO users
         (first_name, last_name, email, password_hash, country_id, province_id, education_level_id, grade, curriculum_id, role)
@@ -95,14 +94,14 @@ router.post('/signup', async (req, res) => {
         parsedCountryId,
         parsedProvinceId,
         parsedEducationLevelId,
-        grade,               // grade is a VARCHAR, not an ID
+        grade,
         parsedCurriculumId,
         role || 'learner'
       ]
     );
     const user = userResult.rows[0];
 
-    // --- 10. Insert subjects (validate each exists) ---
+    // Insert subjects
     for (const subName of subjects) {
       const subRes = await client.query('SELECT id FROM subjects WHERE name = $1', [subName]);
       if (subRes.rows.length === 0) {
@@ -116,7 +115,7 @@ router.post('/signup', async (req, res) => {
       );
     }
 
-    // --- 11. Create 3‑day free trial subscription ---
+    // Create 3‑day free trial subscription
     const startDate = new Date();
     const expiryDate = new Date();
     expiryDate.setDate(expiryDate.getDate() + 3);
@@ -127,16 +126,11 @@ router.post('/signup', async (req, res) => {
       [user.id, startDate, expiryDate]
     );
 
-    // --- 12. Commit transaction ---
     await client.query('COMMIT');
-
-    // --- 13. Return success (no password hash) ---
     res.status(201).json({ success: true, user });
   } catch (err) {
     await client.query('ROLLBACK');
     console.error('Signup error:', err);
-
-    // Handle known error codes
     if (err.code === '23505') {
       return res.status(400).json({ error: 'This email already has an account. Please log in.' });
     }
@@ -159,10 +153,9 @@ router.post('/login', async (req, res) => {
   const normalizedEmail = email.trim().toLowerCase();
 
   try {
-    // Use the exact column names from the schema
     const result = await pool.query(
       `SELECT id, first_name, last_name, email, password_hash, role, grade,
-              country_id, province_id, education_level_id, curriculum_id, plan
+              country_id, province_id, education_level_id, curriculum_id
        FROM users
        WHERE email = $1`,
       [normalizedEmail]
@@ -175,7 +168,7 @@ router.post('/login', async (req, res) => {
     if (!isMatch) {
       return res.status(401).json({ error: 'Invalid credentials' });
     }
-    delete user.password_hash; // never return hash
+    delete user.password_hash;
 
     const token = jwt.sign(
       { userId: user.id, role: user.role || 'learner' },
@@ -194,11 +187,12 @@ router.post('/login', async (req, res) => {
 router.get('/me', authenticateToken, async (req, res) => {
   const userId = req.user.userId;
   try {
+    // Removed "plan" from SELECT – it's only in subscriptions
     const userResult = await pool.query(
       `SELECT
         id, first_name, last_name, email, role, grade,
         country_id, province_id, education_level_id, curriculum_id,
-        plan, daily_question_count, last_question_date
+        daily_question_count, last_question_date
        FROM users
        WHERE id = $1`,
       [userId]
@@ -208,7 +202,7 @@ router.get('/me', authenticateToken, async (req, res) => {
     }
     const user = userResult.rows[0];
 
-    // Enrich with lookup data
+    // Enrich with related data
     const countryRes = await pool.query('SELECT id, name FROM countries WHERE id = $1', [user.country_id]);
     const curriculumRes = await pool.query('SELECT id, name FROM curricula WHERE id = $1', [user.curriculum_id]);
     const levelRes = await pool.query('SELECT id, name FROM education_levels WHERE id = $1', [user.education_level_id]);
@@ -230,9 +224,17 @@ router.get('/me', authenticateToken, async (req, res) => {
     );
     const subscription = subRes.rows[0] || { plan: 'free', status: 'active', expires_at: null };
 
-    // Daily question limit
+    // Daily question limit – safely handle date
     const today = new Date().toISOString().split('T')[0];
-    const lastDate = user.last_question_date ? user.last_question_date.toISOString().split('T')[0] : null;
+    let lastDate = null;
+    if (user.last_question_date) {
+      const dateObj = user.last_question_date instanceof Date
+        ? user.last_question_date
+        : new Date(user.last_question_date);
+      if (!isNaN(dateObj.getTime())) {
+        lastDate = dateObj.toISOString().split('T')[0];
+      }
+    }
     let count = user.daily_question_count || 0;
     if (lastDate !== today) {
       count = 0;
@@ -243,15 +245,25 @@ router.get('/me', authenticateToken, async (req, res) => {
     }
     const limit = subscription.plan === 'premium' ? -1 : 20;
 
-    // Progress summary
-    const progressRes = await pool.query(
-      `SELECT COUNT(*) as total,
-              SUM(CASE WHEN status = 'completed' THEN 1 ELSE 0 END) as completed
-       FROM student_progress
-       WHERE user_id = $1`,
-      [userId]
-    );
-    const progress = progressRes.rows[0] || { total: 0, completed: 0 };
+    // Progress – fallback if table missing
+    let progress = { total: 0, completed: 0 };
+    try {
+      const progressRes = await pool.query(
+        `SELECT COUNT(*) as total,
+                SUM(CASE WHEN status = 'completed' THEN 1 ELSE 0 END) as completed
+         FROM student_progress
+         WHERE user_id = $1`,
+        [userId]
+      );
+      if (progressRes.rows.length > 0) {
+        progress = {
+          total: parseInt(progressRes.rows[0].total || 0),
+          completed: parseInt(progressRes.rows[0].completed || 0)
+        };
+      }
+    } catch (progressErr) {
+      console.error('❌ Progress query failed:', progressErr.message);
+    }
 
     const response = {
       id: user.id,
@@ -273,10 +285,7 @@ router.get('/me', authenticateToken, async (req, res) => {
         used: count,
         limit: limit
       },
-      progress: {
-        total: parseInt(progress.total || 0),
-        completed: parseInt(progress.completed || 0)
-      }
+      progress: progress
     };
 
     res.json(response);
