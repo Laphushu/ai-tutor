@@ -1983,7 +1983,7 @@
             const headerText = displayTopic ? `${displaySubject} – ${displayTopic}` : displaySubject;
 
             panel.innerHTML = `
-                <button class="back-btn" onclick="switchDashboardTab('overview')">← Back to Overview</button>
+                <button class="back-btn" onclick="loadSubject(${currentSubjectId})">← Back</button>
                 <div class="tutor-container">
                     <div class="tutor-header">
                         <h3>Leago AI Tutor</h3>
