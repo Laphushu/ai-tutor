@@ -12,7 +12,7 @@ async function initDB() {
   try {
     await client.query('BEGIN');
 
-    // ===== CREATE TABLES (unchanged) =====
+    // ===== 1. CREATE TABLES =====
     await client.query(`
       CREATE TABLE IF NOT EXISTS countries (
         id SERIAL PRIMARY KEY,
@@ -48,6 +48,13 @@ async function initDB() {
       ALTER TABLE subjects ADD COLUMN IF NOT EXISTS icon VARCHAR(50);
       ALTER TABLE subjects ADD COLUMN IF NOT EXISTS color VARCHAR(20);
       ALTER TABLE subjects ADD COLUMN IF NOT EXISTS description TEXT;
+
+      CREATE TABLE IF NOT EXISTS curriculum_subjects (
+        id SERIAL PRIMARY KEY,
+        curriculum_id INTEGER REFERENCES curricula(id) ON DELETE CASCADE,
+        subject_id INTEGER REFERENCES subjects(id) ON DELETE CASCADE,
+        UNIQUE(curriculum_id, subject_id)
+      );
 
       CREATE TABLE IF NOT EXISTS topics (
         id SERIAL PRIMARY KEY,
@@ -148,45 +155,55 @@ async function initDB() {
       ALTER TABLE users ADD COLUMN IF NOT EXISTS last_question_date DATE;
     `);
 
-    // ===== STAGE 2: CURRICULUM-SUBJECT ARCHITECTURE =====
-
-    // 1. Check for duplicate subject names – log but do NOT abort
-    const dupCheck = await client.query(`
-      SELECT name, COUNT(*) FROM subjects GROUP BY name HAVING COUNT(*) > 1
-    `);
-    if (dupCheck.rows.length > 0) {
-      console.warn('⚠️ Duplicate subject names found:');
-      dupCheck.rows.forEach(row => {
-        console.warn(`   "${row.name}" appears ${row.count} times`);
-      });
-      console.warn('⚠️ Skipping UNIQUE constraint on subjects.name to avoid errors.');
-      console.warn('⚠️ Duplicate subjects will be handled safely in future inserts.');
-    } else {
-      // No duplicates – safe to add unique constraint
-      await client.query(`
-        DO $$
-        BEGIN
-          IF NOT EXISTS (
-            SELECT 1 FROM pg_constraint WHERE conname = 'subjects_name_key'
-          ) THEN
-            ALTER TABLE subjects ADD CONSTRAINT subjects_name_key UNIQUE (name);
-          END IF;
-        END $$;
-      `);
-      console.log('✅ Unique constraint on subjects.name added.');
-    }
-
-    // 2. Create curriculum_subjects table (if not exists)
+    // ===== 2. SEED COUNTRIES (idempotent) =====
     await client.query(`
-      CREATE TABLE IF NOT EXISTS curriculum_subjects (
-        id SERIAL PRIMARY KEY,
-        curriculum_id INTEGER REFERENCES curricula(id) ON DELETE CASCADE,
-        subject_id INTEGER REFERENCES subjects(id) ON DELETE CASCADE,
-        UNIQUE(curriculum_id, subject_id)
-      );
+      INSERT INTO countries (name, code) VALUES
+      ('South Africa', 'ZA'),
+      ('Kenya', 'KE'),
+      ('Nigeria', 'NG'),
+      ('Zimbabwe', 'ZW'),
+      ('Botswana', 'BW'),
+      ('Ghana', 'GH')
+      ON CONFLICT (code) DO NOTHING;
     `);
 
-    // 3. Insert new subjects safely – using separate existence check to avoid type inference issues
+    // ===== 3. SEED PROVINCES (idempotent) =====
+    await client.query(`
+      INSERT INTO provinces (country_id, name) VALUES
+      ((SELECT id FROM countries WHERE code = 'ZA'), 'Gauteng'),
+      ((SELECT id FROM countries WHERE code = 'ZA'), 'Western Cape'),
+      ((SELECT id FROM countries WHERE code = 'ZA'), 'KwaZulu-Natal'),
+      ((SELECT id FROM countries WHERE code = 'ZA'), 'Eastern Cape'),
+      ((SELECT id FROM countries WHERE code = 'ZA'), 'Free State'),
+      ((SELECT id FROM countries WHERE code = 'ZA'), 'Limpopo'),
+      ((SELECT id FROM countries WHERE code = 'ZA'), 'Mpumalanga'),
+      ((SELECT id FROM countries WHERE code = 'ZA'), 'North West'),
+      ((SELECT id FROM countries WHERE code = 'ZA'), 'Northern Cape')
+      ON CONFLICT (country_id, name) DO NOTHING;
+    `);
+
+    // ===== 4. SEED EDUCATION LEVELS (idempotent) =====
+    await client.query(`
+      INSERT INTO education_levels (name, sort_order) VALUES
+      ('High School', 1),
+      ('TVET College', 2),
+      ('University', 3),
+      ('Other', 4)
+      ON CONFLICT (name) DO NOTHING;
+    `);
+
+    // ===== 5. SEED CURRICULA (now countries exist) =====
+    await client.query(`
+      INSERT INTO curricula (country_id, name) VALUES
+      ((SELECT id FROM countries WHERE code = 'ZA'), 'CAPS'),
+      ((SELECT id FROM countries WHERE code = 'ZA'), 'IEB'),
+      ((SELECT id FROM countries WHERE code = 'KE'), 'CBC'),
+      ((SELECT id FROM countries WHERE code = 'NG'), 'WAEC'),
+      ((SELECT id FROM countries WHERE code = 'ZW'), 'ZIMSEC')
+      ON CONFLICT (country_id, name) DO NOTHING;
+    `);
+
+    // ===== 6. SEED SUBJECTS (master list) – idempotent =====
     const subjectList = [
       { name: 'Mathematics', icon: '📐', color: '#7C3AED', desc: 'Pure Mathematics – algebra, calculus, geometry' },
       { name: 'Physical Sciences', icon: '⚛️', color: '#3B82F6', desc: 'Physics and chemistry fundamentals' },
@@ -225,7 +242,7 @@ async function initDB() {
     ];
 
     for (const sub of subjectList) {
-      // Check if subject already exists
+      // Insert only if not exists
       const exists = await client.query('SELECT 1 FROM subjects WHERE name = $1', [sub.name]);
       if (exists.rows.length === 0) {
         await client.query(
@@ -235,34 +252,8 @@ async function initDB() {
       }
     }
 
-    // 4. Ensure curricula exist for South Africa (ZA)
-    await client.query(`
-      INSERT INTO curricula (country_id, name)
-      SELECT c.id, 'CAPS'
-      FROM countries c WHERE c.code = 'ZA'
-      ON CONFLICT (country_id, name) DO NOTHING;
-
-      INSERT INTO curricula (country_id, name)
-      SELECT c.id, 'IEB'
-      FROM countries c WHERE c.code = 'ZA'
-      ON CONFLICT (country_id, name) DO NOTHING;
-    `);
-
-    // 5. Link explicit CAPS and IEB subjects (idempotent)
-    const capsSubjects = [
-      'Mathematics', 'Mathematical Literacy', 'Physical Sciences', 'Life Sciences',
-      'Agricultural Sciences', 'Accounting', 'Business Studies', 'Economics',
-      'Geography', 'History', 'English Home Language', 'English First Additional Language',
-      'Afrikaans Home Language', 'Afrikaans First Additional Language',
-      'isiZulu Home Language', 'isiXhosa Home Language', 'Sepedi Home Language',
-      'Setswana Home Language', 'Siswati Home Language', 'Tshivenda Home Language',
-      'Xitsonga Home Language', 'Information Technology', 'Computer Applications Technology (CAT)',
-      'Engineering Graphics and Design (EGD)', 'Life Orientation', 'Tourism',
-      'Consumer Studies', 'Visual Arts', 'Music', 'Dramatic Arts', 'Religion Studies',
-      'Hospitality Studies', 'Design'
-    ];
-
-    // Get curriculum IDs for CAPS and IEB using ZA country
+    // ===== 7. LINK SUBJECTS TO CAPS AND IEB =====
+    // Get CAPS and IEB IDs (they now exist)
     const curRes = await client.query(`
       SELECT c.id, c.name
       FROM curricula c
@@ -273,6 +264,18 @@ async function initDB() {
     const iebId = curRes.rows.find(r => r.name === 'IEB')?.id;
 
     if (capsId && iebId) {
+      const capsSubjects = [
+        'Mathematics', 'Mathematical Literacy', 'Physical Sciences', 'Life Sciences',
+        'Agricultural Sciences', 'Accounting', 'Business Studies', 'Economics',
+        'Geography', 'History', 'English Home Language', 'English First Additional Language',
+        'Afrikaans Home Language', 'Afrikaans First Additional Language',
+        'isiZulu Home Language', 'isiXhosa Home Language', 'Sepedi Home Language',
+        'Setswana Home Language', 'Siswati Home Language', 'Tshivenda Home Language',
+        'Xitsonga Home Language', 'Information Technology', 'Computer Applications Technology (CAT)',
+        'Engineering Graphics and Design (EGD)', 'Life Orientation', 'Tourism',
+        'Consumer Studies', 'Visual Arts', 'Music', 'Dramatic Arts', 'Religion Studies',
+        'Hospitality Studies', 'Design'
+      ];
       for (const subName of capsSubjects) {
         const subRes = await client.query('SELECT id FROM subjects WHERE name = $1', [subName]);
         if (subRes.rows.length > 0) {
@@ -296,51 +299,34 @@ async function initDB() {
       console.warn('⚠️ CAPS or IEB curriculum not found, skipping subject linking.');
     }
 
-    // 6. Seed countries, provinces, education levels (idempotent)
-    const countriesCheck = await client.query('SELECT COUNT(*) FROM countries');
-    if (parseInt(countriesCheck.rows[0].count) === 0) {
+    // ===== 8. HANDLE DUPLICATE SUBJECT NAMES (log only, do not abort) =====
+    const dupCheck = await client.query(`
+      SELECT name, COUNT(*) FROM subjects GROUP BY name HAVING COUNT(*) > 1
+    `);
+    if (dupCheck.rows.length > 0) {
+      console.warn('⚠️ Duplicate subject names found:');
+      dupCheck.rows.forEach(row => {
+        console.warn(`   "${row.name}" appears ${row.count} times`);
+      });
+      console.warn('⚠️ Unique constraint on subjects.name will not be added.');
+    } else {
+      // No duplicates – add unique constraint if missing
       await client.query(`
-        INSERT INTO countries (name, code) VALUES
-        ('South Africa', 'ZA'),
-        ('Kenya', 'KE'),
-        ('Nigeria', 'NG'),
-        ('Zimbabwe', 'ZW'),
-        ('Botswana', 'BW'),
-        ('Ghana', 'GH')
+        DO $$
+        BEGIN
+          IF NOT EXISTS (
+            SELECT 1 FROM pg_constraint WHERE conname = 'subjects_name_key'
+          ) THEN
+            ALTER TABLE subjects ADD CONSTRAINT subjects_name_key UNIQUE (name);
+          END IF;
+        END $$;
       `);
-      // Insert South African provinces
-      await client.query(`
-        INSERT INTO provinces (country_id, name) VALUES
-        ((SELECT id FROM countries WHERE code = 'ZA'), 'Gauteng'),
-        ((SELECT id FROM countries WHERE code = 'ZA'), 'Western Cape'),
-        ((SELECT id FROM countries WHERE code = 'ZA'), 'KwaZulu-Natal'),
-        ((SELECT id FROM countries WHERE code = 'ZA'), 'Eastern Cape'),
-        ((SELECT id FROM countries WHERE code = 'ZA'), 'Free State'),
-        ((SELECT id FROM countries WHERE code = 'ZA'), 'Limpopo'),
-        ((SELECT id FROM countries WHERE code = 'ZA'), 'Mpumalanga'),
-        ((SELECT id FROM countries WHERE code = 'ZA'), 'North West'),
-        ((SELECT id FROM countries WHERE code = 'ZA'), 'Northern Cape')
-      `);
-      // Additional provinces for Kenya, Nigeria, etc. (optional)
-    }
-
-    const levelsCheck = await client.query('SELECT COUNT(*) FROM education_levels');
-    if (parseInt(levelsCheck.rows[0].count) === 0) {
-      await client.query(`
-        INSERT INTO education_levels (name, sort_order) VALUES
-        ('High School', 1),
-        ('TVET College', 2),
-        ('University', 3),
-        ('Other', 4)
-      `);
+      console.log('✅ Unique constraint on subjects.name added.');
     }
 
     await client.query('COMMIT');
     console.log('✅ Database tables and schema migrations initialized');
     console.log('✅ Stage 2: Subject catalogue expanded and linked to CAPS/IEB');
-    if (dupCheck.rows.length > 0) {
-      console.log('⚠️ Duplicate subjects still exist. Please consider merging them manually to enable future unique constraint.');
-    }
   } catch (err) {
     await client.query('ROLLBACK');
     console.error('❌ DATABASE ERROR');
