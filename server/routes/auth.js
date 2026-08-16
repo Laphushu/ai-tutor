@@ -21,7 +21,6 @@ router.post('/signup', async (req, res) => {
     role
   } = req.body;
 
-  // Validate required fields
   if (!firstName || !lastName || !email || !password) {
     return res.status(400).json({ error: 'First name, last name, email, and password are required.' });
   }
@@ -32,7 +31,6 @@ router.post('/signup', async (req, res) => {
     return res.status(400).json({ error: 'At least one subject must be selected.' });
   }
 
-  // Validate IDs are integers
   const parsedCountryId = parseInt(countryId, 10);
   const parsedProvinceId = parseInt(provinceId, 10);
   const parsedEducationLevelId = parseInt(educationLevelId, 10);
@@ -42,21 +40,18 @@ router.post('/signup', async (req, res) => {
     return res.status(400).json({ error: 'Invalid ID provided for country, province, education level, or curriculum.' });
   }
 
-  // Normalize email
   const normalizedEmail = email.trim().toLowerCase();
 
   const client = await pool.connect();
   try {
     await client.query('BEGIN');
 
-    // Check duplicate email
     const existing = await client.query('SELECT id FROM users WHERE email = $1', [normalizedEmail]);
     if (existing.rows.length > 0) {
       await client.query('ROLLBACK');
       return res.status(400).json({ error: 'This email already has an account. Please log in.' });
     }
 
-    // Validate province belongs to country
     const provinceCheck = await client.query(
       'SELECT id FROM provinces WHERE id = $1 AND country_id = $2',
       [parsedProvinceId, parsedCountryId]
@@ -66,7 +61,6 @@ router.post('/signup', async (req, res) => {
       return res.status(400).json({ error: 'Selected province does not belong to the selected country.' });
     }
 
-    // Validate curriculum belongs to country
     const curriculumCheck = await client.query(
       'SELECT id FROM curricula WHERE id = $1 AND country_id = $2',
       [parsedCurriculumId, parsedCountryId]
@@ -76,11 +70,9 @@ router.post('/signup', async (req, res) => {
       return res.status(400).json({ error: 'Selected curriculum does not belong to the selected country.' });
     }
 
-    // Hash password
     const salt = await bcrypt.genSalt(10);
     const passwordHash = await bcrypt.hash(password, salt);
 
-    // Insert user
     const userResult = await client.query(
       `INSERT INTO users
         (first_name, last_name, email, password_hash, country_id, province_id, education_level_id, grade, curriculum_id, role)
@@ -101,7 +93,6 @@ router.post('/signup', async (req, res) => {
     );
     const user = userResult.rows[0];
 
-    // Insert subjects
     for (const subName of subjects) {
       const subRes = await client.query('SELECT id FROM subjects WHERE name = $1', [subName]);
       if (subRes.rows.length === 0) {
@@ -115,7 +106,6 @@ router.post('/signup', async (req, res) => {
       );
     }
 
-    // Create 3‑day free trial subscription
     const startDate = new Date();
     const expiryDate = new Date();
     expiryDate.setDate(expiryDate.getDate() + 3);
@@ -187,7 +177,7 @@ router.post('/login', async (req, res) => {
 router.get('/me', authenticateToken, async (req, res) => {
   const userId = req.user.userId;
   try {
-    // Removed "plan" from SELECT – it's only in subscriptions
+    // Fetch user – removed "plan" because it's in subscriptions
     const userResult = await pool.query(
       `SELECT
         id, first_name, last_name, email, role, grade,
@@ -216,13 +206,22 @@ router.get('/me', authenticateToken, async (req, res) => {
       [userId]
     );
 
-    const subRes = await pool.query(
-      `SELECT plan, status, start_date, expires_at
-       FROM subscriptions
-       WHERE user_id = $1`,
-      [userId]
-    );
-    const subscription = subRes.rows[0] || { plan: 'free', status: 'active', expires_at: null };
+    // --- Subscription query with fallback ---
+    let subscription = { plan: 'free', status: 'active', expires_at: null };
+    try {
+      const subRes = await pool.query(
+        `SELECT plan, status, start_date, expires_at
+         FROM subscriptions
+         WHERE user_id = $1`,
+        [userId]
+      );
+      if (subRes.rows.length > 0) {
+        subscription = subRes.rows[0];
+      }
+    } catch (subErr) {
+      console.error('❌ Subscription query failed (table may lack plan column):', subErr.message);
+      // Fallback to default subscription
+    }
 
     // Daily question limit – safely handle date
     const today = new Date().toISOString().split('T')[0];
