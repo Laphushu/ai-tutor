@@ -2122,8 +2122,32 @@
         // ================================================================
         //  UPGRADE / LOGOUT
         // ================================================================
-        function openUpgradeModal() {
-            alert('🚀 Upgrade to Premium for unlimited AI access, past papers, and advanced features! (Payment integration coming soon.)');
+
+        // ---- Secure Paystack Upgrade ----
+        async function openUpgradeModal() {
+            const token = localStorage.getItem('token');
+            if (!token) {
+                alert('Please log in first.');
+                return;
+            }
+            try {
+                const res = await fetch('/api/payments/create', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer ' + token
+                    }
+                });
+                const data = await res.json();
+                if (data.authorization_url) {
+                    window.location.href = data.authorization_url;
+                } else {
+                    alert('Payment initiation failed. Please try again.');
+                }
+            } catch (err) {
+                console.error('Payment error:', err);
+                alert('Payment service unavailable. Please try again later.');
+            }
         }
 
         function handleLogout() {
