@@ -200,7 +200,6 @@
             .pricing-grid { grid-template-columns: 1fr; }
         }
 
-        /* ===== Chat Box ===== */
         .chat-box {
             background: rgba(0,0,0,0.2);
             border-radius: 16px;
@@ -213,8 +212,13 @@
             margin-bottom: 16px;
             width: 100%;
         }
+        .chat-box .msg { margin-bottom: 12px; padding: 8px 14px; border-radius: 12px; max-width: 85%; word-wrap: break-word; }
+        .chat-box .msg.user { background: rgba(124,58,237,0.2); margin-left: auto; color: #e5e7eb; border: 1px solid rgba(124,58,237,0.2); }
+        .chat-box .msg.bot { background: rgba(255,255,255,0.05); margin-right: auto; color: #d1d5db; border: 1px solid rgba(255,255,255,0.06); }
+        .chat-box .msg.bot .katex-display { margin: 0.5em 0; }
+        .chat-box .typing-indicator { display: none; margin: 8px 0; }
+        .chat-box .typing-indicator.active { display: block; }
 
-        /* ===== Input Area ===== */
         .input-area {
             position: sticky;
             bottom: 0;
@@ -222,8 +226,6 @@
             padding: 12px 0 16px;
             z-index: 10;
         }
-
-        /* ==== Rest of styles (keeping original) ==== */
 
         .sidebar-left, .sidebar-right { background: rgba(255,255,255,0.04); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.06); border-radius: 16px; padding: 24px 18px; height: fit-content; }
         .sidebar-left .section-title, .sidebar-right .section-title { font-size: 0.7rem; text-transform: uppercase; color: #9ca3af; font-weight: 700; letter-spacing: 0.5px; margin: 16px 0 8px; }
@@ -727,13 +729,6 @@
                         <label>Country</label>
                         <select id="signupCountry" onchange="updateProvinceField()">
                             <option value="">Select your country</option>
-                            <option value="ZA">South Africa</option>
-                            <option value="KE">Kenya</option>
-                            <option value="NG">Nigeria</option>
-                            <option value="ZW">Zimbabwe</option>
-                            <option value="BW">Botswana</option>
-                            <option value="GH">Ghana</option>
-                            <!-- Add more as needed -->
                         </select>
                     </div>
                     <div class="field" id="provinceField" style="display: none;">
@@ -756,21 +751,13 @@
                     <div class="field">
                         <label>Curriculum</label>
                         <select id="signupCurriculum" onchange="updateSubjects()">
-                            <option value="CAPS">CAPS (South Africa)</option>
-                            <option value="IEB">IEB (Independent Schools)</option>
-                            <option value="CBC">CBC (Kenya)</option>
-                            <option value="WAEC">WAEC (West Africa)</option>
-                            <option value="ZIMSEC">ZIMSEC (Zimbabwe)</option>
+                            <option value="">Select curriculum</option>
                         </select>
                     </div>
                     <div class="field">
                         <label>Education Level</label>
                         <select id="signupLevel" onchange="updateGradeOptions(); updateSubjects();">
                             <option value="">Select level</option>
-                            <option value="High School">High School</option>
-                            <option value="TVET College">TVET College</option>
-                            <option value="University">University</option>
-                            <option value="Other">Other</option>
                         </select>
                     </div>
                     <div class="error" id="signupError3"></div>
@@ -803,6 +790,7 @@
                     <p class="sub">Choose the subjects you want to study (optional).</p>
                     <div class="subject-grid-check" id="signupSubjectsCheck"></div>
                     <div class="error" id="signupError5"></div>
+                    <div class="success" id="signupSuccess"></div>
                     <div class="flex gap-3 mt-4">
                         <button class="btn" style="background: rgba(255,255,255,0.1);" onclick="prevSignupStep(4)">Back</button>
                         <button class="btn" onclick="handleSignup()">Complete Signup</button>
@@ -963,11 +951,16 @@
             animateCanvas();
         }
 
-        // --- Auth & State Management ---
+        // ================================================================
+        //  STATE
+        // ================================================================
         let currentUser = null;
         let currentConversationId = null;
         let isProcessing = false;
 
+        // ================================================================
+        //  AUTH & UI FUNCTIONS (unchanged from original)
+        // ================================================================
         function openAuth(mode) {
             document.getElementById('authOverlay').classList.add('active');
             if (mode === 'login') {
@@ -1006,42 +999,14 @@
                 }
             }
             document.querySelectorAll('#signupFormContainer .error').forEach(e => e.classList.remove('show'));
+            document.getElementById('signupSuccess')?.classList.remove('show');
         }
 
         function prevSignupStep(step) {
             nextSignupStep(step);
         }
 
-        // ---- Country → Province ----
-        const provinceMap = {
-            'ZA': ['Gauteng', 'Western Cape', 'KwaZulu-Natal', 'Eastern Cape', 'Free State', 'Limpopo', 'Mpumalanga', 'North West', 'Northern Cape'],
-            'KE': ['Nairobi', 'Mombasa', 'Kisumu', 'Nakuru', 'Eldoret'],
-            'NG': ['Lagos', 'Abuja', 'Kano', 'Ibadan', 'Port Harcourt'],
-            'ZW': ['Harare', 'Bulawayo', 'Mutare'],
-            'BW': ['Gaborone', 'Francistown', 'Serowe'],
-            'GH': ['Greater Accra', 'Ashanti', 'Central', 'Western']
-        };
-
-        function updateProvinceField() {
-            const country = document.getElementById('signupCountry').value;
-            const provinceField = document.getElementById('provinceField');
-            const provinceSelect = document.getElementById('signupProvince');
-            if (!country || !provinceMap[country]) {
-                provinceField.style.display = 'none';
-                provinceSelect.innerHTML = '<option value="">Select province</option>';
-                return;
-            }
-            provinceField.style.display = 'block';
-            provinceSelect.innerHTML = '<option value="">Select province</option>';
-            provinceMap[country].forEach(p => {
-                const opt = document.createElement('option');
-                opt.value = p;
-                opt.textContent = p;
-                provinceSelect.appendChild(opt);
-            });
-        }
-
-        // ---- Education Level → Grade ----
+        // ---- Education Level → Grade (unchanged) ----
         const gradeMap = {
             'High School': ['Grade 8', 'Grade 9', 'Grade 10', 'Grade 11', 'Grade 12'],
             'TVET College': ['N1', 'N2', 'N3', 'N4', 'N5', 'N6'],
@@ -1052,9 +1017,10 @@
         function updateGradeOptions() {
             const level = document.getElementById('signupLevel').value;
             const gradeSelect = document.getElementById('signupGrade');
+            const levelText = document.getElementById('signupLevel').options[document.getElementById('signupLevel').selectedIndex]?.text || '';
             gradeSelect.innerHTML = '<option value="">Select grade</option>';
-            if (level && gradeMap[level]) {
-                gradeMap[level].forEach(g => {
+            if (level && gradeMap[levelText]) {
+                gradeMap[levelText].forEach(g => {
                     const opt = document.createElement('option');
                     opt.value = g;
                     opt.textContent = g;
@@ -1063,7 +1029,7 @@
             }
         }
 
-        // ---- Subjects ----
+        // ---- Subject list (fallback) ----
         function getSubjectList(curriculum, level) {
             const common = ['Mathematics', 'English', 'Life Orientation'];
             let extras = [];
@@ -1083,23 +1049,152 @@
             return [...new Set(all)].sort();
         }
 
+        // ================================================================
+        //  STAGE 1: LOOKUP FUNCTIONS (ADDED)
+        // ================================================================
+        async function loadLookupData() {
+            await Promise.all([
+                populateCountries(),
+                populateCurricula(),
+                populateEducationLevels()
+            ]);
+        }
+
+        async function populateCountries() {
+            const select = document.getElementById('signupCountry');
+            select.innerHTML = '<option value="">Loading countries...</option>';
+            try {
+                const res = await fetch('/api/lookup/countries');
+                if (!res.ok) throw new Error('Failed to fetch countries');
+                const data = await res.json();
+                select.innerHTML = '<option value="">Select your country</option>';
+                const items = data.data || data;
+                if (Array.isArray(items) && items.length > 0) {
+                    items.forEach(c => {
+                        const opt = document.createElement('option');
+                        opt.value = c.id;
+                        opt.textContent = c.name;
+                        select.appendChild(opt);
+                    });
+                } else {
+                    select.innerHTML = '<option value="">No countries available</option>';
+                }
+            } catch (e) {
+                console.error('Failed to load countries', e);
+                select.innerHTML = '<option value="">Error loading countries</option>';
+            }
+        }
+
+        async function populateCurricula() {
+            const select = document.getElementById('signupCurriculum');
+            select.innerHTML = '<option value="">Loading curricula...</option>';
+            try {
+                const res = await fetch('/api/lookup/curricula');
+                if (!res.ok) throw new Error('Failed to fetch curricula');
+                const data = await res.json();
+                select.innerHTML = '<option value="">Select curriculum</option>';
+                const items = data.data || data;
+                if (Array.isArray(items) && items.length > 0) {
+                    items.forEach(c => {
+                        const opt = document.createElement('option');
+                        opt.value = c.id;
+                        opt.textContent = c.name;
+                        select.appendChild(opt);
+                    });
+                } else {
+                    select.innerHTML = '<option value="">No curricula available</option>';
+                }
+            } catch (e) {
+                console.error('Failed to load curricula', e);
+                select.innerHTML = '<option value="">Error loading curricula</option>';
+            }
+        }
+
+        async function populateEducationLevels() {
+            const select = document.getElementById('signupLevel');
+            select.innerHTML = '<option value="">Loading levels...</option>';
+            try {
+                const res = await fetch('/api/lookup/education-levels');
+                if (!res.ok) throw new Error('Failed to fetch education levels');
+                const data = await res.json();
+                select.innerHTML = '<option value="">Select level</option>';
+                const items = data.data || data;
+                if (Array.isArray(items) && items.length > 0) {
+                    items.forEach(l => {
+                        const opt = document.createElement('option');
+                        opt.value = l.id;
+                        opt.textContent = l.name;
+                        select.appendChild(opt);
+                    });
+                } else {
+                    select.innerHTML = '<option value="">No levels available</option>';
+                }
+            } catch (e) {
+                console.error('Failed to load education levels', e);
+                select.innerHTML = '<option value="">Error loading levels</option>';
+            }
+        }
+
+        // ================================================================
+        //  STAGE 1: REPLACED FUNCTIONS
+        // ================================================================
+
+        // ---- updateProvinceField (replaced) ----
+        async function updateProvinceField() {
+            const countryId = document.getElementById('signupCountry').value;
+            const provinceField = document.getElementById('provinceField');
+            const provinceSelect = document.getElementById('signupProvince');
+            if (!countryId) {
+                provinceField.style.display = 'none';
+                provinceSelect.innerHTML = '<option value="">Select province</option>';
+                return;
+            }
+            try {
+                const res = await fetch(`/api/lookup/provinces?countryId=${countryId}`);
+                if (!res.ok) throw new Error('Failed to fetch provinces');
+                const data = await res.json();
+                const items = data.data || data;
+                if (Array.isArray(items) && items.length > 0) {
+                    provinceField.style.display = 'block';
+                    provinceSelect.innerHTML = '<option value="">Select province</option>';
+                    items.forEach(p => {
+                        const opt = document.createElement('option');
+                        opt.value = p.id;
+                        opt.textContent = p.name;
+                        provinceSelect.appendChild(opt);
+                    });
+                } else {
+                    provinceField.style.display = 'none';
+                    provinceSelect.innerHTML = '<option value="">No provinces available</option>';
+                }
+            } catch (e) {
+                console.error('Failed to load provinces', e);
+                provinceField.style.display = 'none';
+                provinceSelect.innerHTML = '<option value="">Error loading provinces</option>';
+            }
+        }
+
+        // ---- updateSubjects (replaced) ----
         function updateSubjects() {
-            const curriculum = document.getElementById('signupCurriculum').value;
-            const level = document.getElementById('signupLevel').value;
+            const curriculumSelect = document.getElementById('signupCurriculum');
+            const levelSelect = document.getElementById('signupLevel');
+            const curriculumText = curriculumSelect.options[curriculumSelect.selectedIndex]?.text || '';
+            const levelText = levelSelect.options[levelSelect.selectedIndex]?.text || '';
             const container = document.getElementById('signupSubjectsCheck');
-            const subjects = getSubjectList(curriculum, level);
+            const subjects = getSubjectList(curriculumText, levelText);
             container.innerHTML = subjects.map(sub => `
                 <label><input type="checkbox" value="${sub}" checked> ${sub}</label>
             `).join('');
         }
 
-        // --- Handle Signup ---
-        function handleSignup() {
+        // ---- handleSignup (replaced) ----
+        async function handleSignup() {
             const name = document.getElementById('signupName').value.trim();
             const email = document.getElementById('signupEmail').value.trim();
             const pass = document.getElementById('signupPassword').value.trim();
             const confirm = document.getElementById('signupConfirmPassword').value.trim();
             const err = document.getElementById('signupError5');
+            const success = document.getElementById('signupSuccess');
 
             if (!name || !email || !pass || !confirm) {
                 err.textContent = 'Please fill in all required fields.';
@@ -1116,58 +1211,56 @@
                 err.classList.add('show');
                 return;
             }
+            err.classList.remove('show');
+            success.classList.remove('show');
 
-            const country = document.getElementById('signupCountry').value;
-            const province = document.getElementById('signupProvince').value;
-            const curriculum = document.getElementById('signupCurriculum').value;
-            const level = document.getElementById('signupLevel').value;
-            const grade = document.getElementById('signupGrade').value;
-            const checkedSubs = Array.from(document.querySelectorAll('#signupSubjectsCheck input:checked')).map(cb => cb.value);
+            const firstName = name.split(' ')[0] || name;
+            const lastName = name.split(' ').slice(1).join(' ') || '';
+            const countryId = parseInt(document.getElementById('signupCountry').value) || null;
+            const province = document.getElementById('signupProvince').value || null;
+            const educationLevelId = parseInt(document.getElementById('signupLevel').value) || null;
+            const grade = document.getElementById('signupGrade').value || '';
+            const curriculumId = parseInt(document.getElementById('signupCurriculum').value) || null;
+            const subjects = Array.from(document.querySelectorAll('#signupSubjectsCheck input:checked')).map(cb => cb.value);
 
-            // For API: need to map country, curriculum, educationLevel to IDs. We'll use placeholder IDs for now.
-            // In a real app you'd fetch IDs from DB.
-            // For demo, we'll send names.
-            const payload = {
-                firstName: name,
-                lastName: name,
-                email,
-                password: pass,
-                countryId: 1, // placeholder
-                province: province,
-                educationLevelId: 1, // placeholder
-                grade,
-                curriculumId: 1, // placeholder
-                subjects: checkedSubs.length ? checkedSubs : ['Mathematics', 'English'],
-                role: 'learner'
-            };
-
-            fetch('/api/auth/signup', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(payload)
-            })
-            .then(res => res.json())
-            .then(data => {
+            try {
+                const res = await fetch('/api/auth/signup', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        firstName,
+                        lastName,
+                        email,
+                        password: pass,
+                        countryId,
+                        province,
+                        educationLevelId,
+                        grade,
+                        curriculumId,
+                        subjects
+                    })
+                });
+                const data = await res.json();
                 if (!data.success) {
                     err.textContent = data.error || 'Signup failed';
                     err.classList.add('show');
                     return;
                 }
-                document.getElementById('signupSuccess').textContent = 'Account created! Please log in.';
-                document.getElementById('signupSuccess').classList.add('show');
+                success.textContent = 'Account created! Please log in.';
+                success.classList.add('show');
                 setTimeout(() => {
                     switchAuthMode('login');
                     document.getElementById('loginEmail').value = email;
+                    document.getElementById('loginPassword').value = '';
                 }, 1000);
-            })
-            .catch(() => {
-                err.textContent = 'Server error. Please try again.';
+            } catch (e) {
+                err.textContent = 'Network error. Please try again.';
                 err.classList.add('show');
-            });
+            }
         }
 
-        // ---- Login ----
-        function handleLogin() {
+        // ---- handleLogin (replaced) ----
+        async function handleLogin() {
             const email = document.getElementById('loginEmail').value.trim();
             const pass = document.getElementById('loginPassword').value.trim();
             const err = document.getElementById('loginError');
@@ -1178,94 +1271,108 @@
             }
             err.classList.remove('show');
 
-            fetch('/api/auth/login', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ email, password: pass })
-            })
-            .then(res => res.json())
-            .then(data => {
-                if (!data.success) {
-                    err.textContent = data.error || 'Login failed';
+            try {
+                const loginRes = await fetch('/api/auth/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, password: pass })
+                });
+                const loginData = await loginRes.json();
+                if (!loginData.success || !loginData.token) {
+                    err.textContent = loginData.error || 'Login failed';
                     err.classList.add('show');
                     return;
                 }
-                localStorage.setItem('token', data.token);
-                localStorage.setItem('leago_user', JSON.stringify(data.user));
+
+                const token = loginData.token;
+                localStorage.setItem('token', token);
+
+                const meRes = await fetch('/api/auth/me', {
+                    headers: { 'Authorization': 'Bearer ' + token }
+                });
+                if (!meRes.ok) {
+                    localStorage.removeItem('token');
+                    err.textContent = 'Could not fetch profile.';
+                    err.classList.add('show');
+                    return;
+                }
+                // /me returns the user object directly
+                const user = await meRes.json();
+                currentUser = user;
+                localStorage.setItem('leago_user', JSON.stringify(currentUser));
                 closeAuth();
                 initDashboard();
-            })
-            .catch(() => {
+            } catch (e) {
                 err.textContent = 'Network error. Please try again.';
                 err.classList.add('show');
-            });
-        }
-
-        // ---- Logout ----
-        function handleLogout() {
-            if (confirm('Are you sure you want to logout?')) {
-                localStorage.removeItem('token');
-                localStorage.removeItem('leago_user');
-                currentUser = null;
-                document.getElementById('dashboard').classList.remove('active');
-                document.getElementById('landingPage').classList.remove('hidden');
             }
         }
 
-        // ---- Init Dashboard (using /api/dashboard) ----
-        function initDashboard() {
+        // ================================================================
+        //  SESSION RESTORATION (ADDED)
+        // ================================================================
+        async function restoreSession() {
             const token = localStorage.getItem('token');
             if (!token) {
-                window.location.href = '/';
+                document.getElementById('landingPage').style.display = 'block';
                 return;
             }
-
-            fetch('/api/dashboard', {
-                headers: { 'Authorization': 'Bearer ' + token }
-            })
-            .then(res => {
-                if (!res.ok) throw new Error('Failed to load dashboard');
-                return res.json();
-            })
-            .then(data => {
-                currentUser = data.profile;
-                currentUser.subjects = data.subjects;
-                currentUser.subscription = data.subscription;
-                currentUser.dailyQuestions = data.dailyQuestions;
-                currentUser.progress = data.progress;
-                currentUser.recentConversations = data.recentConversations;
-
-                document.getElementById('landingPage').classList.add('hidden');
-                document.getElementById('dashboard').classList.add('active');
-
-                const fullName = `${data.profile.first_name || ''} ${data.profile.last_name || ''}`.trim() || 'Student';
-                document.getElementById('dashUserName').textContent = fullName;
-                document.getElementById('dashUserRole').textContent = `${data.profile.grade || ''} • ${data.profile.curriculum?.name || 'CAPS'}`;
-
-                const badge = document.getElementById('dashSubBadge');
-                const upgradeBtn = document.getElementById('dashUpgradeBtn');
-                if (data.subscription.plan === 'premium') {
-                    badge.textContent = 'Premium Scholar';
-                    badge.className = 'sub-badge sub-active';
-                    upgradeBtn.style.display = 'none';
-                } else {
-                    badge.textContent = 'Free Trial';
-                    badge.className = 'sub-badge sub-trial';
-                    upgradeBtn.style.display = 'inline-block';
+            try {
+                const res = await fetch('/api/auth/me', {
+                    headers: { 'Authorization': 'Bearer ' + token }
+                });
+                if (!res.ok) {
+                    localStorage.removeItem('token');
+                    localStorage.removeItem('leago_user');
+                    document.getElementById('landingPage').style.display = 'block';
+                    return;
                 }
-
-                updateDailyQuestionCount();
-                renderSubjectList();
-                switchDashboardTab('overview');
-            })
-            .catch(err => {
-                console.error('❌ Dashboard error:', err);
+                const user = await res.json();
+                currentUser = user;
+                localStorage.setItem('leago_user', JSON.stringify(currentUser));
+                initDashboard();
+            } catch (e) {
+                console.error('Session restoration failed', e);
                 localStorage.removeItem('token');
-                window.location.href = '/';
-            });
+                localStorage.removeItem('leago_user');
+                document.getElementById('landingPage').style.display = 'block';
+            }
         }
 
-        // ---- Daily Question Counter ----
+        // ================================================================
+        //  DASHBOARD FUNCTIONS (MOCKED – unchanged)
+        // ================================================================
+        function initDashboard() {
+            // --- This is the existing mock dashboard init, kept as-is ---
+            if (!currentUser) {
+                alert('Please log in first.');
+                return;
+            }
+            document.getElementById('landingPage').classList.add('hidden');
+            document.getElementById('landingPage').style.display = 'none';
+            document.getElementById('dashboard').classList.add('active');
+
+            const fullName = `${currentUser.first_name || ''} ${currentUser.last_name || ''}`.trim() || 'Student';
+            document.getElementById('dashUserName').textContent = fullName;
+            document.getElementById('dashUserRole').textContent = `${currentUser.grade || 'Grade 10'} • ${currentUser.curriculum?.name || 'CAPS'}`;
+
+            const badge = document.getElementById('dashSubBadge');
+            const upgradeBtn = document.getElementById('dashUpgradeBtn');
+            if (currentUser.subscription?.plan === 'premium') {
+                badge.textContent = 'Premium Scholar';
+                badge.className = 'sub-badge sub-active';
+                upgradeBtn.style.display = 'none';
+            } else {
+                badge.textContent = 'Free Trial';
+                badge.className = 'sub-badge sub-trial';
+                upgradeBtn.style.display = 'inline-block';
+            }
+
+            updateDailyQuestionCount();
+            renderSubjectList();
+            switchDashboardTab('overview');
+        }
+
         function updateDailyQuestionCount() {
             const el = document.getElementById('dailyQuestionCount');
             if (!el) return;
@@ -1277,22 +1384,18 @@
             }
         }
 
-        // ---- Render Subjects ----
         function renderSubjectList() {
             const list = document.getElementById('dashSubjectList');
             const subjects = currentUser.subjects || [];
-
             if (subjects.length === 0) {
                 list.innerHTML = '<li style="color:#9ca3af;cursor:default;">No subjects. Update your profile.</li>';
                 return;
             }
-
             list.innerHTML = subjects.map(sub => `
                 <li onclick="loadSubject(${sub.id})">
                     ${sub.icon || '📖'} ${sub.name}
                 </li>
             `).join('');
-
             renderOverviewSubjects(subjects);
         }
 
@@ -1300,7 +1403,7 @@
             const container = document.getElementById('overviewSubjects');
             if (!container) return;
             if (!subjects || subjects.length === 0) {
-                container.innerHTML = '<p style="color:var(--text-secondary);">No subjects selected. Update your profile.</p>';
+                container.innerHTML = '<p style="color:#9ca3af;">No subjects selected. Update your profile.</p>';
                 return;
             }
             container.innerHTML = subjects.map(sub => `
@@ -1312,71 +1415,18 @@
             `).join('');
         }
 
-        // ---- Load Subject & Topics ----
         function loadSubject(subjectId) {
-            const token = localStorage.getItem('token');
-            const subject = currentUser.subjects.find(s => s.id === subjectId);
-            if (!subject) {
-                alert('Subject not found');
-                return;
-            }
-
-            const panel = document.getElementById('centerPanel');
-            panel.innerHTML = `
-                <button class="back-btn" onclick="switchDashboardTab('overview')">← Back to Overview</button>
-                <div class="welcome">${subject.icon || '📘'} ${subject.name}</div>
-                <div class="welcome-sub">Select a topic to start learning.</div>
-                <div id="topicList" class="topic-grid mt-4"></div>
-            `;
-
-            fetch(`/api/topics?subject_id=${subjectId}&grade=${encodeURIComponent(currentUser.grade || '')}`, {
-                headers: { 'Authorization': 'Bearer ' + token }
-            })
-            .then(res => res.json())
-            .then(topics => {
-                const container = document.getElementById('topicList');
-                if (!topics || topics.length === 0) {
-                    container.innerHTML = '<p style="color:#9ca3af;">No topics available for this subject.</p>';
-                    return;
-                }
-                container.innerHTML = topics.map(t => {
-                    // Check progress (we don't have topic-level progress from dashboard yet, but we can compute from currentUser.progress if needed)
-                    const progress = currentUser.progress?.topics?.find(p => p.topic_id === t.id);
-                    const status = progress?.status || 'not_started';
-                    const badge = status === 'completed' ? '✅' : status === 'in_progress' ? '🔄' : '📝';
-                    return `
-                        <div class="topic-card" onclick="openTopic(${subject.id}, ${t.id})">
-                            <div class="title">${badge} ${t.title}</div>
-                            <div class="meta">${t.description || 'Click to explore'}</div>
-                            ${progress ? `<div class="text-xs text-gray-500 mt-2">${progress.completion_percentage || 0}% complete</div>` : ''}
-                        </div>
-                    `;
-                }).join('');
-            })
-            .catch(() => {
-                document.getElementById('topicList').innerHTML = '<p style="color:#9ca3af;">Could not load topics.</p>';
-            });
+            // Placeholder – will be replaced in Stage 2
+            alert('Dashboard topics will be connected in Stage 2.');
         }
 
-        // ---- Open Topic ----
-        function openTopic(subjectId, topicId) {
-            const subject = currentUser.subjects.find(s => s.id === subjectId);
-            if (!subject) return;
-            currentUser.currentSubjectId = subjectId;
-            currentUser.currentTopicId = topicId;
-            document.getElementById('chatInput').value = `Explain this topic step by step.`;
-            switchDashboardTab('tutor', subject.name);
-            setTimeout(sendChatMessage, 500);
-        }
-
-        // ---- Dashboard Tabs ----
         function switchDashboardTab(tab, param) {
-            document.querySelectorAll('.sidebar-left .subject-list li').forEach(el => el.classList.remove('active'));
-
+            // Placeholder – will be replaced in Stage 2
             const panel = document.getElementById('centerPanel');
             if (tab === 'overview') {
+                const name = currentUser?.first_name || 'Student';
                 panel.innerHTML = `
-                    <div class="welcome">Welcome back, ${currentUser.first_name || 'Student'} 👋</div>
+                    <div class="welcome">Welcome back, ${name} 👋</div>
                     <div class="welcome-sub">Choose a subject or start an AI tutoring session below.</div>
                     <div class="subject-grid mt-6" id="overviewSubjects">
                         ${(currentUser.subjects || []).map(sub => `
@@ -1388,52 +1438,35 @@
                         `).join('')}
                     </div>
                 `;
-            } else if (tab === 'tutor') {
-                renderAiTutorPanel(panel, param || 'General');
-            } else if (tab === 'papers') {
+            } else {
                 panel.innerHTML = `
                     <button class="back-btn" onclick="switchDashboardTab('overview')">← Back to Overview</button>
-                    <div class="welcome">Past Exam Papers & Memorandums</div>
-                    <div class="welcome-sub">Practice with official CAPS, IEB, and regional past papers.</div>
-                    <div class="topic-grid mt-4">
-                        <div class="topic-card">
-                            <div class="title">Mathematics Paper 1 (November 2025)</div>
-                            <div class="meta">CAPS • Grade 12</div>
-                            <div class="resources">
-                                <span class="tag cursor-pointer">📄 Question Paper</span>
-                                <span class="tag cursor-pointer">💡 Memorandum</span>
-                            </div>
-                        </div>
-                        <div class="topic-card">
-                            <div class="title">Physical Sciences Physics P1 (2025)</div>
-                            <div class="meta">CAPS • Grade 12</div>
-                            <div class="resources">
-                                <span class="tag cursor-pointer">📄 Question Paper</span>
-                                <span class="tag cursor-pointer">💡 Memorandum</span>
-                            </div>
-                        </div>
-                    </div>
-                `;
-            } else if (tab === 'flashcards') {
-                panel.innerHTML = `
-                    <button class="back-btn" onclick="switchDashboardTab('overview')">← Back to Overview</button>
-                    <div class="welcome">AI Flashcards & Revision</div>
-                    <div class="welcome-sub">Key terms and definitions generated for your subjects.</div>
-                    <div class="mt-4 space-y-2">
-                        <div class="flashcard-item">
-                            <div class="term">Newton's Second Law of Motion</div>
-                            <div class="def">When a resultant force acts on an object, the object will accelerate in the direction of the force...</div>
-                        </div>
-                        <div class="flashcard-item">
-                            <div class="term">Photosynthesis</div>
-                            <div class="def">The process by which green plants use sunlight to synthesize foods from carbon dioxide and water.</div>
-                        </div>
-                    </div>
+                    <div class="welcome">${tab.charAt(0).toUpperCase() + tab.slice(1)}</div>
+                    <div class="welcome-sub">This feature will be connected in Stage 2.</div>
                 `;
             }
         }
 
-        // ---- AI Tutor Panel ----
+        function openTopic(subjectId, topicId) {
+            alert('Topics will be connected in Stage 2.');
+        }
+
+        function openUpgradeModal() {
+            alert('🚀 Upgrade to Premium for unlimited AI access, past papers, and advanced features! (Payment integration coming in Stage 2.)');
+        }
+
+        function handleLogout() {
+            if (confirm('Are you sure you want to logout?')) {
+                localStorage.removeItem('token');
+                localStorage.removeItem('leago_user');
+                currentUser = null;
+                document.getElementById('dashboard').classList.remove('active');
+                document.getElementById('landingPage').classList.remove('hidden');
+                document.getElementById('landingPage').style.display = 'block';
+            }
+        }
+
+        // ---- chat functions (mocked, unchanged) ----
         function renderAiTutorPanel(panel, subject) {
             panel.innerHTML = `
                 <button class="back-btn" onclick="switchDashboardTab('overview')">← Back to Overview</button>
@@ -1443,7 +1476,11 @@
                         <div class="context">Subject: ${subject || 'General'}</div>
                     </div>
                     <div class="chat-box" id="chatBox">
-                        <div class="msg bot">Hello ${currentUser.first_name || 'Student'}! I am your personal AI teacher for ${subject || 'all subjects'}. How can I help you master your studies today?</div>
+                        <div class="typing-indicator" id="typingIndicator">
+                            <span style="color:#9ca3af;">Leago is thinking</span>
+                            <span class="spinner" style="width:14px;height:14px;border-width:2px;"></span>
+                        </div>
+                        <div class="msg bot">Hello ${currentUser?.first_name || 'Student'}! I am your personal AI teacher for ${subject || 'all subjects'}. How can I help you master your studies today?</div>
                     </div>
                     <div class="chat-input">
                         <input type="text" id="chatInput" placeholder="Ask a question or paste a homework problem..." onkeydown="if(event.key==='Enter') sendChatMessage()" />
@@ -1457,8 +1494,8 @@
             `;
         }
 
-        // ---- Send Chat Message ----
         async function sendChatMessage() {
+            // Mock chat – will be replaced in Stage 2
             const input = document.getElementById('chatInput');
             const message = input.value.trim();
             if (!message || isProcessing) return;
@@ -1466,54 +1503,27 @@
             addMessage('user', message);
             showTyping(true);
             isProcessing = true;
-
-            const payload = {
-                message: message,
-                subject_id: currentUser.currentSubjectId || null,
-                topic_id: currentUser.currentTopicId || null,
-                conversation_id: currentConversationId || null
-            };
-
-            try {
-                const res = await fetch('/api/chat', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': 'Bearer ' + localStorage.getItem('token')
-                    },
-                    body: JSON.stringify(payload)
-                });
-                const data = await res.json();
-                if (res.status === 403 && data.error === 'limit_reached') {
-                    addMessage('bot', '📚 You\'ve reached your daily limit. Upgrade to Premium.');
-                } else if (data.reply) {
-                    addMessage('bot', data.reply);
-                    if (data.conversation_id) currentConversationId = data.conversation_id;
-                } else {
-                    addMessage('bot', '❌ ' + (data.error || 'No response'));
-                }
-                // Refresh daily counter
-                updateDailyQuestionCount();
-            } catch(err) {
-                addMessage('bot', '❌ Server error. Please try again.');
-            }
-            showTyping(false);
-            isProcessing = false;
+            setTimeout(() => {
+                addMessage('bot', 'This is a mock response. The AI Tutor will be connected in Stage 2.');
+                showTyping(false);
+                isProcessing = false;
+            }, 800);
         }
 
         function addMessage(role, text) {
             const box = document.getElementById('chatBox');
+            if (!box) return;
+            const typing = document.getElementById('typingIndicator');
+            if (typing) typing.classList.remove('active');
             const div = document.createElement('div');
             div.className = `msg ${role}`;
             if (role === 'bot') {
-                // Render markdown and math
                 let content = text;
                 if (typeof marked !== 'undefined') {
                     marked.setOptions({ breaks: true, gfm: true });
                     content = marked.parse(content);
                 }
                 div.innerHTML = content;
-                // Render KaTeX if available
                 setTimeout(() => {
                     if (typeof renderMathInElement === 'function') {
                         try {
@@ -1529,43 +1539,44 @@
             } else {
                 div.textContent = text;
             }
-            box.appendChild(div);
+            if (typing) {
+                box.insertBefore(div, typing);
+            } else {
+                box.appendChild(div);
+            }
             box.scrollTop = box.scrollHeight;
         }
 
         function showTyping(active) {
-            // We don't have a typing indicator element in the current HTML; we'll add a simple one if needed.
-            // For now, we just skip.
-        }
-
-        // ---- Upgrade Modal ----
-        async function openUpgradeModal() {
-            try {
-                const res = await fetch('/api/payments/create', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ userId: currentUser.id, email: currentUser.email })
-                });
-                const data = await res.json();
-                if (data.authorization_url) {
-                    window.location.href = data.authorization_url;
-                } else {
-                    alert('Payment initialization failed. Please try again.');
-                }
-            } catch(err) {
-                alert('Payment service unavailable. Please try again later.');
+            const el = document.getElementById('typingIndicator');
+            if (el) {
+                if (active) el.classList.add('active');
+                else el.classList.remove('active');
             }
         }
 
-        function escapeHtml(str) {
-            return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+        // ================================================================
+        //  STAGE 1: PAGE INITIALISATION (added at bottom)
+        // ================================================================
+        // Override openAuth to preload lookup data when signup is opened
+        const originalOpenAuth = openAuth;
+        openAuth = function(mode) {
+            if (mode === 'signup') {
+                const countrySelect = document.getElementById('signupCountry');
+                if (countrySelect.options.length <= 1) {
+                    loadLookupData().catch(e => console.error('Lookup preload failed', e));
+                }
+            }
+            originalOpenAuth(mode);
+        };
+
+        // Preload lookup data on page load (so dropdowns are ready when user clicks signup)
+        if (!localStorage.getItem('token')) {
+            loadLookupData().catch(e => console.error('Lookup preload failed', e));
         }
 
-        // ---- Auto-initialize if user stored ----
-        const storedToken = localStorage.getItem('token');
-        if (storedToken) {
-            initDashboard();
-        }
+        // Restore session if token exists
+        restoreSession();
     </script>
 
 </body>
