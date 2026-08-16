@@ -1389,6 +1389,8 @@
         let isProcessing = false;
         let currentTopicId = null;
         let currentTopicTitle = '';
+        let currentSubjectId = null;
+        let currentSubjectName = '';
 
         // ================================================================
         //  AUTH & UI FUNCTIONS (unchanged from original)
@@ -1883,6 +1885,11 @@
                 </div>
             `;
 
+            // Store the current subject
+            currentSubjectId = subjectId;
+            const subject = currentUser.subjects.find(s => s.id === subjectId);
+            currentSubjectName = subject ? subject.name : 'Subject';
+
             try {
                 const token = localStorage.getItem('token');
                 const res = await fetch(`/api/topics?subject_id=${subjectId}`, {
@@ -1931,16 +1938,20 @@
             return subject ? subject.name : 'Subject';
         }
 
+        // ================================================================
+        //  STAGE 4: AI TUTOR CONNECTION
+        // ================================================================
+
         function openTopic(topicId, topicTitle) {
             currentTopicId = topicId;
             currentTopicTitle = topicTitle;
-            switchDashboardTab('tutor', topicTitle);
+            // Reset conversation ID to start a new session for this topic
+            currentConversationId = null;
+            // Switch to AI Tutor tab with subject and topic context
+            switchDashboardTab('tutor', currentSubjectName, topicTitle);
         }
 
-        // ================================================================
-        //  DASHBOARD TAB SWITCHING (with tutor placeholder)
-        // ================================================================
-        function switchDashboardTab(tab, param) {
+        function switchDashboardTab(tab, param, topicParam) {
             const panel = document.getElementById('centerPanel');
             if (tab === 'overview') {
                 const name = currentUser?.first_name || 'Student';
@@ -1958,7 +1969,7 @@
                     </div>
                 `;
             } else if (tab === 'tutor') {
-                renderAiTutorPanel(panel, param || 'General');
+                renderAiTutorPanel(panel, param || 'General', topicParam);
             } else {
                 panel.innerHTML = `
                     <button class="back-btn" onclick="switchDashboardTab('overview')">← Back to Overview</button>
@@ -1968,23 +1979,24 @@
             }
         }
 
-        // ================================================================
-        //  TUTOR / CHAT (placeholder)
-        // ================================================================
-        function renderAiTutorPanel(panel, subject) {
+        function renderAiTutorPanel(panel, subject, topic) {
+            const name = currentUser?.first_name || 'Student';
+            const displaySubject = subject || 'General';
+            const displayTopic = topic || '';
+            const headerText = displayTopic ? `${displaySubject} – ${displayTopic}` : displaySubject;
+
             panel.innerHTML = `
                 <button class="back-btn" onclick="switchDashboardTab('overview')">← Back to Overview</button>
                 <div class="tutor-container">
                     <div class="tutor-header">
                         <h3>Leago AI Tutor</h3>
-                        <div class="context">Subject: ${subject || 'General'}</div>
+                        <div class="context">${headerText}</div>
                     </div>
                     <div class="chat-box" id="chatBox">
                         <div class="typing-indicator" id="typingIndicator">
                             <span style="color:#9ca3af;">Leago is thinking</span>
                             <span class="spinner" style="width:14px;height:14px;border-width:2px;"></span>
                         </div>
-                        <div class="msg bot">Hello ${currentUser?.first_name || 'Student'}! I am your personal AI teacher for ${subject || 'all subjects'}. How can I help you master your studies today?</div>
                     </div>
                     <div class="chat-input">
                         <input type="text" id="chatInput" placeholder="Ask a question or paste a homework problem..." onkeydown="if(event.key==='Enter') sendChatMessage()" />
@@ -1996,10 +2008,20 @@
                     </div>
                 </div>
             `;
+
+            // Auto-send a welcome message to get a real AI response if a topic is selected
+            if (topic && currentTopicId) {
+                setTimeout(() => {
+                    const input = document.getElementById('chatInput');
+                    if (input) {
+                        input.value = `I want to learn about "${currentTopicTitle}" in ${currentSubjectName}. Please guide me.`;
+                        sendChatMessage();
+                    }
+                }, 300);
+            }
         }
 
         async function sendChatMessage() {
-            // Placeholder – will be replaced when AI is integrated
             const input = document.getElementById('chatInput');
             const message = input.value.trim();
             if (!message || isProcessing) return;
@@ -2007,11 +2029,55 @@
             addMessage('user', message);
             showTyping(true);
             isProcessing = true;
-            setTimeout(() => {
-                addMessage('bot', 'This is a mock response. The AI Tutor will be connected in Stage 3.');
+
+            const token = localStorage.getItem('token');
+            if (!token) {
+                addMessage('bot', '⚠️ You are not logged in. Please refresh and try again.');
                 showTyping(false);
                 isProcessing = false;
-            }, 800);
+                return;
+            }
+
+            try {
+                const res = await fetch('/api/chat', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer ' + token
+                    },
+                    body: JSON.stringify({
+                        message: message,
+                        subject_id: currentSubjectId,
+                        topic_id: currentTopicId,
+                        conversation_id: currentConversationId
+                    })
+                });
+                const data = await res.json();
+                if (!res.ok) {
+                    if (data.error === 'limit_reached') {
+                        addMessage('bot', '📚 You\'ve reached your daily limit. Upgrade to Premium to continue.');
+                    } else {
+                        addMessage('bot', '❌ ' + (data.error || 'Server error'));
+                    }
+                    showTyping(false);
+                    isProcessing = false;
+                    return;
+                }
+                // Success
+                if (data.reply) {
+                    addMessage('bot', data.reply);
+                    if (data.conversation_id) {
+                        currentConversationId = data.conversation_id;
+                    }
+                }
+                // Update daily question count (the backend increments it)
+                updateDailyQuestionCount();
+            } catch (err) {
+                console.error('Chat error:', err);
+                addMessage('bot', '❌ Network error. Please try again.');
+            }
+            showTyping(false);
+            isProcessing = false;
         }
 
         function addMessage(role, text) {
