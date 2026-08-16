@@ -12,7 +12,7 @@ async function initDB() {
   try {
     await client.query('BEGIN');
 
-    // ===== CREATE TABLES (unchanged) =====
+    // ===== CREATE TABLES =====
     await client.query(`
       CREATE TABLE IF NOT EXISTS countries (
         id SERIAL PRIMARY KEY,
@@ -63,8 +63,7 @@ async function initDB() {
         grade VARCHAR(20),
         title VARCHAR(200) NOT NULL,
         description TEXT,
-        order_number INTEGER DEFAULT 0,
-        UNIQUE(subject_id, title)
+        order_number INTEGER DEFAULT 0
       );
 
       CREATE TABLE IF NOT EXISTS users (
@@ -171,11 +170,13 @@ async function initDB() {
         dup_count INTEGER;
         rec RECORD;
       BEGIN
+        -- Check if the new constraint already exists
         IF NOT EXISTS (
           SELECT 1 FROM pg_constraint
           WHERE conrelid = 'topics'::regclass
             AND conname = 'topics_subject_id_curriculum_id_grade_title_key'
         ) THEN
+          -- Find the old unique constraint (subject_id, title) if it exists
           SELECT conname INTO old_constraint_name
           FROM pg_constraint
           WHERE conrelid = 'topics'::regclass
@@ -188,6 +189,7 @@ async function initDB() {
             )
             AND array_length(conkey, 1) = 2;
 
+          -- Check for duplicates that would violate the new constraint
           SELECT COUNT(*) INTO dup_count FROM (
             SELECT subject_id, curriculum_id, grade, title, COUNT(*)
             FROM topics
@@ -203,11 +205,13 @@ async function initDB() {
                 rec.subject_id, rec.curriculum_id, rec.grade, rec.title, rec.count;
             END LOOP;
           ELSE
+            -- Safe to migrate: drop old constraint if it exists
             IF old_constraint_name IS NOT NULL THEN
               EXECUTE format('ALTER TABLE topics DROP CONSTRAINT %I', old_constraint_name);
               RAISE NOTICE '✅ Dropped old constraint: %', old_constraint_name;
             END IF;
 
+            -- Add new constraint
             ALTER TABLE topics ADD CONSTRAINT topics_subject_id_curriculum_id_grade_title_key
               UNIQUE (subject_id, curriculum_id, grade, title);
             RAISE NOTICE '✅ New unique constraint added.';
@@ -358,7 +362,6 @@ async function initDB() {
         topic_record RECORD;
         grade_text TEXT;
         subject_name TEXT;
-        subject_id INTEGER;
         topic_data JSONB;
         topics_for_subject JSONB;
         grade_array TEXT[] := ARRAY['Grade 10', 'Grade 11', 'Grade 12'];
@@ -383,11 +386,6 @@ async function initDB() {
         -- The keys are the exact subject names as in the subjects table.
         -- Each value is a JSON object with keys 'Grade 10', 'Grade 11', 'Grade 12'
         -- and an array of { title, description, order_number } objects.
-
-        -- We'll build the lookup as a JSONB variable.
-        -- For brevity, the lookup includes all subjects from the curriculum_subjects list.
-        -- Subjects not in this lookup will be skipped.
-
         topic_data := '{
           "Mathematics": {
             "Grade 10": [
@@ -1269,7 +1267,6 @@ async function initDB() {
           WHERE cs.curriculum_id = caps_id
         LOOP
           subject_name := subject_record.name;
-          subject_id := subject_record.id;
 
           -- Get the topics for this subject from the lookup
           topics_for_subject := topic_data->subject_name;
@@ -1283,7 +1280,7 @@ async function initDB() {
           FOREACH grade_text IN ARRAY grade_array LOOP
             -- Get topics for this grade
             IF topics_for_subject ? grade_text THEN
-              -- Insert each topic
+              -- Insert each topic into temp_topics
               FOR topic_record IN
                 SELECT
                   (topic->>'title') AS title,
@@ -1292,7 +1289,7 @@ async function initDB() {
                 FROM jsonb_array_elements(topics_for_subject->grade_text) AS topic
               LOOP
                 INSERT INTO temp_topics (subject_id, grade, title, description, order_number)
-                VALUES (subject_id, grade_text, topic_record.title, topic_record.description, topic_record.order_number);
+                VALUES (subject_record.id, grade_text, topic_record.title, topic_record.description, topic_record.order_number);
               END LOOP;
             END IF;
           END LOOP;
