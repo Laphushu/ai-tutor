@@ -229,38 +229,66 @@
             .features-grid { grid-template-columns: 1fr 1fr; }
             .pricing-grid { grid-template-columns: 1fr; }
             .auth-card { padding: 28px 20px; max-width: 100%; }
+            
+            /* Dashboard & tutor full-width reset */
             .dashboard { padding: 12px; }
-            .center-panel { padding: 16px 12px; }
-            .subject-grid { grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); }
-            .topic-grid { grid-template-columns: 1fr; }
-            .tutor-container { 
-                padding: 16px; 
-                width: 100% !important; 
+            .dashboard-grid {
+                display: block !important;
+                width: 100% !important;
+                gap: 0 !important;
+                grid-template-columns: unset !important;
+            }
+            .dashboard-grid > * {
+                width: 100% !important;
                 max-width: 100% !important;
+                margin-left: 0 !important;
+                margin-right: 0 !important;
             }
-            .tutor-header {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 8px;
-            }
-            .tutor-header .context {
-                max-width: 100%;
-                white-space: normal;
-                word-wrap: break-word;
-            }
-            .chat-box {
+            .center-panel {
                 width: 100% !important;
                 max-width: 100% !important;
                 min-width: 0 !important;
+                padding: 16px 12px !important;
+                overflow: visible !important;
+                box-sizing: border-box !important;
+            }
+            .subject-grid { grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); }
+            .topic-grid { grid-template-columns: 1fr; }
+            .top-nav { padding: 12px 16px; }
+
+            /* Tutor container full width */
+            .tutor-container,
+            .chat-box,
+            .chat-input,
+            .chat-options {
+                width: 100% !important;
+                max-width: 100% !important;
+                min-width: 0 !important;
+                flex: 0 0 100% !important;
+                box-sizing: border-box !important;
+            }
+            .tutor-container { padding: 16px !important; }
+            .tutor-header {
+                flex-direction: column !important;
+                align-items: flex-start !important;
+                gap: 8px !important;
+            }
+            .tutor-header .context {
+                max-width: 100% !important;
+                white-space: normal !important;
+                word-wrap: break-word !important;
+            }
+            .chat-box {
                 padding: 12px !important;
+                min-height: 200px !important;
             }
             .chat-box .msg {
                 max-width: 90% !important;
+                min-width: 0 !important;
             }
             .chat-input {
-                flex-direction: column;
-                gap: 8px;
-                width: 100% !important;
+                flex-direction: column !important;
+                gap: 8px !important;
             }
             .chat-input input {
                 width: 100% !important;
@@ -270,14 +298,13 @@
             .chat-input .btn-send {
                 width: 100% !important;
                 padding: 12px !important;
-                white-space: normal;
+                white-space: normal !important;
             }
             .chat-options {
-                flex-wrap: wrap;
-                gap: 8px;
+                flex-wrap: wrap !important;
+                gap: 8px !important;
             }
             .subject-grid-check { grid-template-columns: 1fr 1fr; }
-            .top-nav { padding: 12px 16px; }
         }
         @media (max-width: 480px) {
             .hero h1 { font-size: 1.8rem; }
@@ -285,7 +312,7 @@
             .subject-grid-check { grid-template-columns: 1fr; }
             .pricing-grid { grid-template-columns: 1fr; }
             .subject-grid { grid-template-columns: 1fr; }
-            .center-panel { padding: 12px 10px; }
+            .center-panel { padding: 12px 10px !important; }
         }
 
         .chat-box {
