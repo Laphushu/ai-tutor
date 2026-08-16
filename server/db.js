@@ -12,7 +12,7 @@ async function initDB() {
   try {
     await client.query('BEGIN');
 
-    // ===== CREATE TABLES =====
+    // ===== CREATE TABLES (unchanged) =====
     await client.query(`
       CREATE TABLE IF NOT EXISTS countries (
         id SERIAL PRIMARY KEY,
@@ -150,7 +150,7 @@ async function initDB() {
 
     // ===== STAGE 2: CURRICULUM-SUBJECT ARCHITECTURE =====
 
-    // 1. Check for duplicate subject names – log them but do NOT abort
+    // 1. Check for duplicate subject names – log but do NOT abort
     const dupCheck = await client.query(`
       SELECT name, COUNT(*) FROM subjects GROUP BY name HAVING COUNT(*) > 1
     `);
@@ -186,7 +186,7 @@ async function initDB() {
       );
     `);
 
-    // 3. Insert new subjects safely – using a simple SELECT+INSERT approach
+    // 3. Insert new subjects safely – using separate existence check to avoid type inference issues
     const subjectList = [
       { name: 'Mathematics', icon: '📐', color: '#7C3AED', desc: 'Pure Mathematics – algebra, calculus, geometry' },
       { name: 'Physical Sciences', icon: '⚛️', color: '#3B82F6', desc: 'Physics and chemistry fundamentals' },
@@ -226,7 +226,7 @@ async function initDB() {
 
     for (const sub of subjectList) {
       // Check if subject already exists
-      const exists = await client.query('SELECT id FROM subjects WHERE name = $1', [sub.name]);
+      const exists = await client.query('SELECT 1 FROM subjects WHERE name = $1', [sub.name]);
       if (exists.rows.length === 0) {
         await client.query(
           'INSERT INTO subjects (name, icon, color, description) VALUES ($1, $2, $3, $4)',
@@ -235,7 +235,7 @@ async function initDB() {
       }
     }
 
-    // 4. Ensure curricula exist for ZA (CAPS, IEB)
+    // 4. Ensure curricula exist for South Africa (ZA)
     await client.query(`
       INSERT INTO curricula (country_id, name)
       SELECT c.id, 'CAPS'
@@ -248,7 +248,7 @@ async function initDB() {
       ON CONFLICT (country_id, name) DO NOTHING;
     `);
 
-    // 5. Link explicit CAPS and IEB subjects
+    // 5. Link explicit CAPS and IEB subjects (idempotent)
     const capsSubjects = [
       'Mathematics', 'Mathematical Literacy', 'Physical Sciences', 'Life Sciences',
       'Agricultural Sciences', 'Accounting', 'Business Studies', 'Economics',
@@ -262,6 +262,7 @@ async function initDB() {
       'Hospitality Studies', 'Design'
     ];
 
+    // Get curriculum IDs for CAPS and IEB using ZA country
     const curRes = await client.query(`
       SELECT c.id, c.name
       FROM curricula c
@@ -276,12 +277,13 @@ async function initDB() {
         const subRes = await client.query('SELECT id FROM subjects WHERE name = $1', [subName]);
         if (subRes.rows.length > 0) {
           const subId = subRes.rows[0].id;
+          // Link to CAPS
           await client.query(`
             INSERT INTO curriculum_subjects (curriculum_id, subject_id)
             VALUES ($1, $2)
             ON CONFLICT (curriculum_id, subject_id) DO NOTHING
           `, [capsId, subId]);
-
+          // Link to IEB
           await client.query(`
             INSERT INTO curriculum_subjects (curriculum_id, subject_id)
             VALUES ($1, $2)
@@ -289,11 +291,12 @@ async function initDB() {
           `, [iebId, subId]);
         }
       }
+      console.log(`✅ Linked ${capsSubjects.length} subjects to CAPS and IEB.`);
     } else {
       console.warn('⚠️ CAPS or IEB curriculum not found, skipping subject linking.');
     }
 
-    // 6. Seed countries, provinces, education levels if empty
+    // 6. Seed countries, provinces, education levels (idempotent)
     const countriesCheck = await client.query('SELECT COUNT(*) FROM countries');
     if (parseInt(countriesCheck.rows[0].count) === 0) {
       await client.query(`
@@ -305,6 +308,7 @@ async function initDB() {
         ('Botswana', 'BW'),
         ('Ghana', 'GH')
       `);
+      // Insert South African provinces
       await client.query(`
         INSERT INTO provinces (country_id, name) VALUES
         ((SELECT id FROM countries WHERE code = 'ZA'), 'Gauteng'),
@@ -317,7 +321,7 @@ async function initDB() {
         ((SELECT id FROM countries WHERE code = 'ZA'), 'North West'),
         ((SELECT id FROM countries WHERE code = 'ZA'), 'Northern Cape')
       `);
-      // Additional provinces for other countries can be added here if needed
+      // Additional provinces for Kenya, Nigeria, etc. (optional)
     }
 
     const levelsCheck = await client.query('SELECT COUNT(*) FROM education_levels');
