@@ -1872,7 +1872,7 @@
         }
 
         // ================================================================
-        //  STAGE 3: TOPICS FUNCTIONS (replaces placeholder loadSubject)
+        //  STAGE 3: TOPICS FUNCTIONS
         // ================================================================
         async function loadSubject(subjectId) {
             const panel = document.getElementById('centerPanel');
@@ -1885,7 +1885,6 @@
                 </div>
             `;
 
-            // Store the current subject
             currentSubjectId = subjectId;
             const subject = currentUser.subjects.find(s => s.id === subjectId);
             currentSubjectName = subject ? subject.name : 'Subject';
@@ -1945,9 +1944,7 @@
         function openTopic(topicId, topicTitle) {
             currentTopicId = topicId;
             currentTopicTitle = topicTitle;
-            // Reset conversation ID to start a new session for this topic
             currentConversationId = null;
-            // Switch to AI Tutor tab with subject and topic context
             switchDashboardTab('tutor', currentSubjectName, topicTitle);
         }
 
@@ -1974,7 +1971,7 @@
                 panel.innerHTML = `
                     <button class="back-btn" onclick="switchDashboardTab('overview')">← Back to Overview</button>
                     <div class="welcome">${tab.charAt(0).toUpperCase() + tab.slice(1)}</div>
-                    <div class="welcome-sub">This feature will be connected in Stage 3.</div>
+                    <div class="welcome-sub">Coming soon.</div>
                 `;
             }
         }
@@ -2009,12 +2006,11 @@
                 </div>
             `;
 
-            // Auto-send a welcome message to get a real AI response if a topic is selected
             if (topic && currentTopicId) {
                 setTimeout(() => {
                     const input = document.getElementById('chatInput');
                     if (input) {
-                        input.value = `I want to learn about "${currentTopicTitle}" in ${currentSubjectName}. Please guide me.`;
+                        input.value = `I want to learn about "${currentTopicTitle}" in ${currentSubjectName}. Please guide me step-by-step.`;
                         sendChatMessage();
                     }
                 }, 300);
@@ -2063,14 +2059,12 @@
                     isProcessing = false;
                     return;
                 }
-                // Success
                 if (data.reply) {
                     addMessage('bot', data.reply);
                     if (data.conversation_id) {
                         currentConversationId = data.conversation_id;
                     }
                 }
-                // Update daily question count (the backend increments it)
                 updateDailyQuestionCount();
             } catch (err) {
                 console.error('Chat error:', err);

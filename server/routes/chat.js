@@ -24,7 +24,6 @@ async function checkAndIncrementDailyQuestion(userId) {
   if (limit !== -1 && count >= limit) {
     return { allowed: false, limit, used: count };
   }
-  // increment
   await pool.query('UPDATE users SET daily_question_count = $1, last_question_date = $2 WHERE id = $3', [count + 1, today, userId]);
   return { allowed: true, limit, used: count + 1 };
 }
@@ -35,38 +34,42 @@ router.post('/', authenticateToken, async (req, res) => {
   const { message, subject_id, topic_id, conversation_id } = req.body;
   if (!message) return res.status(400).json({ error: 'Message is required' });
 
-  // Check daily limit
+  // Daily limit
   const daily = await checkAndIncrementDailyQuestion(userId);
   if (!daily.allowed) {
     return res.status(403).json({ error: 'limit_reached', message: 'Daily question limit reached.' });
   }
 
-  // Get subject and topic info if provided
+  // Get user details for prompt
+  const userRes = await pool.query(
+    'SELECT first_name, grade, curriculum_id FROM users WHERE id = $1',
+    [userId]
+  );
+  if (userRes.rows.length === 0) return res.status(404).json({ error: 'User not found' });
+  const user = userRes.rows[0];
+  const firstName = user.first_name || 'Student';
+  const grade = user.grade || 'unknown';
+
+  // Get subject and topic info
   let subjectName = null;
   let topicName = null;
-  let grade = null;
-  let curriculum = null;
   if (subject_id) {
     const subRes = await pool.query('SELECT name FROM subjects WHERE id = $1', [subject_id]);
     if (subRes.rows.length > 0) subjectName = subRes.rows[0].name;
   }
   if (topic_id) {
-    const topRes = await pool.query('SELECT title, grade FROM topics WHERE id = $1', [topic_id]);
-    if (topRes.rows.length > 0) {
-      topicName = topRes.rows[0].title;
-      grade = topRes.rows[0].grade || grade;
-    }
-  }
-  // Get user curriculum
-  if (!curriculum) {
-    const curRes = await pool.query('SELECT curriculum_id FROM users WHERE id = $1', [userId]);
-    if (curRes.rows.length > 0 && curRes.rows[0].curriculum_id) {
-      const curNameRes = await pool.query('SELECT name FROM curricula WHERE id = $1', [curRes.rows[0].curriculum_id]);
-      if (curNameRes.rows.length > 0) curriculum = curNameRes.rows[0].name;
-    }
+    const topRes = await pool.query('SELECT title FROM topics WHERE id = $1', [topic_id]);
+    if (topRes.rows.length > 0) topicName = topRes.rows[0].title;
   }
 
-  // Get or create conversation
+  // Get curriculum
+  let curriculum = null;
+  if (user.curriculum_id) {
+    const curRes = await pool.query('SELECT name FROM curricula WHERE id = $1', [user.curriculum_id]);
+    if (curRes.rows.length > 0) curriculum = curRes.rows[0].name;
+  }
+
+  // Conversation handling
   let convId = conversation_id;
   if (!convId) {
     const title = subjectName ? `${subjectName} - ${topicName || 'General'}` : 'New Conversation';
@@ -78,7 +81,6 @@ router.post('/', authenticateToken, async (req, res) => {
     );
     convId = result.rows[0].id;
   } else {
-    // Update conversation timestamp
     await pool.query('UPDATE conversations SET updated_at = NOW() WHERE id = $1', [convId]);
   }
 
@@ -99,17 +101,18 @@ router.post('/', authenticateToken, async (req, res) => {
   );
   const history = historyRes.rows;
 
-  // Build prompt using util
+  // Build prompt with user details
   const prompt = buildAIPrompt({
-    message,
+    firstName,
+    grade,
+    curriculum: curriculum || 'CAPS',
     subject: subjectName || 'General',
     topic: topicName || '',
-    grade: grade || 'unknown',
-    curriculum: curriculum || 'CAPS',
+    message,
     history: history.slice(0, -1) // exclude current user message? Actually we already added it, but we'll include all history
   });
 
-  // Call AI
+  // Call DeepSeek API
   const DEEPSEEK_API_KEY = process.env.DEEPSEEK_API_KEY;
   let aiReply = '';
   if (DEEPSEEK_API_KEY) {
@@ -131,11 +134,14 @@ router.post('/', authenticateToken, async (req, res) => {
         const data = await response.json();
         aiReply = data.choices?.[0]?.message?.content || '';
       }
-    } catch(e) {}
+    } catch(e) {
+      console.error('DeepSeek API error:', e);
+    }
   }
 
+  // If AI call fails, return a helpful fallback (but still generated, not a mock)
   if (!aiReply) {
-    aiReply = `I'm here to help you with ${subjectName || 'this topic'}. Could you tell me more about what you need?`;
+    aiReply = `I'm sorry, I'm having trouble connecting to my knowledge base. Please try again in a moment. If the problem persists, you can ask your teacher or check your textbook.`;
   }
 
   // Save AI reply
@@ -145,7 +151,7 @@ router.post('/', authenticateToken, async (req, res) => {
     [convId, aiReply]
   );
 
-  // Update progress if topic is known
+  // Update progress if topic known
   if (topic_id) {
     await pool.query(
       `INSERT INTO student_progress (user_id, subject_id, topic_id, status, last_opened)
@@ -164,7 +170,6 @@ router.get('/history', authenticateToken, async (req, res) => {
   const userId = req.user.userId;
   const { conversation_id } = req.query;
   if (!conversation_id) {
-    // List conversations
     const result = await pool.query(
       `SELECT c.id, c.title, c.created_at, c.updated_at,
               (SELECT COUNT(*) FROM chat_messages WHERE conversation_id = c.id) as message_count,
@@ -178,7 +183,6 @@ router.get('/history', authenticateToken, async (req, res) => {
     );
     return res.json(result.rows);
   }
-  // Get messages for a conversation
   const result = await pool.query(
     `SELECT role, content, created_at FROM chat_messages
      WHERE conversation_id = $1
