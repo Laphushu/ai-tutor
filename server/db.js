@@ -150,7 +150,7 @@ async function initDB() {
       ALTER TABLE users ADD COLUMN IF NOT EXISTS last_question_date DATE;
     `);
 
-    // Seed subjects if empty
+    // Seed subjects if empty (kept as-is, idempotent)
     const subjectsCheck = await client.query('SELECT COUNT(*) FROM subjects');
     if (parseInt(subjectsCheck.rows[0].count) === 0) {
       await client.query(`
@@ -168,8 +168,106 @@ async function initDB() {
       `);
     }
 
+    // ========== SEED LOOKUP TABLES ==========
+    // All inserts use ON CONFLICT DO NOTHING to be idempotent.
+
+    // 1. Countries
+    await client.query(`
+      INSERT INTO countries (name, code) VALUES
+      ('South Africa', 'ZA'),
+      ('Kenya', 'KE'),
+      ('Nigeria', 'NG'),
+      ('Zimbabwe', 'ZW'),
+      ('Botswana', 'BW'),
+      ('Ghana', 'GH')
+      ON CONFLICT (code) DO NOTHING
+    `);
+
+    // 2. Provinces – South Africa (9 provinces)
+    await client.query(`
+      INSERT INTO provinces (country_id, name) VALUES
+      ((SELECT id FROM countries WHERE code = 'ZA'), 'Eastern Cape'),
+      ((SELECT id FROM countries WHERE code = 'ZA'), 'Free State'),
+      ((SELECT id FROM countries WHERE code = 'ZA'), 'Gauteng'),
+      ((SELECT id FROM countries WHERE code = 'ZA'), 'KwaZulu-Natal'),
+      ((SELECT id FROM countries WHERE code = 'ZA'), 'Limpopo'),
+      ((SELECT id FROM countries WHERE code = 'ZA'), 'Mpumalanga'),
+      ((SELECT id FROM countries WHERE code = 'ZA'), 'Northern Cape'),
+      ((SELECT id FROM countries WHERE code = 'ZA'), 'North West'),
+      ((SELECT id FROM countries WHERE code = 'ZA'), 'Western Cape')
+      ON CONFLICT (country_id, name) DO NOTHING
+    `);
+
+    // 3. Provinces – Kenya
+    await client.query(`
+      INSERT INTO provinces (country_id, name) VALUES
+      ((SELECT id FROM countries WHERE code = 'KE'), 'Nairobi'),
+      ((SELECT id FROM countries WHERE code = 'KE'), 'Mombasa'),
+      ((SELECT id FROM countries WHERE code = 'KE'), 'Kisumu')
+      ON CONFLICT (country_id, name) DO NOTHING
+    `);
+
+    // 4. Provinces – Nigeria (major states)
+    await client.query(`
+      INSERT INTO provinces (country_id, name) VALUES
+      ((SELECT id FROM countries WHERE code = 'NG'), 'Lagos'),
+      ((SELECT id FROM countries WHERE code = 'NG'), 'Abuja'),
+      ((SELECT id FROM countries WHERE code = 'NG'), 'Kano'),
+      ((SELECT id FROM countries WHERE code = 'NG'), 'Ibadan')
+      ON CONFLICT (country_id, name) DO NOTHING
+    `);
+
+    // 5. Provinces – Zimbabwe
+    await client.query(`
+      INSERT INTO provinces (country_id, name) VALUES
+      ((SELECT id FROM countries WHERE code = 'ZW'), 'Harare'),
+      ((SELECT id FROM countries WHERE code = 'ZW'), 'Bulawayo'),
+      ((SELECT id FROM countries WHERE code = 'ZW'), 'Manicaland')
+      ON CONFLICT (country_id, name) DO NOTHING
+    `);
+
+    // 6. Provinces – Botswana
+    await client.query(`
+      INSERT INTO provinces (country_id, name) VALUES
+      ((SELECT id FROM countries WHERE code = 'BW'), 'Gaborone'),
+      ((SELECT id FROM countries WHERE code = 'BW'), 'Francistown'),
+      ((SELECT id FROM countries WHERE code = 'BW'), 'Central District')
+      ON CONFLICT (country_id, name) DO NOTHING
+    `);
+
+    // 7. Provinces – Ghana
+    await client.query(`
+      INSERT INTO provinces (country_id, name) VALUES
+      ((SELECT id FROM countries WHERE code = 'GH'), 'Greater Accra'),
+      ((SELECT id FROM countries WHERE code = 'GH'), 'Ashanti'),
+      ((SELECT id FROM countries WHERE code = 'GH'), 'Central')
+      ON CONFLICT (country_id, name) DO NOTHING
+    `);
+
+    // 8. Education levels
+    await client.query(`
+      INSERT INTO education_levels (name, sort_order) VALUES
+      ('High School', 1),
+      ('TVET College', 2),
+      ('University', 3),
+      ('Other', 4)
+      ON CONFLICT (name) DO NOTHING
+    `);
+
+    // 9. Curricula – mapped to countries
+    await client.query(`
+      INSERT INTO curricula (country_id, name) VALUES
+      ((SELECT id FROM countries WHERE code = 'ZA'), 'CAPS'),
+      ((SELECT id FROM countries WHERE code = 'ZA'), 'IEB'),
+      ((SELECT id FROM countries WHERE code = 'KE'), 'CBC'),
+      ((SELECT id FROM countries WHERE code = 'NG'), 'WAEC'),
+      ((SELECT id FROM countries WHERE code = 'ZW'), 'ZIMSEC')
+      ON CONFLICT (country_id, name) DO NOTHING
+    `);
+
     await client.query('COMMIT');
     console.log('✅ Database tables and schema migrations initialized');
+    console.log('✅ Lookup data seeded (countries, provinces, education levels, curricula)');
   } catch (err) {
     await client.query('ROLLBACK');
     console.error('❌ DATABASE ERROR');
