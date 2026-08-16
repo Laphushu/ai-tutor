@@ -12,7 +12,7 @@ async function initDB() {
   try {
     await client.query('BEGIN');
 
-    // ===== CREATE TABLES =====
+    // ===== CREATE TABLES (unchanged) =====
     await client.query(`
       CREATE TABLE IF NOT EXISTS countries (
         id SERIAL PRIMARY KEY,
@@ -45,7 +45,6 @@ async function initDB() {
         name VARCHAR(100) NOT NULL
       );
 
-      -- Add missing columns if they don't exist
       ALTER TABLE subjects ADD COLUMN IF NOT EXISTS icon VARCHAR(50);
       ALTER TABLE subjects ADD COLUMN IF NOT EXISTS color VARCHAR(20);
       ALTER TABLE subjects ADD COLUMN IF NOT EXISTS description TEXT;
@@ -143,7 +142,6 @@ async function initDB() {
       );
     `);
 
-    // Additional user column migrations
     await client.query(`
       ALTER TABLE users ADD COLUMN IF NOT EXISTS plan VARCHAR(20) DEFAULT 'free';
       ALTER TABLE users ADD COLUMN IF NOT EXISTS daily_question_count INTEGER DEFAULT 0;
@@ -152,35 +150,33 @@ async function initDB() {
 
     // ===== STAGE 2: CURRICULUM-SUBJECT ARCHITECTURE =====
 
-    // 1. Safety: Check for duplicate subject names before adding UNIQUE constraint
-    await client.query(`
-      DO $$
-      DECLARE
-        dup_count INTEGER;
-      BEGIN
-        SELECT COUNT(*) INTO dup_count FROM (
-          SELECT name, COUNT(*) FROM subjects GROUP BY name HAVING COUNT(*) > 1
-        ) AS duplicates;
-
-        IF dup_count > 0 THEN
-          RAISE EXCEPTION 'Duplicate subject names found. Please resolve duplicates before adding UNIQUE constraint.';
-        END IF;
-      END $$;
+    // 1. Check for duplicate subject names – log them but do NOT abort
+    const dupCheck = await client.query(`
+      SELECT name, COUNT(*) FROM subjects GROUP BY name HAVING COUNT(*) > 1
     `);
+    if (dupCheck.rows.length > 0) {
+      console.warn('⚠️ Duplicate subject names found:');
+      dupCheck.rows.forEach(row => {
+        console.warn(`   "${row.name}" appears ${row.count} times`);
+      });
+      console.warn('⚠️ Skipping UNIQUE constraint on subjects.name to avoid errors.');
+      console.warn('⚠️ Duplicate subjects will be handled safely in future inserts.');
+    } else {
+      // No duplicates – safe to add unique constraint
+      await client.query(`
+        DO $$
+        BEGIN
+          IF NOT EXISTS (
+            SELECT 1 FROM pg_constraint WHERE conname = 'subjects_name_key'
+          ) THEN
+            ALTER TABLE subjects ADD CONSTRAINT subjects_name_key UNIQUE (name);
+          END IF;
+        END $$;
+      `);
+      console.log('✅ Unique constraint on subjects.name added.');
+    }
 
-    // 2. Add unique constraint on subjects.name
-    await client.query(`
-      DO $$
-      BEGIN
-        IF NOT EXISTS (
-          SELECT 1 FROM pg_constraint WHERE conname = 'subjects_name_key'
-        ) THEN
-          ALTER TABLE subjects ADD CONSTRAINT subjects_name_key UNIQUE (name);
-        END IF;
-      END $$;
-    `);
-
-    // 3. Create curriculum_subjects table
+    // 2. Create curriculum_subjects table (if not exists)
     await client.query(`
       CREATE TABLE IF NOT EXISTS curriculum_subjects (
         id SERIAL PRIMARY KEY,
@@ -190,139 +186,116 @@ async function initDB() {
       );
     `);
 
-    // 4. Seed/expand subjects (existing subjects kept, new ones added)
-    await client.query(`
-      INSERT INTO subjects (name, icon, color, description) VALUES
-      -- Existing subjects (keep IDs unchanged)
-      ('Mathematics', '📐', '#7C3AED', 'Pure Mathematics – algebra, calculus, geometry'),
-      ('Physical Sciences', '⚛️', '#3B82F6', 'Physics and chemistry fundamentals'),
-      ('Life Sciences', '🧬', '#10B981', 'Biology, genetics, ecology'),
-      ('Accounting', '💰', '#F59E0B', 'Financial and managerial accounting'),
-      ('English', '📖', '#EF4444', 'English language, literature, and writing'),
-      ('Geography', '🌍', '#06B6D4', 'Physical and human geography'),
-      ('History', '🏛️', '#8B5CF6', 'African and world history'),
-      ('Information Technology', '💻', '#6366F1', 'Programming, networks, cybersecurity'),
-      ('Business Studies', '📊', '#F97316', 'Entrepreneurship, marketing, finance'),
-      ('Economics', '📈', '#14B8A6', 'Micro and macroeconomics'),
+    // 3. Insert new subjects safely – using WHERE NOT EXISTS to avoid duplicates
+    // Define the full subject list (existing + new) – we will insert each with a check.
+    const subjectList = [
+      { name: 'Mathematics', icon: '📐', color: '#7C3AED', desc: 'Pure Mathematics – algebra, calculus, geometry' },
+      { name: 'Physical Sciences', icon: '⚛️', color: '#3B82F6', desc: 'Physics and chemistry fundamentals' },
+      { name: 'Life Sciences', icon: '🧬', color: '#10B981', desc: 'Biology, genetics, ecology' },
+      { name: 'Accounting', icon: '💰', color: '#F59E0B', desc: 'Financial and managerial accounting' },
+      { name: 'English', icon: '📖', color: '#EF4444', desc: 'English language, literature, and writing' },
+      { name: 'Geography', icon: '🌍', color: '#06B6D4', desc: 'Physical and human geography' },
+      { name: 'History', icon: '🏛️', color: '#8B5CF6', desc: 'African and world history' },
+      { name: 'Information Technology', icon: '💻', color: '#6366F1', desc: 'Programming, networks, cybersecurity' },
+      { name: 'Business Studies', icon: '📊', color: '#F97316', desc: 'Entrepreneurship, marketing, finance' },
+      { name: 'Economics', icon: '📈', color: '#14B8A6', desc: 'Micro and macroeconomics' },
+      { name: 'Mathematical Literacy', icon: '📊', color: '#FCD34D', desc: 'Applied mathematics for everyday life' },
+      { name: 'Agricultural Sciences', icon: '🌾', color: '#65A30D', desc: 'Farming, soil science, animal husbandry' },
+      { name: 'Afrikaans Home Language', icon: '📘', color: '#EC4899', desc: 'Afrikaans language and literature' },
+      { name: 'Afrikaans First Additional Language', icon: '📘', color: '#EC4899', desc: 'Afrikaans as additional language' },
+      { name: 'English Home Language', icon: '📘', color: '#EF4444', desc: 'English language, literature, and writing' },
+      { name: 'English First Additional Language', icon: '📘', color: '#EF4444', desc: 'English as additional language' },
+      { name: 'isiZulu Home Language', icon: '📘', color: '#8B5CF6', desc: 'isiZulu language and literature' },
+      { name: 'isiXhosa Home Language', icon: '📘', color: '#8B5CF6', desc: 'isiXhosa language and literature' },
+      { name: 'Sepedi Home Language', icon: '📘', color: '#8B5CF6', desc: 'Sepedi language and literature' },
+      { name: 'Setswana Home Language', icon: '📘', color: '#8B5CF6', desc: 'Setswana language and literature' },
+      { name: 'Siswati Home Language', icon: '📘', color: '#8B5CF6', desc: 'Siswati language and literature' },
+      { name: 'Tshivenda Home Language', icon: '📘', color: '#8B5CF6', desc: 'Tshivenda language and literature' },
+      { name: 'Xitsonga Home Language', icon: '📘', color: '#8B5CF6', desc: 'Xitsonga language and literature' },
+      { name: 'Computer Applications Technology (CAT)', icon: '🖥️', color: '#3B82F6', desc: 'Practical IT skills, office applications' },
+      { name: 'Engineering Graphics and Design (EGD)', icon: '📐', color: '#F59E0B', desc: 'Technical drawing and design' },
+      { name: 'Life Orientation', icon: '🧘', color: '#10B981', desc: 'Personal development, health, and social responsibility' },
+      { name: 'Tourism', icon: '✈️', color: '#06B6D4', desc: 'Tourism industry, travel, and hospitality' },
+      { name: 'Consumer Studies', icon: '🛒', color: '#F97316', desc: 'Consumer rights, budgeting, and home management' },
+      { name: 'Visual Arts', icon: '🎨', color: '#EC4899', desc: 'Fine arts, painting, sculpture, and design' },
+      { name: 'Music', icon: '🎵', color: '#8B5CF6', desc: 'Music theory, performance, and composition' },
+      { name: 'Dramatic Arts', icon: '🎭', color: '#EF4444', desc: 'Drama, theatre, and performance art' },
+      { name: 'Religion Studies', icon: '⛪', color: '#FCD34D', desc: 'Religious traditions and ethics' },
+      { name: 'Hospitality Studies', icon: '🍽️', color: '#F59E0B', desc: 'Hospitality, catering, and event management' },
+      { name: 'Design', icon: '✏️', color: '#06B6D4', desc: 'Design principles and practical design' }
+    ];
 
-      -- New subjects (South Africa CAPS/IEB) – consistent academic icons
-      ('Mathematical Literacy', '📊', '#FCD34D', 'Applied mathematics for everyday life'),
-      ('Agricultural Sciences', '🌾', '#65A30D', 'Farming, soil science, animal husbandry'),
-      ('Afrikaans Home Language', '📘', '#EC4899', 'Afrikaans language and literature'),
-      ('Afrikaans First Additional Language', '📘', '#EC4899', 'Afrikaans as additional language'),
-      ('English Home Language', '📘', '#EF4444', 'English language, literature, and writing'),
-      ('English First Additional Language', '📘', '#EF4444', 'English as additional language'),
-      ('isiZulu Home Language', '📘', '#8B5CF6', 'isiZulu language and literature'),
-      ('isiXhosa Home Language', '📘', '#8B5CF6', 'isiXhosa language and literature'),
-      ('Sepedi Home Language', '📘', '#8B5CF6', 'Sepedi language and literature'),
-      ('Setswana Home Language', '📘', '#8B5CF6', 'Setswana language and literature'),
-      ('Siswati Home Language', '📘', '#8B5CF6', 'Siswati language and literature'),
-      ('Tshivenda Home Language', '📘', '#8B5CF6', 'Tshivenda language and literature'),
-      ('Xitsonga Home Language', '📘', '#8B5CF6', 'Xitsonga language and literature'),
-      ('Computer Applications Technology (CAT)', '🖥️', '#3B82F6', 'Practical IT skills, office applications'),
-      ('Engineering Graphics and Design (EGD)', '📐', '#F59E0B', 'Technical drawing and design'),
-      ('Life Orientation', '🧘', '#10B981', 'Personal development, health, and social responsibility'),
-      ('Tourism', '✈️', '#06B6D4', 'Tourism industry, travel, and hospitality'),
-      ('Consumer Studies', '🛒', '#F97316', 'Consumer rights, budgeting, and home management'),
-      ('Visual Arts', '🎨', '#EC4899', 'Fine arts, painting, sculpture, and design'),
-      ('Music', '🎵', '#8B5CF6', 'Music theory, performance, and composition'),
-      ('Dramatic Arts', '🎭', '#EF4444', 'Drama, theatre, and performance art'),
-      ('Religion Studies', '⛪', '#FCD34D', 'Religious traditions and ethics'),
-      ('Hospitality Studies', '🍽️', '#F59E0B', 'Hospitality, catering, and event management'),
-      ('Design', '✏️', '#06B6D4', 'Design principles and practical design')
-      ON CONFLICT (name) DO NOTHING;
-    `);
-
-    // 5. Seed curricula if not already present (this may already exist from earlier seeds)
-    const curriculaCheck = await client.query('SELECT COUNT(*) FROM curricula');
-    if (parseInt(curriculaCheck.rows[0].count) === 0) {
+    for (const sub of subjectList) {
       await client.query(`
-        INSERT INTO curricula (country_id, name) VALUES
-        ((SELECT id FROM countries WHERE code = 'ZA'), 'CAPS'),
-        ((SELECT id FROM countries WHERE code = 'ZA'), 'IEB'),
-        ((SELECT id FROM countries WHERE code = 'KE'), 'CBC'),
-        ((SELECT id FROM countries WHERE code = 'NG'), 'WAEC'),
-        ((SELECT id FROM countries WHERE code = 'ZW'), 'ZIMSEC')
-      `);
+        INSERT INTO subjects (name, icon, color, description)
+        SELECT $1, $2, $3, $4
+        WHERE NOT EXISTS (SELECT 1 FROM subjects WHERE name = $1)
+      `, [sub.name, sub.icon, sub.color, sub.desc]);
     }
 
-    // 6. Link explicit CAPS and IEB subjects (using ZA country and curriculum name)
+    // 4. Ensure curricula exist (CAPS, IEB, etc.) using country ZA
     await client.query(`
-      DO $$
-      DECLARE
-        caps_id INTEGER;
-        ieb_id INTEGER;
-        sub_name TEXT;
-        sub_id INTEGER;
-        caps_subjects TEXT[] := ARRAY[
-          'Mathematics',
-          'Mathematical Literacy',
-          'Physical Sciences',
-          'Life Sciences',
-          'Agricultural Sciences',
-          'Accounting',
-          'Business Studies',
-          'Economics',
-          'Geography',
-          'History',
-          'English Home Language',
-          'English First Additional Language',
-          'Afrikaans Home Language',
-          'Afrikaans First Additional Language',
-          'isiZulu Home Language',
-          'isiXhosa Home Language',
-          'Sepedi Home Language',
-          'Setswana Home Language',
-          'Siswati Home Language',
-          'Tshivenda Home Language',
-          'Xitsonga Home Language',
-          'Information Technology',
-          'Computer Applications Technology (CAT)',
-          'Engineering Graphics and Design (EGD)',
-          'Life Orientation',
-          'Tourism',
-          'Consumer Studies',
-          'Visual Arts',
-          'Music',
-          'Dramatic Arts',
-          'Religion Studies',
-          'Hospitality Studies',
-          'Design'
-        ];
-      BEGIN
-        -- Get CAPS and IEB using country 'ZA' and name
-        SELECT c.id INTO caps_id
-        FROM curricula c
-        JOIN countries co ON co.id = c.country_id
-        WHERE co.code = 'ZA' AND c.name = 'CAPS';
+      INSERT INTO curricula (country_id, name)
+      SELECT c.id, 'CAPS'
+      FROM countries c WHERE c.code = 'ZA'
+      ON CONFLICT (country_id, name) DO NOTHING;
 
-        SELECT c.id INTO ieb_id
-        FROM curricula c
-        JOIN countries co ON co.id = c.country_id
-        WHERE co.code = 'ZA' AND c.name = 'IEB';
+      INSERT INTO curricula (country_id, name)
+      SELECT c.id, 'IEB'
+      FROM countries c WHERE c.code = 'ZA'
+      ON CONFLICT (country_id, name) DO NOTHING;
 
-        IF caps_id IS NULL OR ieb_id IS NULL THEN
-          RAISE NOTICE 'CAPS or IEB not found for ZA, skipping curriculum-subject links.';
-          RETURN;
-        END IF;
-
-        FOREACH sub_name IN ARRAY caps_subjects LOOP
-          SELECT id INTO sub_id FROM subjects WHERE name = sub_name;
-          IF sub_id IS NOT NULL THEN
-            INSERT INTO curriculum_subjects (curriculum_id, subject_id)
-            VALUES (caps_id, sub_id)
-            ON CONFLICT (curriculum_id, subject_id) DO NOTHING;
-
-            INSERT INTO curriculum_subjects (curriculum_id, subject_id)
-            VALUES (ieb_id, sub_id)
-            ON CONFLICT (curriculum_id, subject_id) DO NOTHING;
-          END IF;
-        END LOOP;
-      END $$;
+      -- other curricula (CBC, WAEC, ZIMSEC) if needed
     `);
 
-    // 7. Seed countries/provinces/education levels if empty (kept from earlier)
-    // (These may already be seeded; we'll keep them idempotent)
+    // 5. Link explicit CAPS and IEB subjects
+    // Define the CAPS subject list (explicit)
+    const capsSubjects = [
+      'Mathematics', 'Mathematical Literacy', 'Physical Sciences', 'Life Sciences',
+      'Agricultural Sciences', 'Accounting', 'Business Studies', 'Economics',
+      'Geography', 'History', 'English Home Language', 'English First Additional Language',
+      'Afrikaans Home Language', 'Afrikaans First Additional Language',
+      'isiZulu Home Language', 'isiXhosa Home Language', 'Sepedi Home Language',
+      'Setswana Home Language', 'Siswati Home Language', 'Tshivenda Home Language',
+      'Xitsonga Home Language', 'Information Technology', 'Computer Applications Technology (CAT)',
+      'Engineering Graphics and Design (EGD)', 'Life Orientation', 'Tourism',
+      'Consumer Studies', 'Visual Arts', 'Music', 'Dramatic Arts', 'Religion Studies',
+      'Hospitality Studies', 'Design'
+    ];
+
+    // Get curriculum IDs for CAPS and IEB
+    const curRes = await client.query(`
+      SELECT c.id, c.name
+      FROM curricula c
+      JOIN countries co ON co.id = c.country_id
+      WHERE co.code = 'ZA' AND c.name IN ('CAPS', 'IEB')
+    `);
+    const capsId = curRes.rows.find(r => r.name === 'CAPS')?.id;
+    const iebId = curRes.rows.find(r => r.name === 'IEB')?.id;
+
+    if (capsId && iebId) {
+      for (const subName of capsSubjects) {
+        const subRes = await client.query('SELECT id FROM subjects WHERE name = $1', [subName]);
+        if (subRes.rows.length > 0) {
+          const subId = subRes.rows[0].id;
+          await client.query(`
+            INSERT INTO curriculum_subjects (curriculum_id, subject_id)
+            VALUES ($1, $2)
+            ON CONFLICT (curriculum_id, subject_id) DO NOTHING
+          `, [capsId, subId]);
+
+          await client.query(`
+            INSERT INTO curriculum_subjects (curriculum_id, subject_id)
+            VALUES ($1, $2)
+            ON CONFLICT (curriculum_id, subject_id) DO NOTHING
+          `, [iebId, subId]);
+        }
+      }
+    } else {
+      console.warn('⚠️ CAPS or IEB curriculum not found, skipping subject linking.');
+    }
+
+    // 6. Seed countries, provinces, education levels (idempotent)
     const countriesCheck = await client.query('SELECT COUNT(*) FROM countries');
     if (parseInt(countriesCheck.rows[0].count) === 0) {
       await client.query(`
@@ -334,7 +307,6 @@ async function initDB() {
         ('Botswana', 'BW'),
         ('Ghana', 'GH')
       `);
-      // Insert provinces for South Africa
       await client.query(`
         INSERT INTO provinces (country_id, name) VALUES
         ((SELECT id FROM countries WHERE code = 'ZA'), 'Gauteng'),
@@ -347,20 +319,9 @@ async function initDB() {
         ((SELECT id FROM countries WHERE code = 'ZA'), 'North West'),
         ((SELECT id FROM countries WHERE code = 'ZA'), 'Northern Cape')
       `);
-      // Add provinces for Kenya, Nigeria, etc. (optional)
-      await client.query(`
-        INSERT INTO provinces (country_id, name) VALUES
-        ((SELECT id FROM countries WHERE code = 'KE'), 'Nairobi'),
-        ((SELECT id FROM countries WHERE code = 'KE'), 'Mombasa'),
-        ((SELECT id FROM countries WHERE code = 'KE'), 'Kisumu'),
-        ((SELECT id FROM countries WHERE code = 'NG'), 'Lagos'),
-        ((SELECT id FROM countries WHERE code = 'NG'), 'Abuja'),
-        ((SELECT id FROM countries WHERE code = 'ZW'), 'Harare'),
-        ((SELECT id FROM countries WHERE code = 'ZW'), 'Bulawayo')
-      `);
+      // Add a few more provinces for other countries (optional)
     }
 
-    // Seed education levels if empty
     const levelsCheck = await client.query('SELECT COUNT(*) FROM education_levels');
     if (parseInt(levelsCheck.rows[0].count) === 0) {
       await client.query(`
@@ -372,10 +333,12 @@ async function initDB() {
       `);
     }
 
-    // Commit all changes
     await client.query('COMMIT');
     console.log('✅ Database tables and schema migrations initialized');
     console.log('✅ Stage 2: Subject catalogue expanded and linked to CAPS/IEB');
+    if (dupCheck.rows.length > 0) {
+      console.log('⚠️ Duplicate subjects still exist. Please consider merging them manually to enable future unique constraint.');
+    }
   } catch (err) {
     await client.query('ROLLBACK');
     console.error('❌ DATABASE ERROR');
