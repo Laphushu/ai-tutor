@@ -12,7 +12,7 @@ async function initDB() {
   try {
     await client.query('BEGIN');
 
-    // ===== CREATE TABLES (unchanged) =====
+    // ===== CREATE TABLES =====
     await client.query(`
       CREATE TABLE IF NOT EXISTS countries (
         id SERIAL PRIMARY KEY,
@@ -186,8 +186,7 @@ async function initDB() {
       );
     `);
 
-    // 3. Insert new subjects safely – using WHERE NOT EXISTS to avoid duplicates
-    // Define the full subject list (existing + new) – we will insert each with a check.
+    // 3. Insert new subjects safely – using a simple SELECT+INSERT approach
     const subjectList = [
       { name: 'Mathematics', icon: '📐', color: '#7C3AED', desc: 'Pure Mathematics – algebra, calculus, geometry' },
       { name: 'Physical Sciences', icon: '⚛️', color: '#3B82F6', desc: 'Physics and chemistry fundamentals' },
@@ -226,14 +225,17 @@ async function initDB() {
     ];
 
     for (const sub of subjectList) {
-      await client.query(`
-        INSERT INTO subjects (name, icon, color, description)
-        SELECT $1, $2, $3, $4
-        WHERE NOT EXISTS (SELECT 1 FROM subjects WHERE name = $1)
-      `, [sub.name, sub.icon, sub.color, sub.desc]);
+      // Check if subject already exists
+      const exists = await client.query('SELECT id FROM subjects WHERE name = $1', [sub.name]);
+      if (exists.rows.length === 0) {
+        await client.query(
+          'INSERT INTO subjects (name, icon, color, description) VALUES ($1, $2, $3, $4)',
+          [sub.name, sub.icon, sub.color, sub.desc]
+        );
+      }
     }
 
-    // 4. Ensure curricula exist (CAPS, IEB, etc.) using country ZA
+    // 4. Ensure curricula exist for ZA (CAPS, IEB)
     await client.query(`
       INSERT INTO curricula (country_id, name)
       SELECT c.id, 'CAPS'
@@ -244,12 +246,9 @@ async function initDB() {
       SELECT c.id, 'IEB'
       FROM countries c WHERE c.code = 'ZA'
       ON CONFLICT (country_id, name) DO NOTHING;
-
-      -- other curricula (CBC, WAEC, ZIMSEC) if needed
     `);
 
     // 5. Link explicit CAPS and IEB subjects
-    // Define the CAPS subject list (explicit)
     const capsSubjects = [
       'Mathematics', 'Mathematical Literacy', 'Physical Sciences', 'Life Sciences',
       'Agricultural Sciences', 'Accounting', 'Business Studies', 'Economics',
@@ -263,7 +262,6 @@ async function initDB() {
       'Hospitality Studies', 'Design'
     ];
 
-    // Get curriculum IDs for CAPS and IEB
     const curRes = await client.query(`
       SELECT c.id, c.name
       FROM curricula c
@@ -295,7 +293,7 @@ async function initDB() {
       console.warn('⚠️ CAPS or IEB curriculum not found, skipping subject linking.');
     }
 
-    // 6. Seed countries, provinces, education levels (idempotent)
+    // 6. Seed countries, provinces, education levels if empty
     const countriesCheck = await client.query('SELECT COUNT(*) FROM countries');
     if (parseInt(countriesCheck.rows[0].count) === 0) {
       await client.query(`
@@ -319,7 +317,7 @@ async function initDB() {
         ((SELECT id FROM countries WHERE code = 'ZA'), 'North West'),
         ((SELECT id FROM countries WHERE code = 'ZA'), 'Northern Cape')
       `);
-      // Add a few more provinces for other countries (optional)
+      // Additional provinces for other countries can be added here if needed
     }
 
     const levelsCheck = await client.query('SELECT COUNT(*) FROM education_levels');
