@@ -1174,17 +1174,43 @@
             }
         }
 
-        // ---- updateSubjects (replaced) ----
-        function updateSubjects() {
+        // ---- updateSubjects (replaced with Stage 2 version) ----
+        async function updateSubjects() {
             const curriculumSelect = document.getElementById('signupCurriculum');
-            const levelSelect = document.getElementById('signupLevel');
-            const curriculumText = curriculumSelect.options[curriculumSelect.selectedIndex]?.text || '';
-            const levelText = levelSelect.options[levelSelect.selectedIndex]?.text || '';
+            const curriculumId = curriculumSelect.value;
             const container = document.getElementById('signupSubjectsCheck');
-            const subjects = getSubjectList(curriculumText, levelText);
-            container.innerHTML = subjects.map(sub => `
-                <label><input type="checkbox" value="${sub}" checked> ${sub}</label>
-            `).join('');
+
+            if (!curriculumId) {
+                container.innerHTML = '<p style="color:#9ca3af;">Please select a curriculum first.</p>';
+                return;
+            }
+
+            try {
+                const res = await fetch(`/api/subjects?curriculumId=${curriculumId}`);
+                if (!res.ok) {
+                    throw new Error('Failed to fetch subjects');
+                }
+                const subjects = await res.json();
+                if (subjects.length === 0) {
+                    container.innerHTML = '<p style="color:#9ca3af;">No subjects available for this curriculum.</p>';
+                    return;
+                }
+                // Important: checkboxes are NOT checked by default
+                container.innerHTML = subjects.map(sub => `
+                    <label><input type="checkbox" value="${sub.name}"> ${sub.icon || '📘'} ${sub.name}</label>
+                `).join('');
+            } catch (err) {
+                console.error('Failed to load subjects:', err);
+                // Fallback to hardcoded list (also unchecked)
+                const curriculumText = curriculumSelect.options[curriculumSelect.selectedIndex]?.text || '';
+                const levelSelect = document.getElementById('signupLevel');
+                const levelText = levelSelect.options[levelSelect.selectedIndex]?.text || '';
+                const fallbackSubjects = getSubjectList(curriculumText, levelText);
+                container.innerHTML = fallbackSubjects.map(sub => `
+                    <label><input type="checkbox" value="${sub}"> ${sub}</label>
+                `).join('');
+                container.innerHTML += '<p style="color:#ff9800; font-size:0.8rem;">⚠️ Using fallback subject list.</p>';
+            }
         }
 
         // ---- handleSignup (replaced) ----
@@ -1217,7 +1243,7 @@
             const firstName = name.split(' ')[0] || name;
             const lastName = name.split(' ').slice(1).join(' ') || '';
             const countryId = parseInt(document.getElementById('signupCountry').value) || null;
-            const provinceId = parseInt(document.getElementById('signupProvince').value) || null; // ← now sends provinceId
+            const provinceId = parseInt(document.getElementById('signupProvince').value) || null;
             const educationLevelId = parseInt(document.getElementById('signupLevel').value) || null;
             const grade = document.getElementById('signupGrade').value || '';
             const curriculumId = parseInt(document.getElementById('signupCurriculum').value) || null;
@@ -1416,12 +1442,12 @@
         }
 
         function loadSubject(subjectId) {
-            // Placeholder – will be replaced in Stage 2
-            alert('Dashboard topics will be connected in Stage 2.');
+            // Placeholder – will be replaced in Stage 3
+            alert('Dashboard topics will be connected in Stage 3.');
         }
 
         function switchDashboardTab(tab, param) {
-            // Placeholder – will be replaced in Stage 2
+            // Placeholder – will be replaced in Stage 3
             const panel = document.getElementById('centerPanel');
             if (tab === 'overview') {
                 const name = currentUser?.first_name || 'Student';
@@ -1442,17 +1468,17 @@
                 panel.innerHTML = `
                     <button class="back-btn" onclick="switchDashboardTab('overview')">← Back to Overview</button>
                     <div class="welcome">${tab.charAt(0).toUpperCase() + tab.slice(1)}</div>
-                    <div class="welcome-sub">This feature will be connected in Stage 2.</div>
+                    <div class="welcome-sub">This feature will be connected in Stage 3.</div>
                 `;
             }
         }
 
         function openTopic(subjectId, topicId) {
-            alert('Topics will be connected in Stage 2.');
+            alert('Topics will be connected in Stage 3.');
         }
 
         function openUpgradeModal() {
-            alert('🚀 Upgrade to Premium for unlimited AI access, past papers, and advanced features! (Payment integration coming in Stage 2.)');
+            alert('🚀 Upgrade to Premium for unlimited AI access, past papers, and advanced features! (Payment integration coming in Stage 3.)');
         }
 
         function handleLogout() {
@@ -1495,7 +1521,7 @@
         }
 
         async function sendChatMessage() {
-            // Mock chat – will be replaced in Stage 2
+            // Mock chat – will be replaced in Stage 3
             const input = document.getElementById('chatInput');
             const message = input.value.trim();
             if (!message || isProcessing) return;
@@ -1504,7 +1530,7 @@
             showTyping(true);
             isProcessing = true;
             setTimeout(() => {
-                addMessage('bot', 'This is a mock response. The AI Tutor will be connected in Stage 2.');
+                addMessage('bot', 'This is a mock response. The AI Tutor will be connected in Stage 3.');
                 showTyping(false);
                 isProcessing = false;
             }, 800);
