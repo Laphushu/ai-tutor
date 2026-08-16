@@ -1263,6 +1263,7 @@
                     <li onclick="switchDashboardTab('tutor')">🤖 AI Tutor</li>
                     <li onclick="switchDashboardTab('papers')">📄 Past Papers</li>
                     <li onclick="switchDashboardTab('flashcards')">🧠 Flashcards</li>
+                    <li onclick="switchDashboardTab('history')">📚 History</li>
                 </ul>
                 <div class="section-title mt-6">My Subjects</div>
                 <ul class="subject-list" id="dashSubjectList">
@@ -1391,6 +1392,7 @@
         let currentTopicTitle = '';
         let currentSubjectId = null;
         let currentSubjectName = '';
+        let tutorReturnPath = 'subject'; // 'subject' or 'history'
 
         // ================================================================
         //  AUTH & UI FUNCTIONS (unchanged from original)
@@ -1938,14 +1940,88 @@
         }
 
         // ================================================================
-        //  STAGE 4: AI TUTOR CONNECTION
+        //  STAGE 4: AI TUTOR CONNECTION + HISTORY
         // ================================================================
 
         function openTopic(topicId, topicTitle) {
             currentTopicId = topicId;
             currentTopicTitle = topicTitle;
             currentConversationId = null;
+            tutorReturnPath = 'subject';
             switchDashboardTab('tutor', currentSubjectName, topicTitle);
+        }
+
+        async function loadConversation(convId) {
+            try {
+                const token = localStorage.getItem('token');
+                const res = await fetch(`/api/conversations/${convId}`, {
+                    headers: { 'Authorization': 'Bearer ' + token }
+                });
+                if (!res.ok) {
+                    const err = await res.json();
+                    throw new Error(err.error || 'Failed to load conversation');
+                }
+                const data = await res.json();
+                const conv = data.conversation;
+                const messages = data.messages;
+
+                // Set current context
+                currentConversationId = convId;
+                currentSubjectId = conv.subject_id;
+                currentTopicId = conv.topic_id;
+                currentSubjectName = conv.subject_name || 'General';
+                currentTopicTitle = conv.topic_title || '';
+                tutorReturnPath = 'history';
+
+                // Open tutor with this conversation
+                switchDashboardTab('tutor', currentSubjectName, currentTopicTitle);
+
+                // Populate chat with existing messages
+                const chatBox = document.getElementById('chatBox');
+                if (chatBox) {
+                    // Clear existing messages (except typing indicator)
+                    const typing = document.getElementById('typingIndicator');
+                    chatBox.innerHTML = '';
+                    if (typing) chatBox.appendChild(typing);
+                    // Add messages
+                    messages.forEach(msg => {
+                        const div = document.createElement('div');
+                        div.className = `msg ${msg.role === 'user' ? 'user' : 'bot'}`;
+                        if (msg.role === 'assistant') {
+                            let content = msg.content;
+                            if (typeof marked !== 'undefined') {
+                                marked.setOptions({ breaks: true, gfm: true });
+                                content = marked.parse(content);
+                            }
+                            div.innerHTML = content;
+                            // KaTeX render
+                            setTimeout(() => {
+                                if (typeof renderMathInElement === 'function') {
+                                    try {
+                                        renderMathInElement(div, {
+                                            delimiters: [
+                                                { left: '$$', right: '$$', display: true },
+                                                { left: '$', right: '$', display: false }
+                                            ]
+                                        });
+                                    } catch(e) {}
+                                }
+                            }, 100);
+                        } else {
+                            div.textContent = msg.content;
+                        }
+                        if (typing) {
+                            chatBox.insertBefore(div, typing);
+                        } else {
+                            chatBox.appendChild(div);
+                        }
+                    });
+                    chatBox.scrollTop = chatBox.scrollHeight;
+                }
+            } catch (err) {
+                console.error('Load conversation error:', err);
+                alert('Could not load conversation. Please try again.');
+            }
         }
 
         function switchDashboardTab(tab, param, topicParam) {
@@ -1967,6 +2043,8 @@
                 `;
             } else if (tab === 'tutor') {
                 renderAiTutorPanel(panel, param || 'General', topicParam);
+            } else if (tab === 'history') {
+                renderHistoryPanel(panel);
             } else {
                 panel.innerHTML = `
                     <button class="back-btn" onclick="switchDashboardTab('overview')">← Back to Overview</button>
@@ -1976,14 +2054,64 @@
             }
         }
 
+        async function renderHistoryPanel(panel) {
+            panel.innerHTML = `
+                <button class="back-btn" onclick="switchDashboardTab('overview')">← Back to Overview</button>
+                <div class="welcome">📚 Learning History</div>
+                <div class="welcome-sub">Your past conversations</div>
+                <div id="historyList" style="margin-top:20px;">
+                    <div style="text-align:center; color:#9ca3af; padding:20px;">Loading conversations...</div>
+                </div>
+            `;
+            try {
+                const token = localStorage.getItem('token');
+                const res = await fetch('/api/conversations', {
+                    headers: { 'Authorization': 'Bearer ' + token }
+                });
+                if (!res.ok) throw new Error('Failed to fetch history');
+                const conversations = await res.json();
+                const container = document.getElementById('historyList');
+                if (!conversations || conversations.length === 0) {
+                    container.innerHTML = `<div style="text-align:center; color:#9ca3af; padding:20px;">No conversations yet. Start a topic to begin learning!</div>`;
+                    return;
+                }
+                let html = '';
+                conversations.forEach(conv => {
+                    const subject = conv.subject_name || 'General';
+                    const topic = conv.topic_title || '';
+                    const title = conv.title || `${subject} - ${topic}`;
+                    const date = new Date(conv.updated_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+                    const msgCount = conv.message_count || 0;
+                    html += `
+                        <div class="recent-item" style="cursor:pointer; margin-bottom:12px; border-left:3px solid #7C3AED; padding-left:14px;" onclick="loadConversation(${conv.id})">
+                            <div style="font-weight:600; color:white;">${title}</div>
+                            <div style="font-size:0.8rem; color:#9ca3af;">${subject} ${topic ? '– ' + topic : ''} • ${date} • ${msgCount} messages</div>
+                        </div>
+                    `;
+                });
+                container.innerHTML = html;
+            } catch (err) {
+                console.error('History error:', err);
+                document.getElementById('historyList').innerHTML = `<div style="text-align:center; color:#ef4444; padding:20px;">⚠️ Could not load history.</div>`;
+            }
+        }
+
         function renderAiTutorPanel(panel, subject, topic) {
             const name = currentUser?.first_name || 'Student';
             const displaySubject = subject || 'General';
             const displayTopic = topic || '';
             const headerText = displayTopic ? `${displaySubject} – ${displayTopic}` : displaySubject;
 
+            // Determine back button action
+            let backAction = '';
+            if (tutorReturnPath === 'history') {
+                backAction = `switchDashboardTab('history')`;
+            } else {
+                backAction = `loadSubject(${currentSubjectId})`;
+            }
+
             panel.innerHTML = `
-                <button class="back-btn" onclick="loadSubject(${currentSubjectId})">← Back</button>
+                <button class="back-btn" onclick="${backAction}">← Back</button>
                 <div class="tutor-container">
                     <div class="tutor-header">
                         <h3>Leago AI Tutor</h3>
@@ -2006,7 +2134,8 @@
                 </div>
             `;
 
-            if (topic && currentTopicId) {
+            // If new conversation (no messages yet), auto-send welcome
+            if (!currentConversationId && topic && currentTopicId) {
                 setTimeout(() => {
                     const input = document.getElementById('chatInput');
                     if (input) {

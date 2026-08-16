@@ -81,6 +81,12 @@ router.post('/', authenticateToken, async (req, res) => {
     );
     convId = result.rows[0].id;
   } else {
+    // Verify ownership
+    const ownerCheck = await pool.query('SELECT user_id FROM conversations WHERE id = $1', [convId]);
+    if (ownerCheck.rows.length === 0) return res.status(404).json({ error: 'Conversation not found' });
+    if (ownerCheck.rows[0].user_id !== userId) {
+      return res.status(403).json({ error: 'Access denied' });
+    }
     await pool.query('UPDATE conversations SET updated_at = NOW() WHERE id = $1', [convId]);
   }
 
@@ -91,17 +97,16 @@ router.post('/', authenticateToken, async (req, res) => {
     [convId, message]
   );
 
-  // Get conversation history (last 6 messages)
+  // Get full conversation history (for AI context)
   const historyRes = await pool.query(
     `SELECT role, content FROM chat_messages
      WHERE conversation_id = $1
-     ORDER BY created_at ASC
-     LIMIT 6`,
+     ORDER BY created_at ASC`,
     [convId]
   );
   const history = historyRes.rows;
 
-  // Build prompt with user details
+  // Build prompt with full history
   const prompt = buildAIPrompt({
     firstName,
     grade,
@@ -109,7 +114,7 @@ router.post('/', authenticateToken, async (req, res) => {
     subject: subjectName || 'General',
     topic: topicName || '',
     message,
-    history: history.slice(0, -1) // exclude current user message? Actually we already added it, but we'll include all history
+    history: history.slice(0, -1) // exclude current user message (already included)
   });
 
   // Call DeepSeek API
@@ -139,7 +144,7 @@ router.post('/', authenticateToken, async (req, res) => {
     }
   }
 
-  // If AI call fails, return a helpful fallback (but still generated, not a mock)
+  // Fallback
   if (!aiReply) {
     aiReply = `I'm sorry, I'm having trouble connecting to my knowledge base. Please try again in a moment. If the problem persists, you can ask your teacher or check your textbook.`;
   }
@@ -165,17 +170,20 @@ router.post('/', authenticateToken, async (req, res) => {
   res.json({ reply: aiReply, conversation_id: convId });
 });
 
-// ===== GET /api/chat/history =====
+// ===== GET /api/chat/history (keep for backwards compatibility) =====
 router.get('/history', authenticateToken, async (req, res) => {
   const userId = req.user.userId;
   const { conversation_id } = req.query;
   if (!conversation_id) {
+    // List conversations
     const result = await pool.query(
       `SELECT c.id, c.title, c.created_at, c.updated_at,
               (SELECT COUNT(*) FROM chat_messages WHERE conversation_id = c.id) as message_count,
-              s.name as subject_name
+              s.name as subject_name,
+              t.title as topic_title
        FROM conversations c
        LEFT JOIN subjects s ON s.id = c.subject_id
+       LEFT JOIN topics t ON t.id = c.topic_id
        WHERE c.user_id = $1
        ORDER BY c.updated_at DESC
        LIMIT 20`,
@@ -183,6 +191,10 @@ router.get('/history', authenticateToken, async (req, res) => {
     );
     return res.json(result.rows);
   }
+  // Get messages (with ownership check)
+  const convCheck = await pool.query('SELECT user_id FROM conversations WHERE id = $1', [conversation_id]);
+  if (convCheck.rows.length === 0) return res.status(404).json({ error: 'Conversation not found' });
+  if (convCheck.rows[0].user_id !== userId) return res.status(403).json({ error: 'Access denied' });
   const result = await pool.query(
     `SELECT role, content, created_at FROM chat_messages
      WHERE conversation_id = $1
@@ -190,6 +202,87 @@ router.get('/history', authenticateToken, async (req, res) => {
     [conversation_id]
   );
   res.json(result.rows);
+});
+
+// ===== NEW: GET /api/conversations =====
+router.get('/conversations', authenticateToken, async (req, res) => {
+  const userId = req.user.userId;
+  try {
+    const result = await pool.query(
+      `SELECT c.id, c.title, c.created_at, c.updated_at,
+              s.name as subject_name,
+              t.title as topic_title,
+              (SELECT COUNT(*) FROM chat_messages WHERE conversation_id = c.id) as message_count
+       FROM conversations c
+       LEFT JOIN subjects s ON s.id = c.subject_id
+       LEFT JOIN topics t ON t.id = c.topic_id
+       WHERE c.user_id = $1
+       ORDER BY c.updated_at DESC
+       LIMIT 50`,
+      [userId]
+    );
+    res.json(result.rows);
+  } catch (err) {
+    console.error('Conversations list error:', err);
+    res.status(500).json({ error: 'Server error' });
+  }
+});
+
+// ===== NEW: GET /api/conversations/:id =====
+router.get('/conversations/:id', authenticateToken, async (req, res) => {
+  const userId = req.user.userId;
+  const convId = parseInt(req.params.id, 10);
+  if (isNaN(convId)) return res.status(400).json({ error: 'Invalid conversation ID' });
+  try {
+    // Check ownership and get conversation details
+    const convCheck = await pool.query(
+      `SELECT c.id, c.title, c.subject_id, c.topic_id,
+              s.name as subject_name,
+              t.title as topic_title
+       FROM conversations c
+       LEFT JOIN subjects s ON s.id = c.subject_id
+       LEFT JOIN topics t ON t.id = c.topic_id
+       WHERE c.id = $1 AND c.user_id = $2`,
+      [convId, userId]
+    );
+    if (convCheck.rows.length === 0) return res.status(404).json({ error: 'Conversation not found' });
+    const conv = convCheck.rows[0];
+
+    // Get messages
+    const messages = await pool.query(
+      `SELECT role, content, created_at FROM chat_messages
+       WHERE conversation_id = $1
+       ORDER BY created_at ASC`,
+      [convId]
+    );
+
+    res.json({
+      conversation: conv,
+      messages: messages.rows
+    });
+  } catch (err) {
+    console.error('Get conversation error:', err);
+    res.status(500).json({ error: 'Server error' });
+  }
+});
+
+// ===== NEW: DELETE /api/conversations/:id =====
+router.delete('/conversations/:id', authenticateToken, async (req, res) => {
+  const userId = req.user.userId;
+  const convId = parseInt(req.params.id, 10);
+  if (isNaN(convId)) return res.status(400).json({ error: 'Invalid conversation ID' });
+  try {
+    // Verify ownership
+    const ownerCheck = await pool.query('SELECT user_id FROM conversations WHERE id = $1', [convId]);
+    if (ownerCheck.rows.length === 0) return res.status(404).json({ error: 'Conversation not found' });
+    if (ownerCheck.rows[0].user_id !== userId) return res.status(403).json({ error: 'Access denied' });
+    // Delete (cascade will remove messages)
+    await pool.query('DELETE FROM conversations WHERE id = $1', [convId]);
+    res.json({ success: true });
+  } catch (err) {
+    console.error('Delete conversation error:', err);
+    res.status(500).json({ error: 'Server error' });
+  }
 });
 
 module.exports = router;
