@@ -42,30 +42,48 @@ app.get('/dashboard', (req, res) => {
 app.get('/health', (req, res) => res.send('OK'));
 
 // ===== PUBLIC STATIC FILES =====
+// ads.txt must be served as plain text
 app.get('/ads.txt', (req, res) => {
   res.sendFile(path.join(__dirname, '../client/ads.txt'));
 });
+// robots.txt must be served as plain text
 app.get('/robots.txt', (req, res) => {
   res.sendFile(path.join(__dirname, '../client/robots.txt'));
 });
+// sitemap.xml must be served as XML
 app.get('/sitemap.xml', (req, res) => {
   res.sendFile(path.join(__dirname, '../client/sitemap.xml'));
 });
 
 // ===== PUBLIC PAGES =====
-const publicPages = ['privacy', 'terms', 'about', 'contact', 'faq'];
-publicPages.forEach(page => {
-  app.get(`/${page}`, (req, res) => {
-    res.sendFile(path.join(__dirname, `../client/${page}.html`));
-  });
+// Each route returns the corresponding HTML page, not index.html
+app.get('/privacy', (req, res) => {
+  res.sendFile(path.join(__dirname, '../client/privacy.html'));
+});
+app.get('/terms', (req, res) => {
+  res.sendFile(path.join(__dirname, '../client/terms.html'));
+});
+app.get('/about', (req, res) => {
+  res.sendFile(path.join(__dirname, '../client/about.html'));
+});
+app.get('/contact', (req, res) => {
+  res.sendFile(path.join(__dirname, '../client/contact.html'));
+});
+app.get('/faq', (req, res) => {
+  res.sendFile(path.join(__dirname, '../client/faq.html'));
 });
 
 // ===== STATIC FILES & CATCH‑ALL =====
+// Serve all static assets from the client folder
 app.use(express.static(path.join(__dirname, '../client')));
+
+// Catch‑all route: returns the main index.html for any unmatched route
+// This must come AFTER all explicit routes
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, '../client/index.html'));
 });
 
+// Initialize database and start server
 initDB().then(() => {
   app.listen(PORT, () => {
     console.log(`✅ Leago Academy v2 running on port ${PORT}`);
