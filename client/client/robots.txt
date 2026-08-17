@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://leagoacademy.co.za/sitemap.xml

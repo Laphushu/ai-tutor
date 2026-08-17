@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FAQ – Leago Academy</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz@14..32&display=swap" rel="stylesheet" />
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { background: #090B1D; font-family: 'Inter', sans-serif; color: #fff; line-height: 1.6; }
+        .container { max-width: 800px; margin: 0 auto; padding: 40px 20px; }
+        .glass { background: rgba(255,255,255,0.04); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.06); border-radius: 16px; padding: 40px; }
+        h1 { font-size: 2.5rem; font-weight: 700; margin-bottom: 8px; background: linear-gradient(135deg, #818cf8, #a855f7); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+        h2 { font-size: 1.3rem; margin-top: 28px; margin-bottom: 8px; color: #e5e7eb; }
+        .faq-item { margin-bottom: 24px; }
+        .faq-item p { color: #d1d5db; margin: 4px 0; }
+        .back-link { display: inline-block; margin-top: 24px; color: #a855f7; font-weight: 600; text-decoration: none; }
+        .back-link:hover { text-decoration: underline; }
+        .nav-bar { display: flex; justify-content: space-between; align-items: center; padding: 16px 0; border-bottom: 1px solid rgba(255,255,255,0.06); }
+        .nav-bar .logo { font-size: 1.4rem; font-weight: 800; color: white; text-decoration: none; }
+        .nav-bar .logo span { background: linear-gradient(135deg, #818cf8, #a855f7); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+        .footer { margin-top: 40px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.06); text-align: center; color: #9ca3af; font-size: 0.9rem; }
+        .footer a { color: #a855f7; text-decoration: none; }
+        .footer a:hover { text-decoration: underline; }
+        @media (max-width: 768px) { .container { padding: 20px; } .glass { padding: 24px; } h1 { font-size: 2rem; } }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="nav-bar">
+            <a href="/" class="logo"><span>Leago Academy</span></a>
+            <a href="/" style="color:#9ca3af; text-decoration:none;">← Back to Home</a>
+        </div>
+        <div class="glass">
+            <h1>Frequently Asked Questions</h1>
+
+            <div class="faq-item">
+                <h2>Is Leago Academy free?</h2>
+                <p>Yes, we offer a free trial that includes 20 AI Tutor questions per day. For unlimited access, we offer a Premium subscription for R49.99 per month.</p>
+            </div>
+
+            <div class="faq-item">
+                <h2>How does the AI Tutor work?</h2>
+                <p>The AI Tutor uses a large language model (DeepSeek) to provide personalised, step‑by‑step explanations. It adapts to your grade, curriculum, and subject, and remembers your conversation history for continuity.</p>
+            </div>
+
+            <div class="faq-item">
+                <h2>Which curricula does Leago Academy support?</h2>
+                <p>We currently support CAPS (South Africa), IEB, CBC (Kenya), WAEC (West Africa), and ZIMSEC (Zimbabwe). We are continuously adding more curricula and subjects.</p>
+            </div>
+
+            <div class="faq-item">
+                <h2>How does the Premium subscription work?</h2>
+                <p>Premium costs R49.99 per month and gives you unlimited AI Tutor questions, full access to all subjects, topics, and advanced features like flashcards and exam preparation. You can subscribe and manage your plan directly from your dashboard.</p>
+            </div>
+
+            <div class="faq-item">
+                <h2>Can I cancel my subscription?</h2>
+                <p>Yes, you can cancel your Premium subscription at any time from your dashboard. Cancellation will take effect at the end of your current billing cycle. No refunds are provided for partial months. Exceptional cases may be considered at our discretion where appropriate.</p>
+            </div>
+
+            <div class="faq-item">
+                <h2>How is my data handled?</h2>
+                <p>We take your privacy seriously. Your personal information, conversation history, and usage data are stored securely and used only to provide and improve the service. We do not sell your data to third parties. For full details, please see our <a href="/privacy" style="color:#a855f7;">Privacy Policy</a>.</p>
+            </div>
+
+            <div class="faq-item">
+                <h2>Can I use Leago Academy on my phone?</h2>
+                <p>Yes! Leago Academy is fully responsive and works well on smartphones, tablets, and desktops. The interface adapts to your screen size for a comfortable learning experience.</p>
+            </div>
+
+            <div class="faq-item">
+                <h2>How do I contact support?</h2>
+                <p>You can reach us at <a href="mailto:[MY REAL SUPPORT EMAIL]" style="color:#a855f7;">[MY REAL SUPPORT EMAIL]</a>. We aim to respond within 48 hours during weekdays.</p>
+            </div>
+
+            <a href="/" class="back-link">← Back to Home</a>
+        </div>
+        <div class="footer">
+            &copy; 2026 Leago Academy. All rights reserved.
+        </div>
+    </div>
+</body>
+</html>

@@ -22,7 +22,7 @@ const chatRoutes = require('./routes/chat');
 const chatUploadRoutes = require('./routes/chat-upload');
 const progressRoutes = require('./routes/progress');
 const dashboardRoutes = require('./routes/dashboard');
-const lookupRoutes = require('./routes/lookup');   // ← new
+const lookupRoutes = require('./routes/lookup');
 
 app.use('/api/auth', authRoutes);
 app.use('/api/admin', adminRoutes);
@@ -33,13 +33,34 @@ app.use('/api/chat', chatRoutes);
 app.use('/api/chat/upload', chatUploadRoutes);
 app.use('/api/progress', progressRoutes);
 app.use('/api/dashboard', dashboardRoutes);
-app.use('/api/lookup', lookupRoutes);             // ← new
+app.use('/api/lookup', lookupRoutes);
 
 app.get('/dashboard', (req, res) => {
   res.sendFile(path.join(__dirname, '../client/dashboard.html'));
 });
 
 app.get('/health', (req, res) => res.send('OK'));
+
+// ===== PUBLIC STATIC FILES =====
+app.get('/ads.txt', (req, res) => {
+  res.sendFile(path.join(__dirname, '../client/ads.txt'));
+});
+app.get('/robots.txt', (req, res) => {
+  res.sendFile(path.join(__dirname, '../client/robots.txt'));
+});
+app.get('/sitemap.xml', (req, res) => {
+  res.sendFile(path.join(__dirname, '../client/sitemap.xml'));
+});
+
+// ===== PUBLIC PAGES =====
+const publicPages = ['privacy', 'terms', 'about', 'contact', 'faq'];
+publicPages.forEach(page => {
+  app.get(`/${page}`, (req, res) => {
+    res.sendFile(path.join(__dirname, `../client/${page}.html`));
+  });
+});
+
+// ===== STATIC FILES & CATCH‑ALL =====
 app.use(express.static(path.join(__dirname, '../client')));
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, '../client/index.html'));

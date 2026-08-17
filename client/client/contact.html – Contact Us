@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Contact – Leago Academy</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz@14..32&display=swap" rel="stylesheet" />
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { background: #090B1D; font-family: 'Inter', sans-serif; color: #fff; line-height: 1.6; }
+        .container { max-width: 800px; margin: 0 auto; padding: 40px 20px; }
+        .glass { background: rgba(255,255,255,0.04); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.06); border-radius: 16px; padding: 40px; }
+        h1 { font-size: 2.5rem; font-weight: 700; margin-bottom: 8px; background: linear-gradient(135deg, #818cf8, #a855f7); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+        h2 { font-size: 1.5rem; margin-top: 32px; margin-bottom: 12px; color: #e5e7eb; }
+        p { color: #d1d5db; margin-bottom: 16px; }
+        .back-link { display: inline-block; margin-top: 24px; color: #a855f7; font-weight: 600; text-decoration: none; }
+        .back-link:hover { text-decoration: underline; }
+        .nav-bar { display: flex; justify-content: space-between; align-items: center; padding: 16px 0; border-bottom: 1px solid rgba(255,255,255,0.06); }
+        .nav-bar .logo { font-size: 1.4rem; font-weight: 800; color: white; text-decoration: none; }
+        .nav-bar .logo span { background: linear-gradient(135deg, #818cf8, #a855f7); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+        .footer { margin-top: 40px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.06); text-align: center; color: #9ca3af; font-size: 0.9rem; }
+        .footer a { color: #a855f7; text-decoration: none; }
+        .footer a:hover { text-decoration: underline; }
+        .email-link { color: #a855f7; font-weight: 600; text-decoration: none; }
+        .email-link:hover { text-decoration: underline; }
+        @media (max-width: 768px) { .container { padding: 20px; } .glass { padding: 24px; } h1 { font-size: 2rem; } }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="nav-bar">
+            <a href="/" class="logo"><span>Leago Academy</span></a>
+            <a href="/" style="color:#9ca3af; text-decoration:none;">← Back to Home</a>
+        </div>
+        <div class="glass">
+            <h1>Contact Us</h1>
+            <p>We’d love to hear from you. Whether you have a question, feedback, or need support, please reach out.</p>
+
+            <h2>Email</h2>
+            <p>For general inquiries and support:</p>
+            <p><a href="mailto:[MY REAL SUPPORT EMAIL]" class="email-link">[MY REAL SUPPORT EMAIL]</a></p>
+
+            <h2>Response Time</h2>
+            <p>We aim to respond to all emails within 48 hours during weekdays.</p>
+
+            <h2>Feedback</h2>
+            <p>Your feedback helps us improve. If you have suggestions for new features, subjects, or topics, please let us know.</p>
+
+            <a href="/" class="back-link">← Back to Home</a>
+        </div>
+        <div class="footer">
+            &copy; 2026 Leago Academy. All rights reserved.
+        </div>
+    </div>
+</body>
+</html>
