@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url>
-    <loc>https://leagoacademy.co.za/</loc>
-    <priority>1.0</priority>
-  </url>
-  <url>
-    <loc>https://leagoacademy.co.za/dashboard</loc>
-    <priority>0.8</priority>
-  </url>
+  <url><loc>https://leagoacademy.co.za/</loc></url>
+  <url><loc>https://leagoacademy.co.za/privacy</loc></url>
+  <url><loc>https://leagoacademy.co.za/terms</loc></url>
+  <url><loc>https://leagoacademy.co.za/about</loc></url>
+  <url><loc>https://leagoacademy.co.za/contact</loc></url>
+  <url><loc>https://leagoacademy.co.za/faq</loc></url>
 </urlset>
