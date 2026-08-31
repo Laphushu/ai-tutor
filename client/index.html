@@ -3,8 +3,6 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
-    <!-- ===== SEO & META ===== -->
     <title>AI Tutor for CAPS &amp; African Curricula | Leago Academy</title>
     <meta name="description" content="Get step‑by‑step help with Mathematics, Science and more using your personal AI tutor, built for learners studying African curricula. Start learning free." />
     <link rel="canonical" href="https://leagoacademy.co.za/" />
@@ -14,12 +12,12 @@
     <meta property="og:description" content="Get step‑by‑step help with Mathematics, Science and more using your personal AI tutor, built for learners studying African curricula. Start learning free." />
     <meta property="og:url" content="https://leagoacademy.co.za/" />
     <meta property="og:type" content="website" />
-    <meta property="og:image" content="https://leagoacademy.co.za/og-image.jpg" /> <!-- you can add a real image later -->
+    <meta property="og:image" content="https://leagoacademy.co.za/og-image.jpg" />
 
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image" />
 
-    <!-- Structured Data: Organization -->
+    <!-- Structured Data -->
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
@@ -32,11 +30,12 @@
     }
     </script>
 
-    <!-- ===== EXISTING ADSENSE & ANALYTICS ===== -->
+    <!-- AdSense -->
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-5343712358770166"
      crossorigin="anonymous"></script>
     <meta name="google-adsense-account" content="ca-pub-5343712358770166">
 
+    <!-- Analytics -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-KL4YBPERZ5"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
@@ -45,7 +44,7 @@
       gtag('config', 'G-KL4YBPERZ5');
     </script>
 
-    <!-- ===== LIBRARIES ===== -->
+    <!-- Libraries -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" crossorigin="anonymous">
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" crossorigin="anonymous"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
@@ -61,11 +60,7 @@
                     fontFamily: { inter: ['Inter', 'sans-serif'] },
                     colors: {
                         dark: '#090B1D',
-                        purple: {
-                            400: '#A855F7',
-                            500: '#8B5CF6',
-                            600: '#7C3AED',
-                        },
+                        purple: { 400: '#A855F7', 500: '#8B5CF6', 600: '#7C3AED' },
                     },
                     borderRadius: { xl: '16px' },
                     boxShadow: {
@@ -77,11 +72,12 @@
         };
     </script>
 
-    <!-- ===== CUSTOM CSS ===== -->
+    <!-- ===== COMPLETE CSS (Original + New) ===== -->
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; scroll-behavior: smooth; }
         body { background: #090B1D; font-family: 'Inter', sans-serif; color: #fff; }
 
+        /* ---------- Landing page specific ---------- */
         .glass {
             background: rgba(255, 255, 255, 0.04);
             backdrop-filter: blur(12px);
@@ -108,7 +104,6 @@
             opacity: 1;
             transform: translateY(0);
         }
-
         .step-number {
             font-size: 3rem;
             font-weight: 700;
@@ -118,7 +113,6 @@
             -webkit-text-fill-color: transparent;
             line-height: 1;
         }
-
         .pricing-card {
             background: rgba(255,255,255,0.04);
             backdrop-filter: blur(12px);
@@ -135,7 +129,6 @@
             border-color: #7C3AED;
             background: linear-gradient(135deg, rgba(124,58,237,0.15) 0%, rgba(99,102,241,0.05) 100%);
         }
-
         .faq-item .answer {
             max-height: 0;
             overflow: hidden;
@@ -151,31 +144,228 @@
             transform: rotate(180deg);
         }
 
-        /* --- Responsive fixes --- */
-        @media (max-width: 768px) {
-            .hero h1 { font-size: 2.2rem; }
-            .hero .hero-subtitle { font-size: 1rem; }
-            .step-number { font-size: 2.2rem; }
-            .floating-card { display: none; }
-            /* Remove extra space from hero canvas */
-            #aiCanvas {
-                max-height: 250px !important;
-                min-height: 0 !important;
-            }
-            .relative.w-full.max-w-lg.aspect-square {
-                max-height: 280px;
-            }
+        /* ---------- Authentication Modal (critical) ---------- */
+        .auth-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.7);
+            backdrop-filter: blur(12px);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            padding: 20px;
+            box-sizing: border-box;
         }
-        @media (max-width: 480px) {
-            .hero h1 { font-size: 1.8rem; }
+        .auth-overlay.active { display: flex; }
+        .auth-card {
+            background: #0b1120;
+            border-radius: 28px;
+            padding: 40px 36px;
+            max-width: 680px;
+            width: 100%;
+            max-height: 95vh;
+            overflow-y: auto;
+            position: relative;
+            border: 1px solid rgba(255,255,255,0.06);
+            box-sizing: border-box;
         }
+        .auth-card .close-btn {
+            position: absolute;
+            top: 16px;
+            right: 20px;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #9ca3af;
+        }
+        .auth-card .close-btn:hover { color: white; }
+        .auth-card .logo-sm { text-align: center; margin-bottom: 20px; }
+        .auth-card .logo-sm h2 { font-size: 1.6rem; font-weight: 800; color: white; }
+        .auth-card .logo-sm h2 span { background: linear-gradient(135deg, #6366f1, #a855f7); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+        .auth-card .logo-sm p { color: #9ca3af; font-size: 0.9rem; }
+        .auth-card h3 { font-size: 1.3rem; font-weight: 700; color: white; margin-bottom: 4px; }
+        .auth-card .sub { color: #9ca3af; font-size: 0.95rem; margin-bottom: 20px; }
+        .field { margin-bottom: 14px; }
+        .field label { display: block; font-weight: 600; font-size: 0.85rem; color: #d1d5db; margin-bottom: 4px; }
+        .field input, .field select {
+            width: 100%;
+            padding: 12px 14px;
+            background: rgba(255,255,255,0.05);
+            border: 2px solid rgba(255,255,255,0.1);
+            border-radius: 10px;
+            font-size: 1rem;
+            color: white;
+            font-family: inherit;
+            box-sizing: border-box;
+        }
+        .field input:focus, .field select:focus { outline: none; border-color: #7C3AED; }
+        .btn {
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 700;
+            cursor: pointer;
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            color: #fff;
+            transition: transform 0.15s;
+            box-sizing: border-box;
+        }
+        .btn:hover { transform: translateY(-2px); }
+        .btn:disabled { opacity: 0.6; cursor: not-allowed; }
+        .auth-link { text-align: center; margin-top: 16px; font-size: 0.9rem; color: #9ca3af; }
+        .auth-link a { color: #a855f7; text-decoration: none; font-weight: 600; cursor: pointer; }
+        .auth-link a:hover { text-decoration: underline; }
+        .error { color: #ef4444; font-size: 0.85rem; margin-top: 4px; display: none; }
+        .error.show { display: block; }
+        .success { color: #22c55e; font-size: 0.85rem; margin-top: 4px; display: none; }
+        .success.show { display: block; }
 
-        /* ===== DASHBOARD CSS (unchanged) ===== */
+        .stepper { display: flex; justify-content: space-between; margin-bottom: 24px; position: relative; }
+        .stepper::before { content: ''; position: absolute; top: 50%; left: 10%; right: 10%; height: 2px; background: rgba(255,255,255,0.1); z-index: 0; }
+        .step-circle { width: 36px; height: 36px; border-radius: 50%; background: rgba(255,255,255,0.1); display: flex; align-items: center; justify-content: center; font-weight: 700; color: #9ca3af; position: relative; z-index: 1; transition: all 0.3s; }
+        .step-circle.active { background: #7C3AED; color: white; }
+        .step-circle.done { background: #22c55e; color: white; }
+        .subject-grid-check {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px,1fr));
+            gap: 8px;
+            max-height: 300px;
+            overflow-y: auto;
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 10px;
+            padding: 12px;
+            box-sizing: border-box;
+            width: 100%;
+        }
+        .subject-grid-check label {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            padding: 4px 6px;
+            border-radius: 4px;
+            transition: background 0.15s;
+            color: #d1d5db;
+        }
+        .subject-grid-check label:hover { background: rgba(255,255,255,0.05); }
+        .subject-grid-check input[type="checkbox"] { width: 16px; height: 16px; accent-color: #7C3AED; }
+
+        /* ---------- Dashboard styles (unchanged) ---------- */
         #landingPage.hidden { display: none !important; }
         .dashboard { display: none; max-width: 1200px; margin: 0 auto; padding: 20px; }
         .dashboard.active { display: block; }
-        /* … the rest of the dashboard styles are preserved exactly as they were … */
-        /* (They are unchanged, so I’m not pasting them again to keep this readable) */
+        .top-nav { background: rgba(255,255,255,0.05); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.06); padding: 16px 28px; display: flex; justify-content: space-between; align-items: center; border-radius: 16px; margin-bottom: 24px; flex-wrap: wrap; gap: 12px; width: 100%; max-width: 100%; box-sizing: border-box; }
+        .top-nav .logo { font-size: 1.4rem; font-weight: 800; color: white; text-decoration: none; }
+        .top-nav .logo span { background: linear-gradient(135deg, #818cf8, #a855f7); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+        .user-info { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; color: #ccc; }
+        .user-info .name { font-weight: 600; color: white; font-size: 0.95rem; }
+        .user-info .role { font-size: 0.75rem; color: #9ca3af; background: rgba(255,255,255,0.06); padding: 2px 12px; border-radius: 12px; }
+        .logout-btn { background: none; border: none; color: #9ca3af; font-size: 0.85rem; cursor: pointer; padding: 6px 14px; border-radius: 8px; transition: all 0.2s; font-family: inherit; }
+        .logout-btn:hover { background: rgba(255,255,255,0.05); color: #ef4444; }
+        .sub-badge { font-size: 0.7rem; padding: 3px 12px; border-radius: 12px; font-weight: 600; }
+        .sub-trial { background: #fef3c7; color: #92400e; }
+        .sub-active { background: #d1fae5; color: #065f46; }
+        .sub-expired { background: #fee2e2; color: #991b1b; }
+        .subscribe-btn { background: linear-gradient(135deg, #6366f1, #8b5cf6); color: white; border: none; padding: 6px 16px; border-radius: 20px; font-weight: 600; font-size: 0.8rem; cursor: pointer; font-family: inherit; margin-left: 8px; }
+        .subscribe-btn:hover { transform: scale(1.02); }
+        .dashboard-grid { display: grid; grid-template-columns: 220px 1fr 250px; gap: 20px; width: 100%; max-width: 100%; min-width: 0; box-sizing: border-box; }
+        @media (max-width: 1024px) {
+            .dashboard-grid { grid-template-columns: 1fr; }
+            .sidebar-left, .sidebar-right { display: none; }
+        }
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 2.2rem; }
+            .features-grid { grid-template-columns: 1fr 1fr; }
+            .pricing-grid { grid-template-columns: 1fr; }
+            .auth-card { padding: 28px 20px; max-width: 100%; }
+            .dashboard { padding: 12px; }
+            .center-panel { padding: 16px 12px; }
+            .subject-grid { grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); }
+            .topic-grid { grid-template-columns: 1fr; }
+            .top-nav { padding: 12px 16px; }
+            .tutor-container { padding: 16px; width: 100% !important; max-width: 100% !important; }
+            .tutor-header { flex-direction: column; align-items: flex-start; gap: 8px; }
+            .chat-box { width: 100% !important; max-width: 100% !important; padding: 12px !important; }
+            .chat-box .msg { max-width: 90% !important; }
+            .chat-input { flex-direction: column; gap: 8px; width: 100% !important; }
+            .chat-input input { width: 100% !important; }
+            .chat-input .btn-send { width: 100% !important; padding: 12px !important; white-space: normal; }
+            .chat-options { flex-wrap: wrap; gap: 8px; }
+            .subject-grid-check { grid-template-columns: 1fr 1fr; }
+            .floating-card { display: none; }
+            #aiCanvas { max-height: 250px; min-height: 0; }
+            .relative.w-full.max-w-lg.aspect-square { max-height: 280px; }
+        }
+        @media (max-width: 480px) {
+            .hero h1 { font-size: 1.8rem; }
+            .subject-grid-check { grid-template-columns: 1fr; }
+            .subject-grid { grid-template-columns: 1fr; }
+            .center-panel { padding: 12px 10px; }
+        }
+
+        .chat-box { background: rgba(0,0,0,0.2); border-radius: 16px; padding: 20px; height: auto; min-height: 300px; max-height: 60vh; overflow-y: auto; border: 1px solid rgba(255,255,255,0.06); margin-bottom: 16px; width: 100%; box-sizing: border-box; }
+        .chat-box .msg { margin-bottom: 12px; padding: 8px 14px; border-radius: 12px; max-width: 85%; word-wrap: break-word; }
+        .chat-box .msg.user { background: rgba(124,58,237,0.2); margin-left: auto; color: #e5e7eb; border: 1px solid rgba(124,58,237,0.2); }
+        .chat-box .msg.bot { background: rgba(255,255,255,0.05); margin-right: auto; color: #d1d5db; border: 1px solid rgba(255,255,255,0.06); }
+        .chat-box .msg.bot .katex-display { margin: 0.5em 0; }
+        .chat-box .typing-indicator { display: none; margin: 8px 0; }
+        .chat-box .typing-indicator.active { display: block; }
+
+        .sidebar-left, .sidebar-right { background: rgba(255,255,255,0.04); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.06); border-radius: 16px; padding: 24px 18px; height: fit-content; box-sizing: border-box; max-width: 100%; }
+        .sidebar-left .section-title, .sidebar-right .section-title { font-size: 0.7rem; text-transform: uppercase; color: #9ca3af; font-weight: 700; letter-spacing: 0.5px; margin: 16px 0 8px; }
+        .sidebar-left .section-title:first-child { margin-top: 0; }
+        .subject-list { list-style: none; }
+        .subject-list li { padding: 10px 14px; border-radius: 10px; cursor: pointer; transition: all 0.2s; font-size: 0.9rem; color: #d1d5db; display: flex; align-items: center; gap: 10px; margin-bottom: 2px; }
+        .subject-list li:hover { background: rgba(255,255,255,0.05); }
+        .subject-list li.active { background: rgba(124,58,237,0.15); color: #a855f7; font-weight: 600; }
+        .center-panel { background: rgba(255,255,255,0.04); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.06); border-radius: 16px; padding: 28px 32px; min-height: 500px; width: 100%; max-width: 100%; box-sizing: border-box; overflow: hidden; }
+        .center-panel .welcome { font-size: 1.6rem; font-weight: 700; color: white; margin-bottom: 4px; }
+        .center-panel .welcome-sub { color: #9ca3af; font-size: 0.95rem; margin-bottom: 20px; }
+        .subject-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); gap: 16px; width: 100%; max-width: 100%; min-width: 0; box-sizing: border-box; }
+        .subject-card { background: rgba(255,255,255,0.04); border: 2px solid rgba(255,255,255,0.06); border-radius: 16px; padding: 28px 16px; text-align: center; cursor: pointer; transition: all 0.25s; min-width: 0; max-width: 100%; box-sizing: border-box; word-wrap: break-word; }
+        .subject-card:hover { border-color: #7C3AED; transform: translateY(-4px); box-shadow: 0 12px 32px rgba(99,102,241,0.12); }
+        .subject-card .icon { font-size: 2.8rem; display: block; margin-bottom: 6px; }
+        .subject-card .name { font-weight: 700; font-size: 0.95rem; color: white; }
+        .subject-card .progress-badge { display: inline-block; font-size: 0.7rem; color: #a855f7; background: rgba(168,85,247,0.15); padding: 2px 10px; border-radius: 12px; margin-top: 6px; }
+        .back-btn { background: none; border: 1px solid rgba(255,255,255,0.1); padding: 10px 20px; border-radius: 12px; cursor: pointer; font-weight: 600; color: #d1d5db; transition: all 0.2s; font-family: inherit; display: inline-block; margin-bottom: 16px; }
+        .back-btn:hover { background: rgba(255,255,255,0.05); }
+        .topic-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 16px; margin-top: 12px; width: 100%; max-width: 100%; min-width: 0; box-sizing: border-box; }
+        .topic-card { background: rgba(255,255,255,0.04); border: 2px solid rgba(255,255,255,0.06); border-radius: 14px; padding: 20px 18px; transition: all 0.25s; cursor: pointer; position: relative; min-width: 0; max-width: 100%; box-sizing: border-box; word-wrap: break-word; }
+        .topic-card:hover { border-color: #7C3AED; box-shadow: 0 8px 24px rgba(99,102,241,0.08); }
+        .topic-card .title { font-weight: 700; font-size: 1rem; color: white; }
+        .topic-card .meta { font-size: 0.8rem; color: #9ca3af; margin-top: 4px; }
+
+        .tutor-container { background: rgba(255,255,255,0.04); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.06); border-radius: 20px; padding: 28px; margin-top: 12px; width: 100%; max-width: 100%; box-sizing: border-box; }
+        .tutor-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 10px; }
+        .tutor-header h3 { font-size: 1.2rem; font-weight: 700; color: white; }
+        .tutor-header .context { font-size: 0.9rem; color: #9ca3af; background: rgba(255,255,255,0.05); padding: 4px 16px; border-radius: 20px; }
+        .chat-input { display: flex; gap: 10px; margin-bottom: 12px; flex-wrap: wrap; }
+        .chat-input input { flex: 1; padding: 14px 18px; background: rgba(255,255,255,0.05); border: 2px solid rgba(255,255,255,0.1); border-radius: 14px; font-size: 0.95rem; color: white; font-family: inherit; transition: border-color 0.25s; min-width: 0; width: 100%; box-sizing: border-box; }
+        .chat-input input:focus { outline: none; border-color: #7C3AED; }
+        .chat-input .btn-send { padding: 0 28px; background: linear-gradient(135deg, #6366f1, #8b5cf6); color: #fff; border: none; border-radius: 14px; font-weight: 700; cursor: pointer; transition: all 0.25s; font-family: inherit; white-space: nowrap; }
+        .chat-input .btn-send:hover { transform: scale(1.02); }
+        .chat-input .btn-send:disabled { opacity: 0.6; cursor: not-allowed; }
+        .chat-options { display: flex; align-items: center; gap: 14px; margin-top: 0px; font-size: 0.85rem; color: #9ca3af; flex-wrap: wrap; }
+
+        .floating-card { position: absolute; background: rgba(255,255,255,0.06); backdrop-filter: blur(8px); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 8px 16px; font-size: 0.8rem; color: #ccc; white-space: nowrap; box-shadow: 0 0 20px rgba(124,58,237,0.15); animation: float 6s ease-in-out infinite; }
+        @keyframes float { 0%,100% { transform: translateY(0px); } 50% { transform: translateY(-8px); } }
+        #aiCanvas { width: 100%; height: 100%; min-height: 400px; border-radius: 24px; background: radial-gradient(ellipse at 30% 50%, rgba(124,58,237,0.12) 0%, transparent 70%); }
+
+        .error-item { padding: 10px 14px; background: rgba(239,68,68,0.1); border-radius: 10px; margin-bottom: 6px; font-size: 0.85rem; border-left: 3px solid #ef4444; word-wrap: break-word; }
+        .error-item .concept { font-weight: 600; color: #fca5a5; }
+        .error-item .hint { font-size: 0.8rem; color: #9ca3af; margin-top: 2px; }
+        .recent-item { padding: 10px 12px; border-radius: 10px; background: rgba(255,255,255,0.03); margin-bottom: 6px; cursor: pointer; font-size: 0.85rem; color: #d1d5db; transition: all 0.2s; word-wrap: break-word; }
+        .recent-item:hover { background: rgba(255,255,255,0.05); }
+        .recent-item .sub { font-size: 0.75rem; color: #9ca3af; }
+        .flashcard-item { padding: 10px 14px; background: rgba(255,255,255,0.04); border-radius: 10px; margin-bottom: 6px; font-size: 0.85rem; cursor: pointer; transition: all 0.2s; color: #d1d5db; word-wrap: break-word; }
+        .flashcard-item:hover { background: rgba(255,255,255,0.08); }
+        .flashcard-item .term { font-weight: 600; color: white; }
+        .flashcard-item .def { font-size: 0.8rem; color: #9ca3af; margin-top: 2px; }
     </style>
 </head>
 <body>
@@ -251,7 +441,6 @@
                 <div class="flex-1 relative flex justify-center items-center">
                     <div class="relative w-full max-w-md lg:max-w-lg aspect-square max-h-[300px] lg:max-h-none">
                         <canvas id="aiCanvas" class="w-full h-full rounded-3xl"></canvas>
-                        <!-- floating cards removed on mobile by CSS -->
                         <div class="floating-card hidden lg:block" style="top: 5%; left: -5%; animation-delay: 0s;">✨ AI Tutor</div>
                         <div class="floating-card hidden lg:block" style="top: 15%; right: -8%; animation-delay: 1s;">📘 Homework Help</div>
                         <div class="floating-card hidden lg:block" style="bottom: 20%; left: -10%; animation-delay: 2s;">🎯 Practice Quizzes</div>
@@ -292,28 +481,18 @@
             </div>
         </section>
 
-        <!-- ===== 3. AI TUTOR SECTION ===== -->
+        <!-- ===== 3. AI TUTOR ===== -->
         <section id="ai-tutor" class="py-20 px-4 bg-gradient-to-b from-transparent via-purple-950/20 to-transparent fade-section">
             <div class="max-w-7xl mx-auto flex flex-col lg:flex-row items-center gap-12">
                 <div class="flex-1">
                     <span class="inline-block px-4 py-1.5 rounded-full bg-purple-500/10 text-purple-400 text-xs font-semibold tracking-wider border border-purple-500/20 mb-4">💬 Interactive AI Pedagogy</span>
                     <h2 class="text-3xl md:text-4xl font-bold">Don’t Just Get the Answer. Understand It.</h2>
-                    <p class="mt-4 text-gray-400">
-                        Leago AI can guide you through problems step‑by‑step, helping you understand how to solve them instead of simply giving you the answer.
-                    </p>
+                    <p class="mt-4 text-gray-400">Leago AI can guide you through problems step‑by‑step, helping you understand how to solve them instead of simply giving you the answer.</p>
                     <div class="mt-6 space-y-3 text-sm text-gray-300">
-                        <div class="flex items-center gap-3">
-                            <span class="text-purple-400">✅</span> Step‑by‑step Socratic guidance
-                        </div>
-                        <div class="flex items-center gap-3">
-                            <span class="text-purple-400">✅</span> Support for LaTeX math formulas and scientific notations
-                        </div>
-                        <div class="flex items-center gap-3">
-                            <span class="text-purple-400">✅</span> Multilingual capability supporting local contexts
-                        </div>
-                        <div class="flex items-center gap-3">
-                            <span class="text-purple-400">✅</span> <strong>Socratic Mode</strong> – guides you with questions and hints rather than immediately giving the final answer
-                        </div>
+                        <div class="flex items-center gap-3"><span class="text-purple-400">✅</span> Step‑by‑step Socratic guidance</div>
+                        <div class="flex items-center gap-3"><span class="text-purple-400">✅</span> Support for LaTeX math formulas and scientific notations</div>
+                        <div class="flex items-center gap-3"><span class="text-purple-400">✅</span> Multilingual capability supporting local contexts</div>
+                        <div class="flex items-center gap-3"><span class="text-purple-400">✅</span> <strong>Socratic Mode</strong> – guides you with questions and hints rather than immediately giving the final answer</div>
                     </div>
                     <div class="mt-8">
                         <button onclick="openAuth('signup')" class="px-8 py-3.5 rounded-2xl bg-gradient-to-r from-purple-500 to-purple-600 text-white font-semibold shadow-glow hover:shadow-glow-lg transition">Try the AI Tutor</button>
@@ -340,68 +519,30 @@
             </div>
         </section>
 
-        <!-- ===== 4. SUBJECTS SECTION ===== -->
+        <!-- ===== 4. SUBJECTS ===== -->
         <section id="subjects" class="py-20 px-4 fade-section">
             <div class="max-w-7xl mx-auto">
                 <h2 class="text-3xl md:text-4xl font-bold text-center">Your Subjects. Your Curriculum. Your AI Teacher.</h2>
                 <p class="mt-4 text-gray-400 text-center max-w-2xl mx-auto">Choose your grade, curriculum and subjects, then get learning support relevant to what you’re studying.</p>
                 <div class="mt-12 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6">
-                    <!-- Only real subjects from the actual catalogue -->
-                    <div class="glass p-6 rounded-2xl card-glow text-center">
-                        <div class="text-3xl mb-2">📐</div>
-                        <h3 class="font-semibold text-lg">Mathematics</h3>
-                    </div>
-                    <div class="glass p-6 rounded-2xl card-glow text-center">
-                        <div class="text-3xl mb-2">⚛️</div>
-                        <h3 class="font-semibold text-lg">Physical Sciences</h3>
-                    </div>
-                    <div class="glass p-6 rounded-2xl card-glow text-center">
-                        <div class="text-3xl mb-2">🧬</div>
-                        <h3 class="font-semibold text-lg">Life Sciences</h3>
-                    </div>
-                    <div class="glass p-6 rounded-2xl card-glow text-center">
-                        <div class="text-3xl mb-2">💰</div>
-                        <h3 class="font-semibold text-lg">Accounting</h3>
-                    </div>
-                    <div class="glass p-6 rounded-2xl card-glow text-center">
-                        <div class="text-3xl mb-2">📖</div>
-                        <h3 class="font-semibold text-lg">English</h3>
-                    </div>
-                    <div class="glass p-6 rounded-2xl card-glow text-center">
-                        <div class="text-3xl mb-2">🌍</div>
-                        <h3 class="font-semibold text-lg">Geography</h3>
-                    </div>
-                    <div class="glass p-6 rounded-2xl card-glow text-center">
-                        <div class="text-3xl mb-2">🏛️</div>
-                        <h3 class="font-semibold text-lg">History</h3>
-                    </div>
-                    <div class="glass p-6 rounded-2xl card-glow text-center">
-                        <div class="text-3xl mb-2">💻</div>
-                        <h3 class="font-semibold text-lg">Information Technology</h3>
-                    </div>
-                    <div class="glass p-6 rounded-2xl card-glow text-center">
-                        <div class="text-3xl mb-2">📊</div>
-                        <h3 class="font-semibold text-lg">Business Studies</h3>
-                    </div>
-                    <div class="glass p-6 rounded-2xl card-glow text-center">
-                        <div class="text-3xl mb-2">📈</div>
-                        <h3 class="font-semibold text-lg">Economics</h3>
-                    </div>
-                    <div class="glass p-6 rounded-2xl card-glow text-center">
-                        <div class="text-3xl mb-2">📊</div>
-                        <h3 class="font-semibold text-lg">Mathematical Literacy</h3>
-                    </div>
-                    <div class="glass p-6 rounded-2xl card-glow text-center">
-                        <div class="text-3xl mb-2">🌾</div>
-                        <h3 class="font-semibold text-lg">Agricultural Sciences</h3>
-                    </div>
-                    <!-- Add more real subjects as needed, but keep it realistic -->
+                    <div class="glass p-6 rounded-2xl card-glow text-center"><div class="text-3xl mb-2">📐</div><h3 class="font-semibold text-lg">Mathematics</h3></div>
+                    <div class="glass p-6 rounded-2xl card-glow text-center"><div class="text-3xl mb-2">⚛️</div><h3 class="font-semibold text-lg">Physical Sciences</h3></div>
+                    <div class="glass p-6 rounded-2xl card-glow text-center"><div class="text-3xl mb-2">🧬</div><h3 class="font-semibold text-lg">Life Sciences</h3></div>
+                    <div class="glass p-6 rounded-2xl card-glow text-center"><div class="text-3xl mb-2">💰</div><h3 class="font-semibold text-lg">Accounting</h3></div>
+                    <div class="glass p-6 rounded-2xl card-glow text-center"><div class="text-3xl mb-2">📖</div><h3 class="font-semibold text-lg">English</h3></div>
+                    <div class="glass p-6 rounded-2xl card-glow text-center"><div class="text-3xl mb-2">🌍</div><h3 class="font-semibold text-lg">Geography</h3></div>
+                    <div class="glass p-6 rounded-2xl card-glow text-center"><div class="text-3xl mb-2">🏛️</div><h3 class="font-semibold text-lg">History</h3></div>
+                    <div class="glass p-6 rounded-2xl card-glow text-center"><div class="text-3xl mb-2">💻</div><h3 class="font-semibold text-lg">Information Technology</h3></div>
+                    <div class="glass p-6 rounded-2xl card-glow text-center"><div class="text-3xl mb-2">📊</div><h3 class="font-semibold text-lg">Business Studies</h3></div>
+                    <div class="glass p-6 rounded-2xl card-glow text-center"><div class="text-3xl mb-2">📈</div><h3 class="font-semibold text-lg">Economics</h3></div>
+                    <div class="glass p-6 rounded-2xl card-glow text-center"><div class="text-3xl mb-2">📊</div><h3 class="font-semibold text-lg">Mathematical Literacy</h3></div>
+                    <div class="glass p-6 rounded-2xl card-glow text-center"><div class="text-3xl mb-2">🌾</div><h3 class="font-semibold text-lg">Agricultural Sciences</h3></div>
                 </div>
                 <p class="mt-8 text-gray-400 text-center text-sm">…and many more. We support CAPS, IEB, CBC, WAEC, and ZIMSEC.</p>
             </div>
         </section>
 
-        <!-- ===== 5. PERSONALIZED LEARNING ===== -->
+        <!-- ===== 5. PERSONALISED LEARNING ===== -->
         <section id="personalized" class="py-20 px-4 bg-gradient-to-b from-transparent via-purple-950/20 to-transparent fade-section">
             <div class="max-w-7xl mx-auto text-center">
                 <h2 class="text-3xl md:text-4xl font-bold">Learning That Understands Your Context</h2>
@@ -436,13 +577,12 @@
             </div>
         </section>
 
-        <!-- ===== 7. FREE VS PREMIUM ===== -->
+        <!-- ===== 7. PRICING ===== -->
         <section id="pricing" class="py-20 px-4 fade-section">
             <div class="max-w-7xl mx-auto">
                 <h2 class="text-3xl md:text-4xl font-bold text-center">Simple, Affordable Pricing</h2>
                 <p class="mt-4 text-gray-400 text-center">Invest in your academic future with plans designed for African students and families.</p>
                 <div class="mt-16 grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-                    <!-- Free -->
                     <div class="pricing-card">
                         <span class="text-xs font-semibold px-3 py-1 rounded-full bg-white/10 text-gray-300">Free</span>
                         <h3 class="text-2xl font-bold mt-4">R0 <span class="text-sm font-normal text-gray-400">/ forever</span></h3>
@@ -456,7 +596,6 @@
                         </ul>
                         <button onclick="openAuth('signup')" class="mt-8 w-full py-3 rounded-xl border border-gray-600 font-semibold hover:bg-white/5 transition">Start Learning Free</button>
                     </div>
-                    <!-- Premium -->
                     <div class="pricing-card featured relative">
                         <div class="absolute top-0 right-0 bg-gradient-to-l from-purple-600 to-purple-500 text-white text-[10px] font-bold px-4 py-1 rounded-bl-xl uppercase tracking-wider">Most Popular</div>
                         <span class="text-xs font-semibold px-3 py-1 rounded-full bg-purple-500/20 text-purple-300">Premium Scholar</span>
@@ -474,41 +613,17 @@
             </div>
         </section>
 
-        <!-- ===== 8. WHY LEAGO ACADEMY ===== -->
+        <!-- ===== 8. WHY LEAGO ===== -->
         <section id="why" class="py-20 px-4 bg-gradient-to-b from-transparent via-purple-950/20 to-transparent fade-section">
             <div class="max-w-7xl mx-auto text-center">
                 <h2 class="text-3xl md:text-4xl font-bold">Built Around the Way You Learn.</h2>
                 <div class="mt-12 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-                    <div class="glass p-6 rounded-2xl card-glow">
-                        <div class="text-4xl mb-3">📚</div>
-                        <h3 class="text-xl font-semibold">Curriculum‑Focused</h3>
-                        <p class="text-gray-400 text-sm mt-2">Aligned with CAPS, IEB, CBC, WAEC and ZIMSEC.</p>
-                    </div>
-                    <div class="glass p-6 rounded-2xl card-glow">
-                        <div class="text-4xl mb-3">🤖</div>
-                        <h3 class="text-xl font-semibold">AI‑Powered</h3>
-                        <p class="text-gray-400 text-sm mt-2">Personalised step‑by‑step explanations.</p>
-                    </div>
-                    <div class="glass p-6 rounded-2xl card-glow">
-                        <div class="text-4xl mb-3">🧠</div>
-                        <h3 class="text-xl font-semibold">Step‑by‑Step Learning</h3>
-                        <p class="text-gray-400 text-sm mt-2">Learn through guided problem‑solving.</p>
-                    </div>
-                    <div class="glass p-6 rounded-2xl card-glow">
-                        <div class="text-4xl mb-3">📱</div>
-                        <h3 class="text-xl font-semibold">Mobile‑Friendly</h3>
-                        <p class="text-gray-400 text-sm mt-2">Learn on your phone, tablet or laptop.</p>
-                    </div>
-                    <div class="glass p-6 rounded-2xl card-glow">
-                        <div class="text-4xl mb-3">🌍</div>
-                        <h3 class="text-xl font-semibold">Built for African Learners</h3>
-                        <p class="text-gray-400 text-sm mt-2">Designed with local curricula and contexts in mind.</p>
-                    </div>
-                    <div class="glass p-6 rounded-2xl card-glow">
-                        <div class="text-4xl mb-3">💬</div>
-                        <h3 class="text-xl font-semibold">Conversation History</h3>
-                        <p class="text-gray-400 text-sm mt-2">Never lose your progress – pick up where you left off.</p>
-                    </div>
+                    <div class="glass p-6 rounded-2xl card-glow"><div class="text-4xl mb-3">📚</div><h3 class="text-xl font-semibold">Curriculum‑Focused</h3><p class="text-gray-400 text-sm mt-2">Aligned with CAPS, IEB, CBC, WAEC and ZIMSEC.</p></div>
+                    <div class="glass p-6 rounded-2xl card-glow"><div class="text-4xl mb-3">🤖</div><h3 class="text-xl font-semibold">AI‑Powered</h3><p class="text-gray-400 text-sm mt-2">Personalised step‑by‑step explanations.</p></div>
+                    <div class="glass p-6 rounded-2xl card-glow"><div class="text-4xl mb-3">🧠</div><h3 class="text-xl font-semibold">Step‑by‑Step Learning</h3><p class="text-gray-400 text-sm mt-2">Learn through guided problem‑solving.</p></div>
+                    <div class="glass p-6 rounded-2xl card-glow"><div class="text-4xl mb-3">📱</div><h3 class="text-xl font-semibold">Mobile‑Friendly</h3><p class="text-gray-400 text-sm mt-2">Learn on your phone, tablet or laptop.</p></div>
+                    <div class="glass p-6 rounded-2xl card-glow"><div class="text-4xl mb-3">🌍</div><h3 class="text-xl font-semibold">Built for African Learners</h3><p class="text-gray-400 text-sm mt-2">Designed with local curricula and contexts in mind.</p></div>
+                    <div class="glass p-6 rounded-2xl card-glow"><div class="text-4xl mb-3">💬</div><h3 class="text-xl font-semibold">Conversation History</h3><p class="text-gray-400 text-sm mt-2">Never lose your progress – pick up where you left off.</p></div>
                 </div>
             </div>
         </section>
@@ -523,72 +638,56 @@
                             <span>Is Leago Academy free?</span>
                             <span class="question-icon">▼</span>
                         </div>
-                        <div class="answer text-gray-400 text-sm mt-2">
-                            Yes, we offer a free plan with 5 AI Tutor questions per day. For unlimited access, you can upgrade to Premium for R49.99 per month.
-                        </div>
+                        <div class="answer text-gray-400 text-sm mt-2">Yes, we offer a free plan with 5 AI Tutor questions per day. For unlimited access, you can upgrade to Premium for R49.99 per month.</div>
                     </div>
                     <div class="glass rounded-2xl p-6 faq-item cursor-pointer" onclick="toggleFaq(this)">
                         <div class="flex justify-between items-center font-semibold text-lg">
                             <span>How does the AI Tutor work?</span>
                             <span class="question-icon">▼</span>
                         </div>
-                        <div class="answer text-gray-400 text-sm mt-2">
-                            The AI Tutor uses a large language model (DeepSeek) to provide personalised, step‑by‑step explanations. It adapts to your grade, curriculum and subject, and remembers your conversation history for continuity.
-                        </div>
+                        <div class="answer text-gray-400 text-sm mt-2">The AI Tutor uses a large language model (DeepSeek) to provide personalised, step‑by‑step explanations. It adapts to your grade, curriculum and subject, and remembers your conversation history for continuity.</div>
                     </div>
                     <div class="glass rounded-2xl p-6 faq-item cursor-pointer" onclick="toggleFaq(this)">
                         <div class="flex justify-between items-center font-semibold text-lg">
                             <span>Which curricula does Leago Academy support?</span>
                             <span class="question-icon">▼</span>
                         </div>
-                        <div class="answer text-gray-400 text-sm mt-2">
-                            We currently support CAPS (South Africa), IEB, CBC (Kenya), WAEC (West Africa), and ZIMSEC (Zimbabwe). We are continuously adding more curricula and subjects.
-                        </div>
+                        <div class="answer text-gray-400 text-sm mt-2">We currently support CAPS (South Africa), IEB, CBC (Kenya), WAEC (West Africa), and ZIMSEC (Zimbabwe). We are continuously adding more curricula and subjects.</div>
                     </div>
                     <div class="glass rounded-2xl p-6 faq-item cursor-pointer" onclick="toggleFaq(this)">
                         <div class="flex justify-between items-center font-semibold text-lg">
                             <span>How does Premium work?</span>
                             <span class="question-icon">▼</span>
                         </div>
-                        <div class="answer text-gray-400 text-sm mt-2">
-                            Premium costs R49.99 per month and gives you unlimited AI Tutor questions, full access to all subjects and topics, and an ad‑free experience. You can manage your subscription from your dashboard.
-                        </div>
+                        <div class="answer text-gray-400 text-sm mt-2">Premium costs R49.99 per month and gives you unlimited AI Tutor questions, full access to all subjects and topics, and an ad‑free experience. You can manage your subscription from your dashboard.</div>
                     </div>
                     <div class="glass rounded-2xl p-6 faq-item cursor-pointer" onclick="toggleFaq(this)">
                         <div class="flex justify-between items-center font-semibold text-lg">
                             <span>Can I cancel my subscription?</span>
                             <span class="question-icon">▼</span>
                         </div>
-                        <div class="answer text-gray-400 text-sm mt-2">
-                            Yes, you can cancel your Premium subscription at any time from your dashboard. Cancellation will take effect at the end of the current billing cycle. No refunds are provided for partial months.
-                        </div>
+                        <div class="answer text-gray-400 text-sm mt-2">Yes, you can cancel your Premium subscription at any time from your dashboard. Cancellation will take effect at the end of the current billing cycle. No refunds are provided for partial months.</div>
                     </div>
                     <div class="glass rounded-2xl p-6 faq-item cursor-pointer" onclick="toggleFaq(this)">
                         <div class="flex justify-between items-center font-semibold text-lg">
                             <span>How is my data handled?</span>
                             <span class="question-icon">▼</span>
                         </div>
-                        <div class="answer text-gray-400 text-sm mt-2">
-                            We take your privacy seriously. Your personal information, conversation history, and usage data are stored securely and used only to provide and improve the service. We do not sell your data to third parties. For full details, see our <a href="/privacy" class="text-purple-400 hover:underline">Privacy Policy</a>.
-                        </div>
+                        <div class="answer text-gray-400 text-sm mt-2">We take your privacy seriously. Your personal information, conversation history, and usage data are stored securely and used only to provide and improve the service. We do not sell your data to third parties. For full details, see our <a href="/privacy" class="text-purple-400 hover:underline">Privacy Policy</a>.</div>
                     </div>
                     <div class="glass rounded-2xl p-6 faq-item cursor-pointer" onclick="toggleFaq(this)">
                         <div class="flex justify-between items-center font-semibold text-lg">
                             <span>Can I use Leago Academy on my phone?</span>
                             <span class="question-icon">▼</span>
                         </div>
-                        <div class="answer text-gray-400 text-sm mt-2">
-                            Yes! Leago Academy is fully responsive and works well on smartphones, tablets and desktops. The interface adapts to your screen size for a comfortable learning experience.
-                        </div>
+                        <div class="answer text-gray-400 text-sm mt-2">Yes! Leago Academy is fully responsive and works well on smartphones, tablets and desktops. The interface adapts to your screen size for a comfortable learning experience.</div>
                     </div>
                     <div class="glass rounded-2xl p-6 faq-item cursor-pointer" onclick="toggleFaq(this)">
                         <div class="flex justify-between items-center font-semibold text-lg">
                             <span>How do I contact support?</span>
                             <span class="question-icon">▼</span>
                         </div>
-                        <div class="answer text-gray-400 text-sm mt-2">
-                            You can reach us at <a href="mailto:support@leagoacademy.co.za" class="text-purple-400 hover:underline">support@leagoacademy.co.za</a>. We aim to respond within 48 hours during weekdays.
-                        </div>
+                        <div class="answer text-gray-400 text-sm mt-2">You can reach us at <a href="mailto:support@leagoacademy.co.za" class="text-purple-400 hover:underline">support@leagoacademy.co.za</a>. We aim to respond within 48 hours during weekdays.</div>
                     </div>
                 </div>
             </div>
@@ -625,7 +724,7 @@
     </div>
 
     <!-- ============================================================ -->
-    <!--  AUTH MODAL (LOGIN / SIGNUP) – IMPROVED 5-STEP SIGNUP        -->
+    <!--  AUTH MODAL (LOGIN / SIGNUP) – COMPLETE & WORKING            -->
     <!-- ============================================================ -->
     <div id="authOverlay" class="auth-overlay">
         <div class="auth-card">
@@ -656,7 +755,6 @@
 
             <!-- 5-STEP SIGNUP -->
             <div id="signupFormContainer" style="display: none;">
-                <!-- ... (unchanged) ... -->
                 <div class="stepper" id="signupStepper">
                     <div class="step-circle active" id="stepIndicator1">1</div>
                     <div class="step-circle" id="stepIndicator2">2</div>
@@ -664,8 +762,70 @@
                     <div class="step-circle" id="stepIndicator4">4</div>
                     <div class="step-circle" id="stepIndicator5">5</div>
                 </div>
-                <!-- Step 1–5 and signup form (unchanged) -->
-                <!-- (I’m omitting the full modal content for brevity – it remains exactly as before) -->
+
+                <!-- Step 1 -->
+                <div id="signupStep1">
+                    <h3>Create Account</h3>
+                    <p class="sub">Start your AI‑powered learning experience.</p>
+                    <div class="field"><label>Full Name</label><input type="text" id="signupName" placeholder="Thabo Mokoena" /></div>
+                    <div class="field"><label>Email Address</label><input type="email" id="signupEmail" placeholder="student@example.com" /></div>
+                    <div class="field"><label>Password</label><input type="password" id="signupPassword" placeholder="••••••••" /></div>
+                    <div class="field"><label>Confirm Password</label><input type="password" id="signupConfirmPassword" placeholder="••••••••" /></div>
+                    <div class="error" id="signupError1"></div>
+                    <button class="btn mt-4" onclick="nextSignupStep(2)">Continue</button>
+                </div>
+
+                <!-- Step 2 -->
+                <div id="signupStep2" style="display: none;">
+                    <h3>Your Location</h3>
+                    <p class="sub">Tell us where you are studying from.</p>
+                    <div class="field"><label>Country</label><select id="signupCountry" onchange="updateProvinceField()"><option value="">Select your country</option></select></div>
+                    <div class="field" id="provinceField" style="display: none;"><label>Province / State</label><select id="signupProvince"><option value="">Select province</option></select></div>
+                    <div class="error" id="signupError2"></div>
+                    <div class="flex gap-3 mt-4">
+                        <button class="btn" style="background: rgba(255,255,255,0.1);" onclick="prevSignupStep(1)">Back</button>
+                        <button class="btn" onclick="nextSignupStep(3)">Continue</button>
+                    </div>
+                </div>
+
+                <!-- Step 3 -->
+                <div id="signupStep3" style="display: none;">
+                    <h3>Curriculum & Level</h3>
+                    <p class="sub">Select your curriculum and study level.</p>
+                    <div class="field"><label>Curriculum</label><select id="signupCurriculum" onchange="updateSubjects()"><option value="">Select curriculum</option></select></div>
+                    <div class="field"><label>Education Level</label><select id="signupLevel" onchange="updateGradeOptions(); updateSubjects();"><option value="">Select level</option></select></div>
+                    <div class="error" id="signupError3"></div>
+                    <div class="flex gap-3 mt-4">
+                        <button class="btn" style="background: rgba(255,255,255,0.1);" onclick="prevSignupStep(2)">Back</button>
+                        <button class="btn" onclick="nextSignupStep(4)">Continue</button>
+                    </div>
+                </div>
+
+                <!-- Step 4 -->
+                <div id="signupStep4" style="display: none;">
+                    <h3>Your Grade / Year</h3>
+                    <p class="sub">Which grade are you currently in?</p>
+                    <div class="field"><label>Grade</label><select id="signupGrade"><option value="">Select grade</option></select></div>
+                    <div class="error" id="signupError4"></div>
+                    <div class="flex gap-3 mt-4">
+                        <button class="btn" style="background: rgba(255,255,255,0.1);" onclick="prevSignupStep(3)">Back</button>
+                        <button class="btn" onclick="nextSignupStep(5)">Continue</button>
+                    </div>
+                </div>
+
+                <!-- Step 5 -->
+                <div id="signupStep5" style="display: none;">
+                    <h3>Select Your Subjects</h3>
+                    <p class="sub">Choose the subjects you want to study (optional).</p>
+                    <div class="subject-grid-check" id="signupSubjectsCheck"></div>
+                    <div class="error" id="signupError5"></div>
+                    <div class="success" id="signupSuccess"></div>
+                    <div class="flex gap-3 mt-4">
+                        <button class="btn" style="background: rgba(255,255,255,0.1);" onclick="prevSignupStep(4)">Back</button>
+                        <button class="btn" onclick="handleSignup()">Complete Signup</button>
+                    </div>
+                </div>
+
                 <div class="auth-link">
                     Already have an account? <a onclick="switchAuthMode('login')">Log in</a>
                 </div>
@@ -674,46 +834,85 @@
     </div>
 
     <!-- ============================================================ -->
-    <!--  DASHBOARD (APP VIEW) – UNCHANGED                             -->
+    <!--  DASHBOARD (APP VIEW) – UNCHANGED                            -->
     <!-- ============================================================ -->
     <div id="dashboard" class="dashboard">
-        <!-- … The entire dashboard code is preserved exactly as it was … -->
-        <!-- (Not shown here for readability, but it’s present in the actual file) -->
+        <header class="top-nav">
+            <a href="#" class="logo"><span>Leago Academy</span></a>
+            <div class="user-info">
+                <div>
+                    <div class="name" id="dashUserName">Student</div>
+                    <div class="flex items-center gap-2 mt-1">
+                        <span class="role" id="dashUserRole">Grade 12 CAPS</span>
+                        <span id="dashSubBadge" class="sub-badge sub-trial">Free Trial</span>
+                        <span id="dailyQuestionCount" class="text-xs text-gray-400 ml-2">Questions: 0/20</span>
+                    </div>
+                </div>
+                <button id="dashUpgradeBtn" class="subscribe-btn" onclick="openUpgradeModal()">Upgrade Premium</button>
+                <button class="logout-btn" onclick="handleLogout()">Log Out</button>
+            </div>
+        </header>
+
+        <div class="dashboard-grid">
+            <div class="sidebar-left">
+                <div class="section-title">Navigation</div>
+                <ul class="subject-list" id="dashNavList">
+                    <li class="active" onclick="switchDashboardTab('overview')">🏠 Overview</li>
+                    <li onclick="switchDashboardTab('tutor')">🤖 AI Tutor</li>
+                    <li onclick="switchDashboardTab('papers')">📄 Past Papers</li>
+                    <li onclick="switchDashboardTab('flashcards')">🧠 Flashcards</li>
+                    <li onclick="switchDashboardTab('history')">📚 History</li>
+                </ul>
+                <div class="section-title mt-6">My Subjects</div>
+                <ul class="subject-list" id="dashSubjectList"></ul>
+            </div>
+
+            <div class="center-panel" id="centerPanel"></div>
+
+            <div class="sidebar-right">
+                <div class="section-title">Daily Streak 🔥</div>
+                <div class="p-3 rounded-xl bg-white/5 text-center mb-4">
+                    <div class="text-2xl font-bold text-purple-400" id="streakCount">5 Days</div>
+                    <div class="text-xs text-gray-400 mt-1">Keep it up!</div>
+                </div>
+                <div class="section-title">Weakness Areas ⚠️</div>
+                <div id="weaknessList">
+                    <div class="error-item">
+                        <div class="concept">Calculus: Derivatives</div>
+                        <div class="hint">Review product rule</div>
+                    </div>
+                </div>
+                <div class="section-title mt-6">Recent Activity ⏱️</div>
+                <div id="recentActivityList">
+                    <div class="recent-item"><div>Quadratic Equations</div><div class="sub">Mathematics • 2h ago</div></div>
+                </div>
+            </div>
+        </div>
     </div>
 
     <!-- ============================================================ -->
-    <!--  JAVASCRIPT LOGIC – AUTH, DASHBOARD, AI TUTOR, HISTORY, ETC. -->
+    <!--  FULL JAVASCRIPT – AUTH, DASHBOARD, AI TUTOR, HISTORY        -->
     <!-- ============================================================ -->
     <script>
-        // ===== EXISTING AUTH & DASHBOARD FUNCTIONS (UNCHANGED) =====
-        // openAuth, closeAuth, switchAuthMode, handleLogin, handleSignup,
-        // initDashboard, renderSubjectList, loadSubject, openTopic,
-        // sendChatMessage, loadConversation, switchDashboardTab,
-        // renderAiTutorPanel, renderHistoryPanel, etc.
-        // All of these remain exactly as they were.
+        // ---- Mobile Menu Toggle ----
+        document.getElementById('mobileToggle').addEventListener('click', () => {
+            document.getElementById('mobileMenu').classList.toggle('hidden');
+        });
 
-        // ===== LANDING PAGE SPECIFIC =====
+        // ---- FAQ ----
         function toggleFaq(el) {
             el.classList.toggle('active');
         }
 
-        // ---- Mobile menu ----
-        document.getElementById('mobileToggle').addEventListener('click', () => {
-            const menu = document.getElementById('mobileMenu');
-            menu.classList.toggle('hidden');
-        });
-
         // ---- GSAP / Scroll Animations ----
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('visible');
-                }
+                if (entry.isIntersecting) entry.target.classList.add('visible');
             });
         }, { threshold: 0.1 });
         document.querySelectorAll('.fade-section').forEach(sec => observer.observe(sec));
 
-        // ---- Canvas (for the hero) ----
+        // ---- Canvas ----
         const canvas = document.getElementById('aiCanvas');
         if (canvas) {
             const ctx = canvas.getContext('2d');
@@ -727,7 +926,6 @@
             }
             window.addEventListener('resize', resize);
             resize();
-
             const particles = Array.from({ length: 35 }, () => ({
                 x: Math.random() * width,
                 y: Math.random() * height,
@@ -735,23 +933,19 @@
                 vy: (Math.random() - 0.5) * 0.8,
                 radius: Math.random() * 2 + 1.5
             }));
-
             function animateCanvas() {
                 ctx.clearRect(0, 0, width, height);
                 ctx.fillStyle = 'rgba(168, 85, 247, 0.4)';
                 ctx.strokeStyle = 'rgba(124, 58, 237, 0.15)';
                 ctx.lineWidth = 1;
-
                 particles.forEach((p, index) => {
                     p.x += p.vx;
                     p.y += p.vy;
                     if (p.x < 0 || p.x > width) p.vx *= -1;
                     if (p.y < 0 || p.y > height) p.vy *= -1;
-
                     ctx.beginPath();
                     ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
                     ctx.fill();
-
                     for (let j = index + 1; j < particles.length; j++) {
                         const p2 = particles[j];
                         const dist = Math.hypot(p.x - p2.x, p.y - p2.y);
@@ -768,11 +962,857 @@
             animateCanvas();
         }
 
-        // ---- Session restoration (if token exists) ----
-        const token = localStorage.getItem('token');
-        if (token) {
-            restoreSession(); // defined in the existing code
+        // ================================================================
+        //  STATE
+        // ================================================================
+        let currentUser = null;
+        let currentConversationId = null;
+        let isProcessing = false;
+        let currentTopicId = null;
+        let currentTopicTitle = '';
+        let currentSubjectId = null;
+        let currentSubjectName = '';
+        let tutorReturnPath = 'subject';
+
+        // ================================================================
+        //  AUTH FUNCTIONS
+        // ================================================================
+        function openAuth(mode) {
+            document.getElementById('authOverlay').classList.add('active');
+            if (mode === 'login') {
+                document.getElementById('loginFormContainer').style.display = 'block';
+                document.getElementById('signupFormContainer').style.display = 'none';
+            } else {
+                document.getElementById('loginFormContainer').style.display = 'none';
+                document.getElementById('signupFormContainer').style.display = 'block';
+                nextSignupStep(1);
+            }
         }
+
+        function closeAuth() {
+            document.getElementById('authOverlay').classList.remove('active');
+        }
+
+        function switchAuthMode(mode) {
+            if (mode === 'login') {
+                document.getElementById('loginFormContainer').style.display = 'block';
+                document.getElementById('signupFormContainer').style.display = 'none';
+            } else {
+                document.getElementById('loginFormContainer').style.display = 'none';
+                document.getElementById('signupFormContainer').style.display = 'block';
+                nextSignupStep(1);
+            }
+        }
+
+        // ---- Signup Step Navigation ----
+        function nextSignupStep(step) {
+            for (let i = 1; i <= 5; i++) {
+                const el = document.getElementById(`signupStep${i}`);
+                if (el) el.style.display = (i === step) ? 'block' : 'none';
+                const circle = document.getElementById(`stepIndicator${i}`);
+                if (circle) {
+                    circle.className = 'step-circle' + (i < step ? ' done' : i === step ? ' active' : '');
+                }
+            }
+            document.querySelectorAll('#signupFormContainer .error').forEach(e => e.classList.remove('show'));
+            document.getElementById('signupSuccess')?.classList.remove('show');
+        }
+
+        function prevSignupStep(step) {
+            nextSignupStep(step);
+        }
+
+        // ---- Lookup Data ----
+        async function loadLookupData() {
+            await Promise.all([populateCountries(), populateCurricula(), populateEducationLevels()]);
+        }
+
+        async function populateCountries() {
+            const select = document.getElementById('signupCountry');
+            select.innerHTML = '<option value="">Loading countries...</option>';
+            try {
+                const res = await fetch('/api/lookup/countries');
+                if (!res.ok) throw new Error('Failed to fetch countries');
+                const data = await res.json();
+                select.innerHTML = '<option value="">Select your country</option>';
+                const items = data.data || data;
+                if (Array.isArray(items) && items.length > 0) {
+                    items.forEach(c => {
+                        const opt = document.createElement('option');
+                        opt.value = c.id;
+                        opt.textContent = c.name;
+                        select.appendChild(opt);
+                    });
+                } else {
+                    select.innerHTML = '<option value="">No countries available</option>';
+                }
+            } catch (e) {
+                console.error('Failed to load countries', e);
+                select.innerHTML = '<option value="">Error loading countries</option>';
+            }
+        }
+
+        async function populateCurricula() {
+            const select = document.getElementById('signupCurriculum');
+            select.innerHTML = '<option value="">Loading curricula...</option>';
+            try {
+                const res = await fetch('/api/lookup/curricula');
+                if (!res.ok) throw new Error('Failed to fetch curricula');
+                const data = await res.json();
+                select.innerHTML = '<option value="">Select curriculum</option>';
+                const items = data.data || data;
+                if (Array.isArray(items) && items.length > 0) {
+                    items.forEach(c => {
+                        const opt = document.createElement('option');
+                        opt.value = c.id;
+                        opt.textContent = c.name;
+                        select.appendChild(opt);
+                    });
+                } else {
+                    select.innerHTML = '<option value="">No curricula available</option>';
+                }
+            } catch (e) {
+                console.error('Failed to load curricula', e);
+                select.innerHTML = '<option value="">Error loading curricula</option>';
+            }
+        }
+
+        async function populateEducationLevels() {
+            const select = document.getElementById('signupLevel');
+            select.innerHTML = '<option value="">Loading levels...</option>';
+            try {
+                const res = await fetch('/api/lookup/education-levels');
+                if (!res.ok) throw new Error('Failed to fetch education levels');
+                const data = await res.json();
+                select.innerHTML = '<option value="">Select level</option>';
+                const items = data.data || data;
+                if (Array.isArray(items) && items.length > 0) {
+                    items.forEach(l => {
+                        const opt = document.createElement('option');
+                        opt.value = l.id;
+                        opt.textContent = l.name;
+                        select.appendChild(opt);
+                    });
+                } else {
+                    select.innerHTML = '<option value="">No levels available</option>';
+                }
+            } catch (e) {
+                console.error('Failed to load education levels', e);
+                select.innerHTML = '<option value="">Error loading levels</option>';
+            }
+        }
+
+        async function updateProvinceField() {
+            const countryId = document.getElementById('signupCountry').value;
+            const provinceField = document.getElementById('provinceField');
+            const provinceSelect = document.getElementById('signupProvince');
+            if (!countryId) {
+                provinceField.style.display = 'none';
+                provinceSelect.innerHTML = '<option value="">Select province</option>';
+                return;
+            }
+            try {
+                const res = await fetch(`/api/lookup/provinces?countryId=${countryId}`);
+                if (!res.ok) throw new Error('Failed to fetch provinces');
+                const data = await res.json();
+                const items = data.data || data;
+                if (Array.isArray(items) && items.length > 0) {
+                    provinceField.style.display = 'block';
+                    provinceSelect.innerHTML = '<option value="">Select province</option>';
+                    items.forEach(p => {
+                        const opt = document.createElement('option');
+                        opt.value = p.id;
+                        opt.textContent = p.name;
+                        provinceSelect.appendChild(opt);
+                    });
+                } else {
+                    provinceField.style.display = 'none';
+                    provinceSelect.innerHTML = '<option value="">No provinces available</option>';
+                }
+            } catch (e) {
+                console.error('Failed to load provinces', e);
+                provinceField.style.display = 'none';
+                provinceSelect.innerHTML = '<option value="">Error loading provinces</option>';
+            }
+        }
+
+        // ---- Subjects (fallback) ----
+        function getSubjectList(curriculum, level) {
+            const common = ['Mathematics', 'English', 'Life Orientation'];
+            let extras = [];
+            if (curriculum === 'CAPS' || curriculum === 'IEB') {
+                extras = ['Physical Sciences', 'Life Sciences', 'Accounting', 'Business Studies', 'Economics', 'History', 'Geography', 'Tourism', 'Information Technology'];
+            } else if (curriculum === 'CBC') {
+                extras = ['Chemistry', 'Biology', 'Physics', 'History', 'Geography', 'Business Studies'];
+            } else if (curriculum === 'WAEC') {
+                extras = ['Physics', 'Chemistry', 'Biology', 'Economics', 'Government', 'Literature'];
+            } else if (curriculum === 'ZIMSEC') {
+                extras = ['Physics', 'Chemistry', 'Biology', 'Geography', 'History', 'Commerce'];
+            }
+            if (level === 'University') {
+                extras = ['Computer Science', 'Engineering', 'Law', 'Medicine', 'Business Administration', 'Psychology'];
+            }
+            let all = [...common, ...extras];
+            return [...new Set(all)].sort();
+        }
+
+        async function updateSubjects() {
+            const curriculumSelect = document.getElementById('signupCurriculum');
+            const curriculumId = curriculumSelect.value;
+            const container = document.getElementById('signupSubjectsCheck');
+            if (!curriculumId) {
+                container.innerHTML = '<p style="color:#9ca3af;">Please select a curriculum first.</p>';
+                return;
+            }
+            try {
+                const res = await fetch(`/api/subjects?curriculumId=${curriculumId}`);
+                if (!res.ok) throw new Error('Failed to fetch subjects');
+                const subjects = await res.json();
+                if (subjects.length === 0) {
+                    container.innerHTML = '<p style="color:#9ca3af;">No subjects available for this curriculum.</p>';
+                    return;
+                }
+                container.innerHTML = subjects.map(sub => `
+                    <label><input type="checkbox" value="${sub.name}"> ${sub.icon || '📘'} ${sub.name}</label>
+                `).join('');
+            } catch (err) {
+                console.error('Failed to load subjects:', err);
+                const curriculumText = curriculumSelect.options[curriculumSelect.selectedIndex]?.text || '';
+                const levelSelect = document.getElementById('signupLevel');
+                const levelText = levelSelect.options[levelSelect.selectedIndex]?.text || '';
+                const fallbackSubjects = getSubjectList(curriculumText, levelText);
+                container.innerHTML = fallbackSubjects.map(sub => `
+                    <label><input type="checkbox" value="${sub}"> ${sub}</label>
+                `).join('');
+                container.innerHTML += '<p style="color:#ff9800; font-size:0.8rem;">⚠️ Using fallback subject list.</p>';
+            }
+        }
+
+        // ---- Grade options ----
+        const gradeMap = {
+            'High School': ['Grade 8', 'Grade 9', 'Grade 10', 'Grade 11', 'Grade 12'],
+            'TVET College': ['N1', 'N2', 'N3', 'N4', 'N5', 'N6'],
+            'University': ['First Year', 'Second Year', 'Third Year', 'Fourth Year', 'Postgraduate'],
+            'Other': ['Other']
+        };
+
+        function updateGradeOptions() {
+            const level = document.getElementById('signupLevel').value;
+            const gradeSelect = document.getElementById('signupGrade');
+            const levelText = document.getElementById('signupLevel').options[document.getElementById('signupLevel').selectedIndex]?.text || '';
+            gradeSelect.innerHTML = '<option value="">Select grade</option>';
+            if (level && gradeMap[levelText]) {
+                gradeMap[levelText].forEach(g => {
+                    const opt = document.createElement('option');
+                    opt.value = g;
+                    opt.textContent = g;
+                    gradeSelect.appendChild(opt);
+                });
+            }
+        }
+
+        // ---- Signup ----
+        async function handleSignup() {
+            const name = document.getElementById('signupName').value.trim();
+            const email = document.getElementById('signupEmail').value.trim();
+            const pass = document.getElementById('signupPassword').value.trim();
+            const confirm = document.getElementById('signupConfirmPassword').value.trim();
+            const err = document.getElementById('signupError5');
+            const success = document.getElementById('signupSuccess');
+
+            if (!name || !email || !pass || !confirm) {
+                err.textContent = 'Please fill in all required fields.';
+                err.classList.add('show');
+                return;
+            }
+            if (pass !== confirm) {
+                err.textContent = 'Passwords do not match.';
+                err.classList.add('show');
+                return;
+            }
+            if (pass.length < 6) {
+                err.textContent = 'Password must be at least 6 characters.';
+                err.classList.add('show');
+                return;
+            }
+            err.classList.remove('show');
+            success.classList.remove('show');
+
+            const firstName = name.split(' ')[0] || name;
+            const lastName = name.split(' ').slice(1).join(' ') || '';
+            const countryId = parseInt(document.getElementById('signupCountry').value) || null;
+            const provinceId = parseInt(document.getElementById('signupProvince').value) || null;
+            const educationLevelId = parseInt(document.getElementById('signupLevel').value) || null;
+            const grade = document.getElementById('signupGrade').value || '';
+            const curriculumId = parseInt(document.getElementById('signupCurriculum').value) || null;
+            const subjects = Array.from(document.querySelectorAll('#signupSubjectsCheck input:checked')).map(cb => cb.value);
+
+            try {
+                const res = await fetch('/api/auth/signup', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        firstName, lastName, email, password: pass,
+                        countryId, provinceId, educationLevelId, grade, curriculumId, subjects
+                    })
+                });
+                const data = await res.json();
+                if (!data.success) {
+                    err.textContent = data.error || 'Signup failed';
+                    err.classList.add('show');
+                    return;
+                }
+                success.textContent = 'Account created! Please log in.';
+                success.classList.add('show');
+                setTimeout(() => {
+                    switchAuthMode('login');
+                    document.getElementById('loginEmail').value = email;
+                    document.getElementById('loginPassword').value = '';
+                }, 1000);
+            } catch (e) {
+                err.textContent = 'Network error. Please try again.';
+                err.classList.add('show');
+            }
+        }
+
+        // ---- Login ----
+        async function handleLogin() {
+            const email = document.getElementById('loginEmail').value.trim();
+            const pass = document.getElementById('loginPassword').value.trim();
+            const err = document.getElementById('loginError');
+            if (!email || !pass) {
+                err.textContent = 'Please fill in all fields.';
+                err.classList.add('show');
+                return;
+            }
+            err.classList.remove('show');
+
+            try {
+                const loginRes = await fetch('/api/auth/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, password: pass })
+                });
+                const loginData = await loginRes.json();
+                if (!loginData.success || !loginData.token) {
+                    err.textContent = loginData.error || 'Login failed';
+                    err.classList.add('show');
+                    return;
+                }
+
+                const token = loginData.token;
+                localStorage.setItem('token', token);
+
+                const meRes = await fetch('/api/auth/me', {
+                    headers: { 'Authorization': 'Bearer ' + token }
+                });
+                if (!meRes.ok) {
+                    localStorage.removeItem('token');
+                    err.textContent = 'Could not fetch profile.';
+                    err.classList.add('show');
+                    return;
+                }
+                const user = await meRes.json();
+                currentUser = user;
+                localStorage.setItem('leago_user', JSON.stringify(currentUser));
+                closeAuth();
+                initDashboard();
+            } catch (e) {
+                err.textContent = 'Network error. Please try again.';
+                err.classList.add('show');
+            }
+        }
+
+        // ---- Session Restoration ----
+        async function restoreSession() {
+            const token = localStorage.getItem('token');
+            if (!token) {
+                document.getElementById('landingPage').style.display = 'block';
+                return;
+            }
+            try {
+                const res = await fetch('/api/auth/me', {
+                    headers: { 'Authorization': 'Bearer ' + token }
+                });
+                if (!res.ok) {
+                    localStorage.removeItem('token');
+                    localStorage.removeItem('leago_user');
+                    document.getElementById('landingPage').style.display = 'block';
+                    return;
+                }
+                const user = await res.json();
+                currentUser = user;
+                localStorage.setItem('leago_user', JSON.stringify(currentUser));
+                initDashboard();
+            } catch (e) {
+                console.error('Session restoration failed', e);
+                localStorage.removeItem('token');
+                localStorage.removeItem('leago_user');
+                document.getElementById('landingPage').style.display = 'block';
+            }
+        }
+
+        // ================================================================
+        //  DASHBOARD FUNCTIONS (Unchanged)
+        // ================================================================
+        function initDashboard() {
+            if (!currentUser) { alert('Please log in first.'); return; }
+            document.getElementById('landingPage').classList.add('hidden');
+            document.getElementById('landingPage').style.display = 'none';
+            document.getElementById('dashboard').classList.add('active');
+
+            const fullName = `${currentUser.first_name || ''} ${currentUser.last_name || ''}`.trim() || 'Student';
+            document.getElementById('dashUserName').textContent = fullName;
+            document.getElementById('dashUserRole').textContent = `${currentUser.grade || 'Grade 10'} • ${currentUser.curriculum?.name || 'CAPS'}`;
+
+            const badge = document.getElementById('dashSubBadge');
+            const upgradeBtn = document.getElementById('dashUpgradeBtn');
+            if (currentUser.subscription?.plan === 'premium') {
+                badge.textContent = 'Premium Scholar';
+                badge.className = 'sub-badge sub-active';
+                upgradeBtn.style.display = 'none';
+            } else {
+                badge.textContent = 'Free Trial';
+                badge.className = 'sub-badge sub-trial';
+                upgradeBtn.style.display = 'inline-block';
+            }
+
+            updateDailyQuestionCount();
+            renderSubjectList();
+            switchDashboardTab('overview');
+        }
+
+        function updateDailyQuestionCount() {
+            const el = document.getElementById('dailyQuestionCount');
+            if (!el) return;
+            const data = currentUser?.dailyQuestions || { used: 0, limit: 20 };
+            if (data.limit === -1) {
+                el.textContent = '♾️ Unlimited';
+            } else {
+                el.textContent = `Questions: ${data.used}/${data.limit}`;
+            }
+        }
+
+        function renderSubjectList() {
+            const list = document.getElementById('dashSubjectList');
+            const subjects = currentUser.subjects || [];
+            if (subjects.length === 0) {
+                list.innerHTML = '<li style="color:#9ca3af;cursor:default;">No subjects. Update your profile.</li>';
+                return;
+            }
+            list.innerHTML = subjects.map(sub => `
+                <li onclick="loadSubject(${sub.id})">${sub.icon || '📖'} ${sub.name}</li>
+            `).join('');
+            renderOverviewSubjects(subjects);
+        }
+
+        function renderOverviewSubjects(subjects) {
+            const container = document.getElementById('overviewSubjects');
+            if (!container) return;
+            if (!subjects || subjects.length === 0) {
+                container.innerHTML = '<p style="color:#9ca3af;">No subjects selected. Update your profile.</p>';
+                return;
+            }
+            container.innerHTML = subjects.map(sub => `
+                <div class="subject-card" onclick="loadSubject(${sub.id})">
+                    <span class="icon">${sub.icon || '📘'}</span>
+                    <span class="name">${sub.name}</span>
+                    <span class="progress-badge">In Progress</span>
+                </div>
+            `).join('');
+        }
+
+        // ================================================================
+        //  TOPICS & AI TUTOR
+        // ================================================================
+        async function loadSubject(subjectId) {
+            const panel = document.getElementById('centerPanel');
+            panel.innerHTML = `
+                <button class="back-btn" onclick="switchDashboardTab('overview')">← Back to Overview</button>
+                <div class="welcome">📚 ${getSubjectName(subjectId)}</div>
+                <div class="welcome-sub">Select a topic to start learning.</div>
+                <div id="topicList" class="topic-grid mt-4"><div style="grid-column:1/-1; text-align:center; color:#9ca3af; padding:40px 0;">Loading topics...</div></div>
+            `;
+            currentSubjectId = subjectId;
+            const subject = currentUser.subjects.find(s => s.id === subjectId);
+            currentSubjectName = subject ? subject.name : 'Subject';
+
+            try {
+                const token = localStorage.getItem('token');
+                const res = await fetch(`/api/topics?subject_id=${subjectId}`, {
+                    headers: { 'Authorization': 'Bearer ' + token }
+                });
+                if (!res.ok) {
+                    const errData = await res.json();
+                    throw new Error(errData.error || 'Failed to fetch topics');
+                }
+                const topics = await res.json();
+                const container = document.getElementById('topicList');
+                if (!topics || topics.length === 0) {
+                    container.innerHTML = `<div style="grid-column:1/-1; text-align:center; color:#9ca3af; padding:40px 0;">No topics available for this subject in your grade/curriculum.</div>`;
+                    return;
+                }
+                container.innerHTML = topics.map(t => `
+                    <div class="topic-card" data-topic-id="${t.id}" data-topic-title="${t.title}">
+                        <div class="title">📖 ${t.title}</div>
+                        <div class="meta">${t.description || 'Click to start learning'}</div>
+                    </div>
+                `).join('');
+                container.querySelectorAll('.topic-card').forEach(card => {
+                    card.addEventListener('click', function() {
+                        const id = parseInt(this.dataset.topicId);
+                        const title = this.dataset.topicTitle;
+                        openTopic(id, title);
+                    });
+                });
+            } catch (err) {
+                console.error('Failed to load topics:', err);
+                document.getElementById('topicList').innerHTML = `<div style="grid-column:1/-1; text-align:center; color:#ef4444; padding:40px 0;">⚠️ Could not load topics. Please try again.</div>`;
+            }
+        }
+
+        function getSubjectName(subjectId) {
+            const subject = currentUser.subjects.find(s => s.id === subjectId);
+            return subject ? subject.name : 'Subject';
+        }
+
+        function openTopic(topicId, topicTitle) {
+            currentTopicId = topicId;
+            currentTopicTitle = topicTitle;
+            currentConversationId = null;
+            tutorReturnPath = 'subject';
+            switchDashboardTab('tutor', currentSubjectName, topicTitle);
+        }
+
+        function switchDashboardTab(tab, param, topicParam) {
+            const panel = document.getElementById('centerPanel');
+            if (tab === 'overview') {
+                const name = currentUser?.first_name || 'Student';
+                panel.innerHTML = `
+                    <div class="welcome">Welcome back, ${name} 👋</div>
+                    <div class="welcome-sub">Choose a subject or start an AI tutoring session below.</div>
+                    <div class="subject-grid mt-6" id="overviewSubjects">
+                        ${(currentUser.subjects || []).map(sub => `
+                            <div class="subject-card" onclick="loadSubject(${sub.id})">
+                                <span class="icon">${sub.icon || '📘'}</span>
+                                <div class="name">${sub.name}</div>
+                                <span class="progress-badge">In Progress</span>
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+            } else if (tab === 'tutor') {
+                renderAiTutorPanel(panel, param || 'General', topicParam);
+            } else if (tab === 'history') {
+                renderHistoryPanel(panel);
+            } else {
+                panel.innerHTML = `
+                    <button class="back-btn" onclick="switchDashboardTab('overview')">← Back to Overview</button>
+                    <div class="welcome">${tab.charAt(0).toUpperCase() + tab.slice(1)}</div>
+                    <div class="welcome-sub">Coming soon.</div>
+                `;
+            }
+        }
+
+        async function renderHistoryPanel(panel) {
+            panel.innerHTML = `
+                <button class="back-btn" onclick="switchDashboardTab('overview')">← Back to Overview</button>
+                <div class="welcome">📚 Learning History</div>
+                <div class="welcome-sub">Your past conversations</div>
+                <div id="historyList" style="margin-top:20px;"><div style="text-align:center; color:#9ca3af; padding:20px;">Loading conversations...</div></div>
+            `;
+            try {
+                const token = localStorage.getItem('token');
+                const res = await fetch('/api/conversations', {
+                    headers: { 'Authorization': 'Bearer ' + token }
+                });
+                if (!res.ok) throw new Error('Failed to fetch history');
+                const conversations = await res.json();
+                const container = document.getElementById('historyList');
+                if (!conversations || conversations.length === 0) {
+                    container.innerHTML = `<div style="text-align:center; color:#9ca3af; padding:20px;">No conversations yet. Start a topic to begin learning!</div>`;
+                    return;
+                }
+                let html = '';
+                conversations.forEach(conv => {
+                    const subject = conv.subject_name || 'General';
+                    const topic = conv.topic_title || '';
+                    const title = conv.title || `${subject} - ${topic}`;
+                    const date = new Date(conv.updated_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+                    const msgCount = conv.message_count || 0;
+                    html += `
+                        <div class="recent-item" style="cursor:pointer; margin-bottom:12px; border-left:3px solid #7C3AED; padding-left:14px;" onclick="loadConversation(${conv.id})">
+                            <div style="font-weight:600; color:white;">${title}</div>
+                            <div style="font-size:0.8rem; color:#9ca3af;">${subject} ${topic ? '– ' + topic : ''} • ${date} • ${msgCount} messages</div>
+                        </div>
+                    `;
+                });
+                container.innerHTML = html;
+            } catch (err) {
+                console.error('History error:', err);
+                document.getElementById('historyList').innerHTML = `<div style="text-align:center; color:#ef4444; padding:20px;">⚠️ Could not load history.</div>`;
+            }
+        }
+
+        function renderAiTutorPanel(panel, subject, topic) {
+            const name = currentUser?.first_name || 'Student';
+            const displaySubject = subject || 'General';
+            const displayTopic = topic || '';
+            const headerText = displayTopic ? `${displaySubject} – ${displayTopic}` : displaySubject;
+            let backAction = (tutorReturnPath === 'history') ? `switchDashboardTab('history')` : `loadSubject(${currentSubjectId})`;
+
+            panel.innerHTML = `
+                <button class="back-btn" onclick="${backAction}">← Back</button>
+                <div class="tutor-container">
+                    <div class="tutor-header">
+                        <h3>Leago AI Tutor</h3>
+                        <div class="context">${headerText}</div>
+                    </div>
+                    <div class="chat-box" id="chatBox">
+                        <div class="typing-indicator" id="typingIndicator">
+                            <span style="color:#9ca3af;">Leago is thinking</span>
+                            <span class="spinner" style="width:14px;height:14px;border-width:2px;"></span>
+                        </div>
+                    </div>
+                    <div class="chat-input">
+                        <input type="text" id="chatInput" placeholder="Ask a question or paste a homework problem..." onkeydown="if(event.key==='Enter') sendChatMessage()" />
+                        <button class="btn-send" id="sendBtn" onclick="sendChatMessage()">Send</button>
+                    </div>
+                    <div class="chat-options">
+                        <input type="checkbox" id="socraticMode" checked />
+                        <label for="socraticMode">Socratic Mode (Guide me step-by-step instead of giving final answers)</label>
+                    </div>
+                </div>
+            `;
+
+            if (!currentConversationId && topic && currentTopicId) {
+                setTimeout(() => {
+                    const input = document.getElementById('chatInput');
+                    if (input) {
+                        input.value = `I want to learn about "${currentTopicTitle}" in ${currentSubjectName}. Please guide me step-by-step.`;
+                        sendChatMessage();
+                    }
+                }, 300);
+            }
+        }
+
+        async function sendChatMessage() {
+            const input = document.getElementById('chatInput');
+            const message = input.value.trim();
+            if (!message || isProcessing) return;
+            input.value = '';
+            addMessage('user', message);
+            showTyping(true);
+            isProcessing = true;
+
+            const token = localStorage.getItem('token');
+            if (!token) {
+                addMessage('bot', '⚠️ You are not logged in. Please refresh and try again.');
+                showTyping(false);
+                isProcessing = false;
+                return;
+            }
+
+            try {
+                const res = await fetch('/api/chat', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer ' + token
+                    },
+                    body: JSON.stringify({
+                        message: message,
+                        subject_id: currentSubjectId,
+                        topic_id: currentTopicId,
+                        conversation_id: currentConversationId
+                    })
+                });
+                const data = await res.json();
+                if (!res.ok) {
+                    if (data.error === 'limit_reached') {
+                        addMessage('bot', '📚 You\'ve reached your daily limit. Upgrade to Premium to continue.');
+                    } else {
+                        addMessage('bot', '❌ ' + (data.error || 'Server error'));
+                    }
+                    showTyping(false);
+                    isProcessing = false;
+                    return;
+                }
+                if (data.reply) {
+                    addMessage('bot', data.reply);
+                    if (data.conversation_id) {
+                        currentConversationId = data.conversation_id;
+                    }
+                }
+                updateDailyQuestionCount();
+            } catch (err) {
+                console.error('Chat error:', err);
+                addMessage('bot', '❌ Network error. Please try again.');
+            }
+            showTyping(false);
+            isProcessing = false;
+        }
+
+        function addMessage(role, text) {
+            const box = document.getElementById('chatBox');
+            if (!box) return;
+            const typing = document.getElementById('typingIndicator');
+            if (typing) typing.classList.remove('active');
+            const div = document.createElement('div');
+            div.className = `msg ${role}`;
+            if (role === 'bot') {
+                let content = text;
+                if (typeof marked !== 'undefined') {
+                    marked.setOptions({ breaks: true, gfm: true });
+                    content = marked.parse(content);
+                }
+                div.innerHTML = content;
+                setTimeout(() => {
+                    if (typeof renderMathInElement === 'function') {
+                        try {
+                            renderMathInElement(div, {
+                                delimiters: [
+                                    { left: '$$', right: '$$', display: true },
+                                    { left: '$', right: '$', display: false }
+                                ]
+                            });
+                        } catch(e) {}
+                    }
+                }, 100);
+            } else {
+                div.textContent = text;
+            }
+            if (typing) {
+                box.insertBefore(div, typing);
+            } else {
+                box.appendChild(div);
+            }
+            box.scrollTop = box.scrollHeight;
+        }
+
+        function showTyping(active) {
+            const el = document.getElementById('typingIndicator');
+            if (el) {
+                if (active) el.classList.add('active');
+                else el.classList.remove('active');
+            }
+        }
+
+        async function loadConversation(convId) {
+            try {
+                const token = localStorage.getItem('token');
+                const res = await fetch(`/api/conversations/${convId}`, {
+                    headers: { 'Authorization': 'Bearer ' + token }
+                });
+                if (!res.ok) {
+                    const err = await res.json();
+                    throw new Error(err.error || 'Failed to load conversation');
+                }
+                const data = await res.json();
+                const conv = data.conversation;
+                const messages = data.messages;
+
+                currentConversationId = convId;
+                currentSubjectId = conv.subject_id;
+                currentTopicId = conv.topic_id;
+                currentSubjectName = conv.subject_name || 'General';
+                currentTopicTitle = conv.topic_title || '';
+                tutorReturnPath = 'history';
+                switchDashboardTab('tutor', currentSubjectName, currentTopicTitle);
+
+                const chatBox = document.getElementById('chatBox');
+                if (chatBox) {
+                    const typing = document.getElementById('typingIndicator');
+                    chatBox.innerHTML = '';
+                    if (typing) chatBox.appendChild(typing);
+                    messages.forEach(msg => {
+                        const div = document.createElement('div');
+                        div.className = `msg ${msg.role === 'user' ? 'user' : 'bot'}`;
+                        if (msg.role === 'assistant') {
+                            let content = msg.content;
+                            if (typeof marked !== 'undefined') {
+                                marked.setOptions({ breaks: true, gfm: true });
+                                content = marked.parse(content);
+                            }
+                            div.innerHTML = content;
+                            setTimeout(() => {
+                                if (typeof renderMathInElement === 'function') {
+                                    try {
+                                        renderMathInElement(div, {
+                                            delimiters: [
+                                                { left: '$$', right: '$$', display: true },
+                                                { left: '$', right: '$', display: false }
+                                            ]
+                                        });
+                                    } catch(e) {}
+                                }
+                            }, 100);
+                        } else {
+                            div.textContent = msg.content;
+                        }
+                        if (typing) {
+                            chatBox.insertBefore(div, typing);
+                        } else {
+                            chatBox.appendChild(div);
+                        }
+                    });
+                    chatBox.scrollTop = chatBox.scrollHeight;
+                }
+            } catch (err) {
+                console.error('Load conversation error:', err);
+                alert('Could not load conversation. Please try again.');
+            }
+        }
+
+        // ---- Upgrades & Logout ----
+        async function openUpgradeModal() {
+            const token = localStorage.getItem('token');
+            if (!token) { alert('Please log in first.'); return; }
+            try {
+                const res = await fetch('/api/payments/create', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token }
+                });
+                const data = await res.json();
+                if (data.authorization_url) {
+                    window.location.href = data.authorization_url;
+                } else {
+                    alert('Payment initiation failed. Please try again.');
+                }
+            } catch (err) {
+                console.error('Payment error:', err);
+                alert('Payment service unavailable. Please try again later.');
+            }
+        }
+
+        function handleLogout() {
+            if (confirm('Are you sure you want to logout?')) {
+                localStorage.removeItem('token');
+                localStorage.removeItem('leago_user');
+                currentUser = null;
+                document.getElementById('dashboard').classList.remove('active');
+                document.getElementById('landingPage').classList.remove('hidden');
+                document.getElementById('landingPage').style.display = 'block';
+            }
+        }
+
+        // ---- Page Initialisation ----
+        const originalOpenAuth = openAuth;
+        openAuth = function(mode) {
+            if (mode === 'signup') {
+                const countrySelect = document.getElementById('signupCountry');
+                if (countrySelect.options.length <= 1) {
+                    loadLookupData().catch(e => console.error('Lookup preload failed', e));
+                }
+            }
+            originalOpenAuth(mode);
+        };
+
+        if (!localStorage.getItem('token')) {
+            loadLookupData().catch(e => console.error('Lookup preload failed', e));
+        }
+
+        restoreSession();
     </script>
 
 </body>
